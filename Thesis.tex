@@ -97,14 +97,33 @@
 \makeglossaries
 
 % 12pt, please
-\KOMAoptions{fontsize=12pt}
+% \KOMAoptions{fontsize=10pt}
+
+
+\input{packages.tex}
+\input{pl-theory.tex}
+
+% Ott includes
+\inputott{ott-rules}
+% I prefer rulenames on the right
+% \renewcommand\ottaltinferrule[4]{
+%   \inferrule*[narrower=0.7,right=#1,#2]
+%     {#3}
+%     {#4}
+% }
+\renewcommand\ottaltinferrule[4]{
+  \inferrule*[narrower=0.5,lab=#1,#2]
+    {#3}
+    {#4}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Disjoint Intersection Types}
-\subtitle{A New Foundation for Multiple Inheritance}
+\title{Disjoint Intersection Types:}
+\subtitle{Theory and Practice}
 \author{Xuan Bi}
 
 \begin{document}
@@ -119,7 +138,7 @@
 
   \include{Sources/Introduction}
   \include{Sources/Background}
-  \include{Sources/Outro}
+  \include{Sources/Nested}
 
 % This ensures that the subsequent sections are being included as root
 % items in the bookmark structure of your PDF reader.

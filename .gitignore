@@ -36,3 +36,5 @@ Figures/External/
 /Thesis.synctex.gz
 
 **/auto
+*.mng
+*.tex-old
