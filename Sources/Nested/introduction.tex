@@ -13,7 +13,7 @@ Object-Oriented Programming (OOP). One notable
 example is the Scala
 language~\cite{odersky2004overview} and its DOT
 calculus~\cite{amin2012dependent}, which make fundamental use of intersection
-types to express a class/trait that extends multiple other classes/traits. Other
+types to express a class/trait that extends multiple other traits. Other
 modern languages, such as TypeScript~\cite{typescript}, Flow~\cite{flow} and
 Ceylon~\cite{ceylon}, also adopt some form of intersection types.
 
@@ -39,14 +39,14 @@ For this reason, Dunfield~\cite{dunfield2014elaborating} argues that refinement
 intersection is unsuited for encoding various useful language features
 that require the merge operator (or an equivalent term-level operator).
 
-\subparagraph{Disjoint Intersection Types.}
-\oname is a recently proposed calculus with a variant of intersection types 
+\paragraph{Disjoint Intersection Types.}
+\oname is a recent calculus with a variant of intersection types 
 called \emph{disjoint intersection types}~\cite{oliveira2016disjoint}.
 Calculi with disjoint intersection types feature the merge 
 operator, with restrictions that all expressions in a merge 
 operator must have disjoint types and all well-formed intersections 
-are also disjoint. A bidirectional type system and the disjointness restrictions are
-sufficient to ensure that the semantics of the resulting calculi remains 
+are also disjoint. A bidirectional type system and the disjointness restrictions 
+ensure that the semantics of the resulting calculi remains 
 coherent. 
 
 \begin{comment}
@@ -91,7 +91,7 @@ modelled on top of disjoint intersection types, coherence implies
 that no ambiguity arises from multiple inheritance. This makes
 reasoning a lot simpler.
 
-\subparagraph{Family Polymorphism.}
+\paragraph{Family Polymorphism.}
 One powerful and long-standing idea in OOP is \emph{family
   polymorphism}~\cite{Ernst_2001}. In family polymorphism inheritance is
 extended to work on a \emph{whole family of classes}, rather than just a single
@@ -108,8 +108,10 @@ a few, quite sophisticated, languages that manage this~\cite{ErnstVirtual, Nystr
 %multiple inheritance with family polymorphism requires dealing with the various
 %issues of both ideas.
 
-\subparagraph{\name.}
-This paper presents \name\footnote{\name stands for \textbf{Ne}sted \textbf{Co}mposition calcu\textbf{lus}}: a simple calculus with records and
+\paragraph{\name.}
+This paper presents an improved variant of \oname called
+\name\footnote{\name stands for \textbf{Ne}sted \textbf{Co}mposition
+  calcu\textbf{lus}.} (or \namee): a simple calculus with records and
 disjoint intersection types that supports \emph{nested composition}. Nested composition enables
 encoding simple forms of family polymorphism. More complex forms of
 family polymorphism, involving binary methods~\cite{bruce1995binary} and mutable state are
@@ -220,8 +222,7 @@ of \emph{family polymorphism} through nested composition.
   subtyping. % As a by-product, we obtain the first mechanically verified
   % BCD-style subtyping algorithm with coercions.
   We also have an implementation of a language built on top of \name; it runs and type-checks all examples shown in
-  the paper\footnote{The Coq formalization, implementation
-    and appendix are submitted as supplementary material.}.
+  the paper.\footnote{The Coq formalization and implementation are available at \url{https://goo.gl/R5hUAp}.}
 
 
 \end{itemize}

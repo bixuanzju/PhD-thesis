@@ -6,12 +6,12 @@
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \name. Compared
-to prior work~\cite{alpuimdisjoint, oliveira2016disjoint}, \name has a much more
+to prior work~\cite{alpuimdisjoint, oliveira2016disjoint}, \name has a more
 powerful subtyping relation. The new subtyping relation is inspired by BCD-style
 subtyping, but with two noteworthy differences: subtyping is coercive (in
 contrast to traditional formulations of BCD); and it is extended with records.
 We also have a new target language with explicit coercions inspired by the coercion calculus of
-Henglein~\cite{Henglein_1994}. A full technical comparison with \oname can be found in \cref{sec:comparision}.
+Henglein~\cite{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
 
 
 \subsection{Syntax}
@@ -56,7 +56,7 @@ singleton records $[[ {l = ee}]]$, and record selections $[[ee.l ]]$.
   \label{fig:subtype_decl}
 \end{figure}
 
-\subparagraph{BCD-Style Subtyping.}
+\paragraph{BCD-Style Subtyping.}
 The subtyping rules are essentially those of the BCD type
 system~\cite{Barendregt_1983}, extended with subtyping for singleton records.
 \Rref{S-top,S-rcd} for top types and record types are straightforward.
@@ -65,7 +65,7 @@ intersection types axiomatize that $[[A & B]]$ is the greatest lower bound of
 $[[A]]$ and $[[B]]$. \Rref{S-distArr} is perhaps the most interesting rule.
 This, so-called ``distributivity'' rule, describes the interaction between
 the subtyping relations for function types and those for intersection types.
-It can be shown that the other direction ($[[A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)]]$)
+It can be shown\footnote{The full derivations are found in the appendix.} that the other direction ($[[A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)]]$)
 and the contravariant distribution ($[[ (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2 ]]$) are both
 derivable from the existing subtyping rules. \Rref{S-distRcd}, which is not found in the original BCD system,
 prescribes the distribution of records over intersection types. The two
@@ -73,7 +73,7 @@ distributivity rules are the key to enable nested composition. The rule
 \rref*{S-topArr} is standard in BCD subtyping, and the new
 \rref{S-topRcd} plays a similar role for record types.
 
-% \subparagraph{Property of Subtyping}
+% \paragraph{Property of Subtyping}
 % The subtyping relation is vacuously \textit{reflexive} and \textit{transitive}.
 
 
@@ -82,7 +82,7 @@ distributivity rules are the key to enable nested composition. The rule
 %a compact and elegant formulation of algorithmic subtyping (c.f. \cref{sec:alg}). \jeremy{any
 %  other justifications for these two rules?}
 
-\subparagraph{Non-Algorithmic.}
+\paragraph{Non-Algorithmic.}
 The subtyping relation in \cref{fig:subtype_decl} is clearly no more than a
 specification due to the two subtyping axioms: \rref{S-refl,S-trans}. A sound
 and complete algorithmic version is discussed in \cref{sec:alg}. Nevertheless,
@@ -106,8 +106,8 @@ sufficient.
 
 
 
-The bidirectional type system for \name is shown in \cref{fig:type_system}. Again we ignore the \hll{highlighted}
-parts for now.
+The bidirectional type system for \name is shown in \cref{fig:type_system}.
+Again we ignore the \hll{highlighted} parts for now.
 
 % The main difference to \oname is the absence of a well-formedness
 % judgement. Unlike \oname, which requires a well-formedness judgement to ensure
@@ -141,7 +141,7 @@ to continue ignoring the gray-shaded parts until \cref{sec:elaboration}.
 \end{figure}
 
 
-\subparagraph{Typing Rules and Disjointness.}
+\paragraph{Typing Rules and Disjointness.}
 
 As with traditional bidirectional type systems, we employ two modes: the
 inference mode ($[[=>]]$) and the checking mode ($[[<=]]$). The inference
@@ -184,7 +184,7 @@ meta-function $| \cdot |$ transforms \name types to \tname types, and extends
 naturally to typing contexts. Its definition is in the appendix.
 
 
-\subparagraph{Explicit Coercions and Coercive Subtyping.}
+\paragraph{Explicit Coercions and Coercive Subtyping.}
 
 The separate syntactic category for explicit coercions is a distinct
 difference from the prior works (in which they are regular terms). Our coercions
@@ -206,7 +206,7 @@ specific form of coercion.
 %subtyping.\bruno{Why not discuss the form of coercions directly here?}
 
 
-\subparagraph{Target Typing.}
+\paragraph{Target Typing.}
 The typing of \tname has the form $[[G |- e : T]]$, which is entirely standard. Only the typing of coercion
 applications, shown below, deserves attention:
 \begin{mathpar}
@@ -224,13 +224,15 @@ shown in \cref{fig:co}.
   \label{fig:co}
 \end{figure}
 
-\subparagraph{Target Operational Semantics and Type Safety.}
+\paragraph{Target Operational Semantics and Type Safety.}
 
 The operational semantics of \tname is mostly unremarkable. What may be
 interesting is the operational semantics of coercions. \Cref{fig:coercion_red}
 shows the single-step ($[[-->]]$) reduction rules for coercions. Our coercion
 reduction rules are quite standard but not efficient in terms of space.
-Space-efficient coercions can be obtained by following the approach such as \cite{Siek_2015, herman2010space}.
+Nevertheless, there is existing work on space-efficient
+coercions~\cite{Siek_2015, herman2010space}, which should be applicable
+to our work as well.
 As standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
 We show that \tname is type safe:
 \begin{theorem}[Preservation]
@@ -251,7 +253,7 @@ We show that \tname is type safe:
 
 
 
-\subparagraph{Elaboration.}
+\paragraph{Elaboration.}
 \begin{comment}
 The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~>
 c]]$, which says that the subtyping
@@ -295,17 +297,17 @@ to \tname terms.
 \subsection{Comparison with \oname}
 \label{sec:comparision}
 
-Below we identify major differences from \oname, which, when
+Below we identify major differences between \namee and \oname, which, when
 taken together, yield a simpler and more elegant system. The differences may seem
 superficial, but they have far-reaching impacts on the semantics, especially on
 coherence, our major topic in \cref{sec:cohe}.
 
-\subparagraph{No Ordinary Types.}
+\paragraph{No Ordinary Types.}
 
 Apart from the extra subtyping rules, there is an important difference from the
-\oname subtyping relation. The subtyping relation of \oname employ an
+\oname subtyping relation. The subtyping relation of \oname employs an
 auxiliary unary relation called $\mathsf{ordinary}$, which plays a fundamental
-role in both calculi for ensuring coherence and obtaining an
+role for ensuring coherence and obtaining an
 algorithm~\cite{Davies_2000}. The \name calculus discards the notion of
 ordinary types completely; this yields a clean and elegant formulation of the
 subtyping relation. Another minor difference is that due to the addition of the
@@ -313,13 +315,13 @@ transitivity axiom (\rref{S-trans}), \rref{S-andl,S-andr} are simplified: an
 intersection type $[[A & B]]$ is a subtype of both $[[A]]$ and $[[B]]$, instead
 of the more general form $[[ A & B <: CC]]$.
 
-% \subparagraph{Example}
+% \paragraph{Example}
 % The following example shows the derivation tree of the subtyping example
 % presented in \cref{sec:overview}. \jeremy{A derivation of the nested composition
 %   example? }
 
 
-\subparagraph{No Top-Like Types.}
+\paragraph{No Top-Like Types.}
 
 There is a notable difference from the coercive subtyping of \oname. Because of
 their syntactic proof method, they have special treatment for coercions of
@@ -330,7 +332,7 @@ adoption of a more powerful proof method (cf. \cref{sec:cohe}).
 
 
 
-\subparagraph{No Well-Formedness Judgement.}
+\paragraph{No Well-Formedness Judgement.}
 
 A key difference from the type system of \oname is the complete omission of the
 well-formedness judgement. In \oname, the well-formedness judgement $[[GG |- A]]$

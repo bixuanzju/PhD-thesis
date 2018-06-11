@@ -17,6 +17,7 @@ WARN_MSG = "%%% !!! WARNING: AUTO GENERATED. DO NOT MODIFY !!! %%%\n"
 all: $(MAIN).pdf
 
 $(MAIN).pdf: $(MAIN).tex $(wildcard Sources/Nested/*.tex) $(wildcard Sources/*.tex) $(AUTOGEN)
+	@ruby $(SCRIPT).rb
 	@latexmk $(@:.pdf=.tex)
 
 $(RULESFILE): $(OTT_FILES)

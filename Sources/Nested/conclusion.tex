@@ -3,7 +3,7 @@
 \label{sec:conclusion}
 
 We have proposed \name, a type-safe and coherent calculus with disjoint
-intersection types, and support for nested composition/subtyping. \name
+intersection types, and support for nested composition/subtyping. It
 improves upon earlier work with a more
 flexible notion of disjoint intersection types, which leads to
 a clean and elegant formulation of the type system. Due to the added
@@ -15,25 +15,26 @@ has potential for practical applications for extensible software designs.
 
 A natural direction for future work is to enrich \name with parametric
 polymorphism. There is abundant literature on logical relations for parametric
-polymorphism~\cite{reynolds1983types} and we foresee no fundamental difficulties
-in extending our proof method.\footnote{ Our prototype implementation already
+polymorphism~\cite{reynolds1983types}. % and we foresee no fundamental difficulties
+% in extending our proof method .
+The main challenge in the definition of the
+logical relation is the clause that relates type variables with arbitrary types. Careful
+measures are to be taken to avoid potential circularity due to
+impredicativity.\footnote{ Our prototype implementation already
   supports polymorphism, but we are still in the process of extending our Coq
-  development with polymorphism.} The main challenge in the definition of the
-logical relation is the clause for type variables with arbitrary types. Careful
-measures are to be taken to avoid the potential circularity due to
-impredicativity. With the combination of parametric polymorphism and nested
+  development with polymorphism.} With the combination of parametric polymorphism and nested
 composition, an interesting application that we intend to investigate is native
 support for a highly modular form of \textit{Object Algebras}~\cite{oliveira2012extensibility, xuan_traits} and \textsc{Visitor}s
 (or the finally tagless approach~\cite{CARETTE_2009}).
 
 Another direction for future work is to add mutable references, which would
-touch two places in our metatheory: type safety and coherence. For type safety,
+affect two aspects of our metatheory: type safety and coherence. For type safety,
 we expect that lessons learned from previous work on family polymorphism and
-mutability on OO to apply to our work. For example, it is well-known that
+mutability on OO apply to our work. For example, it is well-known that
 subtyping in the presence of mutable state often needs restrictions. Given such
 suitable restrictions we expect that type-safety in the presence of mutability
-still works. For coherence, it would be a major technical challenge to adjust
-our coherence proof and its Coq mechanisation. Logical relations that account
+still holds. For coherence, it would be a major technical challenge to adjust
+our coherence proof and its Coq mechanization: logical relations that account
 for mutable state (e.g., see Ahmed's thesis~\cite{ahmed2004semantics}) introduce significant complexity.
 
 
@@ -43,7 +44,7 @@ for mutable state (e.g., see Ahmed's thesis~\cite{ahmed2004semantics}) introduce
 % For example, we can
 % define the object algebra interfaces for the Expression Problem example in
 % \cref{sec:overview} as follows:
-% \lstinputlisting[linerange=77-78]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_EXT_INTER
+% \lstinputlisting[linerange=77-78]{./examples/overview.sl}% APPLY:linerange=LANG_EXT_INTER
 % By instantiating \lstinline{E} with \lstinline{IPrint}, i.e.,
 % \lstinline{ExpAlg[IPrint]}, we get the interface of the \lstinline{Lang} family.
 % In that sense, object algebra interfaces can be viewed as family interfaces.
@@ -52,7 +53,7 @@ for mutable state (e.g., see Ahmed's thesis~\cite{ahmed2004semantics}) introduce
 % with nested composition. Polymorphism also improves code reuse across expressions in the
 % base and extended languages. For example, the following creates two expressions,
 % one in the base language, the other in the extended language:
-% \lstinputlisting[linerange=83-84]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_EXT
+% \lstinputlisting[linerange=83-84]{./examples/overview.sl}% APPLY:linerange=LANG_EXT
 % Notice how we can  reuse \lstinline{e1} of the base language in the definition
 % of \lstinline{e2}.
 

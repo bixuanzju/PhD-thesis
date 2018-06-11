@@ -24,7 +24,7 @@ inherits (and can override) all the class members, as well as the relationships
 within the family (including subtyping) between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
 
-\subparagraph{The Expression Problem, Scandinavian Style.}
+\paragraph{The Expression Problem, Scandinavian Style.}
 Ernst~\cite{Ernst_2001} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
 \emph{Expression Problem}~\cite{wadler1998expression}. The objective of the
@@ -104,8 +104,8 @@ class LangNeg extends Lang {
     \caption{The Expression Problem, Scandinavian Style}
 \end{figure}
 
-\subparagraph{Adding a New Operation.}
-One way to extend the family, is to add an additional evaluation operation, as
+\paragraph{Adding a New Operation.}
+One way to extend the family is to add an additional evaluation operation, as
 shown in the top half of \cref{fig:extend}. This is done by subclassing the
 \lstinline{Lang} class and refining all the contained classes by implementing
 the additional \lstinline{eval} method. Note that the inheritance between, e.g.,
@@ -115,7 +115,7 @@ the additional \lstinline{eval} method. Note that the inheritance between, e.g.,
 in \lstinline{Lang.Add} is automatically refined to \lstinline{LangEval.Exp} in
 \lstinline{LangEval.Add}.
 
-\subparagraph{Adding a New Case.}
+\paragraph{Adding a New Case.}
 A second dimension to extend the family is to add a case for negation, shown in
 the bottom half of \cref{fig:extend}. This is similarly achieved by subclassing
 \lstinline{Lang}, and now adding a new contained class \lstinline{Neg}, for
@@ -133,7 +133,7 @@ class LangNegEval extends LangEval & LangNeg {
 The only effort required is to implement the one missing operation
 case, evaluation of negated expressions.
 
-% \subparagraph{A solution in \name using nested composition:} Show a
+% \paragraph{A solution in \name using nested composition:} Show a
 % solution in \name with records implemented in SEDEL. Justify the connection to the
 % class-based solution. Mention that type system support
 % for family polymorphism is known to be hard.
@@ -148,29 +148,29 @@ structural type system in which we can model objects with records, and object
 types with record types. For instance, we model the interface of \lstinline{Lang.Exp}
 with the singleton record type \lstinline${ print : String }$. For the sake of
 conciseness, we use type aliases to abbreviate types.
-\lstinputlisting[linerange=4-4]{../../impl/examples/overview.sl}% APPLY:linerange=PRINT_INTERFACE
+\lstinputlisting[linerange=4-4]{./examples/overview.sl}% APPLY:linerange=PRINT_INTERFACE
 Similarly, we capture the interface of the \lstinline{Lang} family in a record,
 with one field for each case's constructor.
-\lstinputlisting[linerange=8-8]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_FAMILY
+\lstinputlisting[linerange=8-8]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY
 Here is the implementation of \lstinline{Lang}.
-\lstinputlisting[linerange=17-22]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_IMPL
+\lstinputlisting[linerange=17-22]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subparagraph{Adding Evaluation.}
+\paragraph{Adding Evaluation.}
 We obtain \lstinline{IPrint & IEval}, which is the corresponding type for \lstinline{LangEval.Exp}, by
 intersecting \lstinline{IPrint} with \lstinline{IEval} where
-\lstinputlisting[linerange=27-27]{../../impl/examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
+\lstinputlisting[linerange=27-27]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
 The type for \lstinline{LangEval} is then:
-\lstinputlisting[linerange=32-35]{../../impl/examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
+\lstinputlisting[linerange=32-35]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
 We obtain an implementation for \lstinline{LangEval} by merging the existing
 \lstinline{Lang} implementation \lstinline{implLang} with the new evaluation
 functionality \lstinline{implEval} using the merge operator \lstinline{,,}.
-\lstinputlisting[linerange=43-49]{../../impl/examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
+\lstinputlisting[linerange=43-49]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subparagraph{Adding Negation.}
+\paragraph{Adding Negation.}
 Adding negation to \lstinline{Lang} works similarly.
-\lstinputlisting[linerange=53-59]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_NEG
+\lstinputlisting[linerange=53-59]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
 % \begin{Verbatim}[xleftmargin=10mm,fontsize=\relscale{.80}]
 % type LangNeg = Lang & { neg : IPrint -> IPrint }
 
@@ -181,21 +181,21 @@ Adding negation to \lstinline{Lang} works similarly.
 % \end{Verbatim}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subparagraph{Putting Everything Together.}
+\paragraph{Putting Everything Together.}
 Finally, we can combine the two extensions and provide the missing
 implementation of evaluation for the negation case.
-\lstinputlisting[linerange=64-71]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_FINAL
+\lstinputlisting[linerange=64-71]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
 We can test \lstinline{implLangNegEval} by creating an object \lstinline{e} of expression $-2 + 3$ that is able to print and evaluate at the same time.
-\lstinputlisting[linerange=89-91]{../../impl/examples/overview.sl}% APPLY:linerange=TEST
+\lstinputlisting[linerange=89-91]{./examples/overview.sl}% APPLY:linerange=TEST
 
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subparagraph{Multi-Field Records.} One relevant remark is that
+\paragraph{Multi-Field Records.} One relevant remark is that
 \name does not have multi-field record types built in. They are merely syntactic
 sugar for intersections of single-field record types. Hence, the following is an
 equivalent definition of \lstinline{Lang}:
-\lstinputlisting[linerange=13-13]{../../impl/examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
+\lstinputlisting[linerange=13-13]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
 Similarly, the multi-field record expression in the definition of
 \lstinline{implLang} is syntactic sugar for the explicit merge of two
 single-field records.
@@ -204,8 +204,8 @@ implLang : Lang = { lit = ... } ,, { add = ... };
 \end{lstlisting}
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\subparagraph{Subtyping.}
-A big difference with gbeta is that many more \name types are related through
+\paragraph{Subtyping.}
+A big difference compared to gbeta is that many more \name types are related through
 subtyping. Indeed, gbeta is unnecessarily conservative~\cite{ernst_hoh}: none of the families is related
 through subtyping, nor is any of the class members of one family related to any
 of the class members in another family. For instance, \lstinline{LangEval} is
@@ -231,7 +231,7 @@ Yet, there is a flaw in our reasoning:
 strictly speaking, \lstinline{implLang ,, implEval} is not of
 type \lstinline{LangEval} but instead of type \lstinline{Lang & EvalExt}, where
 \lstinline{EvalExt} is the type of \lstinline{implEval}:
-\lstinputlisting[linerange=39-39]{../../impl/examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
+\lstinputlisting[linerange=39-39]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
 Nevertheless, the definition of \lstinline{implLangEval} is valid because
 \lstinline{Lang & EvalExt} is a subtype of \lstinline{LangEval}.
 Indeed, if we consider for the sake of simplicity only the \lstinline{lit}
@@ -259,7 +259,7 @@ reason why we have so many subtyping relations in \cref{fig:diagram}.
 \end{figure}
 
 
-\subparagraph{Stand-Alone Extensions.}
+\paragraph{Stand-Alone Extensions.}
 Unlike in gbeta and other class-based inheritance systems, in \name
 the extension \lstinline{implEval} is not tied to \lstinline{LangEval}. In that
 sense, it resembles trait and mixin systems that can apply the same extension
@@ -288,7 +288,7 @@ avoided by dictating that all intersection types have to be disjoint, i.e.,
 $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ is ill-formed because the first component
 has the same type as the second.
 
-\subparagraph{Duplication is Harmless.}
+\paragraph{Duplication is Harmless.}
 While requiring that all intersections are disjoint is sufficient to guarantee
 coherence, it is not necessary. In fact,
 such requirement unnecessarily encumbers the subtyping definition with disjointness constraints

@@ -45,10 +45,10 @@ find some errors and missing lemmas in Pierce's original manual proofs.
 \end{figure}
 
 
-\Cref{fig:algorithm} shows the algorithmic subtyping judgement $[[fs |- A <: B
-~~> c]]$. This judgement is the algorithmic counterpart of the declarative
+\Cref{fig:algorithm} shows the algorithmic subtyping judgement $[[fs |- A <: B ~~> c]]$.
+This judgement is the algorithmic counterpart of the declarative
 judgement $[[A <: fs -> B ~~> c]]$, where the symbol $[[fs]]$ stands for a
-queue of types and labels. \Cref{def:fs} converts a queue to a type:
+queue of types and labels. Definition~\ref{def:fs} converts a queue to a type:
 \begin{definition} $[[fs -> A]]$ is inductively defined as follows: \label{def:fs}
   \begin{mathpar}
     [[ [] -> A]] = [[A]] \and
@@ -70,8 +70,8 @@ $[[B]]$ and popped off again later, left to right, as $[[->]]$'s are encountered
 in $[[A]]$ (\rref{A-arrNat}). Similarly, the labels are pushed onto $[[fs]]$ as
 they are encountered in $[[B]]$ and popped off again later, left to right, as
 records are encountered in $[[A]]$ (\rref{A-rcdNat}). The remaining rules are
-similar to their declarative counterparts. To
-get the intuition of how the algorithm works, below we give an example
+similar to their declarative counterparts. Let us illustrate the algorithm
+with an example
 derivation (for space reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and $[[string]]$ respectively),
 which is essentially the one used by the \lstinline{add} field in \cref{sec:overview}. The
 readers can try to give a corresponding derivation using the declarative
@@ -101,7 +101,6 @@ where the sub-derivation $D$ is shown below ($D'$ is similar):
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
 \end{mathpar}
 \end{small}
-
 Now consider the coercions. Algorithmic subtyping uses the same set of
 coercions as declarative subtyping. However, because algorithmic
 subtyping has a different structure, the rules generate slightly more
@@ -145,7 +144,7 @@ need to show the algorithmic subtyping is reflexive and
 transitive. 
 
 
-\subsubsection{Soundness of the Algorithm.}
+\paragraph{Soundness of the Algorithm.}
 
 The following two lemmas connect the declarative subtyping with the meta-functions.
 
@@ -172,7 +171,7 @@ The proof of soundness is straightforward.
 \end{proof}
 
 
-\subsubsection{Completeness of the Algorithm.}
+\paragraph{Completeness of the Algorithm.}
 
 
 \newcommand{\U}[1]{\mathcal{U}(#1)}
@@ -188,9 +187,7 @@ $\U{[[A]]}$, of ``reflexive supertypes'' of $[[A]]$, as defined below:
   \U{[[A & B]]} \defeq \U{[[A]]} \cup \U{[[B]]} \cup \{ [[A & B]] \} \and
   \U{[[A -> B]]} \defeq \{ [[A -> CC]] \mid [[CC]] \in \U{[[B]]} \}
 \end{mathpar}
-
 We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
-
 \begin{lemma} \label{lemma:set_refl}
   $[[A]] \in \U{[[A]]}$
 \end{lemma}
@@ -206,12 +203,12 @@ We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
 \end{proof}
 
 \begin{remark}
-  \Cref{lemma:set_trans} is not found in \cite{pierce1989decision}, which is
-  crucial in \cref{lemma:refl0}, from which reflexivity (\cref{lemma:refl})
+  Lemma~\ref{lemma:set_trans} is not found in Pierce's proofs~\cite{pierce1989decision}, which is
+  crucial in Lemma~\ref{lemma:refl0}, from which reflexivity (Lemma~\ref{lemma:refl})
   follows immediately.
 \end{remark}
 
-% Next we show the following lemma from which reflexivity (\cref{lemma:refl})
+% Next we show the following lemma from which reflexivity (Lemma~\ref{lemma:refl})
 
 \begin{lemma} \label{lemma:refl0}
   If $[[fs -> B]] \in \U{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
@@ -230,7 +227,7 @@ Now it immediately follows that the algorithmic subtyping is reflexive.
   For every $[[A]]$ there exists $[[c]]$ such that $[[ [] |- A <: A ~~> c]]$.
 \end{lemma}
 \begin{proof}
-  Immediate from \cref{lemma:set_refl,lemma:refl0}.
+  Immediate from Lemma~\ref{lemma:set_refl} and Lemma~\ref{lemma:refl0}.
 \end{proof}
 
 We omit the details of the proof of transitivity.
@@ -245,6 +242,11 @@ We omit the details of the proof of transitivity.
 
 With reflexivity and transitivity in position, we show the main theorem.
 
+\renewcommand\ottaltinferrule[4]{
+  \inferrule*[narrower=0.5,right=#1,#2]
+    {#3}
+    {#4}
+}
 \begin{theorem}[Completeness] \label{thm:complete}
   If $[[A <: B ~~> c]]$ then there exists $[[c']]$ such that $[[ [] |- A <: B ~~> c']]$.
 \end{theorem}
@@ -256,17 +258,16 @@ With reflexivity and transitivity in position, we show the main theorem.
   \begin{mathpar}
   \drule{S-arr}
   \end{mathpar}
-  where he directly concludes from the inductive hypothesis $[[ [] |- B1 <:
-  A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ holds,
-  which is clearly wrong since no algorithmic rules apply here. It turns out we
-  need a few technical lemmas to support the argument, which are omitted for 
-  reasons of space.
+  where he concludes from the inductive
+  hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (rules 6a and 3).
+  However his rule 6a (our \rref{A-arrNat}) only works for \textit{primitive types}, and is thus not applicable in this case. Instead we
+  need a few technical lemmas to support the argument.
 \end{remark}
 
 \begin{remark}
   It is worth pointing out that the two coercions $[[c]]$ and $[[c']]$ in
-  \cref{thm:complete} are contextually equivalent, which follows from
-  \cref{thm:soundness} and \cref{lemma:coercion_same}.
+  Theorem~\ref{thm:complete} are contextually equivalent, which follows from
+  Theorem~\ref{thm:soundness} and Corollary~\ref{lemma:coercion_same}.
 \end{remark}
 
 % Local Variables:

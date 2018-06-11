@@ -2,7 +2,7 @@
 \section{Related Work}
 \label{sec:related}
 
-\subparagraph{Coherence.}
+\paragraph{Coherence.}
 In calculi that feature coercive subtyping, a semantics that interprets the
 subtyping judgement by introducing explicit coercions is typically defined on
 typing derivations rather than on typing judgements. A natural
@@ -14,7 +14,7 @@ intersection types, based on the denotational semantics for intersection types,
 many researchers have studied the problem of coherence in a variety of typed
 calculi. Below we summarize two commonly-found approaches in the literature.
 
-%\subparagraph{Normalization-based Approach}
+%\paragraph{Normalization-based Approach}
 % The first approach is based on normalization.
 Breazu-Tannen et al.~\cite{Breazu_Tannen_1991} proved
 the coherence of a coercion translation from Fun~\cite{cardelli1985understanding}
@@ -29,7 +29,7 @@ same approach, Schwinghammer~\cite{SCHWINGHAMMER_2008} proved the coherence of c
 translation from Moggi's computational lambda calculus~\cite{Moggi_1991} with subtyping.
 
 
-%\subparagraph{Logical-relations-based Approach}
+%\paragraph{Logical-relations-based Approach}
 
 Central to the first approach is to find a normal form for a representation of
 the derivation and show that normal forms are unique for a given typing
@@ -55,7 +55,7 @@ restrict our reasoning to the latter class, which is reflected in a more
 complicated notion of contextual equivalence and our logical relation's
 non-trivial treatment of pairs.
 
-\subparagraph{Intersection Types and the Merge Operator.}
+\paragraph{Intersection Types and the Merge Operator.}
 Forsythe~\cite{reynolds1988preliminary} has intersection types and a merge-like operator. However to ensure coherence, various
 restrictions were added to limit the use of merges. For example, in Forsythe
 merges cannot contain more than one function. Castagna et al.~\cite{Castagna_1992} proposed a
@@ -68,7 +68,7 @@ coherence. The combination of intersection types, a merge operator and
 parametric polymorphism, while achieving coherence was first studied in the
 \fname calculus~\cite{alpuimdisjoint}. Compared to prior work, \name simplifies type systems
 with disjoint intersection types by removing several restrictions. 
-Furthermore, \name adopts a much more powerful subtyping relation based 
+Furthermore, \name adopts a more powerful subtyping relation based 
 on BCD subtyping, which in turn requires the use of a more powerful
 logical relations based method for proving coherence.
 
@@ -78,7 +78,7 @@ logical relations based method for proving coherence.
 %   relates/differs from the work presented in the paper.}
 
 
-\subparagraph{BCD Type System and Decidability.}
+\paragraph{BCD Type System and Decidability.}
 The BCD type system was first introduced by Barendregt et al.~\cite{Barendregt_1983}. It is
 derived from a filter lambda model in order to characterize exactly the strongly
 normalizing terms. The BCD type system features a powerful subtyping relation,
@@ -96,14 +96,14 @@ procedure~\cite{pierce1989decision}, which is shown to be easily extensible to
 coercions and records. In the course of our mechanization we identified several
 mistakes in Pierce's proofs, as well as some important missing lemmas.
 
-\subparagraph{Family Polymorphism.}
+\paragraph{Family Polymorphism.}
 There has been much work on family polymorphism since Ernst's
 original proposal~\cite{Ernst_2001}. Family polymorphism provides an elegant
 solution to the Expression Problem. Although a simple Scala solution does exist without
 requiring family polymorphism (e.g., see Wang and Oliveira~\cite{wang2016expression}), Scala
 does not support nested composition: programmers need to manually compose
 all the classes from multiple extensions. Generally speaking, systems that support
-family polymorphism usually require quite sophisticated mechanisms, for example,
+family polymorphism usually require quite sophisticated mechanisms such as
 dependent types.
 
 % Broadly speaking, systems that support
@@ -114,7 +114,7 @@ dependent types.
 % expressive~\cite{ErnstVirtual}, but requires a complex type system usually
 % involving dependent types.
 
-%\subparagraph{Object Families}
+%\paragraph{Object Families}
 There are two approaches to family polymorphism: the original \textit{object family}
 approach of Beta (e.g., virtual classes~\cite{Madsen_1989}) treats nested classes
 as attributes of objects of the family classes. Path-dependent types are used to
@@ -146,7 +146,7 @@ integrates modular composition and nesting of Java-like classes. It features a
 set of composition operators that allow to manipulate nested classes at any
 depth level. More recently, a Java-like language called
 Familia~\cite{Zhang_2017} were proposed to combine subtyping polymorphism,
-parametric polymorphism and family polymorphism. Two approaches have even been
+parametric polymorphism and family polymorphism. The object and class family approaches have even been
 combined by the work on Tribe~\cite{pubsdoc:tribe-virtual-calculus}.
 
 % This % flexibility allows a further bound class to be a subtype of the class it
