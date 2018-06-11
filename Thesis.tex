@@ -67,13 +67,13 @@
 % Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ifxetexorluatex
-  \setmainfont{Minion Pro}
-\else
-  \usepackage[lf]{ebgaramond}
-  \usepackage[oldstyle,scale=0.7]{sourcecodepro}
-  \singlespacing
-\fi
+% \ifxetexorluatex
+%   \setmainfont{Minion Pro}
+% \else
+%   \usepackage[lf]{ebgaramond}
+%   \usepackage[oldstyle,scale=0.7]{sourcecodepro}
+%   \singlespacing
+% \fi
 
 \renewcommand{\th}{\textsuperscript{\textup{th}}\xspace}
 
@@ -97,20 +97,14 @@
 \makeglossaries
 
 % 12pt, please
-% \KOMAoptions{fontsize=10pt}
+\KOMAoptions{fontsize=11pt}
 
 
 \input{packages.tex}
 \input{pl-theory.tex}
 
 % Ott includes
-\inputott{ott-rules}
-% I prefer rulenames on the right
-% \renewcommand\ottaltinferrule[4]{
-%   \inferrule*[narrower=0.7,right=#1,#2]
-%     {#3}
-%     {#4}
-% }
+\inputott{ott-nested}
 \renewcommand\ottaltinferrule[4]{
   \inferrule*[narrower=0.7,lab=#1,#2]
     {#3}

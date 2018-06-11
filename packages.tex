@@ -24,7 +24,7 @@
 %% Font
 % \usepackage[euler-digits,euler-hat-accent]{eulervm}
 
-
+\usepackage{pifont}
 
 \usepackage{ottalt}
 
@@ -44,7 +44,7 @@
 
 \lstset{%
   backgroundcolor=\color{white},
-  % basicstyle=\ttfamily,
+  basicstyle=\small\ttfamily,
   keywordstyle=\sffamily\bfseries,
   captionpos=none,
   columns=flexible,
@@ -79,15 +79,27 @@
   xleftmargin  = 3mm
 }
 
+
+\lstdefinelanguage{JavaScript}{
+  keywords={const, extends, super, class, export, boolean, throw, implements, import, this, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  identifierstyle=\color{black},
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  xleftmargin  = 3mm,
+  morestring=[b]"
+}
+
+
 \lstset{language=sedel}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 \newtheorem{observation}{Observation}

@@ -39,3 +39,5 @@ Figures/External/
 *.mng
 *.tex-old
 /footempfile.txt
+/ott-nested.tex
+/ott-traits.tex
