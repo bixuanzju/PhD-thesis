@@ -24,7 +24,7 @@ For brevity of the meta-theoretic study, we do not
 consider primitive operations on natural numbers, or other primitive types.
 They can be easily added to the language, and our prototype implementation is
 indeed equipped with common primitive types and their operations.
-Metavariables $[[A]], [[B]], [[CC]]$ range over types. Types include naturals
+Metavariables $[[A]], [[B]], [[C]]$ range over types. Types include naturals
 $[[nat]]$, a top type $[[Top]]$, function types $[[A -> B]]$, intersection types
 $[[A & B]]$, and singleton record types $[[ {l : A} ]]$. Metavariable $[[ee]]$
 ranges over expressions. Expressions include variables $[[x]]$, natural numbers
@@ -35,7 +35,7 @@ singleton records $[[ {l = ee}]]$, and record selections $[[ee.l ]]$.
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll}\toprule
-  Types & $[[A]], [[B]], [[CC]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]  $ \\
   & & $\mid$ & $ [[ { l = ee } ]] \mid [[ee.l]] $ \\
   Typing contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
@@ -166,10 +166,10 @@ previous work~\cite{oliveira2016disjoint, alpuimdisjoint}.
   \centering
 \begin{tabular}{llll} \toprule
   Target types & $[[T]]$ & $\Coloneqq$ & $[[nat]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] \mid [[ {l : T} ]]$ \\
-  Typing contexts & $[[G]]$ & $\Coloneqq$ & $[[empty]] \mid [[G , x : T]]$ \\
+  Typing contexts & $[[gg]]$ & $\Coloneqq$ & $[[empty]] \mid [[gg , x : T]]$ \\
   Target terms & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[<e1, e2>]] \mid [[{ l = e }]] \mid [[e.l]] \mid [[c e]]$ \\
   Coercions & $[[c]]$ & $\Coloneqq$ & $ [[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[topArr]] \mid [[< l >]] \mid [[c1 -> c2]] \mid [[<c1, c2>]]$ \\
-  &  &  $\mid$ & $  [[p1]] \mid [[p2]] \mid [[{l : c}]] \mid  [[ distRcd l ]] \mid [[distArr]]  $ \\
+  &  &  $\mid$ & $  [[pp1]] \mid [[pp2]] \mid [[{l : c}]] \mid  [[ distRcd l ]] \mid [[distArr]]  $ \\
   Target values & $[[v]]$ & $\Coloneqq$ & $[[\x.e]] \mid [[unit]] \mid [[i]] \mid [[<v1, v2>]] \mid [[(c1 -> c2) v]] \mid [[distArr v]] \mid [[topArr v]] $ \\ \bottomrule
 \end{tabular}
   \caption{\tname types, terms and coercions}
@@ -190,7 +190,7 @@ The separate syntactic category for explicit coercions is a distinct
 difference from the prior works (in which they are regular terms). Our coercions
 are based on those of Henglein~\cite{Henglein_1994}, and we add more forms due to our
 extra subtyping rules.
-Metavariable $[[c]]$ ranges over coercions.\footnote{Coercions $[[p1]]$ and $[[p2]]$ subsume the first and second projection of pairs, respectively.}
+Metavariable $[[c]]$ ranges over coercions.\footnote{Coercions $[[pp1]]$ and $[[pp2]]$ subsume the first and second projection of pairs, respectively.}
 Coercions express the conversion
 of a term from one type to another. Because of the addition of coercions, the
 grammar contains explicit coercion applications $[[c e]]$ as a term, and various
@@ -207,7 +207,7 @@ specific form of coercion.
 
 
 \paragraph{Target Typing.}
-The typing of \tname has the form $[[G |- e : T]]$, which is entirely standard. Only the typing of coercion
+The typing of \tname has the form $[[gg |- e : T]]$, which is entirely standard. Only the typing of coercion
 applications, shown below, deserves attention:
 \begin{mathpar}
 \drule{typ-capp}
@@ -313,7 +313,7 @@ ordinary types completely; this yields a clean and elegant formulation of the
 subtyping relation. Another minor difference is that due to the addition of the
 transitivity axiom (\rref{S-trans}), \rref{S-andl,S-andr} are simplified: an
 intersection type $[[A & B]]$ is a subtype of both $[[A]]$ and $[[B]]$, instead
-of the more general form $[[ A & B <: CC]]$.
+of the more general form $[[ A & B <: C]]$.
 
 % \paragraph{Example}
 % The following example shows the derivation tree of the subtyping example

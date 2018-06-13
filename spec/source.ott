@@ -1,0 +1,1019 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% METAVARIABLES
+
+
+metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }}, Z ::=
+
+metavar var, x , y, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
+
+indexvar i, j, k, n, m ::=
+
+grammar
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SEDEL Syntax
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Types
+
+AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}  :: 'AA_' ::=
+  | Top                           :: :: top
+  | Int                           :: :: int
+  | AA -> BB                      :: :: arr
+  | AA & BB                       :: :: and
+  | X                             :: :: tvar
+  | \ X ** AA  . BB              :: :: forall {{ tex \forall ( [[X]] [[**]] [[AA]] ) .\,[[BB]] }}
+  | { l : AA }                    :: :: rcd
+  | Trait [ AA , BB ]             :: :: trait
+  | Trait [ BB ]                  :: :: trait2
+  | { l1 : AA1 , ... , ln : AAn } :: :: rcd2
+  | AA1 & ... & AAn               :: :: and2
+  | Bool                          :: :: bool
+  | Char                          :: :: char
+  | String                        :: :: string
+  | [ AA / a ] BB                 :: :: subst
+
+
+%% Programs
+
+pgm :: 'pgm_' ::=
+  | E             :: :: expr
+  | decl ; pgm    :: :: decl
+  | [ AA / TT ] pgm :: :: subst
+
+
+%% Declarations
+
+decl :: 'decl_' ::=
+  | def f ( x : AA ) : BB = E :: :: termDecl
+  | typ TT = AA               :: :: typeDecl
+
+
+%% Expressions
+
+E {{ tex \mathcal{E} }}  :: 'E_' ::=
+  | Top                                                                     :: :: top
+  | x                                                                       :: :: var
+  | ii                                                                      :: :: lit
+  | BL                                                                      :: :: bool
+  | \ x . E                                                                 :: :: lam
+  | E1 E2                                                                   :: :: app
+  | E1 ,, E2                                                                :: :: merge
+  | \ X ** AA  . E                                                          :: :: blam {{ tex \Lambda ( [[X]] [[**]] [[AA]] ) .\,[[E]] }}
+  | E AA                                                                    :: :: tapp
+  | { l = E }                                                               :: :: rcd
+  | E . l                                                                   :: :: proj
+  | letrec x : AA = E1 in E2                                                :: :: let
+  | new [ AA ] ( </ Ei // i /> )                                            :: :: new
+  | E : AA                                                                  :: :: anno
+  | E -- { l : AA }                                                         :: :: rem
+  | trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA :: :: trait
+  | if E1 then E2 else E3                                                   :: :: if
+  | E1 + E2                                                                 :: :: add
+  | E1 - E2                                                                 :: :: sub
+  | E1 * E2                                                                 :: :: mult
+  | E1 / E2                                                                 :: :: div
+  | E1 == E2                                                                :: :: eq
+  | E1 /= E2                                                                :: :: neq
+  | E1 < E2                                                                 :: :: lt
+  | E1 > E2                                                                 :: :: gt
+  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \textasciicircum\, [[E2]] }}
+  | { l1 = E1 , ... , ln = En }                                             :: :: rcd2
+  | { l1 = E1 } ,, ... ,, { ln = En }                                       :: :: rcd3
+  | ( E )                                                                   :: :: paren
+
+
+%% Contexts
+
+SG {{ tex \Gamma }} :: 'SG_' ::=
+  | empty                                     :: :: empty
+  | SG , x : AA                               :: :: cons1
+  | SG , X ** AA                              :: :: cons2
+  | SG , x1 : AA1 , .. , xn : AAn , self : BB :: :: cons3
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Fi+ Syntax
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Types
+
+sty, A, B, C, t :: 'sty_' ::=
+  | nat          :: :: nat
+  | Top          :: :: top
+  | X            :: :: tvar
+  | A -> B       :: :: arrow
+  | A & B        :: :: and
+  | \ X ** A . B :: :: all {{ tex \forall ( [[X]] [[**]] [[A]] ) .\,[[B]] }}
+  | { l : A }    :: :: rcd
+  | ( A )        :: :: paren
+  | [ B / X ] A  :: :: subst
+  | p ( A )      :: :: pa
+  | fs -> A ::  :: lst
+  | N ::  :: n  {{ tex \mathsf{N} }}
+  | S ::  :: s  {{ tex \mathsf{S} }}
+  | string ::  :: ss   {{ tex \mathsf{String} }}
+
+
+%% Expressions
+
+sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
+  | x              :: :: var
+  | Top            :: :: top
+  | i              :: :: lit
+  | \ x . ee       :: :: abs  {{ tex [[\]][[x]].\,[[ee]] }}
+  | ee1 ee2        :: :: app
+  | ee1 ,, ee2     :: :: merge
+  | \ X ** A . ee  :: :: tabs {{ tex \Lambda ( [[X]] [[**]] [[A]] ) .\,[[ee]] }}
+  | ee A           :: :: tapp
+  | ee : A         :: :: anno
+  | { l = ee }     :: :: rcd
+  | ee . l         :: :: proj
+  | [ee2 / x ] ee1 :: :: subst
+  | [ A / X ] ee   :: :: tsubst
+  | CC { ee }      :: :: appctx
+  | 1 ::  :: one   {{ tex 1  }}
+  | ( ee ) :: :: parens
+
+
+%% Value contexts
+
+GG {{ tex \Gamma }} :: 'sctx_'     ::=
+  | empty          ::   :: empty
+  | GG , x : A     ::   :: cons
+
+
+%% Type contexts
+
+DD {{ tex \Delta }} :: 'stctx'  ::=
+  | empty       :: ::  empty
+  | DD , X ** A :: :: cons
+
+
+%% Expression contexts
+
+CC {{ tex \mathcal{C} }} :: 'C_' ::=
+  | __            :: :: empty
+  | \ x . CC      :: :: lam {{ tex [[\]][[x]].\,[[CC]] }}
+  | \ X ** A . CC :: :: tabs {{ tex \Lambda (  [[X]]  [[**]] [[A]] ) .\, [[CC]] }}
+  | CC A          :: :: tapp
+  | CC ee         :: :: appL
+  | ee CC         :: :: appR
+  | CC ,, ee      :: :: mergeL
+  | ee ,, CC      :: :: mergeR
+  | CC : A        :: :: anno
+  | { l = CC }    :: :: rcd
+  | CC . l        :: :: proj
+  | ( CC )        :: :: paren {{ coq [[CC]] }}
+
+
+%% Modes
+
+dir :: '' ::=
+   | =>             ::   :: Inf
+   | <=             ::   :: Chk
+
+
+%% Type substitution
+
+p {{ tex \rho }} :: 'p_' ::=
+  | emp           :: :: empty   {{ tex \emptyset }}
+  | p [ X -> A  ] :: :: one   {{ tex [[p]] [  [[X]] \mapsto  [[A]] ] }}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% System F Syntax
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%% Types
+
+ty, T {{ tex \tau }} :: 'ty_' ::=
+  | nat            :: :: nat
+  | Unit           :: :: unit
+  | X              :: :: var
+  | T1 -> T2       :: :: arrow
+  | T1 * T2        :: :: prod
+  | { l : T }      :: :: rcd
+  | \ X . T        :: :: forall   {{ tex \forall [[X]].\,[[T]] }}
+  | ( T )          :: :: paren
+  | [ T2 / X ] T1  :: :: subst
+  | | A |          :: :: erase
+
+
+%% Terms
+
+exp, e, v :: 'exp_'     ::=
+  | x             :: :: var
+  | unit          :: :: unit
+  | i             :: :: lit
+  | \ x . e       :: :: abs {{ tex [[\]][[x]].\,[[e]] }}
+  | e1 e2         :: :: app
+  | < e1 , e2 >   :: :: pair
+  | c e           :: :: capp
+  | { l = e }     :: :: rcd
+  | e . l           :: :: proj
+  | \ X . e       :: :: tabs  {{ tex \Lambda [[X]].\,[[e]] }}
+  | e T           :: :: tapp
+  | [ e2 / x ] e1 :: :: subst
+  | [ T / X ] e   :: :: tsubst
+  | ( e )         :: :: paren
+  | cc { e }      :: :: appctx
+  | g ( e )       :: :: gsubst
+  | p ( e )       :: :: psubst
+  | 1 ::  :: one   {{ tex 1  }}
+
+
+
+%% Coercions
+
+co, c :: 'co_' ::=   {{ com coercion }}
+  | id          :: :: id
+  | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
+  | top         :: :: top
+  | c1 -> c2    :: :: arr
+  | < c1 , c2 > :: :: pair
+  | pp1          :: :: proj1
+  | pp2          :: :: proj2
+  | distArr     :: :: distArr
+  | distRcd l   :: :: distRcd {{ tex \mathsf{dist}_{ \{ [[l]] \} } }}
+  | { l : c }   :: :: rcd
+  | topArr      :: :: topArr
+  | < l >       :: :: topRcd {{ tex \mathsf{top}_{ \{ [[l]] \} } }}
+  | ( c )       :: :: paren
+  | < fs >1     :: :: tran1  {{ tex \llbracket [[fs]] \rrbracket_{\top} }}
+  | < fs >2     :: :: tran2  {{ tex \llbracket [[fs]] \rrbracket_{\&} }}
+
+
+
+%% Value contexts
+
+gg {{ tex \Psi }} :: 'ctx_'     ::=
+  | empty      ::   :: empty
+  | gg , x : T ::   :: cons
+  | | GG |     :: S :: trans
+
+
+%% Type contexts
+
+dd {{ tex \Phi }} :: 'tctx_'  ::=
+  | empty  ::   ::  empty
+  | dd , X ::   :: cons
+  | | DD | :: S :: trans
+
+
+%% Term contexts
+
+cc {{ tex \mathcal{D} }} :: 'cc_' ::=
+  | __         ::   :: empty
+  | \ x . cc   ::   :: lam {{ tex [[\]][[x]].\,[[cc]] }}
+  | \ X . cc   ::   :: tabs {{ tex \Lambda [[X]] .\, [[cc]] }}
+  | cc T       ::   :: tapp
+  | cc e       ::   :: appL
+  | e cc       ::   :: appR
+  | < cc , e > ::   :: pairL
+  | < e , cc > ::   :: pairR
+  | c cc       ::   :: co
+  | { l = cc } ::   :: rcd
+  | cc . l     ::   :: proj
+  | ( cc )     :: S :: paren {{ coq [[cc]] }}
+
+
+
+%% Value substitution
+
+g {{ tex \gamma}} :: 'g_' ::=
+  | emp          :: :: empty  {{ tex \emptyset }}
+  | g [ x -> v ] :: :: one  {{ tex [[g]] [  [[x]] \mapsto [[v]] ] }}
+
+
+%% Value substitution
+
+ls, fs {{ tex \mathcal{L} }} :: 'ls_' ::=
+  | []         :: :: empty
+  | ls , A     :: :: cons1
+  | A , ls     :: :: cons2
+  | ls , { l } :: :: con3
+  | { l } , ls :: :: cons4
+  | ( ls )     :: :: paren
+
+
+
+
+terminals :: 'terminals_' ::=
+    | ii      :: :: Arith      {{ tex i }}
+    | S       :: :: String      {{ tex \mathbb{S} }}
+    | BL      :: :: Bool       {{ tex \mathbb{B} }}
+    | \       :: :: lambda     {{ tex \lambda }}
+    | -->     :: :: red        {{ tex \longrightarrow }}
+    | -->>    :: :: red2    {{ tex \longrightarrow^{*} }}
+    | ->      :: :: arrow      {{ tex \rightarrow }}
+    | |-      :: :: turnstile  {{ tex \vdash }}
+    | pp1      :: :: proj1 {{ tex \pi_1 }}
+    | pp2      :: :: proj2 {{ tex \pi_2 }}
+    | <       :: :: lbr  {{ tex \langle }}
+    | >       :: :: rbr  {{ tex \rangle }}
+    | *       :: :: prod {{ tex \times }}
+    | dot     :: :: dot  {{ tex [ \cdot ] }}
+    | empty   :: :: empty {{ tex \bullet }}
+    | |-      :: :: dash  {{ tex \vdash }}
+    | elt     :: :: elt       {{ tex \in }}
+    | tri     :: :: tri       {{ tex \triangleright }}
+    | id      :: :: id  {{ tex \mathsf{id} }}
+    | Top     :: :: Top  {{ tex \top }}
+    | nat     :: :: nat  {{ tex \mathsf{Nat} }}
+    | char    :: :: char  {{ tex \mathsf{Char} }}
+    | ,,      :: :: Merge  {{ tex \,,,\, }}
+    | unit    :: :: unit  {{ tex \langle \rangle }}
+    | Unit    :: :: Unit  {{ tex \langle \rangle }}
+    | top     :: :: top  {{ tex \mathsf{top} }}
+    | topArr  :: :: topArr  {{ tex \mathsf{top}_{\rightarrow} }}
+    | distArr :: :: distArr  {{ tex \mathsf{dist}_{\rightarrow} }}
+    | &       :: :: And  {{ tex \, \& \, }}
+    | =>      :: :: Infer  {{ tex \Rightarrow }}
+    | <=      :: :: Chk  {{ tex \Leftarrow }}
+    | dir     :: :: dir {{ tex \Leftrightarrow }}
+    | **      :: :: Dis  {{ tex * }}
+    | ~~>     :: :: leads  {{ tex \rightsquigarrow }}
+    | in      :: :: in       {{ tex \in }}
+    | ~>      :: :: to       {{ tex \mapsto  }}
+    | __      :: :: hole    {{ tex [\cdot] }}
+    | ~=      :: :: ctxeq  {{ tex \backsimeq_{ctx} }}
+
+
+formula :: 'formula_' ::=
+  | judgement                ::   :: judgement
+  | mono t :: :: pred  {{ tex \mathsf{mono}\ [[t]] }}
+  | uniq GG                   ::   :: uniqGG {{ tex }}
+  | uniq dd                   ::   :: uniq1 {{ coq uniq [[dd]] }} {{ tex }}
+  | uniq DD                   ::   :: uniq2 {{ coq uniq [[DD]] }} {{ tex }}
+  | x : T in gg               ::   :: inG
+  | x : A in GG               ::   :: inGG
+  | x notin dom G            ::   :: notInGx {{ tex [[x]] \notin [[G]] }}
+  | x notin dom GG            ::   :: notInGGx {{ tex [[x]] \notin [[GG]] }}
+  | e -->> e'       :: :: multi_step
+  | l1 <> l2 :: :: label {{ tex [[l1]] \neq [[l2]] }}
+  | A <: B  :: :: sub
+  | GG  |- ee dir A :: :: inferChk
+  | GG |- A :: :: well
+  | cc : ( gg |- T ) ~~> ( gg' |- T' ) :: :: ctxt
+  | gg |- T :: :: hole
+  | gg1 ; gg2 |- e1 == e2 : T1 ; T2 :: :: logeq {{ tex [[gg1]] ; [[gg2]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[T1]] ; [[T2]] }}
+  | gg |- e1 == e2 : T :: :: logeq2 {{ tex [[gg]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[T]] }}
+  | gg |- e1 ~= e2 : T :: :: cxtx {{ tex [[gg]] [[|-]] \ctxeq{[[e1]]}{[[e2]]}{[[T]]} }}
+  | GG |- ee1 ~= ee2 : A :: :: cxtx2
+  | ( v1 , v2 ) in V ( T1 ; T2 ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[T1]]}{[[T2]]} }}
+  | ( e1 , e2 ) in E ( T1 ; T2 ) :: :: term {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[T1]]}{[[T2]]} }}
+  | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
+
+
+
+parsing
+  sty_arrow <= sty_and
+  sty_arrow right sty_arrow
+  ty_arrow <= ty_prod
+  ty_arrow right ty_arrow
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+JSubtyping :: '' ::=
+
+defn
+A <: B ~~> c :: :: sub :: S_ {{ tex [[A]] [[<:]] [[B]] \rulehl{[[~~>]] [[c]]} }}
+by
+
+
+---------------------- :: refl
+A <: A ~~> id
+
+
+A2 <: A3 ~~> c1
+A1 <: A2 ~~> c2
+----------------------- :: trans
+A1 <: A3 ~~> c1 o c2
+
+
+--------------- :: top
+A <: Top ~~> top
+
+
+--------------------------- :: topArr
+Top <: Top -> Top ~~> topArr
+
+
+------------------------------- :: topRcd
+Top <: { l : Top } ~~> < l >
+
+
+B1 <: A1 ~~> c1
+A2 <: B2 ~~> c2
+-------------------------------------- :: arr
+A1 -> A2 <: B1 -> B2 ~~> c1 -> c2
+
+
+A1 <: A2 ~~> c1
+A1 <: A3 ~~> c2
+---------------------------- :: and
+A1 <: A2 & A3 ~~> <c1, c2>
+
+
+------------------------- :: andl
+A1 & A2 <: A1 ~~> pp1
+
+
+----------------- :: andr
+A1 & A2 <: A2 ~~> pp2
+
+
+
+----------------------------------------------------- :: distArr
+(A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3 ~~> distArr
+
+
+
+A <: B ~~> c
+-------------------------------------------- :: rcd
+{ l : A } <: { l : B } ~~> { l : c }
+
+
+--------------------------------------------------- :: distRcd
+{ l : A } & { l : B } <: { l : A & B } ~~> distRcd l
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus algorithmic subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+JASubtype :: '' ::=
+
+defn
+fs |- A <: B ~~> c :: :: ASub :: A_
+{{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] [[~~>]] [[c]] }} by
+
+
+------------------------- :: nat
+[] |- nat <: nat ~~> id
+
+
+
+fs |- A <: nat ~~> c
+--------------------------------------------- :: rcdNat
+{ l } , fs |- { l : A } <: nat ~~> {l : c}
+
+
+
+fs , { l } |- A <: B ~~> c
+---------------------------- :: rcd
+fs |- A <: { l : B } ~~> c
+
+
+-------------------------- :: top
+fs |- A <: Top ~~> < fs >1 o top
+
+
+
+fs |- A <: B1 ~~> c1
+fs |- A <: B2 ~~> c2
+------------------------------------------------------- :: and
+fs |- A <: B1 & B2 ~~> < fs >2 o <c1 , c2>
+
+
+fs , B1 |- A <: B2 ~~> c
+---------------------------- :: arr
+fs |- A <: B1 -> B2 ~~> c
+
+
+fs |- A1 <: nat ~~> c
+---------------------------------- :: andN1
+fs |- A1 & A2 <: nat ~~> c o pp1
+
+
+fs |- A2 <: nat ~~> c
+---------------------------------- :: andN2
+fs |- A1 & A2 <: nat ~~> c o pp2
+
+
+
+[] |- A <: A1 ~~> c1
+fs |- A2 <: nat ~~> c2
+--------------------------------------- :: arrNat
+A, fs |- A1 -> A2 <: nat ~~> c1 -> c2
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus disjointness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+Disjoint :: '' ::=
+
+defn A ** B :: :: disjoint    :: 'D_'  by
+
+
+--------------- :: topL
+Top ** A
+
+
+------------------ :: topR
+A ** Top
+
+
+A2 ** B2
+--------------------- :: arr
+A1 -> A2 ** B1 -> B2
+
+
+A1 ** B
+A2 ** B
+--------------- :: andL
+A1 & A2 ** B
+
+
+A ** B1
+A ** B2
+--------------- :: andR
+A ** B1 & B2
+
+
+A ** B
+------------------------ :: rcdEq
+{ l : A } ** { l : B }
+
+
+
+l1 <> l2
+------------------------- :: rcdNeq
+{ l1 : A } ** { l2 : B }
+
+
+---------------------- :: axNatArr
+nat ** A1 -> A2
+
+
+---------------------- :: axArrNat
+A1 -> A2 ** nat
+
+
+
+---------------------- :: axNatRcd
+nat ** { l : A }
+
+
+---------------------- :: axRcdNat
+{ l : A } ** nat
+
+
+---------------------- :: axArrRcd
+A1 -> A2 ** { l : A }
+
+
+---------------------- :: axRcdArr
+{ l : A } ** A1 -> A2
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+JSTyping :: '' ::=
+
+defn GG  |- ee dir A ~~> e ::  :: has_type :: 'T_'
+{{ tex [[GG]] [[|-]] [[ee]] [[dir]] [[A]] \rulehl{[[~~>]] [[e]]} }}
+by
+
+uniq GG
+----------------- :: top
+GG |- Top => Top ~~> unit
+
+
+uniq GG
+----------------- :: lit
+GG |- i => nat ~~> i
+
+
+uniq GG
+x : A in GG
+--------------------- :: var
+GG |- x => A ~~> x
+
+
+GG |- ee1 => A1 -> A2 ~~> e1
+GG |- ee2 <= A1 ~~> e2
+------------------------------- :: app
+GG |- ee1 ee2 => A2 ~~> e1 e2
+
+
+GG |- ee1 => A1 ~~> e1
+GG |- ee2 => A2 ~~> e2
+A1 ** A2
+----------------------------------------------- :: merge
+GG |- ee1 ,, ee2 => A1 & A2 ~~> < e1 , e2 >
+
+
+
+GG |- ee => A ~~> e
+--------------------------------------------- :: rcd
+GG |- { l = ee } => { l : A } ~~> { l = e }
+
+
+GG |- ee => { l : A } ~~> e
+-------------------------------- :: proj
+GG |- ee.l => A ~~> e.l
+
+
+
+GG |- ee <= A ~~> e
+------------------------- :: anno
+GG |- ee : A => A ~~> e
+
+
+GG, x : A |- ee <= B ~~> e
+--------------------------------- :: abs
+GG |- \ x . ee <= A -> B ~~> \ x . e
+
+
+GG |- ee => B ~~> e
+B <: A ~~> c
+--------------------- :: sub
+GG |- ee <= A ~~> c e
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus context typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+
+JCTyping :: '' ::=
+
+defn CC : ( GG dir A ) ~> ( GG' dir' B ) ~~> cc ::  :: CTyp :: 'CTyp_' by
+
+
+
+--------------------------------------- :: empty1
+__ : (GG => A) ~> (GG => A) ~~> __
+
+
+----------------------------------------- :: empty2
+__ : (GG <= A) ~> (GG <= A) ~~> __
+
+
+
+CC : (GG => A) ~> (GG' => A1 -> A2) ~~> cc
+GG' |- ee2 <= A1 ~~> e
+----------------------------------------------- :: appL1
+CC ee2 : (GG => A) ~> (GG' => A2) ~~> cc e
+
+
+CC : (GG <= A) ~> (GG' => A1 -> A2) ~~> cc
+GG' |- ee2 <= A1 ~~> e
+----------------------------------------------- :: appL2
+CC ee2 : (GG <= A) ~> (GG' => A2) ~~> cc e
+
+
+GG' |- ee1 => A1 -> A2 ~~> e
+CC : (GG => A) ~> (GG' <= A1) ~~> cc
+-------------------------------------------- :: appR1
+ee1 CC : (GG => A) ~> (GG' => A2) ~~> e cc
+
+
+GG' |- ee1 => A1 -> A2 ~~> e
+CC : (GG <= A) ~> (GG' <= A1) ~~> cc
+----------------------------------------- :: appR2
+ee1 CC : (GG <= A) ~> (GG' => A2) ~~> e cc
+
+
+
+CC : (GG => A) ~> (GG' => A1) ~~> cc
+GG' |- ee2 => A2 ~~> e
+A1 ** A2
+---------------------------------------------------------- :: mergeL1
+CC ,, ee2 : (GG => A) ~> (GG' => A1 & A2) ~~> < cc , e >
+
+
+CC : (GG <= A) ~> (GG' => A1) ~~> cc
+GG' |- ee2 => A2 ~~> e
+A1 ** A2
+-------------------------------------------------------- :: mergeL2
+CC ,, ee2 : (GG <= A) ~> (GG' => A1 & A2) ~~> < cc , e >
+
+
+
+GG' |- ee1 => A1 ~~> e
+CC : (GG => A) ~> (GG' => A2) ~~> cc
+A1 ** A2
+------------------------------------------------------ :: mergeR1
+ee1 ,, CC : (GG => A) ~> (GG' => A1 & A2) ~~> < e , cc >
+
+
+GG' |- ee1 => A1 ~~> e
+CC : (GG <= A) ~> (GG' => A2) ~~> cc
+A1 ** A2
+------------------------------------------------------ :: mergeR2
+ee1 ,, CC : (GG <= A) ~> (GG' => A1 & A2) ~~> < e , cc >
+
+
+
+
+CC : (GG => A) ~> (GG' => B) ~~> cc
+---------------------------------------------------- :: rcd1
+{ l = CC } : (GG => A) ~> (GG' => { l : B }) ~~> {l = cc}
+
+
+CC : (GG <= A) ~> (GG' => B) ~~> cc
+---------------------------------------------------- :: rcd2
+{ l = CC } : (GG <= A) ~> (GG' => { l : B }) ~~> {l = cc}
+
+
+
+CC : (GG => A) ~> (GG' => { l : B }) ~~> cc
+-------------------------------------------- :: proj1
+CC.l : (GG => A) ~> (GG' => B) ~~> cc.l
+
+
+CC : (GG <= A) ~> (GG' => { l : B }) ~~> cc
+-------------------------------------------- :: proj2
+CC.l : (GG <= A) ~> (GG' => B) ~~> cc.l
+
+
+CC : (GG => B) ~> (GG' <= A) ~~> cc
+------------------------------------------ :: anno1
+CC : A : (GG => B) ~> (GG' => A) ~~> cc
+
+
+CC : (GG <= B) ~> (GG' <= A) ~~> cc
+---------------------------------------- :: anno2
+CC : A : (GG <= B) ~> (GG' => A) ~~> cc
+
+
+
+CC : (GG => A) ~> (GG', x : A1 <= A2) ~~> cc
+x notin dom GG'
+------------------------------------------------------- :: abs1
+\ x . CC : (GG => A) ~> (GG' <= A1 -> A2) ~~> \x . cc
+
+
+CC : (GG <= A) ~> (GG', x : A1 <= A2) ~~> cc
+x notin dom GG'
+------------------------------------------------------- :: abs2
+\ x . CC : (GG <= A) ~> (GG' <= A1 -> A2) ~~> \x . cc
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% coercion typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+
+JCoTyping :: '' ::=
+
+defn c |- T1 tri T2 ::  :: cotyp :: 'cotyp_' by
+
+
+----------------------- :: refl
+id |- T tri T
+
+
+
+c1 |- T2 tri T3
+c2 |- T1 tri T2
+--------------------- :: trans
+c1 o c2 |- T1 tri T3
+
+
+
+---------------------  :: top
+top |- T tri Unit
+
+
+
+------------------------------  :: topArr
+topArr |- Unit tri Unit -> Unit
+
+
+
+c1 |- T1' tri T1
+c2 |- T2 tri T2'
+------------------------------------- :: arr
+c1 -> c2 |- T1 -> T2 tri T1' -> T2'
+
+
+c1 |- T1 tri T2
+c2 |- T1 tri T3
+----------------------------- :: pair
+<c1, c2> |- T1 tri T2 * T3
+
+
+
+-------------------------------------------------- :: distArr
+distArr |- (T1 -> T2) * (T1 -> T3) tri T1 -> T2 * T3
+
+
+
+--------------------- :: projl
+pp1 |- T1 * T2 tri T1
+
+
+
+--------------------- :: projr
+pp2 |- T1 * T2 tri T2
+
+
+
+c |- T1 tri T2
+--------------------------------- :: rcd
+{l : c} |- {l : T1} tri {l : T2}
+
+
+----------------------------- :: topRcd
+< l > |- Unit tri { l : Unit }
+
+
+
+---------------------------------------------- :: distRcd
+distRcd l |- {l : T1} * {l : T2} tri {l : T1 * T2}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus target typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+
+JTyping :: '' ::=
+
+
+defn
+gg |- e : T ::   :: typing :: 'typ_' by
+
+
+----------------- :: unit
+gg |- unit : Unit
+
+
+----------------- :: lit
+gg |- i : nat
+
+
+x : T in gg
+------------ :: var
+gg |- x : T
+
+
+gg, x : T1 |- e : T2
+-------------------------- :: abs
+gg |- \x. e : T1 -> T2
+
+
+gg |- e1 : T1 -> T2
+gg |- e2 : T1
+------------------ :: app
+gg |- e1 e2 : T2
+
+
+gg |- e1 : T1
+gg |- e2 : T2
+------------------------------ :: pair
+gg |- <e1, e2> : T1 * T2
+
+
+
+gg |- e : T
+c |- T tri T'
+------------------- :: capp
+gg |- c e : T'
+
+
+gg |- e : T
+---------------------------------- :: rcd
+gg |- { l = e } : { l : T }
+
+
+gg |- e : { l : T }
+---------------------- :: proj
+gg |- e.l : T
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% target reduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+
+JEval :: '' ::=
+
+defn
+e --> e' :: :: step :: step_  by
+
+
+-------------------- :: id
+id v --> v
+
+
+---------------------------- :: trans
+(c1 o c2) v --> c1 (c2 v)
+
+
+------------------ :: top
+top v --> unit
+
+
+----------------------- :: topArr
+(topArr unit) unit --> unit
+
+
+
+------------------------------------------- :: arr
+((c1 -> c2) v1) v2 --> c2 (v1 (c1 v2))
+
+
+-------------------------------- :: pair
+<c1, c2> v --> <c1 v, c2 v>
+
+
+------------------------------------------------- :: distArr
+(distArr < v1 , v2 >) v3 --> < v1 v3, v2 v3 >
+
+
+---------------------------- :: projl
+pp1 <v1, v2> --> v1
+
+
+---------------------------- :: projr
+pp2 <v1, v2> --> v2
+
+
+-------------------------------- :: crcd
+{l : c} {l = v} --> { l = c v }
+
+
+
+----------------------------- :: topRcd
+< l > unit --> { l = unit }
+
+
+
+-------------------------------------------- :: distRcd
+distRcd l < {l = v1} , {l = v2} > --> {l = <v1 , v2>}
+
+
+
+----------------- :: projRcd
+{l = v}.l --> v
+
+
+-------------------------------------  :: beta
+(\ x . e) v -->  [ v / x ] e
+
+
+e1 --> e1'
+----------------------- :: app1
+e1 e2 --> e1' e2
+
+
+e2 --> e2'
+----------------------- :: app2
+v1 e2 --> v1 e2'
+
+
+e1 --> e1'
+----------------------- :: pair1
+<e1, e2> --> <e1', e2>
+
+
+e2 --> e2'
+----------------------- :: pair2
+<v1, e2> --> <v1, e2'>
+
+
+e --> e'
+---------------------- :: capp
+c e --> c e'
+
+
+e --> e'
+----------------------- :: rcd1
+{l = e} --> {l = e'}
+
+
+e --> e'
+----------------------- :: rcd2
+e.l --> e'.l

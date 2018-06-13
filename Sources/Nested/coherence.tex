@@ -43,10 +43,10 @@ same numeral $3$.
 we introduce the notion of \textit{expression contexts}. An expression context $[[cc]]$
 is a term with a single hole $[[__]]$ (possibly under some binders) in it. The
 syntax of \tname expression contexts can be found in \cref{fig:contexts}. The typing
-judgement for expression contexts has the form $[[cc : (G |- T) ~~> (G' |- T')]]$ where $([[G |- T]])$ indicates
+judgement for expression contexts has the form $[[cc : (gg |- T) ~~> (gg' |- T')]]$ where $([[gg |- T]])$ indicates
 the type of the hole. This judgement essentially says that plugging a well-typed
-term $[[G |- e : T]]$ into the context $[[cc]]$ gives another well-typed term
-$[[G' |- cc{e} : T']]$. We define a \textit{complete program} to mean any closed
+term $[[gg |- e : T]]$ into the context $[[cc]]$ gives another well-typed term
+$[[gg' |- cc{e} : T']]$. We define a \textit{complete program} to mean any closed
 term of type $[[nat]]$. The following two definitions capture the notion of
 \textit{contextual equivalence}.
 
@@ -55,8 +55,8 @@ term of type $[[nat]]$. The following two definitions capture the notion of
 \begin{tabular}{llll}\toprule
   \tname contexts & $[[cc]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . cc]] \mid [[cc e2]] \mid [[e1 cc]] \mid [[< cc, e2 >]] \mid [[< e1, cc >]] \mid [[c cc]] $ \\
   & & $\mid$ & $ [[ { l = cc }]] \mid [[ cc. l ]]$ \\
-  \name contexts & $[[C]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . C]] \mid [[C ee2]] \mid [[ee1 C]] \mid [[ee1 ,, C]] \mid [[C ,, ee2]] \mid [[C : A]] $ \\
-  & & $\mid$ & $ [[ { l = C } ]] \mid [[C.l]]$ \\ \bottomrule
+  \name contexts & $[[CC]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . CC]] \mid [[CC ee2]] \mid [[ee1 CC]] \mid [[ee1 ,, CC]] \mid [[CC ,, ee2]] \mid [[CC : A]] $ \\
+  & & $\mid$ & $ [[ { l = CC } ]] \mid [[CC.l]]$ \\ \bottomrule
 \end{tabular}
   \caption{Expression contexts of \name and \tname}
   \label{fig:contexts}
@@ -70,8 +70,8 @@ term of type $[[nat]]$. The following two definitions capture the notion of
 \begin{definition}[\tname Contextual Equivalence] \label{def:cxtx} \leavevmode
   \begin{center}
   \begin{tabular}{lll}
-    $[[G |- e1 ~= e2 : T]] $ & $\defeq $ & $[[G |- e1 : T]] \land [[G |- e2 : T]] \ \land $ \\
-                                 & & $\forall [[cc]].\ [[cc : (G |- T) ~~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
+    $[[gg |- e1 ~= e2 : T]] $ & $\defeq $ & $[[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land $ \\
+                                 & & $\forall [[cc]].\ [[cc : (gg |- T) ~~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
   \end{tabular}
   \end{center}
 \end{definition}
@@ -83,12 +83,12 @@ following example.
 
 
 \begin{example} \label{eg:2} It may be counter-intuitive that two \tname terms
-  $[[\x . p1 x]]$ and $[[\x . p2 x]]$ should also be considered equal. To see
+  $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ should also be considered equal. To see
   why, first note that they are both translations of the same \name expression:
   $[[(\x . x) : nat & nat -> nat]]$. What can we do with this lambda
   abstraction? We can apply it to $1 : [[nat & nat]]$ for example. In that case,
-  we get two translations $\app{[[(\x . p1 x)]]}{\pair{1}{1}}$ and $\app{[[(\x . p2 x)]]}{\pair{1}{1}}$,
-  which both reduce to the same numeral $1$. However, $[[\x . p1 x]]$ and $[[\x . p2 x]]$
+  we get two translations $\app{[[(\x . pp1 x)]]}{\pair{1}{1}}$ and $\app{[[(\x . pp2 x)]]}{\pair{1}{1}}$,
+  which both reduce to the same numeral $1$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$
   are definitely not equal according to Definition~\ref{def:cxtx}, as one can find a
   context $\app{[[__]]}{\pair{1}{2}}$ where the two terms reduce to two
   different numerals. The problem is that not every well-typed \tname term
@@ -105,14 +105,14 @@ whose syntax is shown in \cref{fig:contexts}. Due to the bidirectional
 nature of the type system, the typing judgement of $[[C]]$ features 4
 different forms:
 \begin{mathpar}
-  [[C : (GG => A) ~> (GG' => A') ~~> cc]] \and
-  [[C : (GG <= A) ~> (GG' => A') ~~> cc]] \and
-  [[C : (GG => A) ~> (GG' <= A') ~~> cc]] \and
-  [[C : (GG <= A) ~> (GG' <= A') ~~> cc]]
+  [[CC : (GG => A) ~> (GG' => A') ~~> cc]] \and
+  [[CC : (GG <= A) ~> (GG' => A') ~~> cc]] \and
+  [[CC : (GG => A) ~> (GG' <= A') ~~> cc]] \and
+  [[CC : (GG <= A) ~> (GG' <= A') ~~> cc]]
 \end{mathpar}
-We write $[[C : (GG <=> A) ~> (GG' <=>1 A') ~~> cc]]$ to abbreviate the above 4 different forms.
-Take $[[C : (GG => A) ~> (GG' => A') ~~> cc]]$ for example, it reads given a
-well-typed \name expression $[[GG |- ee => A]]$, we have $[[GG' |- C{ee} => A']]$. The judgement also generates a \tname context $[[cc]]$ such that $[[cc : (|GG| |- |A|) ~~> (|GG'| |- |A'|)]]$ holds by
+We write $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$ to abbreviate the above 4 different forms.
+Take $[[CC : (GG => A) ~> (GG' => A') ~~> cc]]$ for example, it reads given a
+well-typed \name expression $[[GG |- ee => A]]$, we have $[[GG' |- CC{ee} => A']]$. The judgement also generates a \tname context $[[cc]]$ such that $[[cc : (|GG| |- |A|) ~~> (|GG'| |- |A'|)]]$ holds by
 construction. The typing rules appear in the appendix. Now we are ready to
 refine Definition~\ref{def:cxtx}'s contextual equivalence to take into
 consideration both \name and \tname contexts.
@@ -122,7 +122,7 @@ consideration both \name and \tname contexts.
   \begin{center}
   \begin{tabular}{lll}
     $[[GG |- ee1 ~= ee2 : A]] $ & $\defeq $ & $\forall [[e1]], [[e2]], [[C]], [[cc]].\  [[GG |- ee1 => A ~~> e1]] \land [[GG |- ee2 => A ~~> e2]] \ \land $ \\
-                                 & & $[[C : (GG => A) ~> (empty => nat) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
+                                 & & $[[CC : (GG => A) ~> (empty => nat) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
   \end{tabular}
   \end{center}
 \end{definition}
@@ -130,7 +130,7 @@ consideration both \name and \tname contexts.
   For brevity we only consider expressions in the inference mode. Our Coq formalization is complete with two modes.
 \end{remark}
 \noindent Regarding Example~\ref{eg:2}, a possible \name context is $[[ __ 1 : (empty => nat & nat -> nat) ~> (empty => nat) ~~> __ <1 , 1>]]$.
-We can verify that both $[[\x . p1 x]]$ and $[[\x . p2 x]]$ produce $1$ in the context $[[__ <1 , 1>]]$.
+We can verify that both $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ produce $1$ in the context $[[__ <1 , 1>]]$.
 Of course we should consider all possible contexts to be certain they are truly equal. From now on, we
 use the symbol $\backsimeq_{ctx}$ to refer to contextual equivalence in
 Definition~\ref{def:cxtx2}. With Definition~\ref{def:cxtx2} we can formally state that \name is coherent
@@ -260,21 +260,21 @@ they evaluate to two values $[[v1]]$ and $[[v2]]$ that are related.
 The logical relations can be lifted to open terms in the usual way. First we give the
 semantic interpretation of typing contexts:
 \begin{definition}[Interpretation of Typing Contexts]
-  $(\gamma_1, \gamma_2) \in \ggR{[[G1]]}{[[G2]]}$ is defined as follows:
+  $(\gamma_1, \gamma_2) \in \ggR{[[gg1]]}{[[gg2]]}$ is defined as follows:
   \begin{mathpar}
     \ottaltinferrule{}{}{ }{(\emptyset, \emptyset) \in  \ggR{[[empty]]}{[[empty]]}} \and
-    \ottaltinferrule{}{}{ [[(v1, v2) in V (T1; T2)]]  \\ (\gamma_1,\gamma_2) \in \ggR{[[G1]]}{[[G2]]} \\ \mathsf{fresh}\, x }{(\gamma_1[x \mapsto v_1], \gamma_2[x \mapsto v_2]) \in \ggR{[[G1, x : T1]]}{[[G2 , x : T2]]}}
+    \ottaltinferrule{}{}{ [[(v1, v2) in V (T1; T2)]]  \\ (\gamma_1,\gamma_2) \in \ggR{[[gg1]]}{[[gg2]]} \\ \mathsf{fresh}\, x }{(\gamma_1[x \mapsto v_1], \gamma_2[x \mapsto v_2]) \in \ggR{[[gg1, x : T1]]}{[[gg2 , x : T2]]}}
   \end{mathpar}
 \end{definition}
 Two open terms are related if every pair of related closing substitutions
 makes them related:
 \begin{definition}[Logical equivalence]
-  Let $[[G1 |- e1 : T1]]$ and $[[G2 |- e2 : T2]]$.
+  Let $[[gg1 |- e1 : T1]]$ and $[[gg2 |- e2 : T2]]$.
   \[
-    [[G1 ; G2 |- e1 == e2 : T1 ; T2]] \defeq \forall \gamma_1, \gamma_2 . \  (\gamma_1, \gamma_2) \in \ggR{[[G1]]}{[[G2]]} \Longrightarrow (\app{\gamma_1}{[[e1]]}, \app{\gamma_2}{[[e2]]}) \in \eeR{[[T1]]}{[[T2]]}
+    [[gg1 ; gg2 |- e1 == e2 : T1 ; T2]] \defeq \forall \gamma_1, \gamma_2 . \  (\gamma_1, \gamma_2) \in \ggR{[[gg1]]}{[[gg2]]} \Longrightarrow (\app{\gamma_1}{[[e1]]}, \app{\gamma_2}{[[e2]]}) \in \eeR{[[T1]]}{[[T2]]}
   \]
 \end{definition}
-For succinctness, we write $[[G |- e1 == e2 : T]]$ to mean $[[G ; G |- e1 == e2 : T ; T]]$.
+For succinctness, we write $[[gg |- e1 == e2 : T]]$ to mean $[[gg ; gg |- e1 == e2 : T ; T]]$.
 
 
 \subsection{Establishing Coherence}
@@ -290,8 +290,8 @@ omitted. We show only one compatibility lemma that is specific to our relations:
   Suppose that $[[c |- T1 tri T2]]$,
   % The logical relation is preserved by coercion application.
   \begin{itemize}
-  \item If $[[G1 ; G2 |- e1 == e2 : T1 ; T0]]$ then $[[G1 ; G2 |- c e1 == e2 : T2 ; T0]]$.
-  \item If $[[G1 ; G2 |- e1 == e2 : T0 ; T1]]$ then $[[G1 ; G2 |- e1 == c e2 : T0 ; T2]]$.
+  \item If $[[gg1 ; gg2 |- e1 == e2 : T1 ; T0]]$ then $[[gg1 ; gg2 |- c e1 == e2 : T2 ; T0]]$.
+  \item If $[[gg1 ; gg2 |- e1 == e2 : T0 ; T1]]$ then $[[gg1 ; gg2 |- e1 == c e2 : T0 ; T2]]$.
   \end{itemize}
 \end{lemma}
 \begin{proof}
@@ -326,7 +326,7 @@ by the logical relation. To prove it, we require Theorem~\ref{thm:uniq}.
 \end{proof}
 \begin{remark}
   It is interesting to ask whether the Fundamental Property holds in the target language. That is,
-  if $[[G |- e : T]]$ then $[[G |- e == e : T]]$. Clearly this does not
+  if $[[gg |- e : T]]$ then $[[gg |- e == e : T]]$. Clearly this does not
   hold for every well-typed \tname term. However, as we have emphasized, we do
   not need to consider every \tname term. Our logical relation is carefully formulated
   so that the Fundamental Property holds in the source language.
@@ -336,7 +336,7 @@ by the logical relation. To prove it, we require Theorem~\ref{thm:uniq}.
 We show that logical equivalence is preserved by \name contexts:
 
 \begin{lemma}[Congruence] \label{lemma:cong}
- If $[[C : (GG <=> A) ~> (GG' <=>1 A') ~~> cc]]$, $[[GG |- ee1 <=> A ~~> e1]]$, $[[GG |- ee2 <=> A ~~> e2]]$
+ If $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$, $[[GG |- ee1 dir A ~~> e1]]$, $[[GG |- ee2 dir A ~~> e2]]$
  and $[[|GG| |- e1 == e2 : |A|]]$, then $[[|GG'| |- cc{e1} == cc{e2} : |A'|]]$.
 \end{lemma}
 \begin{proof}
@@ -359,7 +359,7 @@ Next up is the proof that logical relation is sound with respect to contextual e
   $[[   GG |- ee1 ~= ee2 : A ]]$.
 \end{theorem}
 \begin{proof}
-  From Definition~\ref{def:cxtx2}, we are given a context $[[  C : (GG => A) ~> (empty => nat) ~~> cc ]]$. By Lemma~\ref{lemma:cong}
+  From Definition~\ref{def:cxtx2}, we are given a context $[[  CC : (GG => A) ~> (empty => nat) ~~> cc ]]$. By Lemma~\ref{lemma:cong}
   we have $[[  empty |- cc{e1} == cc{e2} : nat  ]]$, thus $  \kleq{[[ cc{e1} ]]}{ [[cc{e2} ]]}    $ by Lemma~\ref{lemma:ade}.
 \end{proof}
 
@@ -402,7 +402,7 @@ states that coercions from the same types are ``coherent''.
 
 \begin{corollary}[Coercions Preserve Semantics]
   \label{lemma:coercion_same}
-  If $[[A <: B ~~> c1]]$ and $[[A <: B ~~> c2]]$, then $[[G |- \x . c1 x == \x . c2 x : | A | -> | B |]]$.
+  If $[[A <: B ~~> c1]]$ and $[[A <: B ~~> c2]]$, then $[[gg |- \x . c1 x == \x . c2 x : | A | -> | B |]]$.
 \end{corollary}
 
 

@@ -56,7 +56,7 @@ queue of types and labels. Definition~\ref{def:fs} converts a queue to a type:
     [[ (fs , {l}) -> A]] = [[fs -> {l : A}]]
   \end{mathpar}
 \end{definition}
-For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> CC]]$ abbreviates $ [[A -> B -> {l : CC}]]$.
+For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
 The basic idea of $[[fs |- A <: B ~~> c]]$ is to first perform a structural
 analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
@@ -185,7 +185,7 @@ $\U{[[A]]}$, of ``reflexive supertypes'' of $[[A]]$, as defined below:
   \U{[[nat]]} \defeq \{ [[nat]]  \} \and
   \U{[[{l : A}]]} \defeq \{ [[{l : B}]] \mid [[B]] \in \U{[[A]]}  \} \and
   \U{[[A & B]]} \defeq \U{[[A]]} \cup \U{[[B]]} \cup \{ [[A & B]] \} \and
-  \U{[[A -> B]]} \defeq \{ [[A -> CC]] \mid [[CC]] \in \U{[[B]]} \}
+  \U{[[A -> B]]} \defeq \{ [[A -> C]] \mid [[C]] \in \U{[[B]]} \}
 \end{mathpar}
 We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
 \begin{lemma} \label{lemma:set_refl}
@@ -196,7 +196,7 @@ We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
 \end{proof}
 
 \begin{lemma} \label{lemma:set_trans}
-  If $[[A]] \in \U{[[B]]}$ and $[[B]] \in \U{[[CC]]}$, then $[[A]] \in \U{[[CC]]}$.
+  If $[[A]] \in \U{[[B]]}$ and $[[B]] \in \U{[[C]]}$, then $[[A]] \in \U{[[C]]}$.
 \end{lemma}
 \begin{proof}
   By induction on the structure of $[[B]]$.

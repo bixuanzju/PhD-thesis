@@ -48,19 +48,16 @@
 % if present, will be initialized. DOIs and URLs will be preserved.
 
 \usepackage[%
-  autocite     = plain,
-  backend      = bibtex,
-  doi          = true,
-  url          = true,
-  giveninits   = true,
   hyperref     = true,
-  maxbibnames  = 99,
-  maxcitenames = 99,
+  natbib       = true,
   sortcites    = true,
+  maxbibnames  = 9,
+  maxcitenames = 2,
   style        = numeric,
   ]{biblatex}
 
-\input{bibliography-mimosis}
+% \input{bibliography-mimosis}
+% \bibliographystyle{ACM-Reference-Format}
 \bibliography{Thesis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,7 +101,7 @@
 \input{pl-theory.tex}
 
 % Ott includes
-\inputott{ott-nested}
+\inputott{ott-rules}
 \renewcommand\ottaltinferrule[4]{
   \inferrule*[narrower=0.7,lab=#1,#2]
     {#3}
@@ -135,7 +132,7 @@
   \include{Sources/Nested}
   \include{Sources/Polymorphism}
   \include{Sources/Traits}
-  \include{Sources/Category}
+  % \include{Sources/Category}
   \include{Sources/Related}
   \include{Sources/Conclusion}
 
