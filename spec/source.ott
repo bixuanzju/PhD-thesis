@@ -17,13 +17,13 @@ grammar
 
 %% Types
 
-AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}  :: 'AA_' ::=
+AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}, CT {{ tex \mathcal{C} }}  :: 'AA_' ::=
   | Top                           :: :: top
-  | Int                           :: :: int
+  | nat                           :: :: int
   | AA -> BB                      :: :: arr
   | AA & BB                       :: :: and
   | X                             :: :: tvar
-  | \ X ** AA  . BB              :: :: forall {{ tex \forall ( [[X]] [[**]] [[AA]] ) .\,[[BB]] }}
+  | \ X ** AA  . BB               :: :: forall {{ tex \forall ( [[X]] [[**]] [[AA]] ) .\,[[BB]] }}
   | { l : AA }                    :: :: rcd
   | Trait [ AA , BB ]             :: :: trait
   | Trait [ BB ]                  :: :: trait2
@@ -32,7 +32,7 @@ AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}  :: 'AA_' ::=
   | Bool                          :: :: bool
   | Char                          :: :: char
   | String                        :: :: string
-  | [ AA / a ] BB                 :: :: subst
+  | [ AA / X ] BB                 :: :: subst
 
 
 %% Programs
@@ -64,7 +64,7 @@ E {{ tex \mathcal{E} }}  :: 'E_' ::=
   | E AA                                                                    :: :: tapp
   | { l = E }                                                               :: :: rcd
   | E . l                                                                   :: :: proj
-  | letrec x : AA = E1 in E2                                                :: :: let
+  | letrec x : AA = E1 in E2                                                :: :: letrec
   | new [ AA ] ( </ Ei // i /> )                                            :: :: new
   | E : AA                                                                  :: :: anno
   | E -- { l : AA }                                                         :: :: rem
@@ -78,7 +78,7 @@ E {{ tex \mathcal{E} }}  :: 'E_' ::=
   | E1 /= E2                                                                :: :: neq
   | E1 < E2                                                                 :: :: lt
   | E1 > E2                                                                 :: :: gt
-  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \textasciicircum\, [[E2]] }}
+  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \rhd [[E2]] }}
   | { l1 = E1 , ... , ln = En }                                             :: :: rcd2
   | { l1 = E1 } ,, ... ,, { ln = En }                                       :: :: rcd3
   | ( E )                                                                   :: :: paren
@@ -89,8 +89,10 @@ E {{ tex \mathcal{E} }}  :: 'E_' ::=
 SG {{ tex \Gamma }} :: 'SG_' ::=
   | empty                                     :: :: empty
   | SG , x : AA                               :: :: cons1
-  | SG , X ** AA                              :: :: cons2
-  | SG , x1 : AA1 , .. , xn : AAn , self : BB :: :: cons3
+
+SD {{ tex \Delta }} :: 'SD_' ::=
+  | empty                                     :: :: empty
+  | SD , X ** AA                              :: :: cons2
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -115,6 +117,7 @@ sty, A, B, C, t :: 'sty_' ::=
   | N ::  :: n  {{ tex \mathsf{N} }}
   | S ::  :: s  {{ tex \mathsf{S} }}
   | string ::  :: ss   {{ tex \mathsf{String} }}
+  | | AA | :: :: trans
 
 
 %% Expressions
@@ -122,10 +125,12 @@ sty, A, B, C, t :: 'sty_' ::=
 sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | x              :: :: var
   | Top            :: :: top
-  | i              :: :: lit
+  | ii              :: :: lit
   | \ x . ee       :: :: abs  {{ tex [[\]][[x]].\,[[ee]] }}
+  | lam x . ee       :: :: abs2  {{ tex \\ \lambda  [[x]].\,[[ee]] }}
   | ee1 ee2        :: :: app
   | ee1 ,, ee2     :: :: merge
+  | ee1 ,, ... ,, een ::  :: merge2
   | \ X ** A . ee  :: :: tabs {{ tex \Lambda ( [[X]] [[**]] [[A]] ) .\,[[ee]] }}
   | ee A           :: :: tapp
   | ee : A         :: :: anno
@@ -134,6 +139,8 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | [ee2 / x ] ee1 :: :: subst
   | [ A / X ] ee   :: :: tsubst
   | CC { ee }      :: :: appctx
+  | letrec x : A = ee1 in ee2 :: :: letrec
+  | let x = ee1 in ee2  :: :: let
   | 1 ::  :: one   {{ tex 1  }}
   | ( ee ) :: :: parens
 
@@ -143,6 +150,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
 GG {{ tex \Gamma }} :: 'sctx_'     ::=
   | empty          ::   :: empty
   | GG , x : A     ::   :: cons
+  | | SG |   :: :: trans
 
 
 %% Type contexts
@@ -150,6 +158,7 @@ GG {{ tex \Gamma }} :: 'sctx_'     ::=
 DD {{ tex \Delta }} :: 'stctx'  ::=
   | empty       :: ::  empty
   | DD , X ** A :: :: cons
+  | | SD |   :: :: trans
 
 
 %% Expression contexts
@@ -210,7 +219,7 @@ ty, T {{ tex \tau }} :: 'ty_' ::=
 exp, e, v :: 'exp_'     ::=
   | x             :: :: var
   | unit          :: :: unit
-  | i             :: :: lit
+  | ii             :: :: lit
   | \ x . e       :: :: abs {{ tex [[\]][[x]].\,[[e]] }}
   | e1 e2         :: :: app
   | < e1 , e2 >   :: :: pair
@@ -236,6 +245,7 @@ co, c :: 'co_' ::=   {{ com coercion }}
   | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
   | top         :: :: top
   | c1 -> c2    :: :: arr
+  | \ c :: :: forall {{ tex \Lambda [[c]] }}
   | < c1 , c2 > :: :: pair
   | pp1          :: :: proj1
   | pp2          :: :: proj2
@@ -325,7 +335,7 @@ terminals :: 'terminals_' ::=
     | tri     :: :: tri       {{ tex \triangleright }}
     | id      :: :: id  {{ tex \mathsf{id} }}
     | Top     :: :: Top  {{ tex \top }}
-    | nat     :: :: nat  {{ tex \mathsf{Nat} }}
+    | nat     :: :: nat  {{ tex \mathsf{Int} }}
     | char    :: :: char  {{ tex \mathsf{Char} }}
     | ,,      :: :: Merge  {{ tex \,,,\, }}
     | unit    :: :: unit  {{ tex \langle \rangle }}
@@ -339,7 +349,6 @@ terminals :: 'terminals_' ::=
     | dir     :: :: dir {{ tex \Leftrightarrow }}
     | **      :: :: Dis  {{ tex * }}
     | ~~>     :: :: leads  {{ tex \rightsquigarrow }}
-    | in      :: :: in       {{ tex \in }}
     | ~>      :: :: to       {{ tex \mapsto  }}
     | __      :: :: hole    {{ tex [\cdot] }}
     | ~=      :: :: ctxeq  {{ tex \backsimeq_{ctx} }}
@@ -347,18 +356,24 @@ terminals :: 'terminals_' ::=
 
 formula :: 'formula_' ::=
   | judgement                ::   :: judgement
+  | | formula | :: :: multi       {{ tex \overline{[[formula]]}^{i \in 1 .. n}   }}
   | mono t :: :: pred  {{ tex \mathsf{mono}\ [[t]] }}
   | uniq GG                   ::   :: uniqGG {{ tex }}
-  | uniq dd                   ::   :: uniq1 {{ coq uniq [[dd]] }} {{ tex }}
-  | uniq DD                   ::   :: uniq2 {{ coq uniq [[DD]] }} {{ tex }}
+  | uniq dd                   ::   :: uniq1
+  | uniq DD                   ::   :: uniq2
   | x : T in gg               ::   :: inG
   | x : A in GG               ::   :: inGG
+  | x : AA in SD               ::   :: inGG2
+  | X ** A  in DD    ::   :: sbinds2
+  | X ** AA  in SD    ::   :: sbinds3
   | x notin dom G            ::   :: notInGx {{ tex [[x]] \notin [[G]] }}
   | x notin dom GG            ::   :: notInGGx {{ tex [[x]] \notin [[GG]] }}
   | e -->> e'       :: :: multi_step
   | l1 <> l2 :: :: label {{ tex [[l1]] \neq [[l2]] }}
   | A <: B  :: :: sub
   | GG  |- ee dir A :: :: inferChk
+  | DD ; GG  |- ee dir A :: :: inferChk2
+  | SD ; SG  |- E dir AA :: :: sedel
   | GG |- A :: :: well
   | cc : ( gg |- T ) ~~> ( gg' |- T' ) :: :: ctxt
   | gg |- T :: :: hole
@@ -604,7 +619,7 @@ GG |- Top => Top ~~> unit
 
 uniq GG
 ----------------- :: lit
-GG |- i => nat ~~> i
+GG |- ii => nat ~~> ii
 
 
 uniq GG
@@ -868,7 +883,7 @@ gg |- unit : Unit
 
 
 ----------------- :: lit
-gg |- i : nat
+gg |- ii : nat
 
 
 x : T in gg
@@ -1017,3 +1032,586 @@ e --> e'
 e --> e'
 ----------------------- :: rcd2
 e.l --> e'.l
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ type formation judgment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+Jswft :: '' ::=
+
+defn
+DD |- A :: :: swft :: 'swft_' by
+
+
+----------- :: top
+DD |- Top
+
+
+----------- :: nat
+DD |- nat
+
+
+X ** A  in DD
+----------------- :: var
+DD |- X
+
+
+DD |- A
+DD |- B
+--------------- :: arrow
+DD |- A -> B
+
+DD |- A
+DD , X ** A |- B
+-------------------- :: all
+DD |- \ X ** A . B
+
+
+DD |- A
+DD |- B
+--------------- :: and
+DD |- A & B
+
+
+DD |- A
+------------ :: rcd
+DD |- { l : A }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ environment formation judgment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+defns
+Jswf_env :: '' ::=
+
+defn
+DD ||- GG :: :: swfe :: 'swfe_'  {{ tex }} by
+
+
+--------- :: empty
+DD ||- empty
+
+
+DD ||- GG
+DD |- A
+---------------- :: var
+DD ||- GG , x : A
+
+
+defns
+Jswf_tenv :: '' ::=
+
+defn
+||- DD :: :: swfte :: 'swfte_'  {{ tex }} by
+
+
+--------- :: empty
+||- empty
+
+
+||- DD
+DD |- A
+---------------- :: var
+||- DD , X ** A
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+FSubtyping :: '' ::=
+
+defn
+DD |- A <: B ~~> c :: :: Fsub :: FS_ by
+
+
+DD |- A
+---------------------- :: refl
+DD |- A <: A ~~> id
+
+
+
+DD |- A2 <: A3 ~~> c1
+DD |- A1 <: A2 ~~> c2
+----------------------- :: trans
+DD |- A1 <: A3 ~~> c1 o c2
+
+
+
+DD |- A
+---------------------- :: top
+DD |- A <: Top ~~> top
+
+
+
+-------------------------------------- :: topArr
+DD |- Top <: Top -> Top ~~> topArr
+
+
+------------------------------- :: topRcd
+DD |- Top <: { l : Top } ~~> id
+
+
+
+DD |- B1 <: A1 ~~> c1
+DD |- A2 <: B2 ~~> c2
+------------------------------------- :: arr
+DD |- A1 -> A2 <: B1 -> B2 ~~> c1 -> c2
+
+
+DD |- A1 <: A2 ~~> c1
+DD |- A1 <: A3 ~~> c2
+---------------------------- :: and
+DD |- A1 <: A2 & A3 ~~> <c1, c2>
+
+
+DD |- A1
+DD |- A2
+------------------------- :: andl
+DD |- A1 & A2 <: A1 ~~> pp1
+
+
+DD |- A1
+DD |- A2
+----------------- :: andr
+DD |- A1 & A2 <: A2 ~~> pp2
+
+
+DD , X ** Top |- B1 <: B2 ~~> c
+DD |- A2 <: A1 ~~> c'
+------------------------------------------------ :: forall
+DD |- \ X ** A1 . B1 <: \ X ** A2 . B2  ~~> \ c
+
+
+
+DD |- A <: B ~~> c
+------------------------------- :: rcd
+DD |- { l : A } <: { l : B } ~~> c
+
+
+DD |- A1
+DD |- A2
+DD |- A3
+----------------------------------------------------- :: distArr
+DD |- (A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3 ~~> distArr
+
+
+DD |- A
+DD |- B
+--------------------------------------------------- :: distRcd
+DD |- { l : A } & { l : B } <: { l : A & B } ~~> id
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SEDEL type well-formedness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+JWF :: '' ::=
+
+defn SD |- AA :: :: WF :: 'WF_' by
+
+
+--------- :: top
+SD |- Top
+
+
+--------- :: int
+SD |- nat
+
+
+SD |- AA
+SD |- BB
+---------------- :: arrow
+SD |- AA -> BB
+
+
+SD |- AA
+------------- :: record
+SD |- {l : AA}
+
+
+X ** AA in SD
+-------------- :: var
+SD |- X
+
+
+SD |- AA
+SD |- BB
+SD |- AA ** BB
+---------------- :: and
+SD |- AA & BB
+
+
+SD |- AA
+SD , X ** AA |- BB
+-------------------------- :: forall
+SD |- \ X ** AA . BB
+
+
+SD |- AA
+SD |- BB
+---------------- :: trait
+SD |- Trait[AA,BB]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ disjointness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+FDisjoint :: '' ::=
+
+defn DD |- A ** B :: :: Fdisjoint    :: 'FD_'  {{ com Disjointness }} by
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SEDEL typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+FSTyping :: '' ::=
+
+defn DD ; GG  |- ee dir A ~~> e ::  :: Ftyp :: 'FT_'
+by
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SEDEL disjointness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+SDisjoint :: '' ::=
+
+defn SD |- AA ** BB :: :: Sdisjoint    :: 'SD_'  {{ com Disjointness }} by
+
+
+------------------- :: top
+SD |- Top ** AA
+
+
+------------------- :: topSym
+SD |- AA ** Top
+
+
+
+X ** AA in SD
+AA <: BB
+-------------------- :: var
+SD |- X ** BB
+
+
+X ** AA in SD
+AA <: BB
+-------------------- :: varSym
+SD |- BB ** X
+
+
+
+SD , X ** AA1 & AA2 |- BB1 ** BB2
+------------------------------------------------- :: forall
+SD |- \ X ** AA1 . BB1 ** \ X ** AA2 . BB2
+
+
+SD |- AA ** BB
+-------------------------- :: rec
+SD |- {l : AA} ** {l : BB}
+
+
+
+l1 <> l2
+-------------------------- :: recn
+SD |- {l1 : AA} ** {l2 : BB}
+
+
+SD |- AA2 ** BB2
+---------------------------- :: arrow
+SD |- AA1 -> AA2 ** BB1 -> BB2
+
+
+SD |- AA1 ** BB
+SD |- AA2 ** BB
+-------------------- :: andL
+SD |- AA1 & AA2 ** BB
+
+
+SD |- AA ** BB1
+SD |- AA ** BB2
+-------------------- :: andR
+SD |- AA ** BB1 & BB2
+
+
+AA **a BB
+-------------------- :: ax
+SD |- AA ** BB
+
+
+
+SD |- AA2 ** BB2
+--------------------------------- :: trait
+SD |- Trait[AA1, AA2] ** Trait[BB1, BB2]
+
+
+SD |- AA2 ** BB2
+--------------------------------- :: traitArr1
+SD |- Trait[AA1, AA2] ** BB1 -> BB2
+
+
+SD |- AA2 ** BB2
+--------------------------------- :: traitArr2
+SD |- AA1 -> AA2 ** Trait[BB1, BB2]
+
+
+
+defns
+DisAx :: '' ::=
+
+defn AA **a BB :: :: disAx :: 'Dax_'  {{ tex [[AA]] *_{ax} [[BB]] }}
+by
+
+
+
+BB **a AA
+---------- :: sym
+AA **a BB
+
+
+--------------------- :: intArr
+nat **a AA1 -> AA2
+
+
+------------------ :: intRec
+nat **a {l : AA}
+
+
+
+--------------------------------- :: intForall
+nat **a \ X ** BB1 . BB2
+
+
+--------------------------------- :: intTrait
+nat **a Trait[AA1,AA2]
+
+
+
+------------------------------------ :: arrForall
+AA1 -> AA2 **a \ X ** BB1. BB2
+
+
+
+--------------------- :: arrRec
+AA1 -> AA2 **a {l : BB}
+
+
+-------------------------------------- :: traitForall
+Trait[AA1,AA2] **a \ X ** BB1 . BB2
+
+
+------------------------- :: traitRec
+Trait[AA1,AA2] **a {l : BB}
+
+
+
+------------------------------------ :: forallRec
+\ X ** AA1 . AA2 **a {l : BB}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SEDEL subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+SSubtyping :: '' ::=
+
+defn
+AA <: BB :: :: Ssubtyping :: 'TS_' by
+
+---------- :: top
+AA <: Top
+
+
+AA1 <: AA2
+AA1 <: AA3
+----------------- :: andR
+AA1 <: AA2 & AA3
+
+
+-------------- :: int
+nat <: nat
+
+
+AA1 <: AA3
+-------------- :: andL1
+AA1 & AA2 <: AA3
+
+
+AA2 <: AA3
+-------------- :: andL2
+AA1 & AA2 <: AA3
+
+
+AA <: BB
+-------------------- :: rcd
+{l : AA} <: {l : BB}
+
+
+
+-------- :: var
+X <: X
+
+
+BB1 <: AA1
+AA2 <: BB2
+-------------------- :: arr
+AA1 -> AA2 <: BB1 -> BB2
+
+
+BB1 <: BB2
+AA2 <: AA1
+------------------------------------------------ :: forall
+\ X ** AA1. BB1 <: \ X ** AA2 . BB2
+
+
+BB1 <: AA1
+AA2 <: BB2
+--------------------------------- :: trait
+Trait[AA1, AA2] <: Trait[BB1, BB2]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SEDEL typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+SSTyping :: '' ::=
+
+defn SD ; SG  |- E dir AA ~~> ee ::  :: Styp :: 'ST_'
+by
+
+
+
+------------------------- :: top
+SD ; SG |- Top => Top ~~> Top
+
+
+------------------------- :: int
+SD ; SG |- ii => nat ~~> ii
+
+
+x : AA in SD
+------------------------- :: var
+SD ;SG |- x => AA ~~> x
+
+
+SD ; SG |- E <= AA ~~> ee
+--------------------------------- :: anno
+SD ; SG |- E : AA => AA ~~> ee : |AA|
+
+
+
+SD ; SG |- E1 => AA1 -> AA2 ~~> ee1
+SD ; SG |- E2 <= AA1 ~~> ee2
+-------------------------------------- :: app
+SD ; SG |- E1 E2 => AA2 ~~> ee1 ee2
+
+
+SD ; SG |- E => \ X ** BB1 . BB2 ~~> ee
+SD |- AA
+SD |- AA ** BB1
+------------------------------ :: tapp
+SD; SG |- E AA => [AA / X] BB2 ~~> ee |AA|
+
+
+SD ; SG |- E1 => AA ~~> ee1
+SD ; SG |- E2 => BB ~~> ee2
+SD |- AA ** BB
+---------------------------------- :: merge
+SD ; SG |- E1 ,, E2 => AA & BB ~~> ee1 ,, ee2
+
+
+SD ; SG |- E => AA ~~> ee
+------------------------------------------- :: rcd
+SD ; SG |- {l = E} => {l : AA} ~~> {l = ee}
+
+
+SD ; SG |- E => {l : AA} ~~> ee
+--------------------------- :: proj
+SD ; SG |- E.l => AA ~~> ee.l
+
+
+
+SD |- AA
+SD , X ** AA ; SG |- E => BB ~~> ee
+--------------------------------------------------------------------- :: tabs
+SD; SG |- \ X ** AA . E => \ X ** AA . BB ~~> \ X ** |AA| . ee
+
+
+SD ; SG, x : AA |- E1 <= AA ~~> ee1
+SD ; SG, x : AA |- E2 => BB ~~> ee2
+---------------------------------------------------------- :: letrec
+SD ; SG |- letrec x : AA = E1 in E2 => BB ~~> letrec x : |AA| = ee1 in ee2
+
+
+| SD ; SG |- Ei => Trait[AAi, BBi] ~~> eei |
+| AA <: AAi |
+SD |- BB1 & .. & BBn
+BB1 & .. & BBn <: AA
+----------------------------------------------------------------------------------------------------------------------- :: new
+SD ; SG |- new [ AA ] ( </ Ei // i IN 1..n /> ) => AA ~~> letrec self : |AA| = </ (eei self) // i IN 1..n />  in self
+
+
+| SD ; SG, self : BB |- Ei => Trait[BBi, CTi] ~~> eei |
+SD ; SG, self : BB |- { </ lj = Ej' // j IN 1..m /> } => CT ~~> ee
+| BB <: BBi |
+SD |- CT1 & .. & CTn & CT
+CT1 & .. & CTn & CT <: AA
+--------------------------------------------------------------------------------------------------------------- :: trait
+SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self  . ((</ (eei self) // i IN 1..n />)  ,, ee)
+
+
+
+SD ; SG |- E1 => Trait[AA, BB] ~~> ee1
+SD ; SG |- E2 <= AA ~~> ee2
+-------------------------- :: forward
+SD ; SG |- E1 ^ E2 => BB ~~> ee1 ee2
+
+
+
+| SD; SG, self : BB |- Ei => Trait[BBi, CTi] ~~> eei |
+SD ; SG, self : BB, super : CT1 & .. & CTn |- { </ lj = Ej' // j IN 1..m /> } => CT ~~> ee
+| BB <: BBi |
+SD |- CT1 & .. & CTn & CT
+CT1 & .. & CTn & CT <: AA
+--------------------------------------------------------------------------------------------------------------- :: traitSuper
+SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self . (let super = </ (eei self) // i IN 1..n /> in super ,, ee)
+
+
+
+SD |- AA
+SD ; SG , x : AA |- E <= BB ~~> ee
+-------------------------------------- :: abs
+SD ; SG |- \ x . E <= AA -> BB ~~> \x . ee
+
+
+
+SD ; SG |- E => AA ~~> ee
+AA <: BB
+SD |- BB
+-------------------------------- :: sub
+SD ; SG |- E <= BB ~~> ee

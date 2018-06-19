@@ -242,11 +242,6 @@ We omit the details of the proof of transitivity.
 
 With reflexivity and transitivity in position, we show the main theorem.
 
-\renewcommand\ottaltinferrule[4]{
-  \inferrule*[narrower=0.5,right=#1,#2]
-    {#3}
-    {#4}
-}
 \begin{theorem}[Completeness] \label{thm:complete}
   If $[[A <: B ~~> c]]$ then there exists $[[c']]$ such that $[[ [] |- A <: B ~~> c']]$.
 \end{theorem}
