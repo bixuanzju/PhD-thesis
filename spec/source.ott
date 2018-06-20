@@ -361,11 +361,11 @@ formula :: 'formula_' ::=
   | uniq GG                   ::   :: uniqGG {{ tex }}
   | uniq dd                   ::   :: uniq1
   | uniq DD                   ::   :: uniq2
-  | x : T in gg               ::   :: inG
-  | x : A in GG               ::   :: inGG
-  | x : AA in SD               ::   :: inGG2
-  | X ** A  in DD    ::   :: sbinds2
-  | X ** AA  in SD    ::   :: sbinds3
+  | x : T in gg               ::   :: inG {{ tex ( [[x]] : [[T]] ) \in [[gg]] }}
+  | x : A in GG               ::   :: inGG {{ tex ( [[x]] : [[A]] ) \in [[GG]] }}
+  | x : AA in SD               ::   :: inGG2 {{ tex ( [[x]] : [[AA]] ) \in [[SD]] }}
+  | X ** A  in DD    ::   :: sbinds2 {{ tex ( [[X]] [[**]] [[A]] ) \in [[DD]] }}
+  | X ** AA  in SD    ::   :: sbinds3 {{ tex ( [[X]] [[**]] [[AA]] ) \in [[SD]] }}
   | x notin dom G            ::   :: notInGx {{ tex [[x]] \notin [[G]] }}
   | x notin dom GG            ::   :: notInGGx {{ tex [[x]] \notin [[GG]] }}
   | e -->> e'       :: :: multi_step
@@ -1131,84 +1131,73 @@ defns
 FSubtyping :: '' ::=
 
 defn
-DD |- A <: B ~~> c :: :: Fsub :: FS_ by
+A <|: B ~~> c :: :: Fsub :: FS_ by
 
 
-DD |- A
 ---------------------- :: refl
-DD |- A <: A ~~> id
+A <|: A ~~> id
 
 
 
-DD |- A2 <: A3 ~~> c1
-DD |- A1 <: A2 ~~> c2
+A2 <|: A3 ~~> c1
+A1 <|: A2 ~~> c2
 ----------------------- :: trans
-DD |- A1 <: A3 ~~> c1 o c2
+A1 <|: A3 ~~> c1 o c2
 
 
 
-DD |- A
 ---------------------- :: top
-DD |- A <: Top ~~> top
+A <|: Top ~~> top
 
 
 
 -------------------------------------- :: topArr
-DD |- Top <: Top -> Top ~~> topArr
+Top <|: Top -> Top ~~> topArr
 
 
 ------------------------------- :: topRcd
-DD |- Top <: { l : Top } ~~> id
+Top <|: { l : Top } ~~> id
 
 
 
-DD |- B1 <: A1 ~~> c1
-DD |- A2 <: B2 ~~> c2
+B1 <|: A1 ~~> c1
+A2 <|: B2 ~~> c2
 ------------------------------------- :: arr
-DD |- A1 -> A2 <: B1 -> B2 ~~> c1 -> c2
+A1 -> A2 <|: B1 -> B2 ~~> c1 -> c2
 
 
-DD |- A1 <: A2 ~~> c1
-DD |- A1 <: A3 ~~> c2
+A1 <|: A2 ~~> c1
+A1 <|: A3 ~~> c2
 ---------------------------- :: and
-DD |- A1 <: A2 & A3 ~~> <c1, c2>
+A1 <|: A2 & A3 ~~> <c1, c2>
 
 
-DD |- A1
-DD |- A2
 ------------------------- :: andl
-DD |- A1 & A2 <: A1 ~~> pp1
+A1 & A2 <|: A1 ~~> pp1
 
 
-DD |- A1
-DD |- A2
 ----------------- :: andr
-DD |- A1 & A2 <: A2 ~~> pp2
+A1 & A2 <|: A2 ~~> pp2
 
 
-DD , X ** Top |- B1 <: B2 ~~> c
-DD |- A2 <: A1 ~~> c'
+B1 <|: B2 ~~> c
+A2 <: A1
 ------------------------------------------------ :: forall
-DD |- \ X ** A1 . B1 <: \ X ** A2 . B2  ~~> \ c
+\ X ** A1 . B1 <|: \ X ** A2 . B2  ~~> \ c
 
 
 
-DD |- A <: B ~~> c
+A <|: B ~~> c
 ------------------------------- :: rcd
-DD |- { l : A } <: { l : B } ~~> c
+{ l : A } <|: { l : B } ~~> c
 
 
-DD |- A1
-DD |- A2
-DD |- A3
 ----------------------------------------------------- :: distArr
-DD |- (A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3 ~~> distArr
+(A1 -> A2) & (A1 -> A3) <|: A1 -> A2 & A3 ~~> distArr
 
 
-DD |- A
-DD |- B
 --------------------------------------------------- :: distRcd
-DD |- { l : A } & { l : B } <: { l : A & B } ~~> id
+{ l : A } & { l : B } <|: { l : A & B } ~~> id
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
