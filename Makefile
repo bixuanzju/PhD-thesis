@@ -11,7 +11,7 @@ SCRIPT = script
 
 OTT_GEN = ott-rules.tex
 
-AUTOGEN = Sources/Traits/typesystem.mng Sources/Nested/typesystem.mng Sources/Nested/coherence.mng Sources/Nested/algorithm.mng
+AUTOGEN = Sources/Traits/typesystem.mng Sources/Nested/typesystem.mng Sources/Coherence/coherence_simple.mng Sources/Nested/algorithm.mng
 
 WARN_MSG = "%%% !!! WARNING: AUTO GENERATED. DO NOT MODIFY !!! %%%\n"
 
