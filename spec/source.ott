@@ -323,6 +323,7 @@ terminals :: 'terminals_' ::=
     | -->>    :: :: red2    {{ tex \longrightarrow^{*} }}
     | ->      :: :: arrow      {{ tex \rightarrow }}
     | |-      :: :: turnstile  {{ tex \vdash }}
+    | ||-      :: :: turnstile2  {{ tex \vdash }}
     | pp1      :: :: proj1 {{ tex \pi_1 }}
     | pp2      :: :: proj2 {{ tex \pi_2 }}
     | <       :: :: lbr  {{ tex \langle }}
@@ -352,6 +353,7 @@ terminals :: 'terminals_' ::=
     | ~>      :: :: to       {{ tex \mapsto  }}
     | __      :: :: hole    {{ tex [\cdot] }}
     | ~=      :: :: ctxeq  {{ tex \backsimeq_{ctx} }}
+    | <|:     :: :: sub {{ tex <: }}
 
 
 formula :: 'formula_' ::=
@@ -365,12 +367,14 @@ formula :: 'formula_' ::=
   | x : A in GG               ::   :: inGG {{ tex ( [[x]] : [[A]] ) \in [[GG]] }}
   | x : AA in SD               ::   :: inGG2 {{ tex ( [[x]] : [[AA]] ) \in [[SD]] }}
   | X ** A  in DD    ::   :: sbinds2 {{ tex ( [[X]] [[**]] [[A]] ) \in [[DD]] }}
+  | X in dd          ::   :: sbind4 {{ tex  [[X]]  \in [[dd]] }}
   | X ** AA  in SD    ::   :: sbinds3 {{ tex ( [[X]] [[**]] [[AA]] ) \in [[SD]] }}
   | x notin dom G            ::   :: notInGx {{ tex [[x]] \notin [[G]] }}
   | x notin dom GG            ::   :: notInGGx {{ tex [[x]] \notin [[GG]] }}
   | e -->> e'       :: :: multi_step
   | l1 <> l2 :: :: label {{ tex [[l1]] \neq [[l2]] }}
   | A <: B  :: :: sub
+  | A <|: B  :: :: sub2
   | GG  |- ee dir A :: :: inferChk
   | DD ; GG  |- ee dir A :: :: inferChk2
   | SD ; SG  |- E dir AA :: :: sedel
@@ -798,7 +802,7 @@ defns
 
 JCoTyping :: '' ::=
 
-defn c |- T1 tri T2 ::  :: cotyp :: 'cotyp_' by
+defn c |- T1 tri T2 ::  :: cotyp :: 'ct_' by
 
 
 ----------------------- :: refl
@@ -865,8 +869,150 @@ c |- T1 tri T2
 distRcd l |- {l : T1} * {l : T2} tri {l : T1 * T2}
 
 
+c |- T1 tri T2
+---------------------------------- :: forall
+\ c |- \ X . T1 tri \X . T2
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% NeColus target typing
+%% Target well-formedness of value contexts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+Jwf_env :: '' ::=
+
+defn
+dd |- gg :: :: wfe :: 'wfe_' by
+
+
+
+--------- :: empty
+dd |- empty
+
+
+dd |- T
+dd |- gg
+---------------- :: var
+dd |- gg , x : T
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Target well-formedness of types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+Jwft :: '' ::=
+
+defn
+dd |- T :: :: wft :: 'wft_' by
+
+
+
+----------- :: unit
+dd |- Unit
+
+
+----------- :: int
+dd |- nat
+
+
+X in dd
+----------------- :: var
+dd |- X
+
+
+dd |- T1
+dd |- T2
+--------------- :: arrow
+dd |- T1 -> T2
+
+
+dd |- T1
+dd |- T2
+--------------- :: prod
+dd |- T1 * T2
+
+
+
+dd, X |- T2
+-------------------- :: all
+dd |- \ X . T2
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fco typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+Jtyping :: '' ::=
+
+defn
+dd ; gg |- e : T :: :: typ :: 'Ft_' by
+
+
+dd |- gg
+------------------ :: unit
+dd ; gg |- unit : Unit
+
+
+dd |- gg
+------------- :: int
+dd ; gg |- ii : nat
+
+
+
+dd |- gg
+x : T in gg
+------------------ :: var
+dd ; gg |- x : T
+
+
+
+
+dd ; gg , x : T1 |- e : T2
+dd |- T1
+--------------------------- :: abs
+dd ; gg |- \x . e : T1 -> T2
+
+
+
+
+dd ; gg |- e1 : T1 -> T2
+dd ; gg |- e2 : T1
+--------------------- :: app
+dd ; gg |- e1 e2 : T2
+
+
+dd ; gg |- e1 : T1
+dd ; gg |- e2 : T2
+-------------------------- :: pair
+dd ; gg |- <e1,  e2> : T1 * T2
+
+
+dd , X ; gg |- e : T
+dd |- gg
+-------------------------- :: tabs
+dd ; gg |- \X . e : \X. T
+
+
+
+dd ; gg |- e : \X .T'
+dd |- T
+--------------------------- :: tapp
+dd ; gg |- e T : [ T / X ] T'
+
+
+dd ; gg |- e : T
+c |- T tri T'
+dd |- T'
+-------------------- :: capp
+dd ; gg |- c e : T'
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NeColus Target typing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 defns
@@ -964,6 +1110,11 @@ top v --> unit
 <c1, c2> v --> <c1 v, c2 v>
 
 
+--------------------------- :: forall
+(\ c v) T --> c (v T)
+
+
+
 ------------------------------------------------- :: distArr
 (distArr < v1 , v2 >) v3 --> < v1 v3, v2 v3 >
 
@@ -1035,6 +1186,22 @@ e.l --> e'.l
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fi+ type formation judgment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1051,7 +1218,7 @@ DD |- A :: :: swft :: 'swft_' by
 DD |- Top
 
 
------------ :: nat
+----------- :: int
 DD |- nat
 
 
@@ -1092,7 +1259,7 @@ defns
 Jswf_env :: '' ::=
 
 defn
-DD ||- GG :: :: swfe :: 'swfe_'  {{ tex }} by
+DD ||- GG :: :: swfe :: 'swfe_'  by
 
 
 --------- :: empty
@@ -1109,7 +1276,7 @@ defns
 Jswf_tenv :: '' ::=
 
 defn
-||- DD :: :: swfte :: 'swfte_'  {{ tex }} by
+||- DD :: :: swfte :: 'swfte_'  by
 
 
 --------- :: empty
@@ -1201,6 +1368,224 @@ A <|: B ~~> c
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ disjointness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+FDisjoint :: '' ::=
+
+defn DD |- A ** B :: :: Fdisjoint    :: 'FD_'  {{ com Disjointness }} by
+
+
+DD |- A
+--------------- :: topL
+DD |- Top ** A
+
+
+DD |- A
+------------------ :: topR
+DD |- A ** Top
+
+
+DD |- A2 ** B2
+DD |- A1
+DD |- B1
+--------------------- :: arr
+DD |- A1 -> A2 ** B1 -> B2
+
+
+DD |- A1 ** B
+DD |- A2 ** B
+--------------- :: andL
+DD |- A1 & A2 ** B
+
+
+DD |- A ** B1
+DD |- A ** B2
+--------------- :: andR
+DD |- A ** B1 & B2
+
+
+DD |- A ** B
+------------------------ :: rcdEq
+DD |- { l : A } ** { l : B }
+
+
+l1 <> l2
+DD |- A
+DD |- B
+------------------------- :: rcdNeq
+DD |- { l1 : A } ** { l2 : B }
+
+
+X ** A in DD
+A <|: B
+-------------------------- :: tvarL
+DD |- X ** B
+
+
+X ** A in DD
+A <|: B
+-------------------------- :: tvarR
+DD |- B ** X
+
+
+DD , X ** A1 & A2 |- B1 ** B2
+DD |- A1
+DD |- A2
+------------------------------------------- :: forall
+DD |- \ X ** A1 . B1 ** \ X ** A2 . B2
+
+
+A **a B
+-------------------- :: ax
+DD |- A ** B
+
+
+defns
+FDisAx :: '' ::=
+
+defn A **a B :: :: FdisAx :: 'FDax_'  {{ tex [[A]] *_{ax} [[B]] }}
+by
+
+
+
+B **a A
+---------- :: sym
+A **a B
+
+
+--------------------- :: intArr
+nat **a A1 -> A2
+
+
+------------------ :: intRcd
+nat **a {l : A}
+
+
+
+--------------------------------- :: intAll
+nat **a \ X ** B1 . B2
+
+
+
+------------------------------------ :: arrAll
+A1 -> A2 **a \ X ** B1. B2
+
+
+
+--------------------- :: arrRcd
+A1 -> A2 **a {l : B}
+
+
+------------------------------------ :: allRcd
+\ X ** A1 . A2 **a {l : B}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+FSTyping :: '' ::=
+
+defn DD ; GG  |- ee dir A ~~> e ::  :: Ftyp :: 'FT_' by
+
+||- DD
+DD ||- GG
+---------------------------- :: top
+DD ; GG |- Top => Top ~~> unit
+
+
+
+||- DD
+DD ||- GG
+-------------------------- :: nat
+DD ; GG |- ii => nat ~~> ii
+
+
+||- DD
+DD ||- GG
+x : A in GG
+--------------------- :: var
+DD ; GG |- x => A ~~> x
+
+
+DD ; GG |- ee1 => A1 -> A2 ~~> e1
+DD ; GG |- ee2 <= A1 ~~> e2
+------------------------------- :: app
+DD ; GG |- ee1 ee2 => A2 ~~> e1 e2
+
+
+
+DD ; GG |- ee1 => A1 ~~> e1
+DD ; GG |- ee2 => A2 ~~> e2
+DD |- A1 ** A2
+----------------------------------------------- :: merge
+DD ; GG |- ee1 ,, ee2 => A1 & A2 ~~> < e1 , e2 >
+
+
+DD ; GG |- ee <= A ~~> e
+------------------------- :: anno
+DD ; GG |- ee : A => A ~~> e
+
+
+DD |- A
+DD , X ** A ; GG |- ee => B ~~> e
+DD ||- GG
+----------------------------------------------- :: tabs
+DD ; GG |- \ X ** A . ee => \ X ** A . B ~~> \ X . e
+
+
+
+DD ; GG |- ee => \ X ** A . B ~~> e
+DD |- t
+DD |- t ** A
+-------------------------------------------- :: tapp
+DD ; GG |- ee t => [ t / X ] B  ~~>  e | t |
+
+
+
+DD ; GG |- ee => A ~~> e
+--------------------------------- :: rcd
+DD ; GG |- {l = ee} => {l : A} ~~> e
+
+
+
+DD ; GG |- ee => {l : A} ~~> e
+------------------------------- :: proj
+DD ; GG |- ee.l => A ~~> e
+
+
+DD |- A
+DD ; GG, x : A |- ee <= B ~~> e
+------------------------------------------- :: abs
+DD ; GG |- \x . ee <= A -> B ~~> \x . e
+
+
+DD ; GG |- ee => B ~~> e
+DD |- A
+B <|: A ~~> c
+--------------------- :: sub
+DD ; GG |- ee <= A ~~> c e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SEDEL type well-formedness
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1251,29 +1636,6 @@ SD |- AA
 SD |- BB
 ---------------- :: trait
 SD |- Trait[AA,BB]
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Fi+ disjointness
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-defns
-FDisjoint :: '' ::=
-
-defn DD |- A ** B :: :: Fdisjoint    :: 'FD_'  {{ com Disjointness }} by
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% SEDEL typing
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-defns
-FSTyping :: '' ::=
-
-defn DD ; GG  |- ee dir A ~~> e ::  :: Ftyp :: 'FT_'
-by
 
 
 

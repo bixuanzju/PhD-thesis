@@ -1,0 +1,36 @@
+
+\section{Elaboration and Type Safety}
+
+
+
+
+\begin{figure}[t]
+  \centering
+\begin{tabular}{llll} \toprule
+  Types & $[[T]]$ & $\Coloneqq$ & $[[nat]] \mid [[Unit]] \mid [[T1 -> T2]]  \mid [[T1 * T2]] \mid [[X]] \mid [[\ X . T]]$\\
+  Expressions & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[< e1 , e2>]] \mid [[\X . e]] \mid [[ e T ]] \mid [[c e]]$ \\
+  Coercions & $[[c]]$ & $\Coloneqq$ & $[[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[c1 -> c2]] \mid [[< c1 , c2 >]] \mid [[pp1]] \mid [[pp2]] \mid [[\ c]]$ \\
+  & & $\mid$ & $ [[distArr]] \mid [[topArr]] $ \\
+  Values & $[[v]]$ & $\Coloneqq$ & $[[i]] \mid [[unit]] \mid [[\x . e]] \mid [[< v1 , v2>]] \mid [[\X . e]] \mid [[ (c1 -> c2) v ]] \mid [[\c v]]  $ \\
+  & & $\mid$ & $ [[distArr v]] \mid [[topArr v]] $ \\
+  Value Contexts & $[[gg]]$ & $\Coloneqq$ &  $[[empty]] \mid [[gg , x : T]] $ \\
+  Type Contexts & $[[dd]]$ & $\Coloneqq$ &  $[[empty]] \mid [[dd , X ]] $ \\ \bottomrule
+  % Expression Contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid [[\ X . cc]] \mid [[ cc T  ]] \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $
+\end{tabular}
+\caption{Syntax of \tnamee}
+\label{fig:syntax:fco}
+\end{figure}
+
+
+The syntax is shown in \cref{fig:syntax:fco}.
+
+
+\drules[ct]{$[[ c |- T1 tri T2  ]]$}{Coercion typing}{refl,trans,top,arr,pair,projl,projr,forall,topArr, distArr}
+
+\drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value contexts}{empty, var}
+
+\drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
+
+\drules[step]{$[[ e --> e' ]]$}{Coercion reduction}{id, trans, top, arr, pair, topArr, distArr, projl, projr, forall}
+
+\drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Typing}{unit, int, var, abs, app, tabs, tapp, pair, capp}
