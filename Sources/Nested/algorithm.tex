@@ -174,29 +174,29 @@ The proof of soundness is straightforward.
 \paragraph{Completeness of the Algorithm.}
 
 
-\newcommand{\U}[1]{\mathcal{U}(#1)}
+\newcommand{\UU}[1]{\mathcal{U}(#1)}
 
 Completeness, however, is much harder. The reason is that, due to the use of
 $[[fs]]$, reflexivity and transitivity are not entirely obvious. We need to
 strengthen the induction hypothesis by introducing the notion of a set,
-$\U{[[A]]}$, of ``reflexive supertypes'' of $[[A]]$, as defined below:
+$\UU{[[A]]}$, of ``reflexive supertypes'' of $[[A]]$, as defined below:
 \begin{mathpar}
-  \U{[[Top]]} \defeq \{ [[Top]]  \} \and
-  \U{[[nat]]} \defeq \{ [[nat]]  \} \and
-  \U{[[{l : A}]]} \defeq \{ [[{l : B}]] \mid [[B]] \in \U{[[A]]}  \} \and
-  \U{[[A & B]]} \defeq \U{[[A]]} \cup \U{[[B]]} \cup \{ [[A & B]] \} \and
-  \U{[[A -> B]]} \defeq \{ [[A -> C]] \mid [[C]] \in \U{[[B]]} \}
+  \UU{[[Top]]} \defeq \{ [[Top]]  \} \and
+  \UU{[[nat]]} \defeq \{ [[nat]]  \} \and
+  \UU{[[{l : A}]]} \defeq \{ [[{l : B}]] \mid [[B]] \in \UU{[[A]]}  \} \and
+  \UU{[[A & B]]} \defeq \UU{[[A]]} \cup \UU{[[B]]} \cup \{ [[A & B]] \} \and
+  \UU{[[A -> B]]} \defeq \{ [[A -> C]] \mid [[C]] \in \UU{[[B]]} \}
 \end{mathpar}
-We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
+We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 \begin{lemma} \label{lemma:set_refl}
-  $[[A]] \in \U{[[A]]}$
+  $[[A]] \in \UU{[[A]]}$
 \end{lemma}
 \begin{proof}
   By induction on the structure of $[[A]]$.
 \end{proof}
 
 \begin{lemma} \label{lemma:set_trans}
-  If $[[A]] \in \U{[[B]]}$ and $[[B]] \in \U{[[C]]}$, then $[[A]] \in \U{[[C]]}$.
+  If $[[A]] \in \UU{[[B]]}$ and $[[B]] \in \UU{[[C]]}$, then $[[A]] \in \UU{[[C]]}$.
 \end{lemma}
 \begin{proof}
   By induction on the structure of $[[B]]$.
@@ -211,7 +211,7 @@ We show two lemmas about $\U{[[A]]}$ that are crucial in the subsequent proofs.
 % Next we show the following lemma from which reflexivity (Lemma~\ref{lemma:refl})
 
 \begin{lemma} \label{lemma:refl0}
-  If $[[fs -> B]] \in \U{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
+  If $[[fs -> B]] \in \UU{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
 \end{lemma}
 \begin{proof}
   By induction on $\mathsf{size}([[A]]) + \mathsf{size}([[B]]) + \mathsf{size}([[fs]])$.

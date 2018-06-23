@@ -37,6 +37,12 @@
   urlcolor   = RoyalBlue,
   ]{hyperref}
 
+\usepackage{url}
+\usepackage{nameref}
+\usepackage[capitalise]{cleveref}
+
+
+
 \usepackage{bookmark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,13 +70,13 @@
 % Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \ifxetexorluatex
-%   \setmainfont{Minion Pro}
-% \else
-%   \usepackage[lf]{ebgaramond}
-%   \usepackage[oldstyle,scale=0.7]{sourcecodepro}
-%   \singlespacing
-% \fi
+\ifxetexorluatex
+  \setmainfont{Minion Pro}
+\else
+  \usepackage[lf]{ebgaramond}
+  \usepackage[oldstyle,scale=0.7]{sourcecodepro}
+  \singlespacing
+\fi
 
 \renewcommand{\th}{\textsuperscript{\textup{th}}\xspace}
 
@@ -94,7 +100,7 @@
 \makeglossaries
 
 % 12pt, please
-\KOMAoptions{fontsize=11pt}
+% \KOMAoptions{fontsize=12pt}
 
 
 \input{packages.tex}
@@ -108,22 +114,105 @@
     {#4}
 }
 
+%%----------------------------------------------------------------------------%%
+%%    Environment for Declaration                                             %%
+%%----------------------------------------------------------------------------%%
+
+
+\makeatletter
+\newcommand{\makedeclaration}
+{
+\chapter*{Declaration}
+% \addcontentsline{toc}{chapter}{Declaration}
+\noindent I declare that this thesis represents my own work, except
+where due acknowledgement is made, and that it has not been
+previously included in a thesis, dissertation or report submitted
+to this University or to any other institution for a degree,
+diploma or other qualifications.
+\vspace*{1.5in}
+
+\noindent%
+\begin{tabular}{@{}l@{}}
+\dotfill \\
+\@author\hspace*{3cm}\\
+\@date\\
+\end{tabular}
+}
+
+\makeatother
+
+%%----------------------------------------------------------------------------%%
+%%    Environment for Acknowledgments                                         %%
+%%----------------------------------------------------------------------------%%
+
+\makeatletter
+\newcommand{\makeAck}
+{
+\chapter*{Acknowledgments}
+% \addcontentsline{toc}{chapter}{Acknowledgements}
+\input{acknowledgement}
+}
+\makeatother
+
+
+%%----------------------------------------------------------------------------%%
+%%    Environment for Title Page                                              %%
+%%----------------------------------------------------------------------------%%
+
+\makeatletter
+\renewcommand{\maketitle}
+{%
+  \begin{titlepage}
+    \renewcommand{\baselinestretch}{1}
+    \begin{center}
+      \vspace*{\stretch{3}}
+      {\LARGE\@title\par}
+      \vspace*{1cm}
+      {\large\textit{by}\par}
+      \vspace*{1cm}
+      {\Large\@author\par}
+      \vspace*{\stretch{5}}
+      {{\includegraphics[width=30mm]{figures/hku}} \par}
+      {\hbox{}\par}
+      \vspace*{\stretch{5}}
+      {
+      	\textsl{(Temporary Binding for Examination Purposes)} \\
+      	\vspace*{3cm}
+      	{\normalsize
+      	A thesis submitted in partial fulfillment of the requirements for \\
+        the degree of Doctor of Philosophy \\
+        at The University of Hong Kong \\
+        \par
+        }
+      }
+      \vspace*{\stretch{1}}
+      {\large\@date\par}
+      \vspace*{\stretch{1}}
+    \end{center}
+  \end{titlepage}
+} \makeatother
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Disjoint Intersection Types:}
-\subtitle{Theory and Practice}
+\title{Disjoint Intersection Types: Theory and Practice}
 \author{Xuan Bi}
 
 \begin{document}
 
 \frontmatter
-  \include{Sources/Title}
+  \maketitle
+  % \include{Sources/Title}
   \include{Sources/Abstract}
 
+  \makedeclaration
+  \makeAck
   \tableofcontents
+  \listoffigures
+  \listoftables
 
 \mainmatter
 

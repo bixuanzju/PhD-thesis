@@ -17,7 +17,6 @@
 *.ind
 *.log
 *.out
-*.pdf
 *.ps
 *.sav
 *.swp
@@ -43,3 +42,7 @@ Figures/External/
 /ott-traits.tex
 *.bcf
 /ott-rules.tex
+/Thesis.lof
+/Thesis.lot
+/Thesis.pdf
+/diagram-eps-converted-to.pdf

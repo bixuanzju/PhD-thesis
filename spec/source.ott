@@ -180,7 +180,7 @@ CC {{ tex \mathcal{C} }} :: 'C_' ::=
 
 %% Modes
 
-dir :: '' ::=
+dir {{ tex \Leftrightarrow }} :: '' ::=
    | =>             ::   :: Inf
    | <=             ::   :: Chk
 
