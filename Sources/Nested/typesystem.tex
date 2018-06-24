@@ -2,7 +2,7 @@
 \newcommand{\rulehl}[2][gray!40]{%
   \colorbox{#1}{$\displaystyle#2$}}
 
-\section{\name: Syntax and Semantics}
+\section{Syntax and Semantics}
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \name. Compared
@@ -210,7 +210,7 @@ specific form of coercion.
 The typing of \tname has the form $[[gg |- e : T]]$, which is entirely standard. Only the typing of coercion
 applications, shown below, deserves attention:
 \begin{mathpar}
-\drule{typ-capp}
+\drule{t-capp}
 \end{mathpar}
 Here the judgement $[[c |- T1 tri T2]]$ expresses the typing of coercions, which
 are essentially functions from $[[T1]]$ to $[[T2]]$. Their typing
@@ -246,7 +246,7 @@ We show that \tname is type safe:
 
 \begin{figure}[t]
   \centering
-\drules[step]{$[[e --> e']]$}{Coercion reduction}{id, trans, top, topArr, topRcd, pair, arr, distArr, projl, projr, crcd, distRcd}
+\drules[s]{$[[e --> e']]$}{Coercion reduction}{id, trans, top, topArr, topRcd, pair, arr, distArr, projl, projr, crcd, distRcd}
   \caption{Coercion reduction}
   \label{fig:coercion_red}
 \end{figure}
