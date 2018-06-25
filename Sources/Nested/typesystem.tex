@@ -300,7 +300,7 @@ to \tname terms.
 Below we identify major differences between \namee and \oname, which, when
 taken together, yield a simpler and more elegant system. The differences may seem
 superficial, but they have far-reaching impacts on the semantics, especially on
-coherence, our major topic in \cref{sec:cohe}.
+coherence, our major topic in \cref{chap:coherence:simple}.
 
 \paragraph{No Ordinary Types.}
 
@@ -327,7 +327,7 @@ There is a notable difference from the coercive subtyping of \oname. Because of
 their syntactic proof method, they have special treatment for coercions of
 \textit{top-like types} in order to retain coherence. For \name, as
 with ordinary types, we do not need this kind of ad-hoc treatment, thanks to the
-adoption of a more powerful proof method (cf. \cref{sec:cohe}).
+adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
 
 
@@ -338,7 +338,7 @@ A key difference from the type system of \oname is the complete omission of the
 well-formedness judgement. In \oname, the well-formedness judgement $[[GG |- A]]$
 appears in both \rref{T-abs,T-sub}. The sole purpose of this judgement is
 to enforce the invariant that all intersection types are disjoint. However, as
-\cref{sec:cohe} will explain, the syntactic restriction is unnecessary for
+\cref{chap:coherence:simple} will explain, the syntactic restriction is unnecessary for
 coherence, and merely complicates the type system. The \name calculus discards
 this well-formedness judgement altogether in favour of a simpler design that is
 still coherent. An important implication is that even without adding BCD subtyping,

@@ -1,0 +1,72 @@
+
+\section{Overview}
+
+In this chapter, we are going to enrich \namee with parametric polymorphism. As we will see,
+the combination is very expressive, able to express sophisticated OOP
+concepts such as mixins and traits. The combination is also highly challenging
+in that coherence becomes even harder to prove than in the simply typed setting.
+We present \fnamee, the first typed calculus combining disjoint
+polymorphism with BCD subtyping. \fnamee serves as the theoretical
+foundation of typed first-class traits, as will be introduced in \cref{chap:traits}.
+We leave the discussion of coherence proof in \cref{chap:coherence:poly}.
+
+Without getting too technical, in this section we give an overview of
+disjoint polymorphism~\citep{alpuimdisjoint}, a variant of parametric polymorphism. The main novelty
+is the so-called disjoint (universal) quantification of the form
+$[[ \ X ** A . B ]]$. Inspired by bounded quantification~\citep{cardelli1994extension} where a
+type variable is constrained by a type bound, disjoint quantification allows
+type variables to be associated with \textit{disjointness constraints}. Correspondingly, a
+term construct of the form $[[ \ X ** A. ee ]]$ is used to create values of
+disjoint quantification.
+
+To understand the purpose of disjointness constraints, consider the following program (adapted from \citet{alpuimdisjoint}):
+\begin{lstlisting}
+mergeBad X (x : X) : X & Int = x ,, 2;
+\end{lstlisting}
+\lstinline{mergeBad} takes an argument \lstinline{x} of type \lstinline{X} (which is itself a type variable), and merges it with \lstinline{2}.
+However, if we were to allow such definition, we could easily create an example where incoherence occurs again:
+\begin{lstlisting}
+(mergeBad Int 1) : Int -- 1 or 2
+\end{lstlisting}
+This is essentially the same problem of allowing $\mer{1}{2}$, which as we
+discussed in \cref{bg:sec:intersection} will cause ambiguity. For \namee, we
+know the concrete type for each variable and thus disjointness checking can help
+avoid this problematic expression. However, with parametric polymorphism, a variable
+could have a generic type, meaning that it can be of any type. So the key here
+is to decide under what conditions a type variable is disjoint with, say,
+\lstinline{Int}. This is where disjointness constraints come onto stage. The key idea
+is that since we do not know \textit{a priori} what is the exact instantiation a
+type variable is going to have, what we can do is to restrict the set of types
+it can be instantiated to. Let us rewrite the above program as follows:
+\begin{lstlisting}
+mergeGood [X * Int] (x : X) : X & Int = x ,, 2;
+\end{lstlisting}
+The only change is the notation \lstinline{[X * Int]}, where the left-side of
+\lstinline{*} denotes the type variable being declared, and the right-side
+denotes the disjointness constraint(s). Here the disjointness constraint
+(\lstinline{Int}) effectively states that the type variable \lstinline{X} can be
+instantiated to any types disjoint with \lstinline{Int}. For example,
+\begin{lstlisting}
+(mergeGood Bool True) : Int
+\end{lstlisting}
+is accepted but \lstinline{mergeGood Int 1} is rejected due to the fact that \lstinline{Int} (the instantiation) is not disjoint with
+\lstinline{Int} (the disjointness constraint). What is more, we can express multiple
+constraints using intersection types, for example,
+\begin{lstlisting}
+mergeThree [X * Int & Bool] (x : X) : X & Int & Bool = x ,, 2 ,, True;
+\end{lstlisting}
+Here the type variable \lstinline{X} can only be instantiated to types disjoint with both
+\lstinline{Int} and \lstinline{Bool}.
+
+In what follows, we first present the syntax and semantics (subtyping and typing) of \fnamee. We
+then discuss the disjointness judgment in detail, in particular, the
+disjointness relation between type variables and arbitrary types. Finally we
+talk about the elaboration semantics of \fnamee and its target calculus \tnamee,
+a variant of System F with explicit coercions.
+
+
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:
