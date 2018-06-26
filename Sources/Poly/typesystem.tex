@@ -4,10 +4,10 @@
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll} \toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[X]] \mid [[\ X ** A . B]] \mid [[{l : A}]]$\\
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
   Monotypes & $[[t]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[X]] \mid [[{l : t}]]$\\
-  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]] \mid [[\X ** A . ee]] $ \\
-        & & $\mid$ & $[[ ee A ]] \mid [[ ee : A ]] \mid [[{l = ee}]] \mid [[ ee.l  ]] $ \\
+  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] $ \\
+        & & $\mid$ & $ [[{l = ee}]] \mid [[ ee.l  ]] \mid [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
   Value Contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
   Type Contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
   % Expression Contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]]  $ \\
@@ -17,17 +17,108 @@
   \label{fig:syntax:fi}
 \end{figure}
 
-The syntax is shown in \cref{fig:syntax:fi}.
+\Cref{fig:syntax:fi} shows the syntax of \fnamee. Metavariables $[[A]], [[B]],
+[[C]]$ range over types. Apart from \namee types, \fnamee also includes type
+variables $[[X]]$ and disjoint quantification $[[ \X ** A . B ]]$. Monotypes
+$[[t]]$ are the same, less the universal quantification. Metavariable $[[ee]]$
+ranges over expressions. We extend \namee expressions with two standard
+constructs in System F: type abstractions $[[ \X ** A . ee ]]$ and type
+applications $[[ee A]]$. The former also includes an extra disjointness
+constraint $[[A]]$ associated with the type variable $[[X]]$.
+
+\paragraph{Contexts.}
+
+In the traditional formulation of System F, there is a single context that is
+used to keep track of both type variables and term variables. Here we use
+another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
+split into \textit{value contexts} $[[GG]]$ and \textit{type contexts} $[[DD]]$.
+The former track bound term variables $[[x]]$ with their types $[[A]]$; and the
+latter track bound type variables $[[X]]$ with their disjointness constraints
+$[[A]]$. This formulation is also convenient for the presentation of logical
+relations in \cref{chap:coherence:poly}.
 
 
-\drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
 
-\drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value contexts}{empty, var}
+\begin{figure}[t]
+  \centering
+  \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
+  \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value contexts}{empty, var}
+  \drules[swfte]{$[[||- DD]]$}{Well-formedness of type contexts}{empty, var}
+  \caption{Well-formedness of contexts and types}
+  \label{fig:well-formedness:fi}
+\end{figure}
 
-\drules[swfte]{$[[||- DD]]$}{Well-formedness of type contexts}{empty, var}
+\paragraph{Well-formedness of contexts.}
 
-\drules[FS]{$[[ A <|: B ~~> c]]$}{Subtyping}{refl,trans,top,topArr,topRcd,arr,and,andl,andr,forall,rcd,distArr,distRcd}
+The well-formedness judgments for contexts and types, as shown in
+\cref{fig:well-formedness:fi} are quite standard. They together ensure that each
+type appearing in the contexts is well-formed in the sense that there are no
+unbound free variables.
 
-\drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, nat, var, app, merge, anno, tabs, rcd, proj, tapp}
 
-\drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+\begin{figure}[t]
+  \centering
+  \drules[FS]{$[[ A <|: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd, arr,andr,andl,and,distArr,topArr,distRcd,topRcd,forall}
+  \caption{Declarative subtyping of \fnamee}
+  \label{fig:subtyping:fi}
+\end{figure}
+
+\paragraph{Declarative Subtyping.}
+
+\Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
+ignore the coercion parts ($[[c]]$) and explain them in
+\cref{sec:elaboration:fi}. The subtyping rules are mostly the same as those of
+\namee. We naturally extend them with only one rule \rref*{FS-forall}, which
+specifies the subtyping relation between two universal quantifiers. In
+\rref{FS-forall}, a universal quantifier is covariant in its body, and
+contravariant in its disjointness constraint. A minor comment is that since
+\fnamee features explicit polymorphism, type variables are neutral to subtyping,
+i.e., $[[X <: X]]$, which is contained in \rref{FS-refl}. As with \namee
+subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and \textit{transitive}.
+
+\begin{remark}
+  In our Coq formalization, we require the two types $[[A]]$ and $[[B]]$ be
+  well-formed with respect to some type context, resulting in the subtyping
+  judgment of the form $[[DD |- A <: B ~~> c]]$. But this is not very important
+  for the purpose of presentation, thus we omit contexts.
+\end{remark}
+
+
+\begin{figure}[t]
+  \centering
+  \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
+  \drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+  \caption{Bidirectional type system of \fnamee}
+  \label{fig:typing:fi}
+\end{figure}
+
+
+\paragraph{Typing.}
+
+The bidirectional type system of \fnamee follows that of \fname, as shown
+in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[e]]$) and explain them in
+\cref{sec:elaboration:fi}. The inference judgment $[[ DD; GG |- ee => A  ]]$
+says that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]]$. The checking judgment
+$[[ DD ; GG |- ee <= A  ]]$ asserts that $[[ee]]$ checks against the type $[[A]]$
+in the contexts $[[DD]]$ and $[[GG]]$. The rules directly ported from \namee are inferring rules \rref*{FT-top} for top values,
+\rref*{FT-int} for integers, \rref*{FT-var} for variables, \rref*{FT-app} for applications, \rref*{FT-merge} for merges,
+\rref*{FT-anno} for annotated terms, \rref*{FT-rcd,FT-proj} for records; checking rules \rref*{FT-abs} for lambda abstractions, and
+the subsumption rule \rref*{FT-sub}. Note that in \rref{FT-merge}, the disjointness judgment has an extra type context, which will be
+explained in \cref{sec:disjoint:fi}.
+
+\paragraph{Disjoint quantification.}
+
+The new rules are the inferring rules for type abstractions \rref*{FT-tabs} and
+type applications \rref*{FT-tapp}. In \rref{FT-tabs}, the disjointness
+constraint is added to the type context. During a type application in
+\rref{FT-tapp}, the type system checks that the type argument agrees with the
+disjointness constraint. This, together with \rref{FT-merge} are the only two
+rules that use the disjointness checking. Moreover, since \fnamee is
+predicative, we require the type being instantiated to be a monotype.
+
+
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:

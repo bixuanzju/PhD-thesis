@@ -29,9 +29,9 @@ AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}, CT {{ tex \mathcal{C} }}  ::
   | Trait [ BB ]                  :: :: trait2
   | { l1 : AA1 , ... , ln : AAn } :: :: rcd2
   | AA1 & ... & AAn               :: :: and2
-  | Bool                          :: :: bool
-  | Char                          :: :: char
-  | String                        :: :: string
+  | bool                          :: :: bool
+  | char                          :: :: char
+  | string                        :: :: string
   | [ AA / X ] BB                 :: :: subst
 
 
@@ -375,6 +375,7 @@ formula :: 'formula_' ::=
   | l1 <> l2 :: :: label {{ tex [[l1]] \neq [[l2]] }}
   | A <: B  :: :: sub
   | A <|: B  :: :: sub2
+  | DD |- A <: B ~~> c :: :: sub3
   | GG  |- ee dir A :: :: inferChk
   | DD ; GG  |- ee dir A :: :: inferChk2
   | SD ; SG  |- E dir AA :: :: sedel
@@ -1377,19 +1378,15 @@ FDisjoint :: '' ::=
 defn DD |- A ** B :: :: Fdisjoint    :: 'FD_'  {{ com Disjointness }} by
 
 
-DD |- A
 --------------- :: topL
 DD |- Top ** A
 
 
-DD |- A
 ------------------ :: topR
 DD |- A ** Top
 
 
 DD |- A2 ** B2
-DD |- A1
-DD |- B1
 --------------------- :: arr
 DD |- A1 -> A2 ** B1 -> B2
 
@@ -1412,8 +1409,6 @@ DD |- { l : A } ** { l : B }
 
 
 l1 <> l2
-DD |- A
-DD |- B
 ------------------------- :: rcdNeq
 DD |- { l1 : A } ** { l2 : B }
 
@@ -1431,8 +1426,6 @@ DD |- B ** X
 
 
 DD , X ** A1 & A2 |- B1 ** B2
-DD |- A1
-DD |- A2
 ------------------------------------------- :: forall
 DD |- \ X ** A1 . B1 ** \ X ** A2 . B2
 
@@ -1502,7 +1495,7 @@ DD ; GG |- Top => Top ~~> unit
 
 ||- DD
 DD ||- GG
--------------------------- :: nat
+-------------------------- :: int
 DD ; GG |- ii => nat ~~> ii
 
 
@@ -1534,7 +1527,6 @@ DD ; GG |- ee : A => A ~~> e
 
 DD |- A
 DD , X ** A ; GG |- ee => B ~~> e
-DD ||- GG
 ----------------------------------------------- :: tabs
 DD ; GG |- \ X ** A . ee => \ X ** A . B ~~> \ X . e
 

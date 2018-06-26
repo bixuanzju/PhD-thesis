@@ -1,6 +1,6 @@
 
 \section{Elaboration and Type Safety}
-
+\label{sec:elaboration:fi}
 
 
 
@@ -25,12 +25,12 @@
 The syntax is shown in \cref{fig:syntax:fco}.
 
 
-\drules[ct]{$[[ c |- T1 tri T2  ]]$}{Coercion typing}{refl,trans,top,arr,pair,projl,projr,forall,topArr, distArr}
+% \drules[ct]{$[[ c |- T1 tri T2  ]]$}{Coercion typing}{refl,trans,top,arr,pair,projl,projr,forall,topArr, distArr}
 
-\drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value contexts}{empty, var}
+% \drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value contexts}{empty, var}
 
-\drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
+% \drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
 
-\drules[s]{$[[ e --> e' ]]$}{Coercion reduction}{id, trans, top, arr, pair, topArr, distArr, projl, projr, forall}
+% \drules[s]{$[[ e --> e' ]]$}{Coercion reduction}{id, trans, top, arr, pair, topArr, distArr, projl, projr, forall}
 
-\drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Typing}{unit, int, var, abs, app, tabs, tapp, pair, capp}
+% \drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Typing}{unit, int, var, abs, app, tabs, tapp, pair, capp}
