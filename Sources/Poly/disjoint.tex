@@ -12,7 +12,7 @@
 \end{figure}
 
 
-In this section we present the formal rules for disjointness. As show in
+In this section we present the formal rules of disjointness. As show in
 \cref{fig:disjoint:fi}, the disjointness rules of \fnamee are directly inherited
 from \fname, which consists of two judgments.
 
@@ -20,14 +20,14 @@ from \fname, which consists of two judgments.
 \paragraph{Main judgment.}
 
 The main judgment $[[DD |- A ** B]]$ says that the two types $[[A]]$ and $[[B]]$
-are disjoint in the context $[[DD]]$. As a precondition, we require the two types $[[A]]$
-and $[[B]]$ are both well-formed in the context $[[DD]]$.
+are disjoint in the context $[[DD]]$. As a precondition, $[[A]]$
+and $[[B]]$ are required to be both well-formed in the context $[[DD]]$.
 Most of the rules are similar to those of
 \namee. The major additions are the two rules (\rref*{FD-tvarL,FD-tvarR}) for
 type variables, and \rref{FD-forall} for disjoint quantification.
 \Rref{FD-tvarL} and its symmetric one \rref*{FD-tvarR} both state that a type
-variable $[[X]]$ is disjoint with some type $[[B]]$ if and only if the
-disjointness constraint of $[[X]]$ in the context $[[DD]]$ is a subtype of
+variable $[[X]]$ is disjoint with some type $[[B]]$ if the
+disjointness constraint of $[[X]]$ (i.e., $[[A]]$) in the context $[[DD]]$ is a subtype of
 $[[B]]$. These two rules are a specialization of a more general lemma, which
 says that disjointness is covariant with respect to subtyping. In a more precise
 sense, we have the following:
@@ -50,12 +50,12 @@ sense, we have the following:
 
 An intuition of the following may help better understanding
 \cref{lemma:covariance:disjoint}. As we will see in \cref{sec:category}, another
-way to interpret disjointness of two types is that their least upper bound is
+way to interpret two types being disjoint is that their least upper bound is
 (isomorphic to) $[[Top]]$. Following this interpretation, it is obvious that if
 the least upper bound of two given types is already $[[Top]]$, a supertype of
 one of them will not change this fact.
 
-Let us now turn to \rref{FD-forall}. To illustrate this rule, consider the following two types:
+We now turn to \rref{FD-forall}. To illustrate this rule, consider the following two types:
 \begin{mathpar}
   [[ \X ** nat . X & nat ]] \and  [[ \X ** char . X & char ]]
 \end{mathpar}
@@ -63,9 +63,9 @@ Under what conditions are the two types disjoint? In the first type, $[[X]]$
 cannot be instantiated to $[[nat]]$ (among others) and in the second type
 $[[X]]$ cannot be instantiated to $[[char]]$. Therefore for both bodies to be disjoint,
 $[[X]]$ can only be instantiated to types that are disjoint with both $[[nat]]$
-and $[[char]]$. More formally, in \rref{FD-forall}, we add a new
-constraint by intersecting the two constraints to the context and check for disjointness
-in the extended context.
+and $[[char]]$. More formally, in \rref{FD-forall}, we add to the context a new
+constraint $[[A1 & A2]]$ by intersecting the two constraints $[[A1]]$ and $[[A2]]$, and check for disjointness in the bodies
+under the extended context.
 
 \paragraph{Disjointness axioms.}
 

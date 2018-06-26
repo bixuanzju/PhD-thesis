@@ -77,9 +77,9 @@ i.e., $[[X <: X]]$, which is contained in \rref{FS-refl}. As with \namee
 subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and \textit{transitive}.
 
 \begin{remark}
-  In our Coq formalization, we require the two types $[[A]]$ and $[[B]]$ be
+  In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are
   well-formed with respect to some type context, resulting in the subtyping
-  judgment of the form $[[DD |- A <: B ~~> c]]$. But this is not very important
+  judgment $[[DD |- A <: B ~~> c]]$. But this is not very important
   for the purpose of presentation, thus we omit contexts.
 \end{remark}
 
@@ -102,7 +102,7 @@ says that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]
 $[[ DD ; GG |- ee <= A  ]]$ asserts that $[[ee]]$ checks against the type $[[A]]$
 in the contexts $[[DD]]$ and $[[GG]]$. The rules directly ported from \namee are inferring rules \rref*{FT-top} for top values,
 \rref*{FT-int} for integers, \rref*{FT-var} for variables, \rref*{FT-app} for applications, \rref*{FT-merge} for merges,
-\rref*{FT-anno} for annotated terms, \rref*{FT-rcd,FT-proj} for records; checking rules \rref*{FT-abs} for lambda abstractions, and
+\rref*{FT-anno} for annotated terms, \rref*{FT-rcd,FT-proj} for records; checking rules \rref*{FT-abs} for term abstractions, and
 the subsumption rule \rref*{FT-sub}. Note that in \rref{FT-merge}, the disjointness judgment has an extra type context, which will be
 explained in \cref{sec:disjoint:fi}.
 
@@ -114,7 +114,7 @@ constraint is added to the type context. During a type application in
 \rref{FT-tapp}, the type system checks that the type argument agrees with the
 disjointness constraint. This, together with \rref{FT-merge} are the only two
 rules that use the disjointness checking. Moreover, since \fnamee is
-predicative, we require the type being instantiated to be a monotype.
+predicative, we require that the type being instantiated is a monotype.
 
 
 
