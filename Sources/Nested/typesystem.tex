@@ -5,8 +5,8 @@
 \section{Syntax and Semantics}
 \label{sec:typesystem}
 
-In this section we formally present the syntax and semantics of \name. Compared
-to prior work~\cite{alpuimdisjoint, oliveira2016disjoint}, \name has a more
+In this section we formally present the syntax and semantics of \namee. Compared
+to prior work~\cite{alpuimdisjoint, oliveira2016disjoint}, \namee has a more
 powerful subtyping relation. The new subtyping relation is inspired by BCD-style
 subtyping, but with two noteworthy differences: subtyping is coercive (in
 contrast to traditional formulations of BCD); and it is extended with records.
@@ -16,9 +16,9 @@ Henglein~\cite{Henglein_1994}. A full technical comparison between \namee and \o
 
 \subsection{Syntax}
 
-\Cref{fig:source} shows the syntax of \name.
+\Cref{fig:source} shows the syntax of \namee.
 % with the differences from \oname \hll{highlighted}.
-% \name is a simple calculus with intersection types, the merge operator
+% \namee is a simple calculus with intersection types, the merge operator
 % and singleton records.
 For brevity of the meta-theoretic study, we do not
 consider primitive operations on natural numbers, or other primitive types.
@@ -40,7 +40,7 @@ singleton records $[[ {l = ee}]]$, and record selections $[[ee.l ]]$.
   & & $\mid$ & $ [[ { l = ee } ]] \mid [[ee.l]] $ \\
   Typing contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
 \end{tabular}
-  \caption{Syntax of \name}
+  \caption{Syntax of \namee}
   \label{fig:source}
 \end{figure}
 
@@ -90,14 +90,14 @@ for the sake of establishing coherence, the declarative subtyping relation is
 sufficient.
 
 
-\subsection{Typing of \name}
+\subsection{Typing of \namee}
 
 
 \begin{figure}[t]
   \centering
 \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
 \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
-  \caption{Bidirectional type system of \name}
+  \caption{Bidirectional type system of \namee}
   \label{fig:type_system}
 \end{figure}
 
@@ -106,19 +106,19 @@ sufficient.
 
 
 
-The bidirectional type system for \name is shown in \cref{fig:type_system}.
+The bidirectional type system for \namee is shown in \cref{fig:type_system}.
 Again we ignore the \hll{highlighted} parts for now.
 
 % The main difference to \oname is the absence of a well-formedness
 % judgement. Unlike \oname, which requires a well-formedness judgement to ensure
-% that all intersection types are disjoint, \name only requires a disjointness
+% that all intersection types are disjoint, \namee only requires a disjointness
 % check at the merge operator. Non-disjoint types such as $[[nat & nat]]$ are
 % allowed in other parts of the program.
 
 \begin{comment}
 Unlike the development of \oname, which first presents a type assignment
 specification, \Cref{fig:type_system} directly present the bidirectional type
-system of \name.
+system of \namee.
 Unfortunately, we found that their declarative type
 system is incoherent in nature (even with all the syntactic restrictions).
 \jeremy{perhaps add a counter example somewhere?} Again, the reader is advised
@@ -176,11 +176,11 @@ previous work~\cite{oliveira2016disjoint, alpuimdisjoint}.
   \label{fig:target}
 \end{figure}
 
-The operational semantics of \name is given by elaborating source expressions
+The operational semantics of \namee is given by elaborating source expressions
 $[[ee]]$ into target terms $[[e]]$. Our target language \tname is the standard
 simply-typed call-by-value $\lambda$-calculus extended with singleton records,
 products and coercions. The syntax of \tname is shown in \cref{fig:target}. The
-meta-function $| \cdot |$ shown in \cref{def:type:translate} transforms \name
+meta-function $| \cdot |$ shown in \cref{def:type:translate} transforms \namee
 types to \tname types, and extends naturally to typing contexts.
 
 \begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
@@ -225,7 +225,7 @@ applications, shown below, deserves attention:
 \end{mathpar}
 Here the judgement $[[c |- T1 tri T2]]$ expresses the typing of coercions, which
 are essentially functions from $[[T1]]$ to $[[T2]]$. Their typing
-rules correspond exactly to the subtyping rules of \name, as
+rules correspond exactly to the subtyping rules of \namee, as
 shown in \cref{fig:co}.
 
 \begin{figure}[t]
@@ -280,7 +280,7 @@ $[[c e]]$. All the other rules do straightforward translations between
 source and target expressions.
 
 
-To conclude, we show two lemmas that relate \name expressions
+To conclude, we show two lemmas that relate \namee expressions
 to \tname terms.
 % (Note that in this and subsequent sections, we only provide
 % a proof sketch for each lemma and theorem. We refer the interested reader
@@ -319,7 +319,7 @@ Apart from the extra subtyping rules, there is an important difference from the
 \oname subtyping relation. The subtyping relation of \oname employs an
 auxiliary unary relation called $\mathsf{ordinary}$, which plays a fundamental
 role for ensuring coherence and obtaining an
-algorithm~\cite{Davies_2000}. The \name calculus discards the notion of
+algorithm~\cite{Davies_2000}. The \namee calculus discards the notion of
 ordinary types completely; this yields a clean and elegant formulation of the
 subtyping relation. Another minor difference is that due to the addition of the
 transitivity axiom (\rref{S-trans}), \rref{S-andl,S-andr} are simplified: an
@@ -336,7 +336,7 @@ of the more general form $[[ A & B <: C]]$.
 
 There is a notable difference from the coercive subtyping of \oname. Because of
 their syntactic proof method, they have special treatment for coercions of
-\textit{top-like types} in order to retain coherence. For \name, as
+\textit{top-like types} in order to retain coherence. For \namee, as
 with ordinary types, we do not need this kind of ad-hoc treatment, thanks to the
 adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
@@ -350,11 +350,11 @@ well-formedness judgement. In \oname, the well-formedness judgement $[[GG |- A]]
 appears in both \rref{T-abs,T-sub}. The sole purpose of this judgement is
 to enforce the invariant that all intersection types are disjoint. However, as
 \cref{chap:coherence:simple} will explain, the syntactic restriction is unnecessary for
-coherence, and merely complicates the type system. The \name calculus discards
+coherence, and merely complicates the type system. The \namee calculus discards
 this well-formedness judgement altogether in favour of a simpler design that is
 still coherent. An important implication is that even without adding BCD subtyping,
-\name is already more expressive than \oname: an expression such as $1 : [[nat & nat]]$ is accepted in
-\name but rejected in \oname. This simplification is based on an important
+\namee is already more expressive than \oname: an expression such as $1 : [[nat & nat]]$ is accepted in
+\namee but rejected in \oname. This simplification is based on an important
 observation: incoherence can only originate in merges. Therefore disjointness
 checking is only necessary in \rref{T-merge}.
 
