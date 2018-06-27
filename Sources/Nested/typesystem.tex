@@ -180,8 +180,19 @@ The operational semantics of \name is given by elaborating source expressions
 $[[ee]]$ into target terms $[[e]]$. Our target language \tname is the standard
 simply-typed call-by-value $\lambda$-calculus extended with singleton records,
 products and coercions. The syntax of \tname is shown in \cref{fig:target}. The
-meta-function $| \cdot |$ transforms \name types to \tname types, and extends
-naturally to typing contexts. Its definition is in the appendix.
+meta-function $| \cdot |$ shown in \cref{def:type:translate} transforms \name
+types to \tname types, and extends naturally to typing contexts.
+
+\begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
+  \begin{align*}
+    | [[nat]] | &= [[nat]] \\
+    | [[Top]] | &= \langle \rangle \\
+    | [[A -> B]]  | &= [[ | A | -> | B |  ]] \\
+    | [[ A & B  ]] | &= [[ | A | * | B |  ]] \\
+    | \recordType{l}{A} | &= \recordType{l}{| A |}
+  \end{align*}
+\end{definition}
+
 
 
 \paragraph{Explicit Coercions and Coercive Subtyping.}

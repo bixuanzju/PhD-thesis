@@ -37,9 +37,7 @@ latter track bound type variables $[[X]]$ with their disjointness constraints
 $[[A]]$. This formulation is also convenient for the presentation of logical
 relations in \cref{chap:coherence:poly}.
 
-
-
-\begin{figure}[t]
+\begin{figure}
   \centering
   \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
   \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value contexts}{empty, var}
@@ -56,14 +54,15 @@ type appearing in the contexts is well-formed in the sense that there are no
 unbound free variables.
 
 
-\begin{figure}[t]
+\paragraph{Declarative Subtyping.}
+
+
+\begin{figure}[h]
   \centering
   \drules[FS]{$[[ A <|: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd, arr,andr,andl,and,distArr,topArr,distRcd,topRcd,forall}
   \caption{Declarative subtyping of \fnamee}
   \label{fig:subtyping:fi}
 \end{figure}
-
-\paragraph{Declarative Subtyping.}
 
 \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
 ignore the coercion parts ($[[c]]$) and explain them in
@@ -84,7 +83,9 @@ subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
 \end{remark}
 
 
-\begin{figure}[t]
+\paragraph{Typing.}
+
+\begin{figure}
   \centering
   \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
   \drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
@@ -92,8 +93,6 @@ subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
   \label{fig:typing:fi}
 \end{figure}
 
-
-\paragraph{Typing.}
 
 The bidirectional type system of \fnamee follows that of \fname, as shown
 in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[e]]$) and explain them in
