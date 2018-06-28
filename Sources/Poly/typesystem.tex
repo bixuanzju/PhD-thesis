@@ -8,8 +8,8 @@
   Monotypes & $[[t]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[X]] \mid [[{l : t}]]$\\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] $ \\
         & & $\mid$ & $ [[{l = ee}]] \mid [[ ee.l  ]] \mid [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
-  Value Contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
-  Type Contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
+  Value Context & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
+  Type Context & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
   % Expression Contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]]  $ \\
   % & & $\mid$ & $[[ ee ,, CC  ]] \mid  [[ { l = CC}  ]]  \mid [[ CC . l]] $
 \end{tabular}
@@ -40,8 +40,8 @@ relations in \cref{chap:coherence:poly}.
 \begin{figure}
   \centering
   \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
-  \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value contexts}{empty, var}
-  \drules[swfte]{$[[||- DD]]$}{Well-formedness of type contexts}{empty, var}
+  \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
+  \drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
   \caption{Well-formedness of contexts and types}
   \label{fig:well-formedness:fi}
 \end{figure}
@@ -57,23 +57,22 @@ unbound free variables.
 \paragraph{Declarative Subtyping.}
 
 
-\begin{figure}[h]
-  \centering
-  \drules[FS]{$[[ A <|: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd, arr,andr,andl,and,distArr,topArr,distRcd,topRcd,forall}
-  \caption{Declarative subtyping of \fnamee}
-  \label{fig:subtyping:fi}
-\end{figure}
 
-\Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
-ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
-\cref{sec:elaboration:fi}. We naturally extend the subtyping rules of \namee
-with only one rule \rref*{FS-forall}, which specifies the subtyping relation
-between two universal quantifiers. In \rref{FS-forall}, a universal quantifier
-is covariant in its body, and contravariant in its disjointness constraint. A
-minor comment is that since \fnamee features explicit polymorphism, type
-variables are neutral to subtyping, i.e., $[[X <: X]]$, which is contained in
-\rref{FS-refl}. As with \namee subtyping, the subtyping relation of \fnamee is
-trivially \textit{reflexive} and \textit{transitive}.
+% \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
+% ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
+% \cref{sec:elaboration:fi}.
+We naturally extend the subtyping rules of \namee in \cref{fig:subtype_decl}
+with only one rule \rref*{S-forall}:
+\[
+  \drule{S-forall}
+\]
+which specifies the subtyping relation between two universal quantifiers. In
+\rref{S-forall}, a universal quantifier is covariant in its body, and
+contravariant in its disjointness constraint. A minor comment is that since
+\fnamee features explicit polymorphism, type variables are neutral to subtyping,
+i.e., $[[X <: X]]$, which is already contained in \rref{S-refl}. As with \namee
+subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
+\textit{transitive}.
 
 \begin{remark}
   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are

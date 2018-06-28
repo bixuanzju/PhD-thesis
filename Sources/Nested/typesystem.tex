@@ -165,14 +165,15 @@ previous work~\cite{oliveira2016disjoint, alpuimdisjoint}.
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll} \toprule
-  Target types & $[[T]]$ & $\Coloneqq$ & $[[nat]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] \mid [[ {l : T} ]]$ \\
+  Target types & $[[T]]$ & $\Coloneqq$ & $[[nat]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] $ \\
+  Target terms & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[<e1, e2>]] \mid [[c e]]$ \\
+  Coercions & $[[c]]$ & $\Coloneqq$ & $ [[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[c1 -> c2]] \mid [[<c1, c2>]] \mid [[pp1]] \mid [[pp2]] $ \\
+  &  &  $\mid$ & $   [[distArr]] \mid [[topArr]]  $ \\
+  values & $[[v]]$ & $\Coloneqq$ & $[[unit]] \mid [[i]] \mid [[\x.e]] \mid  [[<v1, v2>]] \mid [[(c1 -> c2) v]] \mid [[distArr v]] \mid [[topArr v]] $ \\
   Typing contexts & $[[gg]]$ & $\Coloneqq$ & $[[empty]] \mid [[gg , x : T]]$ \\
-  Target terms & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[<e1, e2>]] \mid [[{ l = e }]] \mid [[e.l]] \mid [[c e]]$ \\
-  Coercions & $[[c]]$ & $\Coloneqq$ & $ [[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[topArr]] \mid [[< l >]] \mid [[c1 -> c2]] \mid [[<c1, c2>]]$ \\
-  &  &  $\mid$ & $  [[pp1]] \mid [[pp2]] \mid [[{l : c}]] \mid  [[ distRcd l ]] \mid [[distArr]]  $ \\
-  Target values & $[[v]]$ & $\Coloneqq$ & $[[\x.e]] \mid [[unit]] \mid [[i]] \mid [[<v1, v2>]] \mid [[(c1 -> c2) v]] \mid [[distArr v]] \mid [[topArr v]] $ \\ \bottomrule
+  Evaluation Contexts & $[[EE]]$ & $\Coloneqq$ &  $  [[__]] \mid [[EE e]] \mid [[v EE]] \mid [[ < EE , e >  ]] \mid [[ < v , EE > ]] \mid [[ c EE  ]]$ \\ \bottomrule
 \end{tabular}
-  \caption{\tname types, terms and coercions}
+  \caption{\tname syntax}
   \label{fig:target}
 \end{figure}
 
@@ -235,17 +236,25 @@ shown in \cref{fig:co}.
   \label{fig:co}
 \end{figure}
 
-\paragraph{Target Operational Semantics and Type Safety.}
+\paragraph{Dynamic Semantics.}
 
-The operational semantics of \tname is mostly unremarkable. What may be
-interesting is the operational semantics of coercions. \Cref{fig:coercion_red}
-shows the single-step ($[[-->]]$) reduction rules for coercions. Our coercion
-reduction rules are quite standard but not efficient in terms of space.
-Nevertheless, there is existing work on space-efficient
-coercions~\cite{Siek_2015, herman2010space}, which should be applicable
-to our work as well.
-As standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
-We show that \tname is type safe:
+\begin{figure}[t]
+  \centering
+\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, app, ctxt}
+  \caption{Dynamic semantics of \tname}
+  \label{fig:coercion_red}
+\end{figure}
+
+The dynamic semantics of \tname is shown in \cref{fig:coercion_red}. We write
+$[[e --> e']]$ for reduction of expressions. The first three lines are reduction
+rules for coercions. They do not contribute to computation but merely rearrange
+coercions. Our coercion reduction rules are quite standard but not efficient in
+terms of space. Nevertheless, there is existing work on space-efficient
+coercions~\cite{Siek_2015, herman2010space}, which should be applicable to our
+work as well. \Rref{r-app} is the usual $\beta$-rule that performs actual
+computation, and \rref{r-ctxt} handles reduction under an evaluation context. As
+standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
+Now we can show that \tname is type safe:
 \begin{theorem}[Preservation]
   If $[[empty |- e : T]]$ and $[[e --> e']]$, then $[[empty |- e' : T]]$.
 \end{theorem}
@@ -255,19 +264,11 @@ We show that \tname is type safe:
 \end{theorem}
 
 
-\begin{figure}[t]
-  \centering
-\drules[s]{$[[e --> e']]$}{Coercion reduction}{id, trans, top, topArr, topRcd, pair, arr, distArr, projl, projr, crcd, distRcd}
-  \caption{Coercion reduction}
-  \label{fig:coercion_red}
-\end{figure}
-
 
 
 \paragraph{Elaboration.}
 \begin{comment}
-The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~>
-c]]$, which says that the subtyping
+The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the subtyping
 derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that is used to convert a
 term of type $[[ |A| ]]$ to type $[[ |B| ]]$. Each
 subtyping rule has its own specific form of coercion.
