@@ -65,20 +65,20 @@ unbound free variables.
 \end{figure}
 
 \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
-ignore the coercion parts ($[[c]]$) and explain them in
-\cref{sec:elaboration:fi}. The subtyping rules are mostly the same as those of
-\namee. We naturally extend them with only one rule \rref*{FS-forall}, which
-specifies the subtyping relation between two universal quantifiers. In
-\rref{FS-forall}, a universal quantifier is covariant in its body, and
-contravariant in its disjointness constraint. A minor comment is that since
-\fnamee features explicit polymorphism, type variables are neutral to subtyping,
-i.e., $[[X <: X]]$, which is contained in \rref{FS-refl}. As with \namee
-subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and \textit{transitive}.
+ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
+\cref{sec:elaboration:fi}. We naturally extend the subtyping rules of \namee
+with only one rule \rref*{FS-forall}, which specifies the subtyping relation
+between two universal quantifiers. In \rref{FS-forall}, a universal quantifier
+is covariant in its body, and contravariant in its disjointness constraint. A
+minor comment is that since \fnamee features explicit polymorphism, type
+variables are neutral to subtyping, i.e., $[[X <: X]]$, which is contained in
+\rref{FS-refl}. As with \namee subtyping, the subtyping relation of \fnamee is
+trivially \textit{reflexive} and \textit{transitive}.
 
 \begin{remark}
   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are
   well-formed with respect to some type context, resulting in the subtyping
-  judgment $[[DD |- A <: B ~~> c]]$. But this is not very important
+  judgment $[[DD |- A <: B]]$. But this is not very important
   for the purpose of presentation, thus we omit contexts.
 \end{remark}
 
@@ -94,8 +94,8 @@ subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
 \end{figure}
 
 
-The bidirectional type system of \fnamee follows that of \fname, as shown
-in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[e]]$) and explain them in
+The bidirectional type system of \fnamee follows that of \namee, as shown
+in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[~~>]] [[e]]$) and explain them in
 \cref{sec:elaboration:fi}. The inference judgment $[[ DD; GG |- ee => A  ]]$
 says that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]]$. The checking judgment
 $[[ DD ; GG |- ee <= A  ]]$ asserts that $[[ee]]$ checks against the type $[[A]]$

@@ -14,7 +14,7 @@
 
 In this section we present the formal rules of disjointness, as show in
 \cref{fig:disjoint:fi}. The disjointness rules of \fnamee are directly inherited
-from \fname, which consists of two judgments.
+from \fname~\citep{alpuimdisjoint}, which consists of two judgments.
 
 
 \paragraph{Main judgment.}
@@ -23,11 +23,11 @@ The main judgment $[[DD |- A ** B]]$ says that the two types $[[A]]$ and $[[B]]$
 are disjoint in the context $[[DD]]$. As a precondition, $[[A]]$
 and $[[B]]$ are required to be both well-formed in the context $[[DD]]$.
 Most of the rules are similar to those of
-\namee. The major additions are the two rules (\rref*{FD-tvarL,FD-tvarR}) for
+\namee. The major additions are the two rules \rref*{FD-tvarL,FD-tvarR} for
 type variables, and \rref{FD-forall} for disjoint quantification.
-\Rref{FD-tvarL} and its symmetric one \rref*{FD-tvarR} both state that a type
-variable $[[X]]$ is disjoint with some type $[[B]]$ if the
-disjointness constraint of $[[X]]$ (i.e., $[[A]]$) in the context $[[DD]]$ is a subtype of
+\Rref{FD-tvarL} and the symmetric one \rref*{FD-tvarR} state that a type
+variable $[[X]]$ is disjoint with some type $[[B]]$ if its
+disjointness constraint (i.e., $[[A]]$) in the context $[[DD]]$ is a subtype of
 $[[B]]$. These two rules are a specialization of a more general lemma, which
 says that disjointness is covariant with respect to subtyping. In a more precise
 sense, we have the following:
@@ -82,3 +82,8 @@ To conclude this section, we show that disjointness is symmetric:
   By induction on the disjointness derivation. In the case for \rref{FD-forall},
   apply \cref{lemma:narrow:disjoint}.
 \end{proof}
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:

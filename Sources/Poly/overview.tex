@@ -23,7 +23,7 @@ This is essentially the same problem of allowing $\mer{1}{2}$, which as we
 discussed in \cref{bg:sec:intersection} will cause ambiguity. For \namee, we
 know the concrete type for each variable and thus disjointness checking can help
 avoid this problematic expression. However, with parametric polymorphism, a variable
-could have a generic type, meaning that it can be of any type. So the key here
+could have a generic type, meaning that it can be of any type. So the question here
 is to decide under what conditions a type variable is disjoint with, say,
 \lstinline{Int}. This is where disjointness constraints come onto stage. The key idea
 is that since we do not know \textit{a priori} what is the exact instantiation a
