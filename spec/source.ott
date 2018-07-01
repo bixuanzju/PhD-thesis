@@ -393,13 +393,18 @@ formula :: 'formula_' ::=
   | GG |- A :: :: well
   | cc : ( gg |- T ) ~~> ( gg' |- T' ) :: :: ctxt
   | gg |- T :: :: hole
-  | gg1 ; gg2 |- e1 == e2 : T1 ; T2 :: :: logeq {{ tex [[gg1]] ; [[gg2]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[T1]] ; [[T2]] }}
-  | gg |- e1 == e2 : T :: :: logeq2 {{ tex [[gg]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[T]] }}
+  | GG |- e1 == e2 : A ; B :: :: logeq3 {{ tex [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] ; [[B]] }}
+  | GG |- e1 == e2 : A  :: :: logeq4 {{ tex [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] }}
   | gg |- e1 ~= e2 : T :: :: cxtx {{ tex [[gg]] [[|-]] \ctxeq{[[e1]]}{[[e2]]}{[[T]]} }}
   | GG |- ee1 ~= ee2 : A :: :: cxtx2
-  | ( v1 , v2 ) in V ( T1 ; T2 ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[T1]]}{[[T2]]} }}
-  | ( e1 , e2 ) in E ( T1 ; T2 ) :: :: term {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[T1]]}{[[T2]]} }}
+  | ( v1 , v2 ) in V ( A ; B ) :: :: value2 {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[A]]}{[[B]]} }}
+  | ( v1 , v2 ) in V ( A  ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[A]]} }}
+  | ( e1 , e2 ) in E ( A ; B ) :: :: term2 {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[A]]}{[[B]]} }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
+  | e : T :: :: typet
+  | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
+  | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
+
 
 
 
@@ -826,23 +831,23 @@ ee1 ,, CC : (GG <= A) ~> (GG' => A1 & A2) ~~> < e , cc >
 
 CC : (GG => A) ~> (GG' => B) ~~> cc
 ---------------------------------------------------- :: rcd1
-{ l = CC } : (GG => A) ~> (GG' => { l : B }) ~~> {l = cc}
+{ l = CC } : (GG => A) ~> (GG' => { l : B }) ~~> cc
 
 
 CC : (GG <= A) ~> (GG' => B) ~~> cc
 ---------------------------------------------------- :: rcd2
-{ l = CC } : (GG <= A) ~> (GG' => { l : B }) ~~> {l = cc}
+{ l = CC } : (GG <= A) ~> (GG' => { l : B }) ~~> cc
 
 
 
 CC : (GG => A) ~> (GG' => { l : B }) ~~> cc
 -------------------------------------------- :: proj1
-CC.l : (GG => A) ~> (GG' => B) ~~> cc.l
+CC.l : (GG => A) ~> (GG' => B) ~~> cc
 
 
 CC : (GG <= A) ~> (GG' => { l : B }) ~~> cc
 -------------------------------------------- :: proj2
-CC.l : (GG <= A) ~> (GG' => B) ~~> cc.l
+CC.l : (GG <= A) ~> (GG' => B) ~~> cc
 
 
 CC : (GG => B) ~> (GG' <= A) ~~> cc
