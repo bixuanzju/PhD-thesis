@@ -3,3 +3,94 @@
 \chapter{Coherence for \fnamee}
 \label{chap:coherence:poly}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this chapter, we extend the proof technique introduced in
+\cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly we review
+the parametric logical relation for System F~\citep{reynolds1983types} in
+\cref{sec:para:lr}. We then talk about a failed attempt on naturally extending
+it to disjoint intersection types in \cref{sec:failed:lr}. The technical
+difficulty stems from the interaction between impredicativity and disjointness.
+Finally in \cref{sec:succeed:lr}, we present our (predicative) logical relation
+that is specially crafted to prove coherence for \fnamee, and talk about
+potential solutions to lift the predicativity restriction.
+
+
+\section{Review of the Parametric Logical Relation}
+\label{sec:para:lr}
+
+\begin{figure}[t]
+  \centering
+  \begin{tabular}{lll}
+  $[[(v1 , v2) in V ( X ) with pq ]]$  &$\defeq$ & $ ([[v1]], [[v2]]) \in [[pq]]([[X]])   $ \\
+  $[[(v1 , v2) in V ( nat ) with pq ]]$  &$\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1 , v2) in V ( T1 -> T2 ) with pq ]]$  & $\defeq$ & $\forall [[(v'1, v'2) in V (T1) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (T2) with pq   ]]$ \\
+  $[[(v1 , v2) in V ( T1 * T2 ) with pq ]]$  & $\defeq$ & $[[( pp1 v1, pp1 v2 ) in E (T1) with pq ]]  \land [[ (pp2 v1, pp2 v2) in E (T2) with pq ]]   $ \\
+  $[[(v1 , v2) in V ( \X . T ) with pq ]]$  & $\defeq$ & $ \forall [[T1]], [[T2]], [[R]] \subseteq [[T1]] \times [[T2]].\, [[ (v1 T1, v2 T2) in E (T) with pq [X -> R ]     ]]  $ \\ \\
+  $[[(e1, e2) in E (T) with pq ]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (T) with pq ]]$
+  \end{tabular}
+  \caption{A logical relation for System F}
+  \label{fig:logical:f}
+\end{figure}
+
+System F provides a reasoning principle called \textit{relational
+  parametricity}~\citep{reynolds1983types} for establishing when two expressions
+of the same type have identical behavior. The principle is expressed in terms of
+a logical relation. It is well-known that the logical relation of System F
+induces the \textit{abstraction theorem} (also called the \textit{parametricity
+  theorem}) of \citet{reynolds1983types}, which roughly says that every
+well-typed expression behaves the same as itself according to its type. The
+stringency of parametricity ensure that a polymorphic type has very few
+inhabitants, so few that we can deduce the behavior of a program by just looking
+at its type, which \citet{wadler1989theorems} christened \textit{theorems for
+  free}.
+
+Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
+``free'' theorem completely determines the behavior of $[[e]]$ and any other
+function of the same type -- all expressions with this type have to be constant
+functions.
+
+\begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
+  Suppose $[[e]]$ is any expression of type $[[\X . X -> nat]]$. Let $[[T1]]$
+  and $[[T2]]$ be arbitrary types. For any $[[v1]]$ of type $[[T1]]$ and
+  $[[v2]]$ of type $[[T2]]$,
+  \[
+    [[e T1 v1 -->> v3]] \land [[e T2 v2 -->> v4]] \land [[v3]] = [[v4]]
+  \]
+\end{theorem}
+
+
+\Cref{fig:logical:f} defines the logical relation for call-by-value System F.
+Compared with the logical relation for simple types, it is parameterized by a
+relational mapping $[[pq]]$, which plays a central role for type abstractions
+and type variables. Intuitively, for two values $[[v1]]$ and $[[v2]]$ of type
+$[[\X . T]]$ to behave the same, their instantiations must behave the same.
+However, because $[[v1]]$ and $[[v2]]$ do not manipulate the values of type
+$[[X]]$, it is not required that they should behave the same at the
+\textit{same} instantiation. Indeed, as we see in \cref{thm:free}, we shall be
+able to consider \textit{separately} instances of $[[v1]]$ and $[[v2]]$ by types
+$[[T1]]$ and $[[T2]]$, and treat the type variable $[[X]]$ as standing for any
+relation $[[R]]$ between $[[T1]]$ and $[[T2]]$. Now it is apparent that the
+relational mapping $[[pq]]$ maps each type variable $[[X]]$ to a relation
+$[[R]]$ that says how values at type $[[X]]$ should be related. This explains
+why for type variables, values of type $[[X]]$ are related according to the
+relation associated with $[[X]]$ in the mapping $[[pq]]$.
+
+
+
+\section{Impredicativity and Disjointness at Odds}
+\label{sec:failed:lr}
+
+
+
+
+
+\section{Predicative Logical Relation}
+\label{sec:succeed:lr}
+
+
+
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:

@@ -204,17 +204,16 @@ relations~\cite{tait, statman1985logical, plotkin1973lambda}.
 
 \begin{figure}
   \centering
-\begin{align*}
-  [[(v1 , v2) in V ( nat ; nat ) ]]  &\defeq \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
-  [[(v1, v2) in V ( {l : A}  ; {l : B} ) ]] &\defeq [[ (v1, v2) in V ( A ; B ) ]]\\
-  [[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]  &\defeq \forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]] \\
-  [[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]  &\defeq [[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]  \\
-  [[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]  &\defeq [[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]  \\
-  [[(v1 , v2) in V (A; B) ]]  &\defeq \mathsf{true} \quad \text{otherwise}
-\end{align*}
-\[
-  [[(e1, e2) in E (A; B)]] \defeq \exists [[v1]] [[v2]], [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (A; B)]]
-\]
+  \begin{tabular}{lll}
+  $[[(v1 , v2) in V ( nat ; nat ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
+  $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
+  $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
+  $[[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]$  & $\defeq$ & $[[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]$  \\
+  $[[(v1 , v2) in V (A; B) ]]$  & $\defeq$ & $\mathsf{true} \quad \text{otherwise}$ \\ \\
+    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
+                                       & & $[[(v1, v2) in V (A; B)]]$
+  \end{tabular}
   \caption{Logical relation for \namee}
   \label{fig:logical}
 \end{figure}
@@ -424,7 +423,11 @@ We show that logical equivalence is preserved by \namee contexts:
 \end{proof}
 
 
-Next up is the proof that logical relation is sound with respect to contextual equivalence:
+Next up is the proof that logical relation is sound with respect to contextual
+equivalence -- that is, if two programs are logically related then they are
+contextually equivalent -- which justifies the use of logical relation for
+proving contextual equivalence of programs.
+
 \begin{theorem}[Soundness w.r.t. Contextual Equivalence] \label{thm:log-sound}
   Given $[[GG |- e1 == e2 : A]]$, we have
   \begin{itemize}

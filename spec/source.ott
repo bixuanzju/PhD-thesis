@@ -5,7 +5,7 @@
 
 metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }}, Z ::=
 
-metavar var, x , y, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
+metavar var, x , y, R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
 
 indexvar i, j, k, n, m ::=
 
@@ -192,6 +192,12 @@ p {{ tex \rho }} :: 'p_' ::=
   | p [ X -> A  ] :: :: one   {{ tex [[p]] [  [[X]] \mapsto  [[A]] ] }}
 
 
+%% Type substitution
+
+pq {{ tex \rho }} :: 'pq_' ::=
+  | emp           :: :: empty   {{ tex \emptyset }}
+  | pq [ X -> R  ] :: :: one   {{ tex [[pq]] [  [[X]] \mapsto  [[R]] ] }}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% System F Syntax
@@ -211,6 +217,8 @@ ty, T {{ tex \tau }} :: 'ty_' ::=
   | \ X . T        :: :: forall   {{ tex \forall [[X]].\,[[T]] }}
   | ( T )          :: :: paren
   | [ T2 / X ] T1  :: :: subst
+  | bool                          :: :: bool
+  | char                          :: :: char
   | | A |          :: :: erase
 
 
@@ -349,6 +357,7 @@ terminals :: 'terminals_' ::=
     | Top     :: :: Top  {{ tex \top }}
     | nat     :: :: nat  {{ tex \mathsf{Int} }}
     | char    :: :: char  {{ tex \mathsf{Char} }}
+    | bool    :: :: bool  {{ tex \mathsf{Bool} }}
     % | ,,      :: :: Merge  {{ tex \,,,\, }}
     | unit    :: :: unit  {{ tex \langle \rangle }}
     | Unit    :: :: Unit  {{ tex \langle \rangle }}
@@ -399,7 +408,9 @@ formula :: 'formula_' ::=
   | GG |- ee1 ~= ee2 : A :: :: cxtx2
   | ( v1 , v2 ) in V ( A ; B ) :: :: value2 {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[A]]}{[[B]]} }}
   | ( v1 , v2 ) in V ( A  ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[A]]} }}
+  | ( v1 , v2 ) in V ( T  ) with pq :: :: value3 {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[T]]}_{[[pq]]} }}
   | ( e1 , e2 ) in E ( A ; B ) :: :: term2 {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[A]]}{[[B]]} }}
+  | ( e1 , e2 ) in E ( T  ) with pq :: :: term3 {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[T]]}_{[[pq]]}    }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
