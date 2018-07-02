@@ -207,7 +207,7 @@ ty, T {{ tex \tau }} :: 'ty_' ::=
   | X              :: :: var
   | T1 -> T2       :: :: arrow
   | T1 * T2        :: :: prod
-  | { l : T }      :: :: rcd
+  % | { l : T }      :: :: rcd
   | \ X . T        :: :: forall   {{ tex \forall [[X]].\,[[T]] }}
   | ( T )          :: :: paren
   | [ T2 / X ] T1  :: :: subst
@@ -262,9 +262,9 @@ co, c :: 'co_' ::=   {{ com coercion }}
   | pp2          :: :: proj2
   | distArr     :: :: distArr
   | distRcd l   :: :: distRcd {{ tex \mathsf{dist}_{ \{ [[l]] \} } }}
-  | { l : c }   :: :: rcd
+  % | { l : c }   :: :: rcd
   | topArr      :: :: topArr
-  | < l >       :: :: topRcd {{ tex \mathsf{top}_{ \{ [[l]] \} } }}
+  % | < l >       :: :: topRcd {{ tex \mathsf{top}_{ \{ [[l]] \} } }}
   | ( c )       :: :: paren
   | < fs >1     :: :: tran1  {{ tex \llbracket [[fs]] \rrbracket_{\top} }}
   | < fs >2     :: :: tran2  {{ tex \llbracket [[fs]] \rrbracket_{\&} }}
@@ -341,7 +341,7 @@ terminals :: 'terminals_' ::=
     | >       :: :: rbr  {{ tex \rangle }}
     | *       :: :: prod {{ tex \times }}
     | dot     :: :: dot  {{ tex [ \cdot ] }}
-    | empty   :: :: empty {{ tex \bullet }}
+    | empty   :: :: empty {{ tex \cdot }}
     | |-      :: :: dash  {{ tex \vdash }}
     | elt     :: :: elt       {{ tex \in }}
     | tri     :: :: tri       {{ tex \triangleright }}
@@ -349,7 +349,7 @@ terminals :: 'terminals_' ::=
     | Top     :: :: Top  {{ tex \top }}
     | nat     :: :: nat  {{ tex \mathsf{Int} }}
     | char    :: :: char  {{ tex \mathsf{Char} }}
-    | ,,      :: :: Merge  {{ tex \,,,\, }}
+    % | ,,      :: :: Merge  {{ tex \,,,\, }}
     | unit    :: :: unit  {{ tex \langle \rangle }}
     | Unit    :: :: Unit  {{ tex \langle \rangle }}
     | top     :: :: top  {{ tex \mathsf{top} }}
@@ -522,18 +522,18 @@ fs |- A <: B ~~> c :: :: ASub :: A_
 
 fs |- A <: nat ~~> c
 --------------------------------------------- :: rcdNat
-{ l } , fs |- { l : A } <: nat ~~> {l : c}
+{ l } , fs |- { l : A } <: nat ~~> c
 
 
 
 fs |- A <: X ~~> c
 --------------------------------------------- :: rcdVar
-{ l } , fs |- { l : A } <: X ~~> {l : c}
+{ l } , fs |- { l : A } <: X ~~> c
 
 
 fs |- A <: \ X ** B1 . B2 ~~> c
 --------------------------------------------------------- :: rcdAll
-{ l } , fs |- { l : A } <: \ X ** B1 . B2 ~~> {l : c}
+{ l } , fs |- { l : A } <: \ X ** B1 . B2 ~~> c
 
 
 
@@ -933,19 +933,18 @@ pp1 |- T1 * T2 tri T1
 pp2 |- T1 * T2 tri T2
 
 
-
-c |- T1 tri T2
---------------------------------- :: rcd
-{l : c} |- {l : T1} tri {l : T2}
-
-
------------------------------ :: topRcd
-< l > |- Unit tri { l : Unit }
+% c |- T1 tri T2
+% --------------------------------- :: rcd
+% c |- {l : T1} tri {l : T2}
 
 
+% ----------------------------- :: topRcd
+% < l > |- Unit tri { l : Unit }
 
----------------------------------------------- :: distRcd
-distRcd l |- {l : T1} * {l : T2} tri {l : T1 * T2}
+
+
+% ---------------------------------------------- :: distRcd
+% distRcd l |- {l : T1} * {l : T2} tri {l : T1 * T2}
 
 
 c |- T1 tri T2
@@ -1070,14 +1069,14 @@ c |- T1 tri T2
 gg |- c e : T2
 
 
-gg |- e : T
----------------------------------- :: rcd
-gg |- { l = e } : { l : T }
+% gg |- e : T
+% ---------------------------------- :: rcd
+% gg |- { l = e } : { l : T }
 
 
-gg |- e : { l : T }
----------------------- :: proj
-gg |- e.l : T
+% gg |- e : { l : T }
+% ---------------------- :: proj
+% gg |- e.l : T
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

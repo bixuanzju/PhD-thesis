@@ -115,14 +115,14 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
     \begin{subfigure}[b]{0.5\textwidth}
       \begin{align*}
         [[ < [] >1 ]] &=  [[top]] \\
-        [[ < { l } , fs >1 ]] &= [[ {l : < fs >1} o < l >  ]] \\
+        [[ < { l } , fs >1 ]] &= [[ < fs >1 o id  ]] \\
         [[ < A , fs >1 ]] &= [[(top -> < fs >1) o (topArr o top)]]
       \end{align*}
     \end{subfigure} ~
     \begin{subfigure}[b]{0.45\textwidth}
       \begin{align*}
         [[ < [] >2 ]] &=  [[id]] \\
-        [[ < { l } , fs >2 ]] &= [[ {l : < fs >2} o distRcd l  ]] \\
+        [[ < { l } , fs >2 ]] &= [[ < fs >2 o id  ]] \\
         [[ < A , fs >2 ]] &= [[(id -> < fs >2) o distArr]]
       \end{align*}
     \end{subfigure}
