@@ -137,13 +137,13 @@ As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 
 The algorithmic subtyping for \fnamee is a straightforward extension of \namee's
 algorithmic subtyping, because we can treat $[[ \ X ** A . B ]]$ and $[[X]]$
-like $[[nat]]$. \Cref{fig:algo:sub:fi} shows only the extended rules compared
+like $[[nat]]$. \Cref{fig:algo:sub:fi} only shows the extended rules compared
 with \cref{fig:algorithm}.
 
 \begin{figure}
   \centering
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping (extended rules)}{forall,var,rcdVar,rcdAll,andVarOne,andVarTwo,andAllOne,andAllTwo,arrVar,arrAll}
-  \caption{Algorithmic subtyping of \fnamee}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{forall,var,rcdVar,rcdAll,andVarOne,andVarTwo,andAllOne,andAllTwo,arrVar,arrAll}
+  \caption{Algorithmic subtyping of \fnamee (extended rules)}
   \label{fig:algo:sub:fi}
 \end{figure}
 

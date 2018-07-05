@@ -80,6 +80,65 @@ relation associated with $[[X]]$ in the mapping $[[pq]]$.
 \section{Impredicativity and Disjointness at Odds}
 \label{sec:failed:lr}
 
+Based on the parametric logical relation of System F, it is not hard to come up
+with a heterogeneous version, similar to \cref{fig:logical}, but with a
+relational mapping. Below is the definition for functions and intersection types.
+\begin{align*}
+ [[(v1, v2)  in V(A1 -> B1; A2 -> B2) with pq ]] &\defeq \forall [[(v'1, v'2) in V (A1; A2) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (B1 ; B2) with pq   ]] \\
+  [[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) with pq ]]  &\defeq [[ (v1, v3)  in V (A ; C) with pq ]] \land [[ (v2, v3)  in V (B ; C) with pq ]] \\
+  [[( v3 , < v1 , v2 >  )  in V ( C ; A & B  ) with pq ]]  &\defeq [[ (v3, v1)  in V (C ; A) with pq ]] \land [[ (v3, v2)  in V (C ; B) with pq ]]
+\end{align*}
+They do not manipulate $[[pq]]$ and are thus directly ported from
+\cref{fig:logical}. For type abstractions, we follow the definition for System
+F, but also take care of disjointness constraint, as shown below.
+\begin{align*}
+  [[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]] &\defeq \forall [[empty |- C1 ** pq(A1 & A2) ]], [[empty |- C2 ** pq(A1 & A2)]], \\
+                                                            & \quad [[R]] \subseteq [[C1]] \times [[C2]]. \\
+                                                            & \quad [[ ( v1 |C1|, v2 |C2|) in V (B1 ; B2) with pq[X -> R]    ]]
+\end{align*}
+That is, it quantifies over all types that meet the disjointness constraint. For
+type variables, things become a bit complicated. If we have the same type
+variable, it falls back to the familiar definition for System F.
+\begin{align*}
+  [[(v1, v2)  in V(X; X) with pq ]] &\defeq ([[v1]], [[v2]]) \in [[pq]]([[X]])
+\end{align*}
+But what about when they are different variables, or one is a different type? A
+seemingly innocuous definition is as follows.
+\begin{align*}
+  [[(v1, v2)  in V(X; A) with pq ]] &\defeq [[ (v1, v2) in V(pq(X); pq(A)) with emp  ]]
+\end{align*}
+That is, given $[[v1]]$ of type $[[X]]$ and $[[v2]]$ of type $[[A]]$ ($[[A]]
+\neq [[X]]$), they are related at $[[X]]$ and $[[A]]$ if and only if they are
+related at $[[pq(X)]]$ and $[[pq(A)]]$~\footnote{Here we are abusing the
+  notation with the intention that $[[pq(X)]]$ means the assigned type of
+  $[[X]]$ in $[[pq]]$; and $[[pq(A)]]$ means substituting all the variables
+  mentioned in $[[pq]]$ with the corresponding types in $[[A]]$.}. To see why we
+need to get the assigned type of $[[X]]$ in $[[pq]]$, suppose we have an
+expression $[[\ X ** nat . \x . x]]$ of type $[[ \ X ** bool . X & nat -> X & nat ]]$,
+we should expect the following to hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
+\[
+  [[(\ X ** bool . \x . x) nat 1 -->> <1 , 1> ]]
+\]
+According to the definition in question, it boils down to verify the following:
+\[
+  [[  (1 , 1) in V (X ; nat) with pq  ]]
+\]
+where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. And if we
+replace $[[X]]$ with $[[nat]]$ then the above holds trivially.
+
+
+However, the seemingly innocuous definition for type variables has a serious
+issue with impredicativity -- i.e, the relation in question is \textit{not
+  well-founded}. We could pick a bad instantiation to make the relation ``go
+into a loop''. For example, suppose $[[pq]]$ only contains a mapping from $[[X]]$ to
+$[[\X . \Y . Y]]$, we then have the following infinite chain of equational reasoning:
+\[
+ \valR{[[X]]}{[[\Y . Y]]}_{[[pq]]} = \valR{[[\X . \Y . Y]]}{[[\Y. Y]]}_{[[emp]]} = \eeR{[[\Y . Y]]}{[[ X ]]}_{[[pq]]} = \valR{[[\Y . Y]]}{[[ X ]]}_{[[pq]]} = \dots
+\]
+The culprit is the polymorphic instantiation $[[\X . \Y . Y]]$, which is larger
+than $[[\Y . Y]]$. This is the exact circumstance where in \cref{fig:logical:f}
+substitution is deliberately avoided in the definition for type abstractions.
+
 
 
 
