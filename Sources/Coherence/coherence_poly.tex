@@ -39,14 +39,14 @@ a logical relation. It is well-known that the logical relation of System F
 induces the \textit{abstraction theorem} (also called the \textit{parametricity
   theorem}) of \citet{reynolds1983types}, which roughly says that every
 well-typed expression behaves the same as itself according to its type. The
-stringency of parametricity ensure that a polymorphic type has very few
+stringency of parametricity ensures that a polymorphic type has very few
 inhabitants, so few that we can deduce the behavior of a program by just looking
 at its type, which \citet{wadler1989theorems} christened \textit{theorems for
   free}.
 
 Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
-function of the same type -- all expressions with this type have to be constant
+function of the same type -- i.e., all expressions with this type have to be constant
 functions.
 
 \begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
@@ -139,12 +139,65 @@ The culprit is the polymorphic instantiation $[[\X . \Y . Y]]$, which is larger
 than $[[\Y . Y]]$. This is the exact circumstance where in \cref{fig:logical:f}
 substitution is deliberately avoided in the definition for type abstractions.
 
-
-
-
-
 \section{Predicative Logical Relation}
 \label{sec:succeed:lr}
+
+In light of the fact that substitution in the logical relation seems unavoidable
+in our setting, and that impredicativity conflicts with substitution, we turn
+to, for the lack of a better logical relation, predicativity. On the other hand,
+a predicative system seems to be a reasonable choice in that later we want to
+study implicit polymorphism based on \fnamee, which is briefly discussed in
+\cref{sec:implicit}.
+
+\begin{figure}
+  \centering
+  \begin{small}
+  \begin{tabular}{lll}
+  $[[(v1 , v2) in V ( nat ; nat ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
+  $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
+    $\hlmath{[[(v1, v2)  in V ( \ X ** A1 . B1; \ X ** A2 . B2 ) ]]}$  &$\defeq$ & $\hlmath{\forall [[empty |- t ** A1 & A2 ]].}$ \\
+                                       && $\hlmath{[[  (v1 |t| , v2 |t|) in E ( [t / X] B1 ; [t / X] B2) ]]}$ \\
+  $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
+  $[[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]$  & $\defeq$ & $[[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]$  \\
+  $[[(v1 , v2) in V (A; B) ]]$  & $\defeq$ & $\mathsf{true} \quad \text{otherwise}$ \\ \\
+    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
+                                       & & $[[(v1, v2) in V (A; B)]]$
+  \end{tabular}
+  \end{small}
+  \caption{Logical relation for \fnamee}
+  \label{fig:logical:fi}
+\end{figure}
+
+Substitution with predicative instantiations does not prevent well-foundedness.
+\Cref{fig:logical:fi} presents the logical relation for \fnamee. We extend the
+logical relation in \cref{fig:logical} with a new clause (highlighted) for
+disjoint quantification. Notice that it quantifies over a \textit{single}
+monotype $[[t]]$, unlike the tradition formulation (see \cref{fig:logical:f}).
+This suffices for our purposes to prove coherence. Also notice that we directly
+substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$ and $[[B2]]$. It can shown that
+the resulting term $[[ [t / X] B1 ]]$ is smaller than $[[ \X ** A1 . B1 ]]$.
+
+\begin{lemma}[Well-foundedness]
+  The logical relation as defined in \cref{fig:logical:fi} is well-founded.
+\end{lemma}
+\begin{proof}
+  Let $| \cdot |_{\forall}$ and $| \cdot |_s$ denote the number of
+  $\forall$-quantifies and the size of types, respectively. The following
+  measure suffices to prove well-foundedness:
+  \[
+\langle | \cdot |_{\forall} ,  | \cdot |_s   \rangle
+  \]
+  where $\langle \dots \rangle$ denotes lexicographic order. We can verify that
+  for the clause of disjoint quantification, the number of $\forall$-quantifies
+  decreases, because the monotype $[[t]]$ does not contain $\forall$-quantifies.
+  For the other clauses, either the measure of $| \cdot |_{\forall}$ decreases,
+  or it remains the same but the measure of $| \cdot |_s$ decreases.
+\end{proof}
+
+
+
+
 
 
 
