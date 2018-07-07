@@ -406,9 +406,12 @@ formula :: 'formula_' ::=
   | cc : ( gg |- T ) ~~> ( gg' |- T' ) :: :: ctxt
   | gg |- T :: :: hole
   | GG |- e1 == e2 : A ; B :: :: logeq3 {{ tex [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] ; [[B]] }}
+  | DD ; GG  |- e1 == e2 : A ; B :: :: logeq5 {{ tex [[DD]] ; [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] ; [[B]] }}
   | GG |- e1 == e2 : A  :: :: logeq4 {{ tex [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] }}
+  | DD ; GG |- e1 == e2 : A  :: :: logeq6 {{ tex [[DD]] ; [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] }}
   | gg |- e1 ~= e2 : T :: :: cxtx {{ tex [[gg]] [[|-]] \ctxeq{[[e1]]}{[[e2]]}{[[T]]} }}
   | GG |- ee1 ~= ee2 : A :: :: cxtx2
+  | DD ; GG |- ee1 ~= ee2 : A :: :: cxtx3
   | ( v1 , v2 ) in V ( A ; B ) :: :: value2 {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[A]]}{[[B]]} }}
   | ( v1 , v2 ) in V ( A ; B ) with pq :: :: value4 {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[A]]}{[[B]]}_{[[pq]]} }}
   | ( v1 , v2 ) in V ( A  ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[A]]} }}
@@ -421,6 +424,8 @@ formula :: 'formula_' ::=
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
   | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
   | ee -->> e :: :: red
+  | p in DD  :: :: trel  {{ tex [[p]] \in \ddR{[[DD]]} }}
+  | CC : ( DD ; GG dir A ) ~> ( DD' ; GG' dir' B ) ~~> cc :: :: typctx
 
 
 

@@ -12,7 +12,7 @@ it to disjoint intersection types in \cref{sec:failed:lr}. The technical
 difficulty stems from the interaction between impredicativity and disjointness.
 Finally in \cref{sec:succeed:lr}, we present our (predicative) logical relation
 that is specially crafted to prove coherence for \fnamee, and talk about
-potential solutions to lift the predicativity restriction.
+a potential solution to lift the predicativity restriction.
 
 
 \section{Review of the Parametric Logical Relation}
@@ -114,7 +114,7 @@ related at $[[pq(X)]]$ and $[[pq(A)]]$~\footnote{Here we are abusing the
   $[[X]]$ in $[[pq]]$; and $[[pq(A)]]$ means substituting all the variables
   mentioned in $[[pq]]$ with the corresponding types in $[[A]]$.}. To see why we
 need to get the assigned type of $[[X]]$ in $[[pq]]$, suppose we have an
-expression $[[\ X ** nat . \x . x]]$ of type $[[ \ X ** bool . X & nat -> X & nat ]]$,
+expression $[[\ X ** bool . \x . x]]$ of type $[[ \ X ** bool . X & nat -> X & nat ]]$,
 we should expect the following to hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
 \[
   [[(\ X ** bool . \x . x) nat 1 -->> <1 , 1> ]]
@@ -196,13 +196,168 @@ the resulting term $[[ [t / X] B1 ]]$ is smaller than $[[ \X ** A1 . B1 ]]$.
 \end{proof}
 
 
+Another noticeable thing is that in the value relation $ \valR{[[A]]}{[[B]]} $
+(and $\eeR{[[A]]}{[[B]]} $), we keep the invariant that $[[A]]$ and $[[B]]$
+are closed types. That is why we do not need to consider type variables in the
+logical relation, which simplifies the proof a lot. We show that the logical
+relation is symmetric.
 
 
+\begin{lemma}[Symmetry of logical relation]
+  If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
+\end{lemma}
+\begin{proof}
+  Symmetry of \cref{fig:logical} is trivial. For \cref{fig:logical:fi}, the
+  proof proceeds by first induction on $ | [[A]] |_{\forall} $ then simultaneous
+  induction the structure of $[[A]]$ and $[[B]]$.
+\end{proof}
+
+\section{Establishing Coherence}
+
+We are now ready to prove coherence for \fnamee. The proof of coherence
+basically follows that in \cref{chap:coherence:simple}. We first give the
+interpretations of type and value contexts ($[[p]]$ is a mapping from type
+variables to monotypes).
+
+\begin{definition}[Interpretation of type contexts]
+  \begin{mathpar}
+    \ottaltinferrule{}{}{  }{ [[emp in empty]] } \and
+    \ottaltinferrule{}{}{ [[p in DD]] \\ [[empty |- t ** p(B)]] \\  }{ [[p [ X -> t ] in DD , X ** B]]  }
+  \end{mathpar}
+\end{definition}
 
 
+\begin{definition}[Interpretation of value contexts]
+  \begin{mathpar}
+    \ottaltinferrule{}{}{  }{ [[(emp, emp) in empty with p ]]  } \and
+    \ottaltinferrule{}{}{ [[(g1, g2) in GG with p ]] \\ [[(v1, v2) in V (p(A)) ]] }{ [[(g1 [ x -> v1 ] , g2 [ x -> v2 ]  )  in GG , x : A with p ]] }
+  \end{mathpar}
+\end{definition}
 
 
-% Local Variables:
-% TeX-master: "../../Thesis"
-% org-ref-default-bibliography: ../../Thesis.bib
-% End:
+\paragraph{Logical Equivalence.}
+
+Logical equivalence is defined in terms of logical relation by considering all possible interpretations of
+free type and term variables.
+
+\begin{definition}[Logical equivalence] \leavevmode
+  \begin{center}
+  \begin{tabular}{lll}
+    $[[DD ; GG |- e1 == e2 : A ; B]] $ & $\defeq $ & $[[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \forall [[p]], [[g1]], [[g2]]. $ \\
+                                       & & $([[p in DD]] \land [[(g1, g2) in GG with p ]])$ \\
+                                       && $\Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]]$
+  \end{tabular}
+  \end{center}
+\end{definition}
+
+
+\paragraph{Contextual Equivalence.}
+
+\begin{figure}
+  \centering
+\begin{tabular}{llll}\toprule
+  \tnamee contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid [[\ X . cc]]  \mid [[ cc T  ]] \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $ \\
+  \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
+  & & $\mid$ & $[[ { l = CC}  ]]  \mid [[ CC . l]]   $  \\ \bottomrule
+\end{tabular}
+  \caption{Expression contexts of \tnamee and \fnamee}
+  \label{fig:contexts:fi}
+\end{figure}
+
+
+To define the contextual equivalence, we must define the expression contexts for
+\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi}. The typing
+judgment of \fnamee contexts has 4 different forms:
+\begin{mathpar}
+  [[CC : (DD; GG => A) ~> (DD'; GG' => A') ~~> cc]] \and
+  [[CC : (DD; GG <= A) ~> (DD'; GG' => A') ~~> cc]] \and
+  [[CC : (DD; GG => A) ~> (DD'; GG' <= A') ~~> cc]] \and
+  [[CC : (DD; GG <= A) ~> (DD'; GG' <= A') ~~> cc]]
+\end{mathpar}
+The full typing rules are similar to \cref{fig:ctyp} and appear in the appendix.
+Now we may give the definition of contextual equivalence for \fname as follows:
+
+\begin{definition}[\fnamee Contextual Equivalence] \leavevmode
+  \begin{center}
+  \begin{tabular}{lll}
+    $[[DD ; GG |- ee1 ~= ee2 : A]] $ & $\defeq $ & $\forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land  $ \\
+                                     & & $\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]  $ \\
+                                     & & $\Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
+  \end{tabular}
+  \end{center}
+\end{definition}
+
+
+The connection between disjointness and the value relation becomes a bit
+complicated due to the addition of type variables. We first prove that disjoint
+values of monotypes are related.
+
+
+\begin{lemma}[Disjoint values of monotypes are related] \label{lemma:disjoint:mono}
+  If $[[empty |- t1 ** t2]]$,
+  $[[  empty ; empty |-  v1 : |t1|  ]]$ and
+  $[[  empty ; empty |-  v2 : |t2|  ]]$
+  then $[[   (v1, v2) in V ( t1 ; t2  )    ]]$.
+\end{lemma}
+\begin{proof}
+  By simultaneous induction on $[[t1]]$ and $[[t2]]$.
+\end{proof}
+
+Then we can prove a more general lemma.
+
+\begin{lemma}[Disjoint values are related]
+  If $[[DD |- A ** B]]$, $[[ p in DD  ]]$, $[[  empty ; empty |-  v1 : |p (A)|  ]]$ and $[[  empty ; empty |-  v2 : |p (B)|  ]]$
+  then $[[   (v1, v2) in V ( p(A) ; p(B)  )    ]]$.
+\end{lemma}
+\begin{proof}
+  By induction on the derivation of disjointness. The most interesting case is the variable rule:
+  \[
+    \drule{FD-tvarL}
+  \]
+  By the definition of $[[p]]$, we know $[[p(X)]]$ is a monotype. If $[[B]]$ is
+  a polytype, then it follows easily by the definition of logical relation. If
+  $[[B]]$ is also a monotype, we know $[[p(X)]]$ and $[[p(A)]]$ are disjoint by
+  definition. Then by \cref{lemma:covariance:disjoint} and $[[A <: B]]$,
+  we have $[[p(X)]]$ and $[[p(B)]]$ are also disjoint. Finally we apply
+  \cref{lemma:disjoint:mono}.
+\end{proof}
+
+
+Next up are the compatibility lemmas. They are essentially the same as in
+\cref{chap:coherence:simple}. Finally we state the last two important theorems
+without giving proofs. The proofs are essentially the same as in
+\cref{chap:coherence:simple}. The interested reader can refer to our Coq
+formalization.
+
+\begin{theorem}[Fundamental Property] We have that:
+  \begin{itemize}
+  \item If $[[DD; GG |- ee => A ~~> e]]$ and $[[DD; GG |- ee => A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
+  \item If $[[DD ; GG |- ee <= A ~~> e]]$ and $[[DD ; GG |- ee <= A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
+  \end{itemize}
+\end{theorem}
+
+\begin{theorem}[Congruence]
+ If $[[CC : (DD ; GG dir A) ~> (DD' ; GG' dir' A') ~~> cc]]$, $[[DD ; GG |- ee1 dir A ~~> e1]]$, $[[DD ; GG |- ee2 dir A ~~> e2]]$
+ and $[[DD ; GG |- e1 == e2 : A ]]$, then $[[DD' ; GG' |- cc{e1} == cc{e2} : A']]$.
+\end{theorem}
+
+Finally \fnamee is coherent.
+
+\begin{theorem}[Coherence of \fnamee] We have that
+  \begin{itemize}
+  \item If $[[DD ; GG |- ee => A ]]$ then $[[DD ; GG |- ee ~= ee : A]]$.
+  \item If $[[DD ; GG |- ee <= A ]]$ then $[[DD ; GG |- ee ~= ee : A]]$.
+  \end{itemize}
+\end{theorem}
+
+
+\paragraph{Final remarks.}
+
+It would be interesting to study parametricity of \fnamee. Firstly logical
+relation as defined in \cref{fig:logical:fi} is not powerful enough, as it does
+not quantify any relation over values. So \cref{thm:free} is impossible to
+prove using our logical relation. Secondly, as we have seen, it is not obvious
+how to extend the parametric logical relation as defined in \cref{fig:logical:f}
+to account for disjointness, and avoid potential circularity due to
+impredicativity. A possible solution is to use step-indexed logical relations.
+We have yet investigated further on that direction.

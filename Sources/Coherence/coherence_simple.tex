@@ -66,9 +66,8 @@ the notion of \textit{contextual equivalence}.
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll}\toprule
-  \tname contexts & $[[cc]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . cc]] \mid [[cc e2]] \mid [[e1 cc]] \mid [[< cc, e2 >]] \mid [[< e1, cc >]] \mid [[c cc]] $ \\
-  % & & $\mid$ & $ [[ { l = cc }]] \mid [[ cc. l ]]$ \\
-  \namee contexts & $[[CC]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . CC]] \mid [[CC ee2]] \mid [[ee1 CC]] \mid [[ee1 ,, CC]] \mid [[CC ,, ee2]] \mid [[CC : A]] $ \\
+  \tname contexts & $[[cc]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . cc]] \mid [[cc e]] \mid [[e cc]] \mid [[< cc, e >]] \mid [[< e, cc >]] \mid [[c cc]] $ \\
+  \namee contexts & $[[CC]]$ & $\Coloneqq$ & $[[__]] \mid [[\x . CC]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ee ,, CC]] \mid [[CC ,, ee]] \mid [[CC : A]] $ \\
   & & $\mid$ & $ [[ { l = CC } ]] \mid [[CC.l]]$ \\ \bottomrule
 \end{tabular}
   \caption{Expression contexts of \tname and \namee}
@@ -346,7 +345,7 @@ makes them related:
 \begin{definition}[Logical equivalence] \leavevmode
   \begin{center}
   \begin{tabular}{lll}
-    $[[GG |- e1 == e2 : A ; B]] $ & $\defeq $ & $[[|GG| |- e1 : |A|]] \land [[|GG| |- e2 : | A | ]] \ \land $ \\
+    $[[GG |- e1 == e2 : A ; B]] $ & $\defeq $ & $[[|GG| |- e1 : |A|]] \land [[|GG| |- e2 : | B | ]] \ \land $ \\
                                  & & $\forall [[g1]], [[g2]] .\, [[(g1, g2) in GG ]] \Longrightarrow [[(g1 (e1), g2 (e2))  in E (A ; B) ]]$
   \end{tabular}
   \end{center}
@@ -361,7 +360,7 @@ But we need several lemmas to set the stage.
 
 Firstly we need the compatibility lemmas, which state that logical equivalence is
 preserved by language constructs. Most of them are standard and are thus omitted.
-We show only one compatibility lemma that is specific to our logical relation:
+We show only two compatibility lemmas that are specific to our logical relation:
 
 \begin{lemma}[Coercion Compatibility]   \label{lemma:co-compa}
   Suppose that $[[A1 <: A2 ~~> c]]$,
@@ -373,6 +372,15 @@ We show only one compatibility lemma that is specific to our logical relation:
 \begin{proof}
   By induction on the subtyping derivation.
 \end{proof}
+
+\begin{lemma}[Merge compatibility]
+  If $[[   GG |- e1 == e1' : A ]]$, $[[  GG |- e2 == e2' : B ]]$ and $[[ A ** B ]]$,
+  then $[[   GG |- < e1, e2 > == <e1', e2'> : A & B ]]$.
+\end{lemma}
+\begin{proof}
+  By the definition of logical relation and \cref{lemma:disjoint}.
+\end{proof}
+
 
 
 The ``Fundamental Property'' states that any well-typed expression is related to
