@@ -7,8 +7,8 @@
 In this chapter, we extend the proof technique introduced in
 \cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly we review
 the parametric logical relation for System F~\citep{reynolds1983types} in
-\cref{sec:para:lr}. We then talk about a failed attempt on naturally extending
-it to disjoint intersection types in \cref{sec:failed:lr}. The technical
+\cref{sec:para:lr}. We then talk about a failed attempt on a naturally extending
+it to deal with disjoint intersection types in \cref{sec:failed:lr}. The technical
 difficulty stems from the interaction between impredicativity and disjointness.
 Finally in \cref{sec:succeed:lr}, we present our (predicative) logical relation
 that is specially crafted to prove coherence for \fnamee, and talk about
@@ -52,10 +52,7 @@ functions.
 \begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
   Suppose $[[e]]$ is any expression of type $[[\X . X -> nat]]$. Let $[[T1]]$
   and $[[T2]]$ be arbitrary types. For any $[[v1]]$ of type $[[T1]]$ and
-  $[[v2]]$ of type $[[T2]]$,
-  \[
-    [[e T1 v1 -->> v3]] \land [[e T2 v2 -->> v4]] \land [[v3]] = [[v4]]
-  \]
+  $[[v2]]$ of type $[[T2]]$, if $[[e T1 v1 -->> v3]]$ and $[[e T2 v2 -->> v4]]$ then $[[v3]] = [[v4]]$.
 \end{theorem}
 
 
@@ -94,7 +91,7 @@ F, but also take care of disjointness constraint, as shown below.
 \begin{align*}
   [[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]] &\defeq \forall [[empty |- C1 ** pq(A1 & A2) ]], [[empty |- C2 ** pq(A1 & A2)]], \\
                                                             & \quad [[R]] \subseteq [[C1]] \times [[C2]]. \\
-                                                            & \quad [[ ( v1 |C1|, v2 |C2|) in V (B1 ; B2) with pq[X -> R]    ]]
+                                                            & \quad [[ ( v1 |C1|, v2 |C2|) in E (B1 ; B2) with pq[X -> R]    ]]
 \end{align*}
 That is, it quantifies over all types that meet the disjointness constraint. For
 type variables, things become a bit complicated. If we have the same type
@@ -209,7 +206,7 @@ relation is symmetric.
 \begin{proof}
   Symmetry of \cref{fig:logical} is trivial. For \cref{fig:logical:fi}, the
   proof proceeds by first induction on $ | [[A]] |_{\forall} $ then simultaneous
-  induction the structure of $[[A]]$ and $[[B]]$.
+  induction the structures of $[[A]]$ and $[[B]]$.
 \end{proof}
 
 \section{Establishing Coherence}
@@ -240,14 +237,12 @@ variables to monotypes).
 Logical equivalence is defined in terms of logical relation by considering all possible interpretations of
 free type and term variables.
 
-\begin{definition}[Logical equivalence] \leavevmode
-  \begin{center}
-  \begin{tabular}{lll}
-    $[[DD ; GG |- e1 == e2 : A ; B]] $ & $\defeq $ & $[[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \forall [[p]], [[g1]], [[g2]]. $ \\
-                                       & & $([[p in DD]] \land [[(g1, g2) in GG with p ]])$ \\
-                                       && $\Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]]$
-  \end{tabular}
-  \end{center}
+\begin{definition}[Logical equivalence]
+  \begin{align*}
+    [[DD ; GG |- e1 == e2 : A ; B]]  & \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
+                                       & \qquad \forall [[p]], [[g1]], [[g2]]. \ ([[p in DD]] \land [[(g1, g2) in GG with p ]]) \\
+                                       &  \qquad \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]]
+  \end{align*}
 \end{definition}
 
 
@@ -266,8 +261,8 @@ free type and term variables.
 
 
 To define the contextual equivalence, we must define the expression contexts for
-\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi}. The typing
-judgment of \fnamee contexts has 4 different forms:
+\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi}. As with before,
+the typing judgment of \fnamee contexts has 4 different forms:
 \begin{mathpar}
   [[CC : (DD; GG => A) ~> (DD'; GG' => A') ~~> cc]] \and
   [[CC : (DD; GG <= A) ~> (DD'; GG' => A') ~~> cc]] \and
@@ -277,14 +272,12 @@ judgment of \fnamee contexts has 4 different forms:
 The full typing rules are similar to \cref{fig:ctyp} and appear in the appendix.
 Now we may give the definition of contextual equivalence for \fname as follows:
 
-\begin{definition}[\fnamee Contextual Equivalence] \leavevmode
-  \begin{center}
-  \begin{tabular}{lll}
-    $[[DD ; GG |- ee1 ~= ee2 : A]] $ & $\defeq $ & $\forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land  $ \\
-                                     & & $\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]  $ \\
-                                     & & $\Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}  $
-  \end{tabular}
-  \end{center}
+\begin{definition}[\fnamee Contextual Equivalence]
+  \begin{align*}
+    [[DD ; GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
+                                     & \qquad \forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]   \\
+                                     & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}
+  \end{align*}
 \end{definition}
 
 
@@ -315,7 +308,7 @@ Then we can prove a more general lemma.
     \drule{FD-tvarL}
   \]
   By the definition of $[[p]]$, we know $[[p(X)]]$ is a monotype. If $[[B]]$ is
-  a polytype, then it follows easily by the definition of logical relation. If
+  a polytype, then it follows easily from the definition of logical relation. If
   $[[B]]$ is also a monotype, we know $[[p(X)]]$ and $[[p(A)]]$ are disjoint by
   definition. Then by \cref{lemma:covariance:disjoint} and $[[A <: B]]$,
   we have $[[p(X)]]$ and $[[p(B)]]$ are also disjoint. Finally we apply
@@ -324,10 +317,10 @@ Then we can prove a more general lemma.
 
 
 Next up are the compatibility lemmas. They are essentially the same as in
-\cref{chap:coherence:simple}. Finally we state the last two important theorems
-without giving proofs. The proofs are essentially the same as in
-\cref{chap:coherence:simple}. The interested reader can refer to our Coq
-formalization.
+\cref{chap:coherence:simple}. So we skip them and state the last two important
+theorems without giving proofs. The proofs have mostly the same structures as in the
+simply-typed case, but with more cases. The interested reader can refer to our
+Coq formalization.
 
 \begin{theorem}[Fundamental Property] We have that:
   \begin{itemize}
