@@ -52,7 +52,7 @@ decl :: 'decl_' ::=
 
 %% Expressions
 
-E {{ tex \mathcal{E} }}  :: 'E_' ::=
+E {{ tex \mathcal{T} }}  :: 'E_' ::=
   | Top                                                                     :: :: top
   | x                                                                       :: :: var
   | ii                                                                      :: :: lit
@@ -78,7 +78,7 @@ E {{ tex \mathcal{E} }}  :: 'E_' ::=
   | E1 /= E2                                                                :: :: neq
   | E1 < E2                                                                 :: :: lt
   | E1 > E2                                                                 :: :: gt
-  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \rhd [[E2]] }}
+  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \wedge [[E2]] }}
   | { l1 = E1 , ... , ln = En }                                             :: :: rcd2
   | { l1 = E1 } ,, ... ,, { ln = En }                                       :: :: rcd3
   | ( E )                                                                   :: :: paren
@@ -382,6 +382,7 @@ terminals :: 'terminals_' ::=
 formula :: 'formula_' ::=
   | judgement                ::   :: judgement
   | | formula | :: :: multi       {{ tex \overline{[[formula]]}^{i \in 1 .. n}   }}
+  | SD |- AA1 ** ... ** AAn               :: :: dis
   | mono t :: :: pred  {{ tex \mathsf{mono}\ [[t]] }}
   | uniq GG                   ::   :: uniqGG {{ tex }}
   | uniq dd                   ::   :: uniq1
@@ -1947,7 +1948,7 @@ SD ; SG |- letrec x : AA = E1 in E2 => BB ~~> letrec x : |AA| = ee1 in ee2
 
 | SD ; SG |- Ei => Trait[AAi, BBi] ~~> eei |
 | AA <: AAi |
-SD |- BB1 & .. & BBn
+SD |- BB1 ** .. ** BBn
 BB1 & .. & BBn <: AA
 ----------------------------------------------------------------------------------------------------------------------- :: new
 SD ; SG |- new [ AA ] ( </ Ei // i IN 1..n /> ) => AA ~~> letrec self : |AA| = </ (eei self) // i IN 1..n />  in self
@@ -1956,7 +1957,7 @@ SD ; SG |- new [ AA ] ( </ Ei // i IN 1..n /> ) => AA ~~> letrec self : |AA| = <
 | SD ; SG, self : BB |- Ei => Trait[BBi, CTi] ~~> eei |
 SD ; SG, self : BB |- { </ lj = Ej' // j IN 1..m /> } => CT ~~> ee
 | BB <: BBi |
-SD |- CT1 & .. & CTn & CT
+SD |- CT1 ** .. ** CTn ** CT
 CT1 & .. & CTn & CT <: AA
 --------------------------------------------------------------------------------------------------------------- :: trait
 SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self  . ((</ (eei self) // i IN 1..n />)  ,, ee)
@@ -1973,7 +1974,7 @@ SD ; SG |- E1 ^ E2 => BB ~~> ee1 ee2
 | SD; SG, self : BB |- Ei => Trait[BBi, CTi] ~~> eei |
 SD ; SG, self : BB, super : CT1 & .. & CTn |- { </ lj = Ej' // j IN 1..m /> } => CT ~~> ee
 | BB <: BBi |
-SD |- CT1 & .. & CTn & CT
+SD |- CT1 ** .. ** CTn ** CT
 CT1 & .. & CTn & CT <: AA
 --------------------------------------------------------------------------------------------------------------- :: traitSuper
 SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self . (let super = </ (eei self) // i IN 1..n /> in super ,, ee)

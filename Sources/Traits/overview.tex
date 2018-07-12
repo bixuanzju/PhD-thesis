@@ -1,6 +1,6 @@
 
 \section{Overview}
-\label{sec:overview}
+\label{sec:trait:overview}
 
 This section aims at introducing first-class classes and traits, their possible
 uses and applications, as well as the typing challenges that arise
@@ -11,7 +11,7 @@ toolkit~\cite{DBLP:conf/oopsla/TakikawaSDTF12}. The example is illustrative of
 typical uses of dynamic inheritance/composition, and also the typing challenges
 in the presence of first-class classes/traits. Without diving into
 technical details, we then give the corresponding typed version in
-\name, and informally presents its salient features.
+\sedel, and informally presents its salient features.
 
 \subsection{First-Class Classes in JavaScript}
 
@@ -24,6 +24,7 @@ such as Java or C++. However classes in JavaScript are
 statically-typed class-based languages.
 
 \paragraph{Conventional Classes.}
+
 Before diving into the more advanced features of JavaScript classes, we first
 review the more conventional class declarations supported in JavaScript as well
 as many other languages. Even for conventional classes there are some
@@ -31,9 +32,15 @@ interesting points to note about JavaScript that will be important when we move
 into a typed setting. An example of a JavaScript class declaration is:
 \begin{lstlisting}[language=JavaScript]
 class Editor {
-  onKey(key) { return "Pressing " + key; }
-  doCut()    { return this.onKey("C-x") + " for cutting text"; }
-  showHelp() { return "Version: " + this.version() + " Basic usage..."; }
+  onKey(key) {
+    return "Pressing " + key;
+  }
+  doCut() {
+    return this.onKey("C-x") + " for cutting text";
+  }
+  showHelp() {
+    return "Version: " + this.version() + " Basic usage...";
+  }
 };
 \end{lstlisting}
 This form of class definition is standard and very similar to declarations in
@@ -63,10 +70,10 @@ and then calling \lstinline{showHelp} will cause a runtime error!
 Statically-typed languages usually provide some means to protect us from this
 situation. For example, in Java, we would need an \textit{abstract} \lstinline{version}
 method, which effectively makes \lstinline{Editor} an abstract class and
-prevents it from being instantiated. As we will see, \name's treatment of
-abstract methods is quite different from mainstream languages. In fact, \name
+prevents it from being instantiated. As we will see, \sedel's treatment of
+abstract methods is quite different from mainstream languages. In fact, \sedel
 has a unified (typing) mechanism for dealing with both dynamic dispatch and abstract
-methods. We will describe \name's mechanism for dealing with both features and
+methods. We will describe \sedel's mechanism for dealing with both features and
 justify our design in \cref{sec:traits}.
 
 % A couple of things worth pointing out in the above code snippet: (1) the class
@@ -82,9 +89,10 @@ justify our design in \cref{sec:traits}.
 % subclass of \lstinline{Editor} overrides the method \lstinline{onKey}, a call to
 % \lstinline{doCut} should invoke \lstinline{onKey} defined in the subclass
 % instead of the original one.\bruno{punchline?}
-%As we will see later, the type system of \name correctly handles it.
+%As we will see later, the type system of \sedel correctly handles it.
 
 \paragraph{First-Class Classes and Class Expressions.}
+
 Another way to define a class in JavaScript is via a \emph{class expression}. This is where the class
 model in JavaScript is very different from the traditional class model found in
 many mainstream OO languages, such as Java, where classes are second-class
@@ -98,8 +106,12 @@ spell checking to an editor:
 \begin{lstlisting}[language=JavaScript]
 const spellMixin = Base => {
   return class extends Base {
-    check()    { return super.onKey("C-c") + " for spell checking"; }
-    onKey(key) { return "Process " + key + " on spell editor"; }
+    check() {
+      return super.onKey("C-c") + " for spell checking";
+    }
+    onKey(key) {
+      return "Process " + key + " on spell editor";
+    }
   }
 };
 \end{lstlisting}
@@ -123,8 +135,7 @@ classes are successful. Notice the use of the \lstinline{super} keyword in the
 \lstinline{check} method. If the base class does not implement the
 \lstinline{onKey} method, then mixin application fails with a runtime error. In
 a typed setting, a type system must express this requirement (i.e., the presence of
-the \lstinline{onKey} method) on the (statically unknown) base class that is
-being inherited.
+the \lstinline{onKey} method) on the (statically unknown) base class being inherited.
 
 
 % The class expression inside the function body has no
@@ -153,8 +164,12 @@ const modalMixin = Base => {
       super();
       this.mode = "command";
     }
-    toggleMode() { return "toggle succeeded"; }
-    onKey(key)   { return "Process " + key + " on modal editor"; }
+    toggleMode() {
+      return "toggle succeeded";
+    }
+    onKey(key) {
+      return "Process " + key + " on modal editor";
+    }
   };
 };
 \end{lstlisting}
@@ -166,7 +181,9 @@ Now we can compose \lstinline{spellMixin} with \lstinline{modalMixin} to produce
 a combination of functionality, mimicking some form of multiple inheritance:
 \begin{lstlisting}[language=JavaScript]
 class IDEEditor extends modalMixin(spellMixin(Editor)) {
-  version() { return 0.2; }
+  version() {
+    return 0.2;
+  }
 }
 \end{lstlisting}
 The class \lstinline{IDEEditor} extends the base class \lstinline{Editor} with
@@ -202,7 +219,7 @@ mixins is that the order of trait composition is irrelevant, and conflicting
 methods must be resolved \emph{explicitly}. This gives programmers
 fine-grained control, when conflicts arise, of selecting desired features from
 different components. Thus we believe traits are a better model for multiple
-inheritance in statically-typed OO languages, and in \name we realize this
+inheritance in statically-typed object-oriented languages, and in \sedel we realize this
 vision by giving traits a first-class status in the language,
 achieving more expressive power compared with traditional (second-class) traits.
 
@@ -222,7 +239,7 @@ we have just seen in a typed setting:
 \item In the presence of first-class traits, how to detect conflicts statically,
   even when the traits involved are not statically known.
 \end{itemize}
-\name elegantly solves the above challenges in a unified way, as
+\sedel elegantly solves the above challenges in a unified way, as
 we will see next.
 
 
@@ -240,14 +257,14 @@ we will see next.
 % turns out, designing a sound type system that fully supports first-class classes
 % is notoriously hard; there are only a few, quite sophisticated, languages that
 % manage this~\cite{DBLP:conf/oopsla/TakikawaSDTF12, DBLP:conf/ecoop/LeeASP15}. We
-% pushed it further: \name has support for typed first-class
+% pushed it further: \sedel has support for typed first-class
 % traits.\bruno{Better to say there's no work on typed first-class
 %   traits, and little work on first-class classes/mixins, despite
 %  many dynamic languages prominently supporting such features.}
 
-\subsection{A Glance at Typed First-Class Traits in \name}
+\subsection{A Glance at Typed First-Class Traits in \sedel}
 
-We now rewrite the above library in \name, but this time with types. The resulting code has the same functionality as the dynamic version, but is
+We now rewrite the above library in \sedel, but this time with types. The resulting code has the same functionality as the dynamic version, but is
 statically typed. All code snippets in this and later sections are runnable in
 our prototype implementation. Before proceeding, we ask the readers to bear in mind that in this section we are not using traits
 in the most canonical way, i.e., we use traits as if they are classes (but with
@@ -259,22 +276,22 @@ to the structure of the JavaScript version for ease of comparison. In
 Below is a simple trait \lstinline{editor}, which corresponds to the JavaScript
 class \lstinline{Editor}. The \lstinline{editor} trait defines the same set of
 methods: \lstinline{on_key}, \lstinline{do_cut} and \lstinline{show_help}:
-\lstinputlisting[linerange=17-21]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR
-The first thing to notice is that \name uses a syntax (similar to Scala's
+\lstinputlisting[linerange=23-27]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR
+The first thing to notice is that \sedel uses a syntax (similar to Scala's
 self type annotations~\cite{odersky2004overview}) where we can give a type annotation to the
 \lstinline{self} reference. In the type of \lstinline{self} we use
 \lstinline{&} construct to create intersection types. \lstinline{Editor} and \lstinline{Version} are two record types:
-\lstinputlisting[linerange=10-11]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
-For the sake of conciseness, \name uses \lstinline{type} aliases to abbreviate types.
+\lstinputlisting[linerange=10-17]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
+For the sake of conciseness, \sedel uses \lstinline{type} aliases to abbreviate types.
 
 \paragraph{Self-Types Encode Abstract Methods.}
 Recall that in the JavaScript class \lstinline{Editor}, the \lstinline{version}
 method is undefined, but is used inside \lstinline{showHelp}. How can we express
-this in the typed setting, if not with an abstract method? In \name, self-types
+this in the typed setting, if not with an abstract method? In \sedel, self-types
 play the role of trait requirements. As the first approximation, we
 can justify the use of \lstinline{self.version} by noticing that (part of) the
 type of \lstinline{self} (i.e., \lstinline{Version}) contains the declaration of
-\lstinline{version}. An interesting aspect of \name's trait model is that there
+\lstinline{version}. An interesting aspect of \sedel's trait model is that there
 is no need for abstract methods. Instead, abstract methods can be simulated as
 requirements of a trait. Later, when the trait is composed with other
 traits, \emph{all} requirements on the self-types must be
@@ -287,33 +304,33 @@ As in the JavaScript version, the \lstinline{on_key} method is invoked on
 the type of \lstinline{self} (i.e., \lstinline{Editor}) contains the signature
 of \lstinline{on_key}. Comparing \lstinline{editor} to the JavaScript class
 \lstinline{Editor}, almost everything stays the same, except that we now have
-the typed version. As a side note, since \name is currently a pure functional OO
+a typed version. As a side note, since \sedel is currently a pure functional OO
 language, there is no difference between fields and methods, so we can omit
 empty arguments and parameter parentheses.
 
 \paragraph{First-Class Traits and Trait Expressions.}
 
-\name treats traits as first-class expressions, putting them in the same
+\sedel treats traits as first-class expressions, putting them in the same
 syntactic category as objects, functions, and other primitive forms. To
-illustrate this, we give the \name version of \lstinline{spellMixin}:
-\lstinputlisting[linerange=25-32]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_HELP
+illustrate this, we give the \sedel version of \lstinline{spellMixin}:
+\lstinputlisting[linerange=31-43]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_HELP
 This looks daunting at first, but \lstinline{spell_mixin} has almost the same structure as
 its JavaScript cousin \lstinline{spellMixin}, albeit with
-some type annotations. In \name, we use capital letters (\lstinline{A}, \lstinline{B}, $\dots$) to denote type variables, and trait
+some type annotations. In \sedel, we use capital letters (\lstinline{A}, \lstinline{B}, $\dots$) to denote type variables, and trait
 expressions \lstinline$trait [self : ...] inherits ... => {...}$ to create
 first-class traits. Trait expressions have trait
 types of the form \lstinline{Trait[T1, T2]} where \lstinline{T1} and \lstinline{T2} denote trait requirements and functionality respectively.
 We will explain trait types in \cref{sec:traits}. Despite the structural similarities, there are several significant
-features that are unique to \name (e.g., the disjointness operator \lstinline{*}).
+features that are unique to \sedel (e.g., the disjointness operator \lstinline{*}).
 We discuss these in the following.
 
 
 
 \paragraph{Disjoint Polymorphism and Conflict Detection.}
 
-\name uses a type system based on \emph{disjoint intersection types}~\cite{oliveira2016disjoint} and
+\sedel uses a type system based on \emph{disjoint intersection types}~\cite{oliveira2016disjoint} and
 \emph{disjoint polymorphism}~\cite{alpuimdisjoint}. Disjoint intersections
-empower \name to detect conflicts statically when trying to compose two
+empower \sedel to detect conflicts statically when trying to compose two
 traits with identically named features. For example composing two traits
 \lstinline{a} and \lstinline{b} that both provide \lstinline{foo} gives a
 type error (the overloaded \lstinline{&} operator denotes trait composition):
@@ -326,12 +343,18 @@ Disjoint polymorphism, as a more advanced mechanism, allows detecting conflicts
 even in the presence of polymorphism -- for example when a trait is parameterized and its
 full set of methods is not statically known. As can be seen,
 \lstinline{spell_mixin} is actually a polymorphic function. Unlike ordinary
-parametric polymorphism, in \name, a type variable can also have a disjointness
+parametric polymorphism, in \sedel, a type variable can also have a disjointness
 constraint. For instance, \lstinline{A * Spelling & OnKey}
 means that \lstinline{A} can be instantiated to any type as long as it \emph{does not}
-contain \lstinline{check} and \lstinline{on_key}. To mimic mixins, the
+contain \lstinline{check} and \lstinline{on_key}. Note that this is the minimal constraints of \lstinline{A},
+as
+\begin{inparaenum}[(1)]
+  \item \lstinline{A} cannot contain the \lstinline{on_key} method because it will conflict with that in the type \lstinline{Editor};
+  \item \lstinline{A} cannot contain the \lstinline{check} method because it will conflict with that in the trait body.
+\end{inparaenum}
+To mimic mixins, the
 argument \lstinline{base}, which is supposed to be some trait, serves as the
-``base'' trait that is being inherited. Notice that the type variable
+``base'' trait being inherited. Notice that the type variable
 \lstinline{A} appears in the type of \lstinline{base}, which essentially states
 that \lstinline{base} is a trait that contains at least those methods specified
 by \lstinline{Editor}, and possibly more (which we do not know statically).
@@ -365,36 +388,36 @@ polymorphism.
 
 \paragraph{Typing Mixin Composition.}
 Next we give the typed version of \lstinline{modalMixin} as follows:
-\lstinputlisting[linerange=37-44]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_MODAL
+\lstinputlisting[linerange=48-56]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_MODAL
 Now the definition of \lstinline{modal_mixin} should be self-explanatory.
-Finally we can apply both ``mixins'' one by one to \lstinline{editor} to create
-a concrete editor:
-\lstinputlisting[linerange=49-52]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_LINE
+Finally we can apply both ``mixins'' to \lstinline{editor} one at a time to create
+an IDE editor:
+\lstinputlisting[linerange=61-66]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_LINE
 As with the JavaScript version, we need to fill in the missing
 \lstinline{version} method. It is easy to verify that the \lstinline{on_key} method
 in \lstinline{modal_mixin} is inherited. Compared with the untyped version,
 here this behaviour is reasonable because in each mixin we specifically tags the
 \lstinline{on_key} method to be an overriding method. Let us take a close look
-at the mixin applications. Since \name is currently explicitly typed, we need to
-provide concrete types when using \lstinline{modal_mixin} and \lstinline{spell_mixin}.
+at the mixin applications. Since \sedel is currently explicitly typed, we need to
+provide concrete types when applying \lstinline{modal_mixin} and \lstinline{spell_mixin}.
 In the inner application (\lstinline{spell_mixin Top editor}), we use the top
 type \lstinline{Top} to instantiate \lstinline{A} because the \lstinline{editor} trait
 provides exactly those method specified by \lstinline{Editor} and nothing more
 (hence \lstinline{Top}). In the outer application, we use \lstinline{Spelling}
-to instantiate \lstinline{A}. This is where implicit conflict resolution of
-mixins happens. We know the result of the inner application actually forms a
-trait that provides both \lstinline{check} and \lstinline{on_key}, but the
-disjointness constraint of \lstinline{A} requires the absence of \lstinline{on_key},
-thus we cannot instantiate \lstinline{A} to \lstinline{Spelling & OnKey} for example
-when applying \lstinline{modal_mixin}. Therefore the outer application effectively excludes
-\lstinline{on_key} from \lstinline{spell_mixin}.
-In summary, the order of mixin applications is reflected by the order
-of function applications, and conflict resolution code is implicitly embedded.
-Of course changing the mixin application order to \lstinline{spell_mixin ModalEdit (modal_mixin Top editor)} gives the expected behaviour.
+to instantiate \lstinline{A} because the resulting trait of the inner application
+contains the \lstinline{check} method.
+In summary, mixin applications are simply normal function applications,
+and conflict resolution code is implicitly embedded via the keyword \lstinline{override}
+and the order of mixin applications.
+Unsurprisingly, changing the mixin application order to
+\begin{lstlisting}
+  inherits spell_mixin ModalEdit (modal_mixin Top editor)
+\end{lstlisting}
+gives the expected behavior.
 
 
 Admittedly the typed version is unnecessarily complicated as we were
-mimicking mixins by functions over traits. The final editor
+mimicking mixins by functions over traits. The final trait
 \lstinline{ide_editor} suffers from the same problem as the class
 \lstinline{IDEEditor}, since there is no obvious way to access the
 \lstinline{on_key} method in the \lstinline{editor} trait.\footnote{In fact, as
@@ -405,7 +428,7 @@ makes better use of traits to simplify the editor code.
 
 
 % Note that the use of \lstinline{override} is valid because the type system knows the inherit clause contains \lstinline{on_key}.
-% As a bonus, since \name guarantees that there are no potential conflicts in a program,
+% As a bonus, since \sedel guarantees that there are no potential conflicts in a program,
 % we can reason that the version number in \lstinline{modal_editor} is
 % \lstinline{0.1}.
 

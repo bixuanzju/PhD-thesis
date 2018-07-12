@@ -27,7 +27,7 @@ row polymorphism prohibits forgetting class members.
 % the setting of mixins, in some cases, a function taking one class as an argument
 % can return another class that has fewer methods.
 For example, in \name we can write:
-\lstinputlisting[linerange=84-84]{./examples/overview2.sl}% APPLY:linerange=FOO
+\lstinputlisting[linerange=101-101]{./examples/overview2.sl}% APPLY:linerange=FOO
 where \lstinline{foo} drops \lstinline{bar} from its argument trait \lstinline{t},
 which is impossible to express in Typed Racket. Also as we pointed out in \cref{sec:merge}, row polymorphism
 alone cannot express the \lstinline{merge} function that is able to compose objects of statically unknown types.

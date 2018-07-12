@@ -2,32 +2,34 @@
   \colorbox{#1}{$\displaystyle#2$}}
 
 \section{Formalizing Typed First-Class Traits}
-\label{sec:typesystem}
+\label{sec:trait:typesystem}
 
 This section presents the syntax and semantics of \sedel. In particular,
-we show how to elaborate high-level source language constructs (self-references, abstract methods, first-class traits, dynamic inheritance, etc)
-in \sedel to \fname, a pure record calculus with disjoint
-polymorphism. The treatment of the self-reference and dynamic dispatching is
-inspired by Cook and Palsberg's work on the denotational semantics for
+we show how to elaborate high-level source language constructs (self-references, abstract methods, first-class traits, dynamic inheritance, etc.)
+to \fnamee. The treatment of the self-reference and dynamic dispatching is
+inspired by \citeauthor{cook1989denotational}'s work on the denotational semantics for
 inheritance~\cite{cook1989denotational}. We then prove the elaboration is type
-safe, i.e., well-typed \sedel expressions are translated to well-typed \fname
+safe, i.e., well-typed \sedel expressions are translated to well-typed \fnamee
 terms. Finally we show that \sedel is coherent. Full proofs can be found in the appendix.
 
 \subsection{Syntax}
 
 \begin{figure}[t]
 \centering
+\begin{small}
 \begin{tabular}{lrcl}
   Types  & $[[AA]], [[BB]], [[CT]]$ & $\Coloneqq$ & $[[Top]] \mid [[nat]] \mid [[AA -> BB]] \mid [[AA & BB]] \mid  [[{ l : AA }]] \mid [[X]] \mid [[\ X ** AA  . BB]] \mid \hlmath{[[ Trait[AA,BB] ]]}$ \\
   Expressions & $[[E]]$ & $\Coloneqq$ & $[[Top]] \mid [[ii]] \mid [[x]] \mid [[\ x . E]] \mid [[E1 E2]] \mid [[\ X ** AA  . E]] \mid [[E AA]] \mid [[E1 ,, E2]] \mid [[E : AA]] $ \\
          & & $\mid$ & $[[{ l = E }]] \mid [[E . l]] \mid [[letrec x : AA = E1 in E2]] \mid \hlmath{[[new [ AA ] (</ Ei // i />) ]]} \mid \hlmath{[[E1 ^ E2]]} $ \\
+         & & $\mid$ & $\hlmath{[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA ]]}$ \\
   Value contexts & $[[SG]]$ & $\Coloneqq$ & $[[empty]] \mid [[SG , x : AA]] $ \\
   Type contexts & $[[SD]]$ & $\Coloneqq$ & $[[empty]] \mid [[SD , X ** AA]]$ \\ \\
 \end{tabular}
 \begin{tabular}{llll}
-  Record types & $[[ { l1 : AA1 , ... , ln : AAn } ]] $ & := & $[[ { l1 : AA1} & ... & { ln : AAn } ]]$ \\
-  Records &  $[[ { l1 = E1 , ... , ln = En } ]] $ & := & $ [[ { l1 = E1 } ,, ... ,, { ln = En } ]]$
+  Record types & $[[ { l1 : AA1 , ... , ln : AAn } ]] $ & $\defeq$ & $[[ { l1 : AA1} & ... & { ln : AAn } ]]$ \\
+  Records &  $[[ { l1 = E1 , ... , ln = En } ]] $ & $\defeq$ & $ [[ { l1 = E1 } ,, ... ,, { ln = En } ]]$
 \end{tabular}
+\end{small}
 \caption{\sedel core syntax and syntactic abbreviations}
 \label{fig:sedel_syntax}
 \end{figure}
@@ -61,8 +63,7 @@ value $[[Top]]$ and integer literals $[[ii]]$.
 
 \paragraph{First-class traits and trait expressions.}
 The central construct of \sedel is the trait
-expression%\footnote{The abstract syntax of trait expressions is slightly different from the concrete syntax.}
-$[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA]]$,
+expression $[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA]]$,
 which specifies a (possibly empty) list
 of trait expressions $\overline{[[Ei]]}$ in the \lstinline{inherits} clause, an explicit
 $[[self]]$ reference (with type annotation $[[B]]$), and a set of
@@ -83,26 +84,28 @@ expressions are syntactic sugar for merges of single-field records.
 
 \begin{figure}[t]
   \centering
-  \drules[TS]{$[[ AA <: BB ]]$}{Subtyping}{arr, trait}
-  \drules[WF]{$[[ SD |- AA ]]$}{Well formedness}{and, trait}
+  \begin{mathpar}
+    \drule{TS-trait} \and
+    \drule{WF-trait}
+  \end{mathpar}
   \caption{Subtyping and well-formedness of \sedel (excerpt)}
-  \label{fig:typesystem}
+  \label{fig:trait:typesystem}
 \end{figure}
 
 
 \paragraph{Subtyping and Well-formedness.}
-\Cref{fig:typesystem} shows the most relevant subtyping and well-formedness
-rules for \sedel. Omitted rules are standard and can be found in previous
-work~\cite{alpuimdisjoint}. The
-subtyping rule for trait types (\rref{TS-trait}) resembles the one for function
-types (\rref{TS-arr}) in that it is contravariant on the first type $[[AA]]$
+
+\Cref{fig:trait:typesystem} shows the most relevant subtyping and well-formedness
+rules for \sedel. Omitted rules are standard and can be found in the appendix.
+The subtyping rule for trait types (\rref{TS-trait}) resembles the one for function
+types in that it is contravariant on the first type $[[AA]]$
 and covariant on the second type $[[BB]]$. The well-formedness rule for trait
 types is straightforward.
 
 \begin{figure}[t]
   \centering
 \begin{small}
-  \drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{top, topSym, var, varSym, forall, rec, recn, arrow, andL, andR, trait, traitArrOne, traitArrTwo, ax}
+  \drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{trait, traitArrOne, traitArrTwo, ax}
   \drules[SDax]{$[[ AA **a BB ]]$}{Disjointness axiom}{intTrait, traitForall, traitRec}
 \end{small}
 \caption{Disjointness rules of \sedel (excerpt)}
@@ -111,62 +114,67 @@ types is straightforward.
 
 
 \paragraph{Disjointness.}
-\Cref{fig:disjoint} shows the disjointness judgment $[[SD |- AA ** BB]]$, which is
-used for example in \rref{WF-and}. The disjointness checking is the underlying
+
+\Cref{fig:disjoint} shows the disjointness rules for traits. The disjointness checking is the underlying
 mechanism of conflict detection. We naturally extend the disjointness rules in
-\fname to cover trait types. We refer to
-their paper~\cite{alpuimdisjoint} for further explanation. Here we discuss
-the rules
+\fnamee to cover trait types. Here we discuss the rules
 related with traits. \Rref{SD-trait} says that as long as the functionalities
 that two traits provide are disjoint, the two trait types are disjoint.
 \Rref{SD-traitArr1,SD-traitArr2} deal with situations where one of the two types
 is a function type. At first glance, these two look strange because a trait type is
 \textit{different} from a function type, and they ought to be disjoint as an axiom. The reason
 is that \sedel has an elaboration semantics, and as we will see, trait types are translated to function
-types. In order to ensure the elaboration is type-safe, we have to have special treatment for trait
-and function types. In principle, if \sedel has its own semantics, then trait types are always disjoint
-to function types. The axiom rules of the form $[[ AA **a BB ]]$ take care of two types with different language constructs.
+types. In order to ensure the type safety of elaboration, we have to have special treatment for trait
+and function types. In principle, if \sedel has its own dynamic semantics, then trait types are always disjoint
+with function types.
+% The axiom rules $[[ AA **a BB ]]$ take care of two types with different language constructs.
 % These rules capture the notion that any two types are disjoint unless one of
 % them is an intersection types, a type variable or $[[top]]$.
 
 \begin{figure}[t]
   \centering
   \begin{small}
-  \drules[ST]{$[[ SD ; SG  |- E => AA ~~> ee]]$}{Infer}{trait,traitSuper,forward,new}
+  \drules[ST]{$[[ SD ; SG  |- E => AA ~~> ee]]$}{Infer}{trait,traitSuper,new,forward}
   \end{small}
   \caption{Typing of \sedel (excerpt)}
   \label{fig:type}
 \end{figure}
 
 \paragraph{Typing Traits.}
+
 The typing rules of trait related constructs are shown in \cref{fig:type}. The full set of rules can be found in the appendix.
-The reader is advised to ignore the \hll{highlighted} parts for now.
-% As with conventional bidirectional type systems,
-\sedel employs two modes: the inference mode
+The reader is advised to ignore the translation parts ($[[~~>]] [[ee]]$) for now.
+As with \fnamee, \sedel employs two modes: the inference mode
 ($[[=>]]$) and the checking mode ($[[<=]]$). The inference judgment $[[ SD ; SG |- E => AA]]$
 says that we can synthesize a type $[[AA]]$ for expression $[[E]]$.
-The checking judgment $[[SD; SG |- E <= AA]]$ checks $[[E]]$ against $[[AA]]$. One representative of inference rules is
+The checking judgment $[[SD; SG |- E <= AA]]$ checks $[[E]]$ against $[[AA]]$.
+% One representative of inference rules is
 % \begin{mathpar}
 %  \drule{st-merge}
 % \end{mathpar}
-which says that a merge of two expressions is valid only if their types are disjoint. This is the underlying
-mechanism for conflict detection. One representative of checking rules is
+% which says that a merge of two expressions is valid only if their types are disjoint. This is the underlying
+% mechanism for conflict detection. One representative of checking rules is
 % \begin{mathpar}
 %  \drule{ST-sub}
 % \end{mathpar}
 % typically known as the subsumption rule,
-where subtyping is used to coerce expressions of one type to another.
+% where subtyping is used to coerce expressions of one type to another.
 
 
-To type-check a trait (\rref{ST-trait}) we first type-check if its inherited traits $\overline{[[Ei]]}$ are valid
-traits. Note that each trait $[[Ei]]$ can possibly refer to $[[self]]$. Methods
-must all be well-typed in the usual sense. Apart from these, we have several
-side-conditions to make sure traits are well-behaved. The well-formedness
-judgment $[[SD |- CT1 & .. & CTn & CT]]$ ensures that we do not have conflicting
-methods (in inherited traits and the body). The subtyping judgments $\overline{[[BB <: BBi]]}$ ensure that the
-$[[self]]$ parameter satisfies the requirements imposed by each
-inherited trait. Finally the subtyping judgment $[[CT1 & .. & CTn & CT <: AA]]$
-sanity-checks that the assigned type $[[AA]]$ is compatible.
+To type-check a trait (\rref{ST-trait}) we first type-check if its inherited
+traits $\overline{[[Ei]]}$ are valid traits. Note that each trait $[[Ei]]$ can
+possibly refer to $[[self]]$. Methods must all be well-typed in the usual sense.
+Apart from these, we have several side-conditions to make sure traits are
+well-behaved. The disjointness judgment $[[SD |- CT1 ** .. ** CTn ** CT]]$
+ensures that we do not have conflicting methods (in inherited traits and the
+body). The subtyping judgments $\overline{[[BB <: BBi]]}$ ensure that the
+$[[self]]$ parameter satisfies the requirements imposed by each inherited trait.
+Finally the subtyping judgment $[[CT1 & .. & CTn & CT <: AA]]$ sanity-checks
+that the assigned type $[[AA]]$ is compatible. We also include a variant
+(\rref{ST-traitSuper}) of \rref{Inf-trait} where it implicitly assumes a
+$[[super]]$ variable pointing to the \lstinline{inherits} clause in the
+context when type checking the trait body.
+
 
 Trait instantiation (\rref{ST-new}) requires that each instantiated trait is valid.
 There are also several side-conditions, which serve the same
@@ -176,18 +184,17 @@ $[[E2]]$ must satisfy the requirement of $[[E1]]$.
 
 
 
-\paragraph{Treatments of Exclusion, Super and Override.}
+\paragraph{Treatments of Exclusion and Override.}
+
 One may have noticed that in \cref{fig:sedel_syntax} we did not include the
 exclusion operator in the core \sedel syntax, neither do \lstinline{super} and
 \lstinline{override} appear. The reason is that in principle all
 uses of the exclusion operator can be replaced by type annotations. For example
 to exclude a \lstinline{bar} field from \lstinline${foo = a, bar = b, baz = c}$,
 all we need is to annotate the record with type \lstinline${foo : A, baz : C}$
-(suppose \lstinline{a} has type \lstinline{A}, etc). By \rref{Chk-sub}, the resulting
+(suppose \lstinline{a} has type \lstinline{A}, etc). By the subsumption rule, the resulting
 record is guaranteed to contain no \lstinline{bar} field. In the same vein,
 the use of \lstinline{override} can be explained using the exclusion operator.
-The \lstinline{super} keyword is internally a variable pointing to the \lstinline{inherits} clause
-(its typing rule is similar to \rref{inf-trait} and can be found in the appendix).
 We omit all of these features in the meta-theoretic study in order to focus our attention on
 the essence of first-class traits.
 However in practice, this is rather inconvenient as we need to write down
@@ -197,14 +204,14 @@ implementation we offer all of them.
 \paragraph{Elaboration.}
 
 The operational semantics of \sedel is given by means of a type-directed
-translation into \fname extended with (lazy) recursive let bindings.
+translation into \fnamee extended with (lazy) recursive let bindings.
 This extension is standard and type-safe. Let us go back to
-\cref{fig:type}, now focusing on the \hll{highlighted} parts, which
-denote the elaborated \fname terms. Most of them
+\cref{fig:type}, now focusing on the translation parts, which
+denote the elaborated \fnamee terms. Most of them
 are straightforward translations and are thus omitted. We explain the most
 involved rules regarding traits. In \rref{Inf-trait}, a trait is translated into
 a lambda abstraction with $[[self]]$ as the formal parameter.
-In essence a trait corresponds to what Cook and Palsberg~\cite{cook1989denotational} call a \emph{generator}.
+In essence a trait corresponds to what \citet{cook1989denotational} call a \emph{generator}.
  The translations
 of the inherited traits (i.e., $\overline{[[eei]]}$) are each applied to
 $[[self]]$ and then merged with the translation of the trait body $[[ee]]$. Now
@@ -212,32 +219,33 @@ it is clear why we require $[[BB]]$ (the type of $[[self]]$) to be a subtype of 
 $[[BBi]]$ (the requirement of each inherited trait). Note that we abuse the bar
 notation here with the intention that $[[</ (eei self) // i IN 1..n />]]$ means
 $[[ee1 self ,, .. ,, een self]]$.
-Here is an example of translating the \lstinline{ide_editor} trait from \cref{sec:overview} into
-plain \fname terms equipped with definitions (suppose \lstinline{modal_mixin} and \lstinline{spell_mixin}
+Here is an example of translating the \lstinline{ide_editor} trait from \cref{sec:trait:overview} into
+plain \fnamee terms equipped with definitions (suppose \lstinline{modal_mixin} and \lstinline{spell_mixin}
 have been translated accordingly):
-\lstinputlisting[linerange=62-63]{./examples/overview2.sl}% APPLY:linerange=TRANS
+\lstinputlisting[linerange=76-78]{./examples/overview2.sl}% APPLY:linerange=TRANS
+The translation of the \lstinline{super} keyword is also straightforward, which becomes a let binding
+$[[super]]$ with the value $[[</ (eei self) // i IN 1..n />]]$, enabling access to the inherited traits.
 
-The gray parts in \rref{ST-new} show the translation of trait instantiation.
+\Rref{ST-new} show the translation of trait instantiation.
 First we apply every translation (i.e., $[[eei]]$) of the instantiated traits to the $[[self]]$ parameter,
 and then merge the applications together. The bar notation is
 interpreted similarly to the translation in \rref{ST-trait}. Finally we compute the \emph{lazy}
 fixed-point of the resulting merge term, i.e., self-reference must be updated to refer to
 the whole composition. Taking the fixed-point of the
-traits/generators again follows the denotational inheritance model by
-Cook and Palsberg.
+traits/generators again follows the denotational inheritance model by \citet{cook1989denotational}.
  This is the key to the correct implementation of dynamic
  dispatching. Finally,
 \rref{ST-forward} translates forwarding expressions to function
 applications. We show the translation of the
 \lstinline{a_editor1} object in \cref{sec:traits} to illustrate the
 translation of instantiation:
-\lstinputlisting[linerange=71-71]{./examples/overview2.sl}% APPLY:linerange=NEW
+\lstinputlisting[linerange=86-86]{./examples/overview2.sl}% APPLY:linerange=NEW
 
-One remarkable point is that, while Cook and Palsberg work is done in
+One remarkable point is that, while \citeauthor{cook1989denotational}'s work is done in
 an untyped setting, here we apply their ideas in a setting with
 disjoint intersection types and disjoint polymorphism. Our work shows that
-disjoint intersection types blend in quite nicely with Cook and
-Palsberg's denotational model of inheritance.
+disjoint intersection types blend in quite nicely with \citeauthor{cook1989denotational}'s
+denotational model of inheritance.
 
 \paragraph{Flattening Property.}
 
@@ -254,32 +262,29 @@ property. However, we believe that one way to talk about a similar property for 
 along the lines of the following example:
 \begin{example}[Flattening]
   Suppose we have \lstinline$m$ well-typed (i.e, conflict-free) traits \lstinline$trait t1 {l11 = E11, ..}, ..., trait tm {lm1 = Em1, ..}$,
-  each with some number of methods, then
-  \begin{center}
-   \lstinline|new (trait inherits t1 & ... & tm {})|  $=$  \lstinline|new (trait {l11 = E11,..,lm1 = Em1,..})|
-  \end{center}
+  each with some number of methods, then the following two expressions are contextually equivalent.
+\begin{lstlisting}
+new (trait inherits t1 & ... & tm {})
+new (trait {l11 = E11,..,lm1 = Em1,..})
+\end{lstlisting}
 \end{example}
-If we elaborate these two expressions, the property boils down to whether two merge terms
-$[[(ee1 ,, ee2) ,, ee2]]$ and $[[ee1 ,, (ee2 ,, ee3)]]$
-have the same semantics. As is shown by Bi et al.~\cite{xuan_nested}, merges are
-associative and commutative, so it is not hard to see that the above two expressions
-are semantically equivalent. We leave it as future work to formally state and prove flattening.
-
-
-% no gray anymore after this point
-\renewcommand{\rulehl}[1]{#1}
+If we elaborate these two expressions, the property boils down to whether two
+merge terms $[[(ee1 ,, ee2) ,, ee3]]$ and $[[ee1 ,, (ee2 ,, ee3)]]$ have the
+same semantics, which is exactly \cref{lemma:assoc} shows. So it is not hard to
+see that the above two expressions are semantically equivalent. We leave it as
+future work to formally state and prove flattening.
 
 \subsection{Type Soundness and Coherence}
 
-Since the semantics of \sedel is defined by elaboration into \fname it
-is easy to show that key properties of \fname are also guaranteed by \sedel.
+Since the semantics of \sedel is defined by elaboration into \fnamee it
+is easy to show that key properties of \fnamee are also guaranteed by \sedel.
 In particular, we show that the type-directed elaboration is
 type-safe in the sense that well-typed \sedel expressions are elaborated into
-well-typed \fname terms. We also show that the source language is
+well-typed \fnamee terms. We also show that the source language is
 coherent and each valid source program has a unique (unambiguous)
 elaboration.
 
-We need a meta-function $| \cdot |$ that translates \sedel types to \fname types, whose definition is
+We need a meta-function $| \cdot |$ that translates \sedel types to \fnamee types, whose definition is
 straightforward. Only the translation of trait types deserves attention:
 \begin{mathpar}
   | [[Trait[AA,BB] ]] | = [[|AA| -> |BB|]]
@@ -329,8 +334,13 @@ Finally we are in a position to establish the type safety property:
 \end{theorem}
 \begin{proof}
   By examining every elaboration rule, it is easy to see that the elaborated
-  \fname term in the conclusion is uniquely determined by the elaborated \fname
-  terms in the premises. Then by the coherence property of \fname, we conclude
+  \fnamee term in the conclusion is uniquely determined by the elaborated \fnamee
+  terms in the premises. Then by the coherence property of \fnamee, we conclude
   that each well-typed \sedel expression has a unique unambiguous elaboration,
   thus \sedel is coherent.
 \end{proof}
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:
