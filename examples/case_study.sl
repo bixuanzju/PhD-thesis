@@ -534,13 +534,22 @@ ppBoolLogic (e : BoolLogic) : IPrint = e.accept IPrint (new[BoolLogicAlg[IPrint]
 ----------------
 
 -- BEGIN_ARITH
-type ArithAlg[E] = NatBoolAlg[E] & CompAlg[E];         -- Object Algebra interface
-type Arith = { accept : forall E. ArithAlg[E] -> E };  -- AST
-evalArith (e : Arith) : IEval =                        -- Evaluator
-  e.accept IEval (new[ArithAlg[IEval]] evalNatAlg & evalBoolAlg & evalCompAlg);
-ppArith (e : Arith) : IPrint =                         -- Pretty printer
-  e.accept IPrint (new[ArithAlg[IPrint]] ppNatAlg & ppBoolAlg & ppCompAlg);
-tcArith (e : Arith) =                                  -- Type checker
+-- Object Algebra interface
+type ArithAlg[E] = NatBoolAlg[E] & CompAlg[E];
+-- AST
+type Arith = {
+  accept : forall E. ArithAlg[E] -> E
+};
+-- Evaluator
+evalArith (e : Arith) : IEval =
+  e.accept IEval
+    (new[ArithAlg[IEval]] evalNatAlg & evalBoolAlg & evalCompAlg);
+-- Pretty printer
+ppArith (e : Arith) : IPrint =
+  e.accept IPrint
+    (new[ArithAlg[IPrint]] ppNatAlg & ppBoolAlg & ppCompAlg);
+-- Type checker
+tcArith (e : Arith) =
   e.accept ITC (new[ArithAlg[ITC]] tcNatAlg & tcBoolAlg & tcCompAlg);
 -- END_ARITH
 

@@ -261,8 +261,11 @@ from traits. Since \sedel does not have classes, we cannot state exactly the sam
 property. However, we believe that one way to talk about a similar property for \sedel is to have something
 along the lines of the following example:
 \begin{example}[Flattening]
-  Suppose we have \lstinline$m$ well-typed (i.e, conflict-free) traits \lstinline$trait t1 {l11 = E11, ..}, ..., trait tm {lm1 = Em1, ..}$,
-  each with some number of methods, then the following two expressions are contextually equivalent.
+Suppose we have $m$ well-typed (i.e, conflict-free) traits:
+\begin{lstlisting}
+  trait t1 {l11 = E11, ..}, ..., trait tm {lm1 = Em1, ..}
+\end{lstlisting}
+each with some number of methods, then the following two expressions are contextually equivalent:
 \begin{lstlisting}
 new (trait inherits t1 & ... & tm {})
 new (trait {l11 = E11,..,lm1 = Em1,..})
@@ -271,7 +274,7 @@ new (trait {l11 = E11,..,lm1 = Em1,..})
 If we elaborate these two expressions, the property boils down to whether two
 merge terms $[[(ee1 ,, ee2) ,, ee3]]$ and $[[ee1 ,, (ee2 ,, ee3)]]$ have the
 same semantics, which is exactly \cref{lemma:assoc} shows. So it is not hard to
-see that the above two expressions are semantically equivalent. We leave it as
+see that the above two expressions are contextually equivalent. We leave it as
 future work to formally state and prove flattening.
 
 \subsection{Type Soundness and Coherence}

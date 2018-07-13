@@ -11,13 +11,13 @@ of extensible designs for Object Algebras and Extensible \textsc{Visitor}s have
 been presented in mainstream languages~\cite{oliveira09modular, togersen:2004, oliveira2012extensibility, oliveira2013feature, rendel14attributes}.
 However, prior approaches are not entirely satisfactory
 due to the limitations in existing mainstream OO languages. In \cref{sec:ob}, we show how \sedel makes those designs significantly simpler and
-convenient to use. In particular, \name's encoding of extensible visitors gives true ASTs and supports
+convenient to use. In particular, \sedel's encoding of extensible visitors gives true ASTs and supports
 conflict-free Object Algebra combinators, thanks to first-class traits and disjoint polymorphism.
-Based on this technique, \cref{sec:case} gives a bird-view of several orthogonal features of
+Based on this technique, \cref{sec:case} gives a bird's-eye view of several orthogonal features of
 a small JavaScript-like language from a textbook on Programming
 Languages~\cite{poplcook}, and illustrates how various features can
 be modularly developed and composed to assemble a complete language with various
-operations baked in. \Cref{sec:evaluate} compares our \name's implementation
+operations baked in. \Cref{sec:evaluate} compares our \sedel's implementation
 with that of the textbook using Haskell in terms of lines of code.
 
 
@@ -30,10 +30,10 @@ Java. The objective of EP is to \emph{modularly} extend a datatype in two
 dimensions: by adding more cases to the datatype and by adding new operations
 for the datatype.
 Our starting point is the following code:
-\lstinputlisting[linerange=4-9]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
+\lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
 \lstinline{ExpAlg[E]} is the generic interface of a simple arithmetic language
 with two cases, \lstinline{lit} for literals and \lstinline{add} for addition.
-\lstinline{ExpAlg[E]} is also called an Object Algebra interface. A concrete
+\lstinline{ExpAlg[E]} is also referred to as an Object Algebra interface. A concrete
 Object Algebra will implement such an interface by instantiating \lstinline{E}
 with a suitable type. Here we also define one operation \lstinline{IEval},
 modelled by a single-field record type. A concrete Object Algebra that
@@ -43,30 +43,30 @@ implements the evaluation rules is given by a trait
 \paragraph{First-Class Object Algebra Values.}
 The actual AST of this simple arithmetic language is given as an internal
 visitor~\cite{Oliveira_2008}:
-\lstinputlisting[linerange=13-13]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
+\lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
 Note that Object Algebras as implemented in languages like Java or Scala do not define the type
 \lstinline{Exp} because this would make adding new variants very hard. Although extensible versions
 of this visitor pattern do exist, they usually require complex types using advanced features of
 generics~\cite{oliveira2012extensibility, togersen:2004}.
 However, as we will see, this is not a problem in \sedel. We can build a value of \lstinline{Exp} as follows:
-\lstinputlisting[linerange=17-17]{./examples/application.sl}% APPLY:linerange=VALUE_E1
+\lstinputlisting[linerange=27-29]{./examples/application.sl}% APPLY:linerange=VALUE_E1
 
 
 \paragraph{Adding a New Operation.}
 We add another operation \lstinline{IPrint} to the language:
-\lstinputlisting[linerange=22-28]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
+\lstinputlisting[linerange=34-42]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
 This is done by giving another trait \lstinline{printAlg} that implements the
 additional \lstinline{print} method.
 
 
 \paragraph{Adding a New Case.}
 A second dimension for extension is to add another case for negation:
-\lstinputlisting[linerange=33-39]{./examples/application.sl}% APPLY:linerange=SUB_DEF
+\lstinputlisting[linerange=47-57]{./examples/application.sl}% APPLY:linerange=SUB_DEF
 This is achieved by extending \lstinline{evalAlg} and \lstinline{printAlg}, implementing
 missing operations for negation, respectively. We define the actual AST similarly:
-\lstinputlisting[linerange=44-44]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
+\lstinputlisting[linerange=62-64]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
 and build a value of \lstinline{-(2 + 3)} while reusing \lstinline{e1}:
-\lstinputlisting[linerange=49-49]{./examples/application.sl}% APPLY:linerange=VALUE_E2
+\lstinputlisting[linerange=69-71]{./examples/application.sl}% APPLY:linerange=VALUE_E2
 
 \paragraph{Relations between \lstinline{Exp} and \lstinline{ExpExt}}
 At this stage, it is interesting to point out an interesting subtyping relation
@@ -91,38 +91,55 @@ supertype of \lstinline{Exp}.
 
 \section{Dynamic Object Algebra Composition Support}
 
-When programming with Object Algebras, oftentimes it is necessary to pack
-multiple operations in the same object. For example, in the simple language we
-have been developing it can be useful to create an object that supports both
-printing and evaluation. Oliveira and Cook~\cite{oliveira2012extensibility}
-addressed this problem by proposing \emph{Object Algebra combinators} that
-combine multiple algebras into one. However, as they noted, such combinators
-written in Java are difficult to use in practice, and they require significant
-amounts of boilerplate. Improved variants of Object Algebra combinators have
-been encoded in Scala using intersection types and an encoding of the merge
-construct~\cite{oliveira2013feature, rendel14attributes}. However, the
-Scala encoding of the merge construct is quite complex as it relies on low-level
+When programming with Object Algebras, oftentimes it is necessary to compose
+multiple operations together in such a way that they are executed in parallel to
+the same input. For example, in the simple language we have been developing it
+can be useful to create an object that supports both printing and evaluation.
+Oliveira and Cook~\cite{oliveira2012extensibility} addressed this problem by
+proposing \emph{Object Algebra combinators} that combine multiple algebras into
+one. However, as they noted, such combinators written in Java are difficult to
+use in practice, and they require significant amounts of boilerplate. Improved
+variants of Object Algebra combinators have been encoded in Scala using
+intersection types and an encoding of the merge
+construct~\cite{oliveira2013feature, rendel14attributes}. However, the Scala
+encoding of the merge construct is quite complex as it relies on low-level
 type-unsafe programming features such as dynamic proxies, reflection or other
-meta-programming techniques. In \sedel, the combination of first-class
-traits, dynamic inheritance and disjoint polymorphism allows type-safe, coherent
-and boilerplate-free composition of Object Algebras.
-\lstinputlisting[linerange=54-55]{./examples/application.sl}% APPLY:linerange=COMBINE
+meta-programming techniques. In \sedel, the combination of first-class traits,
+dynamic inheritance, disjoint polymorphism and nested composition allows type-safe, coherent and
+boilerplate-free composition of Object Algebras.
+
+Abstractly speaking, what we are seeking is a combinator:
+\[
+  \mathsf{combine} \in F[A] \times F[B] \rightarrow F[A\ \&\ B]
+\]
+That is, given two algebras with types $F[A]$ and $F[B]$ we want to
+derive, in a automatic way, a third algebra $F[A\ \&\ B]$ that combines the results
+of the two algebras. This combinator bears a similarity to a
+\lstinline{zip}-like operation in functional programming, and it is also directly
+related to nested composition in object-oriented programming, as we have studied
+in \cref{chap:nested}. Without further due, here is the definition of a Object
+Algebra combinator in \sedel:
+\lstinputlisting[linerange=76-78]{./examples/application.sl}% APPLY:linerange=COMBINE
 That is it. None of the boilerplate in other
 approaches~\cite{oliveira2012extensibility}, or type-unsafe meta-programming
 techniques of other approaches~\cite{oliveira2013feature,rendel14attributes} are
-needed! Two points are worth noting: (1) \lstinline{combine} relies on
-\emph{dynamic inheritance}. Notice how \lstinline{combine} inherits two traits
-\lstinline{f} and \lstinline{g}, for which their implementations are unknown
-statically; (2) the disjointness constraint (\lstinline{B * A}) is \emph{crucial} to
-ensure two Object Algebras (\lstinline{f} and \lstinline{g}) are conflict-free
-when being composed.
-
-To conclude, let us see \lstinline{combine} in action. We combine \lstinline{negEvalAlg} and \lstinline{negPrintAlg}:
-\lstinputlisting[linerange=59-59]{./examples/application.sl}% APPLY:linerange=NEW_ALG
-The combined algebra \lstinline{combineAlg} is useful to avoid multiple interpretations
-of the same AST when running multiple operations. For example, we can
-create an object \lstinline{o} that supports both evaluation and printing in one go:
-\lstinputlisting[linerange=72-73]{./examples/application.sl}% APPLY:linerange=USE
+needed! Three points are worth noting:
+\begin{inparaenum}[(1)]
+\item \lstinline{combine} relies on \emph{dynamic inheritance}. Notice how
+  \lstinline{combine} is parameterized by two traits \lstinline{f} and \lstinline{g}, for
+  which their implementations are unknown statically;
+\item the disjointness constraint (\lstinline{B * A}) is \emph{crucial} to
+  ensure two algebras (\lstinline{f} and \lstinline{g}) are conflict-free
+  when being composed;
+\item nested composition is the underlying mechanism to automatically derive the
+  combined algebra by appropriately invoking (delegating) behaviors in $A \ \&\ B$ to either $A$ or $B$.
+\end{inparaenum}
+To conclude, let us see \lstinline{combine} in action. We merge the evaluation
+and printing algebras to create an \lstinline{expEvalPrint} algebra:
+\lstinputlisting[linerange=82-82]{./examples/application.sl}% APPLY:linerange=NEW_ALG
+We can use this algebra to create an object \lstinline{o} that allows us to use
+evaluation and pretty printing at the same time:
+\lstinputlisting[linerange=87-89]{./examples/application.sl}% APPLY:linerange=USE
 
 
 
@@ -153,7 +170,7 @@ Now we are ready to see how the same technique scales to modularize different
 language features. A \emph{feature} is an increment in program
 functionality~\cite{zave1999faq,lopez2005evaluating}. \Cref{fig:mini-js}
 presents the syntax of the expressions, values and types provided by the
-features; each line is annotated with the corresponding feature sedel. Starting from a
+features; each line is annotated with the corresponding feature name. Starting from a
 simple arithmetic language, we gradually introduce new features and combine them
 with some of the existing features to form various languages. Below we briefly
 explain what constitutes each feature:
@@ -174,8 +191,8 @@ that, we also define an evaluator, a pretty printer and a type checker. Note
 that for some languages (e.g., \lstinline{simplenat}), since they have only one
 kind of value, we only define an evaluator and a pretty printer. We thus obtain
 12 languages and 30 operations in total. The complete language
-\lstinline{mini-JS} contains all the features and supports all the operations. % Besides, we also define
-% a new algebra with the combined behavior of all the operations.
+\lstinline{mini-JS} contains all the features and supports all the operations.
+Besides, we also define a combined algebra with the combined behavior of all the operations.
 The reader can refer to our supplementary material for the source code of the case study.
 
 
@@ -209,10 +226,10 @@ The reader can refer to our supplementary material for the source code of the ca
 \section{Evaluation}
 \label{sec:evaluate}
 
-To evaluate \name's implementation of the case study,
+To evaluate \sedel's implementation of the case study,
 \Cref{fig:sloc} compares the number of source lines of code
 (SLOC, lines of code without counting empty lines and comments) for
-\name's \emph{modular} implementation with the vanilla
+\sedel's \emph{modular} implementation with the vanilla
 \emph{non-modular} AST-based implementations in Haskell. The Haskell
 implementations are just straightforward AST interpreters, which duplicate code across the multiple language
 components.
@@ -221,17 +238,17 @@ Since \sedel is a new language, we
 had to write various code that is provided in Haskell by the standard library,
 so they are not counted for fairness of comparison. In the left part, for each
 feature, we count the lines of the algebra interface (number beside the feature
-sedel), and the algebras for the operations. In the right part, for each
+name), and the algebras for the operations. In the right part, for each
 language, we count the lines of ASTs, and those to combine previously
 defined operations. For example, here is the code that is needed to make the
 \lstinline{arith} language.
-\lstinputlisting[linerange=537-544]{./examples/case_study.sl}% APPLY:linerange=ARITH
-We only need 8 lines in total: 2 lines for the AST, and 6 lines to combine the operations.
+\lstinputlisting[linerange=537-553]{./examples/case_study.sl}% APPLY:linerange=ARITH
+We only need 12 lines in total: 4 lines for the AST, and 8 lines to combine the operations.
 
-Therefore, the total SLOC of \name's implementation is the sum of all the
+Therefore, the total SLOC of \sedel's implementation is the sum of all the
 lines in the feature and language parts (237 SLOC of all features plus 94 SLOC
 of ASTs and operations). Although \sedel is considerably more verbose than a
-functional language like Haskell, \name's modular implementation for 12 languages and 30
+functional language like Haskell, \sedel's modular implementation for 12 languages and 30
 operations in total reduces approximately 60\% in terms of SLOC. The reason is
 that, the more frequently a feature is reused by other languages directly or
 indirectly, the more reduction we see in the total SLOC. For example,

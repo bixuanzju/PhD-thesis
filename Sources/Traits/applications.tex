@@ -27,7 +27,7 @@ Java. The objective of EP is to \emph{modularly} extend a datatype in two
 dimensions: by adding more cases to the datatype and by adding new operations
 for the datatype.
 Our starting point is the following code:
-\lstinputlisting[linerange=4-9]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
+\lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
 \lstinline{ExpAlg[E]} is the generic interface of a simple arithmetic language
 with two cases, \lstinline{lit} for literals and \lstinline{add} for addition.
 \lstinline{ExpAlg[E]} is also called an Object Algebra interface. A concrete
@@ -40,30 +40,30 @@ implements the evaluation rules is given by a trait
 \paragraph{First-Class Object Algebra Values.}
 The actual AST of this simple arithmetic language is given as an internal
 visitor~\cite{Oliveira_2008}:
-\lstinputlisting[linerange=13-13]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
+\lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
 Note that Object Algebras as implemented in languages like Java or Scala do not define the type
 \lstinline{Exp} because this would make adding new variants very hard. Although extensible versions
 of this visitor pattern do exist, they usually require complex types using advanced features of
 generics~\cite{oliveira2012extensibility, togersen:2004}.
 However, as we will see, this is not a problem in \sedel. We can build a value of \lstinline{Exp} as follows:
-\lstinputlisting[linerange=17-17]{./examples/application.sl}% APPLY:linerange=VALUE_E1
+\lstinputlisting[linerange=27-29]{./examples/application.sl}% APPLY:linerange=VALUE_E1
 
 
 \paragraph{Adding a New Operation.}
 We add another operation \lstinline{IPrint} to the language:
-\lstinputlisting[linerange=22-28]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
+\lstinputlisting[linerange=34-42]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
 This is done by giving another trait \lstinline{printAlg} that implements the
 additional \lstinline{print} method.
 
 
 \paragraph{Adding a New Case.}
 A second dimension for extension is to add another case for negation:
-\lstinputlisting[linerange=33-39]{./examples/application.sl}% APPLY:linerange=SUB_DEF
+\lstinputlisting[linerange=47-57]{./examples/application.sl}% APPLY:linerange=SUB_DEF
 This is achieved by extending \lstinline{evalAlg} and \lstinline{printAlg}, implementing
 missing operations for negation, respectively. We define the actual AST similarly:
-\lstinputlisting[linerange=44-44]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
+\lstinputlisting[linerange=62-64]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
 and build a value of \lstinline{-(2 + 3)} while reusing \lstinline{e1}:
-\lstinputlisting[linerange=49-49]{./examples/application.sl}% APPLY:linerange=VALUE_E2
+\lstinputlisting[linerange=69-71]{./examples/application.sl}% APPLY:linerange=VALUE_E2
 
 \paragraph{Relations between \lstinline{Exp} and \lstinline{ExpExt}}
 At this stage, it is interesting to point out an interesting subtyping relation
@@ -104,7 +104,7 @@ type-unsafe programming features such as dynamic proxies, reflection or other
 meta-programming techniques. In \sedel, the combination of first-class
 traits, dynamic inheritance and disjoint polymorphism allows type-safe, coherent
 and boilerplate-free composition of Object Algebras.
-\lstinputlisting[linerange=54-55]{./examples/application.sl}% APPLY:linerange=COMBINE
+\lstinputlisting[linerange=76-78]{./examples/application.sl}% APPLY:linerange=COMBINE
 That is it. None of the boilerplate in other
 approaches~\cite{oliveira2012extensibility}, or type-unsafe meta-programming
 techniques of other approaches~\cite{oliveira2013feature,rendel14attributes} are
@@ -116,11 +116,11 @@ ensure two Object Algebras (\lstinline{f} and \lstinline{g}) are conflict-free
 when being composed.
 
 To conclude, let us see \lstinline{combine} in action. We combine \lstinline{negEvalAlg} and \lstinline{negPrintAlg}:
-\lstinputlisting[linerange=59-59]{./examples/application.sl}% APPLY:linerange=NEW_ALG
+\lstinputlisting[linerange=82-82]{./examples/application.sl}% APPLY:linerange=NEW_ALG
 The combined algebra \lstinline{combineAlg} is useful to avoid multiple interpretations
 of the same AST when running multiple operations. For example, we can
 create an object \lstinline{o} that supports both evaluation and printing in one go:
-\lstinputlisting[linerange=72-73]{./examples/application.sl}% APPLY:linerange=USE
+\lstinputlisting[linerange=87-89]{./examples/application.sl}% APPLY:linerange=USE
 
 
 \begin{figure}[t]
@@ -261,7 +261,7 @@ sedel), and the algebras for the operations. In the right part, for each
 language, we count the lines of ASTs, and those to combine previously
 defined operations. For example, here is the code that is needed to make the
 \lstinline{arith} language.
-\lstinputlisting[linerange=537-544]{./examples/case_study.sl}% APPLY:linerange=ARITH
+\lstinputlisting[linerange=537-553]{./examples/case_study.sl}% APPLY:linerange=ARITH
 We only need 8 lines in total: 2 lines for the AST, and 6 lines to combine the operations.
 
 Therefore, the total SLOC of \name's implementation is the sum of all the
@@ -337,7 +337,7 @@ printer.
 % the \lstinline{add1} function.
 
 % Finally we apply it to the program we have just created:
-% \lstinputlisting[linerange=735-736]{./examples/case_study.sl}% APPLY:linerange=TEST_TEST
+% \lstinputlisting[linerange=744-745]{./examples/case_study.sl}% APPLY:linerange=TEST_TEST
 % Everything works as expected!
 \end{comment}
 
