@@ -7,7 +7,7 @@
 In this chapter, we extend the proof technique introduced in
 \cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly we review
 the parametric logical relation for System F~\citep{reynolds1983types} in
-\cref{sec:para:lr}. We then talk about a failed attempt on a naturally extending
+\cref{sec:para:lr}. We then talk about a failed attempt on naturally extending
 it to deal with disjoint intersection types in \cref{sec:failed:lr}. The technical
 difficulty stems from the interaction between impredicativity and disjointness.
 Finally in \cref{sec:succeed:lr}, we present our (predicative) logical relation
@@ -41,8 +41,7 @@ induces the \textit{abstraction theorem} (also called the \textit{parametricity
 well-typed expression behaves the same as itself according to its type. The
 stringency of parametricity ensures that a polymorphic type has very few
 inhabitants, so few that we can deduce the behavior of a program by just looking
-at its type, which \citet{wadler1989theorems} christened \textit{theorems for
-  free}.
+at its type, which \citet{wadler1989theorems} christened \textit{theorems for free}.
 
 Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
