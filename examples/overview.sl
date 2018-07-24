@@ -15,7 +15,9 @@ type Lang = {lit : Int -> IPrint} & {add : IPrint -> IPrint -> IPrint};
 
 -- BEGIN_LANG_IMPL
 implLang : Lang = {
-  lit (value : Int) = { print = value.toString },
+  lit (value : Int) = {
+    print = value.toString
+  },
   add (left : IPrint) (right : IPrint) = {
     print = left.print ++ "+" ++ right.print
   }
@@ -41,7 +43,9 @@ type EvalExt = { lit : Int -> IEval, add : IEval -> IEval -> IEval };
 
 -- BEGIN_EVAL_PRINT_IMPL
 implEval = {
-  lit (value : Int) = { eval = value },
+  lit (value : Int) = {
+    eval = value
+  },
   add (left : IEval) (right : IEval) = {
     eval = left.eval + right.eval
   }
@@ -54,7 +58,9 @@ type NegPrint = { neg : IPrint -> IPrint };
 type LangNeg = Lang & NegPrint;
 
 implNegPrint : NegPrint = {
-  neg (exp : IPrint) = { print = "-" ++ exp.print }
+  neg (exp : IPrint) = {
+    print = "-" ++ exp.print
+  }
 };
 implLangNeg : LangNeg = implLang ,, implNegPrint;
 -- END_LANG_NEG
@@ -63,12 +69,15 @@ implLangNeg : LangNeg = implLang ,, implNegPrint;
 -- BEGIN_LANG_FINAL
 type NegEval = { neg : IEval -> IEval};
 implNegEval : NegEval = {
-  neg (exp : IEval) = { eval = 0 - exp.eval }
+  neg (exp : IEval) = {
+    eval = 0 - exp.eval
+  }
 };
 
 type NegEvalExt = { neg : IPrint & IEval -> IPrint & IEval };
 type LangNegEval = LangEval & NegEvalExt;
-implLangNegEval : LangNegEval = implLangEval ,, implNegPrint ,, implNegEval;
+implLangNegEval : LangNegEval =
+  implLangEval ,, implNegPrint ,, implNegEval;
 -- END_LANG_FINAL
 
 

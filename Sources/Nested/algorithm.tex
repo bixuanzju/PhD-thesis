@@ -6,20 +6,20 @@ This section presents an algorithm that implements the subtyping relation in
 \cref{fig:subtype_decl}. While BCD subtyping is well-known, the
 presence of a transitivity axiom in the rules means that the system is
 not algorithmic. This raises an obvious question: how to obtain an
-algorithm for this subtyping relation? Laurent~\cite{Laurent12note} has shown that simply dropping
+algorithm for this subtyping relation? \citet{Laurent12note} has shown that simply dropping
 the transitivity rule from the BCD system is not possible without losing expressivity. Hence, this avenue for
 obtaining an algorithm is not available. 
 %Moreover, even if transitivity elimination
 %would be possible, the remaining rules are still highly overlapping, and pose
 %difficulties for an implementation.  
-Instead, we adapt Pierce's decision
+Instead, we adapt \citeauthor{pierce1989decision}'s decision
 procedure~\cite{pierce1989decision} for a subtyping system (closely
 related to BCD) to obtain a sound and complete algorithm for our
-BCD extension. Our algorithm extends Pierce's decision
+BCD extension. Our algorithm extends \citeauthor{pierce1989decision}'s decision
 procedure with subtyping of singleton records and
 coercion generation. We prove in Coq that the algorithm is sound and complete with
 respect to the declarative version. At the same time we
-find some errors and missing lemmas in Pierce's original manual proofs.
+find some errors and missing lemmas in \citeauthor{pierce1989decision}'s original manual proofs.
 
 %The algorithm is implemented in our
 %prototype implementation. \jeremy{should i say more about implementation?}
@@ -73,7 +73,7 @@ records are encountered in $[[A]]$ (\rref{A-rcdNat}). The remaining rules are
 similar to their declarative counterparts. Let us illustrate the algorithm
 with an example
 derivation (for space reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and $[[string]]$ respectively),
-which is essentially the one used by the \lstinline{add} field in \cref{sec:overview}. The
+which is essentially the one used by the \lstinline{add} field in \cref{nested:sec:overview}. The
 readers can try to give a corresponding derivation using the declarative
 subtyping and see how \rref{S-trans} plays an essential role there.
 \begin{small}
@@ -93,9 +93,9 @@ where the sub-derivation $D$ is shown below ($D'$ is similar):
 \inferrule*[right=\rref*{A-andN1}]
         { \inferrule*[right=\rref*{A-rcdNat}]
           { \inferrule*[right=\rref*{A-arrNat}]
-            { \inferrule*{ \dots } { [[N & S]] \prec : [[N]] }
+            { \inferrule*{ \vdots } { [[ [] |- N & S <: N]]  }
               \\
-              \inferrule* {\dots} { [[N & S]] \vdash [[N -> N]] \prec : [[N]] }     }
+              \inferrule* {\vdots} { [[N & S]] \vdash [[N -> N]] \prec : [[N]] }     }
             {[[N & S]] ,[[N & S]] \vdash [[N -> N -> N]] \prec : [[N]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N}]] \prec : [[N]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
@@ -135,7 +135,7 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
 To establish the correctness of the algorithm, we must show that the algorithm
 is both sound and complete with respect to the declarative specification. While
 soundness follows quite easily, completeness is much harder. The proof of
-completeness essentially follows that of Pierce~\cite{pierce1989decision}
+completeness essentially follows that of \citet{pierce1989decision}
 %%\footnote{
 %%While transferring \cite{pierce1989decision}'s manual proofs to Coq,
 %%we discovered several errors, which will be reported along the way.}
@@ -203,7 +203,7 @@ We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 \end{proof}
 
 \begin{remark}
-  Lemma~\ref{lemma:set_trans} is not found in Pierce's proofs~\cite{pierce1989decision}, which is
+  Lemma~\ref{lemma:set_trans} is not found in \citeauthor{pierce1989decision}'s proofs~\cite{pierce1989decision}, which is
   crucial in Lemma~\ref{lemma:refl0}, from which reflexivity (Lemma~\ref{lemma:refl})
   follows immediately.
 \end{remark}
@@ -230,10 +230,10 @@ Now it immediately follows that the algorithmic subtyping is reflexive.
   Immediate from Lemma~\ref{lemma:set_refl} and Lemma~\ref{lemma:refl0}.
 \end{proof}
 
-We omit the details of the proof of transitivity.
-%The proof of transitivity is, to quote \cite{pierce1989decision}, typically
-%``the hardest single piece'' of metatheory. We omit the details here for lack of space and
-%refer the interested reader to our Coq development.
+% We omit the details of the proof of transitivity.
+The proof of transitivity is, to quote \citet{pierce1989decision}, typically
+``the hardest single piece'' of metatheory. We omit the details here and
+refer the interested reader to our Coq development.
 
 \begin{lemma}[Transitivity] \label{lemma:trans}
   If $[[ [] |- A1 <: A2 ~~> c1]]$ and $[[ [] |- A2 <: A3 ~~> c2]]$, then there
@@ -249,12 +249,12 @@ With reflexivity and transitivity in position, we show the main theorem.
   By induction on the derivation of the declarative subtyping and applying \cref{lemma:refl,lemma:trans} where appropriate.
 \end{proof}
 \begin{remark}
-  Pierce's proof is wrong~\cite[pp.~20, Case~F]{pierce1989decision} in the case
+  \citeauthor{pierce1989decision}'s proof is wrong~\cite[pp.~20, Case~F]{pierce1989decision} in the case
   \begin{mathpar}
   \drule{S-arr}
   \end{mathpar}
   where he concludes from the inductive
-  hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (rules 6a and 3).
+  hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (his rules 6a and 3).
   However his rule 6a (our \rref{A-arrNat}) only works for \textit{primitive types}, and is thus not applicable in this case. Instead we
   need a few technical lemmas to support the argument.
 \end{remark}
@@ -266,5 +266,6 @@ With reflexivity and transitivity in position, we show the main theorem.
 \end{remark}
 
 % Local Variables:
-% org-ref-default-bibliography: ../paper.bib
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
 % End:

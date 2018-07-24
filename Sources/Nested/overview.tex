@@ -2,7 +2,7 @@
 \section{Overview}
 \label{nested:sec:overview}
 
-This section illustrates \name with an encoding of a family polymorphism
+This section illustrates \namee with an encoding of a family polymorphism
 solution to the Expression Problem, and informally presents its salient
 features.
 
@@ -12,7 +12,7 @@ features.
 In OOP \emph{family polymorphism} is the ability to
 simultaneously refine a family of related classes through inheritance. This is
 motivated by a need to not only refine individual classes, but also to preserve
-and refine their mutual relationships. Nystrom et al.~\cite{Nystrom_2004} call this
+and refine their mutual relationships. \citet{Nystrom_2004} call this
 \emph{scalable extensibility}: ``the ability to extend a body of code while
 writing new code proportional to the differences in functionality''.
 %
@@ -25,20 +25,21 @@ within the family (including subtyping) between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
 
 \paragraph{The Expression Problem, Scandinavian Style.}
-Ernst~\cite{Ernst_2001} illustrates the benefits of nested inheritance for modularity
+\citet{Ernst_2001} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
 \emph{Expression Problem}~\cite{wadler1998expression}. The objective of the
 Expression Problem is to extend a datatype, consisting of several cases,
 together with several associated operations in two dimensions: by adding more
-cases to the datatype and by adding new operations for the datatype.
-Ernst solves the Expression Problem in the gbeta language,
-which he adorns with a Java-like syntax for presentation purposes, for a small
-abstract syntax tree (AST) example. His starting point is the code shown in
-\cref{fig:lang}. The outer class \lstinline{Lang} contains a family of related
-AST classes: the common superclass \lstinline{Exp} and two cases,
-\lstinline{Lit} for literals and \lstinline{Add} for addition. The AST comes
-equipped with one operation, \lstinline{toString}, which is implemented by both
-cases.
+cases to the datatype and by adding new operations for the datatype. Ernst
+solves the Expression Problem in the gbeta language, which he adorns with a
+Java-like syntax for presentation purposes, for a small abstract syntax tree
+(AST) example. His starting point is the code shown in \cref{fig:lang}. The
+outer class \lstinline{Lang} contains a family of related AST classes: the
+common superclass \lstinline{Exp} and two cases, \lstinline{Lit} for literals
+and \lstinline{Add} for addition. The AST comes equipped with one operation,
+\lstinline{toString}, which is implemented by both cases. Notice that all the
+inner classes are \textit{virtual}, in the same sense of virtual methods, which
+means that they may be redefined in subclasses of the enclosing class.
 
 
 \begin{figure}[t]
@@ -105,21 +106,31 @@ class LangNeg extends Lang {
 \end{figure}
 
 \paragraph{Adding a New Operation.}
+
 One way to extend the family is to add an additional evaluation operation, as
 shown in the top half of \cref{fig:extend}. This is done by subclassing the
 \lstinline{Lang} class and refining all the contained classes by implementing
-the additional \lstinline{eval} method. Note that the inheritance between, e.g.,
-\lstinline{Lang.Exp} and \lstinline{Lang.Lit} is transferred to
-\lstinline{LangEval.Exp} and \lstinline{LangEval.Lit}. Similarly, the
-\lstinline{Lang.Exp} type of the \lstinline{left} and \lstinline{right} fields
-in \lstinline{Lang.Add} is automatically refined to \lstinline{LangEval.Exp} in
-\lstinline{LangEval.Add}.
+the additional \lstinline{eval} method. The semantics of the keyword
+\lstinline[language=gbeta]{refine} is that the virtual class is constrained to
+be a subclass of the new declaration. In other words, \lstinline{Exp},
+\lstinline{Lit} and \lstinline{Add} are all extended with the \lstinline{eval}
+method. Note that the inheritance between, e.g., \lstinline{Lang.Exp} and
+\lstinline{Lang.Lit} is transferred to \lstinline{LangEval.Exp} and
+\lstinline{LangEval.Lit}. Similarly, the \lstinline{Lang.Exp} type of the
+\lstinline{left} and \lstinline{right} fields in \lstinline{Lang.Add} is
+automatically refined to \lstinline{LangEval.Exp} in \lstinline{LangEval.Add}.
 
 \paragraph{Adding a New Case.}
+
 A second dimension to extend the family is to add a case for negation, shown in
 the bottom half of \cref{fig:extend}. This is similarly achieved by subclassing
-\lstinline{Lang}, and now adding a new contained class \lstinline{Neg}, for
-negation, that implements the \lstinline{toString} operation.
+\lstinline{Lang}, and now adding a new contained virtual class \lstinline{Neg}
+that represents the unary negation operator. Note that \lstinline{Neg} is
+declared to be a subclass of \lstinline{Exp}, which means that the extension to
+\lstinline{Exp} will also be added to \lstinline{Neg}.
+
+
+\paragraph{Combining Both Extensions.}
 
 Finally, the two extensions are naturally combined by means of
 multiple inheritance, closing the diamond.
@@ -133,17 +144,17 @@ class LangNegEval extends LangEval & LangNeg {
 The only effort required is to implement the one missing operation
 case, evaluation of negated expressions.
 
-% \paragraph{A solution in \name using nested composition:} Show a
-% solution in \name with records implemented in SEDEL. Justify the connection to the
+% \paragraph{A solution in \namee using nested composition:} Show a
+% solution in \namee with records implemented in SEDEL. Justify the connection to the
 % class-based solution. Mention that type system support
 % for family polymorphism is known to be hard.
 
 %-------------------------------------------------------------------------------
-\subsection{The Expression Problem, \name Style}
+\subsection{The Expression Problem, \namee Style}
 
-The \name calculus allows us to solve the Expression Problem in a way that is
-very similar to Ernst's gbeta solution. However, the underlying mechanisms of
-\name are quite different from those of gbeta. In particular, \name features a
+The \namee calculus allows us to solve the Expression Problem in a way that is
+very similar to \citeauthor{Ernst_2001}'s gbeta solution. However, the underlying mechanisms of
+\namee are quite different from those of gbeta. In particular, \namee features a
 structural type system in which we can model objects with records, and object
 types with record types. For instance, we model the interface of \lstinline{Lang.Exp}
 with the singleton record type \lstinline${ print : String }$. For the sake of
@@ -153,24 +164,24 @@ Similarly, we capture the interface of the \lstinline{Lang} family in a record,
 with one field for each case's constructor.
 \lstinputlisting[linerange=8-8]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY
 Here is the implementation of \lstinline{Lang}.
-\lstinputlisting[linerange=17-22]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
+\lstinputlisting[linerange=17-24]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Adding Evaluation.}
 We obtain \lstinline{IPrint & IEval}, which is the corresponding type for \lstinline{LangEval.Exp}, by
 intersecting \lstinline{IPrint} with \lstinline{IEval} where
-\lstinputlisting[linerange=27-27]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
+\lstinputlisting[linerange=29-29]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
 The type for \lstinline{LangEval} is then:
-\lstinputlisting[linerange=32-35]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
+\lstinputlisting[linerange=34-37]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
 We obtain an implementation for \lstinline{LangEval} by merging the existing
 \lstinline{Lang} implementation \lstinline{implLang} with the new evaluation
 functionality \lstinline{implEval} using the merge operator \lstinline{,,}.
-\lstinputlisting[linerange=43-49]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
+\lstinputlisting[linerange=45-53]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Adding Negation.}
 Adding negation to \lstinline{Lang} works similarly.
-\lstinputlisting[linerange=53-59]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
+\lstinputlisting[linerange=57-65]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
 % \begin{Verbatim}[xleftmargin=10mm,fontsize=\relscale{.80}]
 % type LangNeg = Lang & { neg : IPrint -> IPrint }
 
@@ -184,15 +195,15 @@ Adding negation to \lstinline{Lang} works similarly.
 \paragraph{Putting Everything Together.}
 Finally, we can combine the two extensions and provide the missing
 implementation of evaluation for the negation case.
-\lstinputlisting[linerange=64-71]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
+\lstinputlisting[linerange=70-80]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
 We can test \lstinline{implLangNegEval} by creating an object \lstinline{e} of expression $-2 + 3$ that is able to print and evaluate at the same time.
-\lstinputlisting[linerange=89-91]{./examples/overview.sl}% APPLY:linerange=TEST
+\lstinputlisting[linerange=98-100]{./examples/overview.sl}% APPLY:linerange=TEST
 
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Multi-Field Records.} One relevant remark is that
-\name does not have multi-field record types built in. They are merely syntactic
+\namee does not have multi-field record types built in. They are merely syntactic
 sugar for intersections of single-field record types. Hence, the following is an
 equivalent definition of \lstinline{Lang}:
 \lstinputlisting[linerange=13-13]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
@@ -205,14 +216,14 @@ implLang : Lang = { lit = ... } ,, { add = ... };
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Subtyping.}
-A big difference compared to gbeta is that many more \name types are related through
+A big difference compared to gbeta is that many more \namee types are related through
 subtyping. Indeed, gbeta is unnecessarily conservative~\cite{ernst_hoh}: none of the families is related
 through subtyping, nor is any of the class members of one family related to any
 of the class members in another family. For instance, \lstinline{LangEval} is
 not a subtype of \lstinline{Lang}, nor is \lstinline{LangNeg.Lit} a subtype
 of \lstinline{Lang.Lit}.
 
-In contrast, subtyping in \name is much more nuanced and depends entirely on the
+In contrast, subtyping in \namee is much more nuanced and depends entirely on the
 structure of types. The primary source of subtyping are intersection types:
 any intersection type is a subtype of its components. For instance, 
 \lstinline{IPrint & IEval} is a subtype of both \lstinline{IPrint} and
@@ -221,8 +232,8 @@ of \lstinline{Lang}. Compare this to gbeta where \lstinline{LangEval.Expr} is
 not a subtype of \lstinline{Lang.Expr}, nor is the family \lstinline{LangNeg} a
 subtype of the family \lstinline{Lang}.
 
-However, gbeta and \name agree that \lstinline{LangEval} is not a subtype of
-\lstinline{Lang}. The \name-side of this may seem contradictory at first, as we
+However, gbeta and \namee agree that \lstinline{LangEval} is not a subtype of
+\lstinline{Lang}. The \namee-side of this may seem contradictory at first, as we
 have seen that intersection types arise from the use of the merge operator, and
 we have created an implementation for \lstinline{LangEval} with
 \lstinline{implLang ,, implEval} where \lstinline{implLang : Lang}. That
@@ -231,13 +242,13 @@ Yet, there is a flaw in our reasoning:
 strictly speaking, \lstinline{implLang ,, implEval} is not of
 type \lstinline{LangEval} but instead of type \lstinline{Lang & EvalExt}, where
 \lstinline{EvalExt} is the type of \lstinline{implEval}:
-\lstinputlisting[linerange=39-39]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
+\lstinputlisting[linerange=41-41]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
 Nevertheless, the definition of \lstinline{implLangEval} is valid because
 \lstinline{Lang & EvalExt} is a subtype of \lstinline{LangEval}.
 Indeed, if we consider for the sake of simplicity only the \lstinline{lit}
 field, we have that \lstinline{(Int -> IPrint) & (Int -> IEval)} is a
 subtype of \lstinline{Int -> IPrint & IEval}. This follows from a standard
-subtyping axiom for distributivity of functions and intersections in the BCD system inherited by \name.
+subtyping axiom for distributivity of functions and intersections in the BCD system inherited by \namee.
 In conclusion, \lstinline{Lang & EvalExt} is a subtype of both \lstinline{Lang}
 and of \lstinline{LangEval}. However, neither of the latter two types is a subtype of the other.
 Indeed, \lstinline{LangEval} is not a subtype of \lstinline{Lang} as the type
@@ -254,13 +265,13 @@ reason why we have so many subtyping relations in \cref{fig:diagram}.
 \begin{figure}[t]
   \centering
 \includegraphics[scale=0.75]{diagram.eps}
-\caption{Summary diagram of the relationships between language components}
+\caption{Summary of the relationships between language components}
 \label{fig:diagram}
 \end{figure}
 
 
 \paragraph{Stand-Alone Extensions.}
-Unlike in gbeta and other class-based inheritance systems, in \name
+Unlike in gbeta and other class-based inheritance systems, in \namee
 the extension \lstinline{implEval} is not tied to \lstinline{LangEval}. In that
 sense, it resembles trait and mixin systems that can apply the same extension
 to different classes. However, unlike those systems, \lstinline{implEval} can also
@@ -276,7 +287,7 @@ namely ambiguity. When a subclass inherits an implementation of the same
 method from two different parent classes, it is unclear which of the two
 methods is to be adopted by the subclass. In the case where the two parent classes
 have a common superclass, this is known as the \emph{diamond problem}.
-The ambiguity problem also appears in \name,
+The ambiguity problem also appears in \namee,
 e.g., if we merge two numbers to obtain $\mer{1}{2}$ of type
 $\inter{\mathsf{Nat}}{\mathsf{Nat}}$. Is the result of $\mer{1}{2} + 3$
 either $4$ or $5$?
@@ -296,11 +307,11 @@ and an ad-hoc treatment of ``top-like'' types. Indeed, the value $\mer{1}{1}$
 of the non-disjoint type $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ is entirely unambiguous, and
 $(\mer{1}{1}) + 3$ can obviously only result in $4$. More generally, when the
 overlapping components of an intersection type have the same value, there is no
-ambiguity problem. \name uses this idea to relax \oname's enforcement of
+ambiguity problem. \namee uses this idea to relax \oname's enforcement of
 disjointness. In the case of a merge, it is hard to statically decide whether
-the two arguments have the same value, and thus \name still requires
+the two arguments have the same value, and thus \namee still requires
 disjointness. This is why in \cref{fig:diagram} we cannot define
-\lstinline{implLangNegEval} by directly composing the two existing
+\lstinline{implLangNegEval} by directly composing the two existing implementation
 \lstinline{implLangEval} and \lstinline{implLangNeg}, even though the latter two
 both contain the same \lstinline{implLang}.
 Yet, disjointness is no longer required for the well-formedness
@@ -309,7 +320,7 @@ subtyping, which results in duplicating values at runtime. For instance, while
 $\mer{1}{1}$ is not expressible
 $ 1 : \inter{\mathsf{Nat}}{\mathsf{Nat}}$ creates the equivalent value implicitly.
 % The consequence of this relaxation of disjointness is a much simplified
-% type system for \name.
+% type system for \namee.
 In short, duplication is harmless and subtyping only generates duplicated
 values for non-disjoint types.
 
@@ -325,7 +336,7 @@ at most one possible subtyping derivation between any two types.  As a
 consequence there is only one possible elaboration and thus one
 possible behavior for any program.
 
-Two factors make establishing coherence for \name much more difficult: the
+Two factors make establishing coherence for \namee much more difficult: the
 relaxation of disjointness and the adoption of the more expressive subtyping
 rules from the BCD system (for which \oname lacks). These two factors mean that subtyping proofs are no
 longer unique and hence that there are multiple elaborations of the same source
@@ -337,17 +348,17 @@ For instance, in the example, we can see that coherence holds because  at
 runtime any value of type $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ has identical components, and
 thus both projections yield the same result.
 
-For \name in general, we show coherence by capturing the non-ambiguity
+For \namee in general, we show coherence by capturing the non-ambiguity
 invariant in a logical relation and showing that it is preserved by the
 operational semantics. A complicating factor is that not one, but two languages
-are involved: the source language \name and the target language, essentially
-the simply-typed lambda calculus extended with coercions and records. The
+are involved: the source language \namee and the target language, essentially
+the simply-typed lambda calculus extended with coercions. The
 logical relation does not hold for target programs and program contexts in
 general, but only for those that are the image of a corresponding source
 program or program context. Thus we must view everything through the lens of
-elaboration.
+elaboration. We refer to \cref{chap:coherence:simple} for a detailed discussion of coherence.
 
 % Local Variables:
-% TeX-master: "../paper"
-% org-ref-default-bibliography: ../paper.bib
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
 % End:

@@ -338,7 +338,6 @@ ls, fs {{ tex \mathcal{L} }} :: 'ls_' ::=
 
 terminals :: 'terminals_' ::=
     | ii      :: :: Arith      {{ tex i }}
-    | S       :: :: String      {{ tex \mathbb{S} }}
     | BL      :: :: Bool       {{ tex \mathbb{B} }}
     | \       :: :: lambda     {{ tex \lambda }}
     | -->     :: :: red        {{ tex \longrightarrow }}
@@ -680,29 +679,9 @@ l1 <> l2
 { l1 : A } ** { l2 : B }
 
 
----------------------- :: axNatArr
-nat ** A1 -> A2
-
-
----------------------- :: axArrNat
-A1 -> A2 ** nat
-
-
-
----------------------- :: axNatRcd
-nat ** { l : A }
-
-
----------------------- :: axRcdNat
-{ l : A } ** nat
-
-
----------------------- :: axArrRcd
-A1 -> A2 ** { l : A }
-
-
----------------------- :: axRcdArr
-{ l : A } ** A1 -> A2
+A **a B
+-------------------- :: ax
+A ** B
 
 
 
