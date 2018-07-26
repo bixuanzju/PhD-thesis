@@ -85,54 +85,54 @@
 % Glossaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage[%
-  acronym,
-  automake,
-  nogroupskip,
-  nopostdot,
-  nonumberlist,
-  toc,
-  ]{glossaries}
+% \RequirePackage[%
+%   acronym,
+%   automake,
+%   nogroupskip,
+%   nopostdot,
+%   nonumberlist,
+%   toc,
+%   ]{glossaries}
 
-% New style that prevents line-breaks between the full description and
-% the acronym. Furthermore, it ensures that the acronym is always
-% printed in an upright font.
-\newacronymstyle{long-short-mimosis}
-{%
-  \GlsUseAcrEntryDispStyle{long-short}%
-}%
-{%
-  \GlsUseAcrStyleDefs{long-short}%
-  \renewcommand*{\genacrfullformat}[2]{%
-    \glsentrylong{##1}##2~\textup{(\firstacronymfont{\glsentryshort{##1}})}%
-  }%
-  \renewcommand*{\Genacrfullformat}[2]{%
-    \Glsentrylong{##1}##2~\textup{(\firstacronymfont{\glsentryshort{##1}})}%
-  }%
-  \renewcommand*{\genplacrfullformat}[2]{%
-    \glsentrylongpl{##1}##2~\textup{(\firstacronymfont{\glsentryshortpl{##1}})}%
-  }%
-  \renewcommand*{\Genplacrfullformat}[2]{%
-    \Glsentrylongpl{##1}##2~\textup{(\firstacronymfont{\Glsentryshortpl{##1}})}%
-  }%
-}
+% % New style that prevents line-breaks between the full description and
+% % the acronym. Furthermore, it ensures that the acronym is always
+% % printed in an upright font.
+% \newacronymstyle{long-short-mimosis}
+% {%
+%   \GlsUseAcrEntryDispStyle{long-short}%
+% }%
+% {%
+%   \GlsUseAcrStyleDefs{long-short}%
+%   \renewcommand*{\genacrfullformat}[2]{%
+%     \glsentrylong{##1}##2~\textup{(\firstacronymfont{\glsentryshort{##1}})}%
+%   }%
+%   \renewcommand*{\Genacrfullformat}[2]{%
+%     \Glsentrylong{##1}##2~\textup{(\firstacronymfont{\glsentryshort{##1}})}%
+%   }%
+%   \renewcommand*{\genplacrfullformat}[2]{%
+%     \glsentrylongpl{##1}##2~\textup{(\firstacronymfont{\glsentryshortpl{##1}})}%
+%   }%
+%   \renewcommand*{\Genplacrfullformat}[2]{%
+%     \Glsentrylongpl{##1}##2~\textup{(\firstacronymfont{\Glsentryshortpl{##1}})}%
+%   }%
+% }
 
-% A new glossary style that based on the long style of the glossaries
-% package. It ensures that descriptions and entries are aligned.
-\newglossarystyle{long-mimosis}{%
-  \setglossarystyle{long}
+% % A new glossary style that based on the long style of the glossaries
+% % package. It ensures that descriptions and entries are aligned.
+% \newglossarystyle{long-mimosis}{%
+%   \setglossarystyle{long}
 
-  \renewcommand{\glossentry}[2]{%
-    \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
-    \glossentrydesc{##1}\glspostdescription\space ##2\tabularnewline
-  }%
-}
+%   \renewcommand{\glossentry}[2]{%
+%     \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+%     \glossentrydesc{##1}\glspostdescription\space ##2\tabularnewline
+%   }%
+% }
 
-% Constrain the description width to enforce breaks.
-\setlength{\glsdescwidth}{10cm}
+% % Constrain the description width to enforce breaks.
+% \setlength{\glsdescwidth}{10cm}
 
-\setacronymstyle{long-short-mimosis}
-\setglossarystyle{long-mimosis}
+% \setacronymstyle{long-short-mimosis}
+% \setglossarystyle{long-mimosis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Paragraph lists & compact enumerations

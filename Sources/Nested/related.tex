@@ -9,24 +9,24 @@ typing derivations rather than on typing judgements. A natural
 question that arises
 for such systems is whether the semantics is \textit{coherent}, i.e.,
 distinct typing derivations of the same typing judgement possess the same
-meaning. Since Reynolds~\cite{Reynolds_1991} proved the coherence of a calculus with
+meaning. Since Reynolds~\citep{Reynolds_1991} proved the coherence of a calculus with
 intersection types, based on the denotational semantics for intersection types,
 many researchers have studied the problem of coherence in a variety of typed
 calculi. Below we summarize two commonly-found approaches in the literature.
 
 %\paragraph{Normalization-based Approach}
 % The first approach is based on normalization.
-Breazu-Tannen et al.~\cite{Breazu_Tannen_1991} proved
-the coherence of a coercion translation from Fun~\cite{cardelli1985understanding}
+Breazu-Tannen et al.~\citep{Breazu_Tannen_1991} proved
+the coherence of a coercion translation from Fun~\citep{cardelli1985understanding}
 extended with recursive types to System F by showing that any two
 typing derivations of the same judgement are normalizable to a unique
 normal derivation. % where the correctness of the normalization steps is justified
 % by an equational theory in the target calculus, i.e., System F.
-Ghelli~\cite{Curien_1992} presented a translation of System F$_\leq$ into a calculus
+Ghelli~\citep{Curien_1992} presented a translation of System F$_\leq$ into a calculus
 with explicit coercions and showed that any derivations of the same judgement are
 translated to terms that are normalizable to a unique normal form. Following the
-same approach, Schwinghammer~\cite{SCHWINGHAMMER_2008} proved the coherence of coercion
-translation from Moggi's computational lambda calculus~\cite{Moggi_1991} with subtyping.
+same approach, Schwinghammer~\citep{SCHWINGHAMMER_2008} proved the coherence of coercion
+translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with subtyping.
 
 
 %\paragraph{Logical-relations-based Approach}
@@ -36,7 +36,7 @@ the derivation and show that normal forms are unique for a given typing
 judgement. However, this approach cannot be directly applied to Curry-style
 calculi, i.e, where the lambda abstractions are not type annotated. Also this
 line of reasoning cannot be used when the calculus has general recursion.
-Biernacki and Polesiuk~\cite{biernacki2015logical} considered the coherence
+Biernacki and Polesiuk~\citep{biernacki2015logical} considered the coherence
 problem of coercion semantics. Their criterion for coherence of the translation is
 \textit{contextual equivalence} in the target calculus. They presented a construction of
 logical relations for establishing so constructed coherence for coercion semantics,
@@ -56,17 +56,17 @@ complicated notion of contextual equivalence and our logical relation's
 non-trivial treatment of pairs.
 
 \paragraph{Intersection Types and the Merge Operator.}
-Forsythe~\cite{reynolds1988preliminary} has intersection types and a merge-like operator. However to ensure coherence, various
+Forsythe~\citep{reynolds1988preliminary} has intersection types and a merge-like operator. However to ensure coherence, various
 restrictions were added to limit the use of merges. For example, in Forsythe
-merges cannot contain more than one function. Castagna et al.~\cite{Castagna_1992} proposed a
+merges cannot contain more than one function. Castagna et al.~\citep{Castagna_1992} proposed a
 coherent calculus with a special merge operator that works on functions only.
-More recently, Dunfield~\cite{dunfield2014elaborating} shows significant expressiveness
+More recently, Dunfield~\citep{dunfield2014elaborating} shows significant expressiveness
 of type systems with intersection types and a merge operator. However his
 calculus lacks coherence. The limitation was addressed by
-Oliveira et al.~\cite{oliveira2016disjoint}, who introduced disjointness to ensure
+Oliveira et al.~\citep{oliveira2016disjoint}, who introduced disjointness to ensure
 coherence. The combination of intersection types, a merge operator and
 parametric polymorphism, while achieving coherence was first studied in the
-\fname calculus~\cite{alpuimdisjoint}. Compared to prior work, \name simplifies type systems
+\fname calculus~\citep{alpuimdisjoint}. Compared to prior work, \name simplifies type systems
 with disjoint intersection types by removing several restrictions. 
 Furthermore, \name adopts a more powerful subtyping relation based 
 on BCD subtyping, which in turn requires the use of a more powerful
@@ -79,28 +79,28 @@ logical relations based method for proving coherence.
 
 
 \paragraph{BCD Type System and Decidability.}
-The BCD type system was first introduced by Barendregt et al.~\cite{Barendregt_1983}. It is
+The BCD type system was first introduced by Barendregt et al.~\citep{Barendregt_1983}. It is
 derived from a filter lambda model in order to characterize exactly the strongly
 normalizing terms. The BCD type system features a powerful subtyping relation,
-which serves as a base for our subtyping relation. Bessai et al.~\cite{DBLP:journals/corr/BessaiDDCd15}
-showed how to type classes and mixins in a BCD-style record calculus with Bracha-Cook's merge operator~\cite{bracha1990mixin}.
+which serves as a base for our subtyping relation. Bessai et al.~\citep{DBLP:journals/corr/BessaiDDCd15}
+showed how to type classes and mixins in a BCD-style record calculus with Bracha-Cook's merge operator~\citep{bracha1990mixin}.
 Their merge can only operate on records, and they only study a type assignment system.
 The decidability of BCD subtyping has been shown in several
-works~\cite{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
-Laurent~\cite{laurent2012intersection} has formalized the relation in Coq in
+works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
+Laurent~\citep{laurent2012intersection} has formalized the relation in Coq in
 order to eliminate transitivity cuts from it, but his formalization does not
-deliver an algorithm. Based on Statman's work~\cite{Statman_2015}, Bessai et
-al.~\cite{bessaiextracting} show a formally verified subtyping algorithm in Coq.
+deliver an algorithm. Based on Statman's work~\citep{Statman_2015}, Bessai et
+al.~\citep{bessaiextracting} show a formally verified subtyping algorithm in Coq.
 Our Coq formalization follows a different idea based on Pierce's decision
-procedure~\cite{pierce1989decision}, which is shown to be easily extensible to
+procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
 coercions and records. In the course of our mechanization we identified several
 mistakes in Pierce's proofs, as well as some important missing lemmas.
 
 \paragraph{Family Polymorphism.}
 There has been much work on family polymorphism since Ernst's
-original proposal~\cite{Ernst_2001}. Family polymorphism provides an elegant
+original proposal~\citep{Ernst_2001}. Family polymorphism provides an elegant
 solution to the Expression Problem. Although a simple Scala solution does exist without
-requiring family polymorphism (e.g., see Wang and Oliveira~\cite{wang2016expression}), Scala
+requiring family polymorphism (e.g., see Wang and Oliveira~\citep{wang2016expression}), Scala
 does not support nested composition: programmers need to manually compose
 all the classes from multiple extensions. Generally speaking, systems that support
 family polymorphism usually require quite sophisticated mechanisms such as
@@ -111,19 +111,19 @@ dependent types.
 % \textit{object families} and those that support \textit{class families}. In
 % object families, classes are nested in objects, whereas in class families,
 % classes are nested in other classes. The former choice is considered more
-% expressive~\cite{ErnstVirtual}, but requires a complex type system usually
+% expressive~\citep{ErnstVirtual}, but requires a complex type system usually
 % involving dependent types.
 
 %\paragraph{Object Families}
 There are two approaches to family polymorphism: the original \textit{object family}
-approach of Beta (e.g., virtual classes~\cite{Madsen_1989}) treats nested classes
+approach of Beta (e.g., virtual classes~\citep{Madsen_1989}) treats nested classes
 as attributes of objects of the family classes. Path-dependent types are used to
 ensure type safety for virtual types and virtual classes in the calculus
-\textit{vc}~\cite{ErnstVirtual}. As for conflicts, \textit{vc} follows the
+\textit{vc}~\citep{ErnstVirtual}. As for conflicts, \textit{vc} follows the
 mixin-style by allowing the rightmost class to take precedence. This is in
 contrast to \name where conflicts are detected statically and resolved
-explicitly. In the \textit{class family} approach of Concord~\cite{jolly2004simple},
-Jx and J\&~\cite{Nystrom_2004,Nystrom:2006:JNI:1167473.1167476},
+explicitly. In the \textit{class family} approach of Concord~\citep{jolly2004simple},
+Jx and J\&~\citep{Nystrom_2004,Nystrom:2006:JNI:1167473.1167476},
 nested classes and types are attributes of the family classes directly.
 % Unlike virtual classes, subclass and subtype relationships are preserved by inheritance: the
 % overriding class is also a subtype of the class it overrides.
@@ -136,18 +136,18 @@ nesting of arbitrary depth. J\& is a language that supports \textit{nested
 play an important role in J\&, which are used to compose packages/classes.
 Unlike \name, J\& does not have a merge-like operator. When conflicts arise,
 prefix types can be exploited to resolve the ambiguity.
-J\&$_s$~\cite{Qi:2009:SCF:1542476.1542508} is an extension of the Java language
-that adds class sharing to J\&. Saito et al.~\cite{SAITO_2007} identified a
+J\&$_s$~\citep{Qi:2009:SCF:1542476.1542508} is an extension of the Java language
+that adds class sharing to J\&. Saito et al.~\citep{SAITO_2007} identified a
 minimal, lightweight set of language features to enable family polymorphism,
 % though inheritance relations between nested classes are not preserved by
 % extension.
-Corradi et al.~\cite{Corradi_2012} present a language design that
+Corradi et al.~\citep{Corradi_2012} present a language design that
 integrates modular composition and nesting of Java-like classes. It features a
 set of composition operators that allow to manipulate nested classes at any
 depth level. More recently, a Java-like language called
-Familia~\cite{Zhang_2017} were proposed to combine subtyping polymorphism,
+Familia~\citep{Zhang_2017} were proposed to combine subtyping polymorphism,
 parametric polymorphism and family polymorphism. The object and class family approaches have even been
-combined by the work on Tribe~\cite{pubsdoc:tribe-virtual-calculus}.
+combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
 
 % This % flexibility allows a further bound class to be a subtype of the class it
 % overrides.
@@ -187,7 +187,7 @@ on the subtyping relations of families.
  \name's goal is not to support full family
 polymorphism which, besides nested composition, also requires 
 dealing with other features such as
-self types~\cite{bruce95thistype,saito09matching} and mutable state. Supporting these features is not the
+self types~\citep{bruce95thistype,saito09matching} and mutable state. Supporting these features is not the
 focus of this paper, but we expect to investigate those features in the future.
 
 

@@ -17,7 +17,7 @@ and refine their mutual relationships. \citet{Nystrom_2004} call this
 writing new code proportional to the differences in functionality''.
 %
 A well-studied mechanism to achieve family inheritance is \emph{nested
-inheritance}~\cite{Nystrom_2004}. Nested inheritance combines two aspects.
+inheritance}~\citep{Nystrom_2004}. Nested inheritance combines two aspects.
 Firstly, a class can have nested class members; the outer class is then a
 family of (inner) classes. Secondly, when one family extends another, it
 inherits (and can override) all the class members, as well as the relationships
@@ -27,7 +27,7 @@ the members of the new family do not become subtypes of those in the parent fami
 \paragraph{The Expression Problem, Scandinavian Style.}
 \citet{Ernst_2001} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
-\emph{Expression Problem}~\cite{wadler1998expression}. The objective of the
+\emph{Expression Problem}~\citep{wadler1998expression}. The objective of the
 Expression Problem is to extend a datatype, consisting of several cases,
 together with several associated operations in two dimensions: by adding more
 cases to the datatype and by adding new operations for the datatype. Ernst
@@ -217,7 +217,7 @@ implLang : Lang = { lit = ... } ,, { add = ... };
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Subtyping.}
 A big difference compared to gbeta is that many more \namee types are related through
-subtyping. Indeed, gbeta is unnecessarily conservative~\cite{ernst_hoh}: none of the families is related
+subtyping. Indeed, gbeta is unnecessarily conservative~\citep{ernst_hoh}: none of the families is related
 through subtyping, nor is any of the class members of one family related to any
 of the class members in another family. For instance, \lstinline{LangEval} is
 not a subtype of \lstinline{Lang}, nor is \lstinline{LangNeg.Lit} a subtype

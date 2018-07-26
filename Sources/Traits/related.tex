@@ -3,15 +3,15 @@
 
 
 \paragraph{Typed First-Class Classes/Mixins/Traits.}
-First-class~\cite{DBLP:conf/aplas/FlattFF06} classes have been used in
+First-class~\citep{DBLP:conf/aplas/FlattFF06} classes have been used in
 Racket, along with mixin support, and
 have shown great practical value. For example, DrRacket
-IDE~\cite{DBLP:journals/jfp/FindlerCFFKSF02} makes extensive use of layered
+IDE~\citep{DBLP:journals/jfp/FindlerCFFKSF02} makes extensive use of layered
 combinations of mixins to implement text editing features. The topic of
 first-class classes with static typing has been explored by Takikawa et
-al.~\cite{DBLP:conf/oopsla/TakikawaSDTF12} in Typed Racket. They designed a
+al.~\citep{DBLP:conf/oopsla/TakikawaSDTF12} in Typed Racket. They designed a
 gradual type system that supports first-class classes. Of particular interest is
-their use of row polymorphism~\cite{wand1994type} to type mixins.
+their use of row polymorphism~\citep{wand1994type} to type mixins.
 % For example,
 % \lstinline{modal_mixin} from \cref{sec:overview} implemented in Typed Racket has
 % type:
@@ -41,7 +41,7 @@ as future work.
 % contrast, \name uses only one mechanism -- disjoint polymorphism -- to deal with
 % both.
 
-More recently, Lee et al.~\cite{DBLP:conf/ecoop/LeeASP15} proposed a model for typed first-class
+More recently, Lee et al.~\citep{DBLP:conf/ecoop/LeeASP15} proposed a model for typed first-class
 classes based on tagged objects. Like our development, the semantics
 of their source language is defined by a translation into a target language.
 One notable difference to \name is that they require the use of a variable
@@ -52,7 +52,7 @@ than ours due to the use of dependent function types and dependent sum types. As
 they admitted, they omit inheritance in their formalization.
 
 Racket also supports a \emph{dynamically-typed model} of first-class
-traits~\cite{DBLP:conf/aplas/FlattFF06}. However, unlike Racket's first-class classes and
+traits~\citep{DBLP:conf/aplas/FlattFF06}. However, unlike Racket's first-class classes and
 mixins, there's no type system supporting the use of first-class
 traits. A key difficulty is \emph{statically} detecting conflicts.
 % In the mixin model this is not a problem because conflicts are implicitly
@@ -127,11 +127,11 @@ As far as we know, \name is the first design for typed first-class traits.
 % \cite{lieberman1986using} is the first to promote the use of prototypes and
 % delegation as the mechanism to code sharing between objects. Since then many
 % researchers have studied the mechanisms of
-% delegation~\cite{wegner1987dimensions,malenfant1995semantic,goldberg1989smalltalk}.
+% delegation~\citep{wegner1987dimensions,malenfant1995semantic,goldberg1989smalltalk}.
 
 % There is not much work on statically-typed, delegation-based languages.
 % \cite{kniesel1999type} provides a good overview of problems when combining
-% delegation with a static type discipline. Cecil~\cite{chambers1992object,
+% delegation with a static type discipline. Cecil~\citep{chambers1992object,
 %   chambers1993cecil} is a prototype-based language, where delegation is the
 % mechanism for method call and code reuse. Cecil supports a polymorphic static
 % type system, although no meta-theory of any kind is given. Its type system is
@@ -139,7 +139,7 @@ As far as we know, \name is the first design for typed first-class traits.
 % result of multiple inheritance or multiple dispatching. However, one major
 % omission of Cecil, which is also one of the interesting features of \name, is
 % dynamic inheritance. There are other
-% works~\cite{fisher1995delegation,anderson2003can} on delegation in a
+% works~\citep{fisher1995delegation,anderson2003can} on delegation in a
 % statically-typed setting, but none of them provide means (such as the merge
 % construct, disjointness constraints, etc.) that are needed for extensible
 % designs.
@@ -155,32 +155,32 @@ As far as we know, \name is the first design for typed first-class traits.
 % operator is good for modelling mixins, but not traits. The
 % \textbf{with} construct seems to be unable to merge two arbitrary (and possible
 % polymorphic) values, since this seems to require something like
-% \emph{row polymorphism}~\cite{wand1987complete,wand1989type}, which is not available in their language.
+% \emph{row polymorphism}~\citep{wand1987complete,wand1989type}, which is not available in their language.
 % The \emph{onion} construct in the Big Bang
-% language~\cite{palmer2015building,menon2012big} has a similar bias problem -- it is a
+% language~\citep{palmer2015building,menon2012big} has a similar bias problem -- it is a
 % left-associative operator which gives rightmost precedence to one
 % implementation when conflicts exist.
 
 \paragraph{Mixin-Based Inheritance.}
 
-% Mixins have become very popular in many OO languages~\cite{flatt1998classes,bono1999core, ancona2003jam}.
-Bracha and Cook's seminal paper~\cite{bracha1990mixin} extends Modula-3 with
-mixins. Since then, many mixin-based models have been proposed~\cite{flatt1998classes,bono1999core, ancona2003jam}.
+% Mixins have become very popular in many OO languages~\citep{flatt1998classes,bono1999core, ancona2003jam}.
+Bracha and Cook's seminal paper~\citep{bracha1990mixin} extends Modula-3 with
+mixins. Since then, many mixin-based models have been proposed~\citep{flatt1998classes,bono1999core, ancona2003jam}.
 Mixin-based inheritance requires that mixins are composed linearly, and
 as such, conflicts are resolved implicitly. In comparison, the trait
 model in \name requires conflicts to be resolved explicitly. We want to emphasize
 that conflict detection is essential in expressing composition operators
 for Object Algebras, without running into ambiguities. Bracha's
-Jigsaw~\cite{bracha1992programming} formalized mixin composition, along with a rich
+Jigsaw~\citep{bracha1992programming} formalized mixin composition, along with a rich
 trait algebra including merge, restrict, select, project, overriding and rename operators.
-Lagorio et al.~\cite{LAGORIO201286} proposed \textsc{FJig} that reformulates Jigsaw constructs
+Lagorio et al.~\citep{LAGORIO201286} proposed \textsc{FJig} that reformulates Jigsaw constructs
 in a Java-like setting.
-Allen et al.~\cite{DBLP:conf/oopsla/AllenBC03} described how to add first-class generic
+Allen et al.~\citep{DBLP:conf/oopsla/AllenBC03} described how to add first-class generic
 types -- including mixins -- to OO languages with nominal typing.
 As such, classes and mixins, though they enjoy static typing, are still second-class
 constructs, and thus their system cannot express dynamic inheritance. Bessai et
-al.~\cite{DBLP:journals/corr/BessaiDDCd15} showed how to type classes and mixins
-with intersection types and Bracha-Cook's merge operator~\cite{bracha1990mixin}.
+al.~\citep{DBLP:journals/corr/BessaiDDCd15} showed how to type classes and mixins
+with intersection types and Bracha-Cook's merge operator~\citep{bracha1990mixin}.
 % In contrast to our merge operator, their merge operator can only work for
 % records, thus limiting its expressive power.
 
@@ -188,15 +188,15 @@ with intersection types and Bracha-Cook's merge operator~\cite{bracha1990mixin}.
 \paragraph{Trait-Based Inheritance.}
 
 
-Traits were proposed by Sch{\"a}rli et al.~\cite{scharli2003traits, Ducasse_2006} as a mechanism
+Traits were proposed by Sch{\"a}rli et al.~\citep{scharli2003traits, Ducasse_2006} as a mechanism
 for fine-grained code reuse to overcome many limitations of class-based inheritance. The original proposal
 of traits were implemented in the dynamically-typed class-based language \textsc{Squeak/Smalltalk}.
 Since then various formalizations of traits in a Java-like (statically-typed) setting
-have been proposed~\cite{fisher2004typed,scharli2003traitsformal,chai_trait, JOT:issue_2006_05/article4}.
+have been proposed~\citep{fisher2004typed,scharli2003traitsformal,chai_trait, JOT:issue_2006_05/article4}.
 % Explicit conflict resolution is the hallmark of trait-based inheritance, compared with
 % mixin-based inheritance.
 In most of the above proposals, trait composition and class-based inheritance live together.
-\name, in the spirit of \textit{pure trait-based programming languages}~\cite{BETTINI2013521, BETTINI2017419}, embraces
+\name, in the spirit of \textit{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419}, embraces
 traits as the sole mechanism for code reuse.
 % differs from prior models of (second-class)
 % traits in that they support \emph{classes} in addition to traits, and consider
@@ -259,26 +259,26 @@ of inheritance.
 % delegation with subtyping into a class-based model is possible, resulting in the
 % \textsc{Darwin} model. In \textsc{Darwin}, the type of the parent object must be
 % a declared class and this limits the flexibility of dynamic composition.
-% Ostermann's delegation layers~\cite{ostermann2002dynamically} use delegation for
+% Ostermann's delegation layers~\citep{ostermann2002dynamically} use delegation for
 % doing dynamic composition in a system with virtual classes. This is in contrast
 % with most other approaches that use class-based composition, but closer to the
 % dynamic composition that we use in \name.
 
 \paragraph{Languages with More Advanced Forms of Inheritance.}
-\textsc{Self}~\cite{ungar1988self} is a dynamically-typed, prototype-based
+\textsc{Self}~\citep{ungar1988self} is a dynamically-typed, prototype-based
 language with a simple and uniform object model. \textsc{Self}'s inheritance
 model is typical of what we call \textit{mutable inheritance}, because an object's parent
 slot may be assigned new values at runtime. Mutable inheritance is rather
 unstructured, and oftentimes access to any clashing methods will generate a
 ``messageAmbiguous'' error at runtime. Although \name's dynamic inheritance is
 not as powerful as mutable inheritance, its static type system can guarantee
-that no such errors occur at runtime. Eiffel~\cite{meyer1987eiffel} supports a
+that no such errors occur at runtime. Eiffel~\citep{meyer1987eiffel} supports a
 sophisticated class-based multiple inheritance with deep renaming, exclusion
 and repeated inheritance. Of particular interest is that in Eiffel, name
 collisions are considered programming errors, and ambiguities must be resolved
 explicitly by the programmer (by means of renaming). In this regard, \name is
 quite like Eiffel. However, the type system in \name is more lenient in that two
-identically named methods with different signatures can coexist. Grace~\cite{DBLP:journals/jot/NobleBBHJ17, DBLP:conf/ecoop/0002HNB16}
+identically named methods with different signatures can coexist. Grace~\citep{DBLP:journals/jot/NobleBBHJ17, DBLP:conf/ecoop/0002HNB16}
 is an object-based language designed for education, where objects are created by
 \textit{object constructors}.
 % In that regard, Grace is similar to \name in that
@@ -300,8 +300,8 @@ based on so-called \emph{instantiable traits}.
 % Still the freshness constraint applies.
 We believe that there is plenty to be learned from
 Grace's design of traits if we want to extend our trait model with
-features such as mutable state. \textsc{MetaFJig}~\cite{SERVETTO2014219} (an extension of \textsc{FJig})
-supports \textit{dynamic trait replacement}~\cite{chai_trait, BETTINI2013907, Ducasse_2006},
+features such as mutable state. \textsc{MetaFJig}~\citep{SERVETTO2014219} (an extension of \textsc{FJig})
+supports \textit{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907, Ducasse_2006},
 a feature for changing the behavior of an object at runtime by replacing one trait for another.
 
 
@@ -309,7 +309,7 @@ a feature for changing the behavior of an object at runtime by replacing one tra
 
 % There are many other class-based OO languages that are equipped with more
 % advanced forms of
-% inheritance~\cite{meyer1987eiffel,buchi2000generic,ostermann2001object}. Most of
+% inheritance~\citep{meyer1987eiffel,buchi2000generic,ostermann2001object}. Most of
 % them are heavyweight and are specific to classes. \name is object-centered, more
 % lightweight, and is dedicated to express extensible designs in a simpler way.
 
@@ -324,9 +324,9 @@ a feature for changing the behavior of an object at runtime by replacing one tra
 % overriding with the assumption that the author of the overriding method is aware
 % of the effect.
 
-% Generic wrappers~\cite{buchi2000generic} supports aggregating objects at
+% Generic wrappers~\citep{buchi2000generic} supports aggregating objects at
 % run-time. In their model, once a ``wrappee'' is assigned to a ``wrapper'', the
-% wrappee is fixed. GBETA~\cite{ernst2000gbeta} has some dynamic features that are
+% wrappee is fixed. GBETA~\citep{ernst2000gbeta} has some dynamic features that are
 % related to delegation. Like Generic wrappers, parents in GBETA are fixed at
 % run-time.
 
@@ -348,10 +348,10 @@ a feature for changing the behavior of an object at runtime by replacing one tra
 \paragraph{Module Systems.}
 
 In parallel to OOP, the ML module system originally proposed by
-MacQueen~\cite{MacQueen_1984} also offers powerful support for flexible program
+MacQueen~\citep{MacQueen_1984} also offers powerful support for flexible program
 construction, data abstraction and code reuse. Mixin modules in the
-Jigsaw framework~\cite{Bracha92modularitymeets} provides a suite of operators
-for adapting and combining modules. The MixML~\cite{Rossberg_2013} module
+Jigsaw framework~\citep{Bracha92modularitymeets} provides a suite of operators
+for adapting and combining modules. The MixML~\citep{Rossberg_2013} module
 system incorporates mixin module composition, while retaining the full
 expressive powerful of ML modules. Module systems usually put more emphasis on
 supporting type abstraction. Support for type abstraction
@@ -365,19 +365,19 @@ dispatching, which (generally speaking) are all missing features in module syste
 
 \paragraph{Intersection Types, Polymorphism and Merge Construct.} There
 is a large body of work on intersection types. Here we only talk about work that
-has direct influences on ours. Dunfield~\cite{dunfield2014elaborating} shows
+has direct influences on ours. Dunfield~\citep{dunfield2014elaborating} shows
 significant expressiveness of type systems with intersection types and a merge
 construct. However his calculus lacks coherence. The limitation was addressed by
-Oliveira el at.~\cite{oliveira2016disjoint}, where they introduced the notion of
+Oliveira el at.~\citep{oliveira2016disjoint}, where they introduced the notion of
 disjointness to ensure coherence. The combination of intersection types, a merge
 construct and parametric polymorphism, while achieving coherence was first
-studied in the \fname calculus~\cite{alpuimdisjoint}.
+studied in the \fname calculus~\citep{alpuimdisjoint}.
 % where they proposed the notion of disjoint polymorphism.
 \fname serves as the target language
 of \name. Dynamic inheritance, self-references and abstract methods
 are all missing from \fname but, as shown in this paper, they can be
 encoded using an elaboration that employs ideas from Cook and
-Palsberg's denotational model of inheritance~\cite{cook1989denotational}.
+Palsberg's denotational model of inheritance~\citep{cook1989denotational}.
 
 
 %%% Local Variables:

@@ -8,7 +8,7 @@ This section presents the syntax and semantics of \sedel. In particular,
 we show how to elaborate high-level source language constructs (self-references, abstract methods, first-class traits, dynamic inheritance, etc.)
 to \fnamee. The treatment of the self-reference and dynamic dispatching is
 inspired by \citeauthor{cook1989denotational}'s work on the denotational semantics for
-inheritance~\cite{cook1989denotational}. We then prove the elaboration is type
+inheritance~\citep{cook1989denotational}. We then prove the elaboration is type
 safe, i.e., well-typed \sedel expressions are translated to well-typed \fnamee
 terms. Finally we show that \sedel is coherent. Full proofs can be found in the appendix.
 
@@ -39,7 +39,7 @@ constructs \hll{highlighted}. For brevity of the meta-theoretic study, we do not
 consider definitions, which can be added in standard ways.
 %We omit mutable fields and other practical
 %constructs in order to focus on the basic mechanisms of traits. The omitted
-%constructs can be added in standard ways~\cite{DBLP:books/daglib/0005958}.
+%constructs can be added in standard ways~\citep{DBLP:books/daglib/0005958}.
 
 \paragraph{Types.}
 Metavariables $[[AA]]$, $[[BB]]$, $[[CT]]$ range over types. Types include a top
@@ -249,7 +249,7 @@ denotational model of inheritance.
 
 \paragraph{Flattening Property.}
 
-In the literature of traits~\cite{Ducasse_2006, scharli2003traits, JOT:issue_2006_05/article4},
+In the literature of traits~\citep{Ducasse_2006, scharli2003traits, JOT:issue_2006_05/article4},
 a distinguished feature of traits is the
 so-called \textit{flattening property}. This property says that a (non-overridden) method in a
 trait has the same semantics as if it were implemented directly in the class

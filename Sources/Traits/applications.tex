@@ -2,17 +2,17 @@
 \label{sec:application}
 
 To further illustrate the applicability of \sedel, we present a case
-study using Object Algebras~\cite{oliveira2012extensibility} and
-Extensible \textsc{Visitor}s~\cite{oliveira09modular, togersen:2004}. Encodings
+study using Object Algebras~\citep{oliveira2012extensibility} and
+Extensible \textsc{Visitor}s~\citep{oliveira09modular, togersen:2004}. Encodings
 of extensible designs for Object Algebras and Extensible \textsc{Visitor}s have
-been presented in mainstream languages~\cite{oliveira09modular, togersen:2004, oliveira2012extensibility, oliveira2013feature, rendel14attributes}.
+been presented in mainstream languages~\citep{oliveira09modular, togersen:2004, oliveira2012extensibility, oliveira2013feature, rendel14attributes}.
 However, prior approaches are not entirely satisfactory
 due to the limitations in existing mainstream OO languages. In \cref{sec:ob}, we show how \sedel makes those designs significantly simpler and
 convenient to use. In particular, \name's encoding of extensible visitors gives true ASTs and supports
 conflict-free Object Algebra combinators, thanks to first-class traits and disjoint polymorphism.
 Based on this technique, \cref{sec:case} gives a bird-view of several orthogonal features of
 a small JavaScript-like language from a textbook on Programming
-Languages~\cite{poplcook}, and illustrates how various features can
+Languages~\citep{poplcook}, and illustrates how various features can
 be modularly developed and composed to assemble a complete language with various
 operations baked in. \Cref{sec:evaluate} compares our \name's implementation
 with that of the textbook using Haskell in terms of lines of code.
@@ -22,7 +22,7 @@ with that of the textbook using Haskell in terms of lines of code.
 \label{sec:ob}
 
 First we give a simple introduction to Object Algebras, a design pattern that
-can solve the Expression Problem~\cite{wadler1998expression} (EP) in languages like
+can solve the Expression Problem~\citep{wadler1998expression} (EP) in languages like
 Java. The objective of EP is to \emph{modularly} extend a datatype in two
 dimensions: by adding more cases to the datatype and by adding new operations
 for the datatype.
@@ -39,12 +39,12 @@ implements the evaluation rules is given by a trait
 
 \paragraph{First-Class Object Algebra Values.}
 The actual AST of this simple arithmetic language is given as an internal
-visitor~\cite{Oliveira_2008}:
+visitor~\citep{Oliveira_2008}:
 \lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
 Note that Object Algebras as implemented in languages like Java or Scala do not define the type
 \lstinline{Exp} because this would make adding new variants very hard. Although extensible versions
 of this visitor pattern do exist, they usually require complex types using advanced features of
-generics~\cite{oliveira2012extensibility, togersen:2004}.
+generics~\citep{oliveira2012extensibility, togersen:2004}.
 However, as we will see, this is not a problem in \sedel. We can build a value of \lstinline{Exp} as follows:
 \lstinputlisting[linerange=27-29]{./examples/application.sl}% APPLY:linerange=VALUE_E1
 
@@ -69,7 +69,7 @@ and build a value of \lstinline{-(2 + 3)} while reusing \lstinline{e1}:
 At this stage, it is interesting to point out an interesting subtyping relation
 between \lstinline{Exp} and \lstinline{ExtExp}: \lstinline{ExpExt}, though being an
 \emph{extension} of \lstinline{Exp} is actually a \emph{supertype} of \lstinline{Exp}.
-As Oliveira~\cite{oliveira09modular} observed, these relations are
+As Oliveira~\citep{oliveira09modular} observed, these relations are
 important for legacy and performance reasons since it means that, a value of
 type \lstinline{Exp} can be \emph{automatically} and \emph{safely}
 coerced into a value of type \lstinline{ExpExt}, allowing some
@@ -83,7 +83,7 @@ supertype of \lstinline{Exp}.
 % Encodings
 % of extensible visitors in mainstream OO languages usually fail to
 % correctly express these relations, or require sophisticated
-% type system extensions~\cite{oliveira09modular}.
+% type system extensions~\citep{oliveira09modular}.
 
 
 
@@ -92,13 +92,13 @@ supertype of \lstinline{Exp}.
 When programming with Object Algebras, oftentimes it is necessary to pack
 multiple operations in the same object. For example, in the simple language we
 have been developing it can be useful to create an object that supports both
-printing and evaluation. Oliveira and Cook~\cite{oliveira2012extensibility}
+printing and evaluation. Oliveira and Cook~\citep{oliveira2012extensibility}
 addressed this problem by proposing \emph{Object Algebra combinators} that
 combine multiple algebras into one. However, as they noted, such combinators
 written in Java are difficult to use in practice, and they require significant
 amounts of boilerplate. Improved variants of Object Algebra combinators have
 been encoded in Scala using intersection types and an encoding of the merge
-construct~\cite{oliveira2013feature, rendel14attributes}. However, the
+construct~\citep{oliveira2013feature, rendel14attributes}. However, the
 Scala encoding of the merge construct is quite complex as it relies on low-level
 type-unsafe programming features such as dynamic proxies, reflection or other
 meta-programming techniques. In \sedel, the combination of first-class
@@ -106,8 +106,8 @@ traits, dynamic inheritance and disjoint polymorphism allows type-safe, coherent
 and boilerplate-free composition of Object Algebras.
 \lstinputlisting[linerange=76-78]{./examples/application.sl}% APPLY:linerange=COMBINE
 That is it. None of the boilerplate in other
-approaches~\cite{oliveira2012extensibility}, or type-unsafe meta-programming
-techniques of other approaches~\cite{oliveira2013feature,rendel14attributes} are
+approaches~\citep{oliveira2012extensibility}, or type-unsafe meta-programming
+techniques of other approaches~\citep{oliveira2013feature,rendel14attributes} are
 needed! Two points are worth noting: (1) \lstinline{combine} relies on
 \emph{dynamic inheritance}. Notice how \lstinline{combine} inherits two traits
 \lstinline{f} and \lstinline{g}, for which their implementations are unknown
@@ -147,7 +147,7 @@ create an object \lstinline{o} that supports both evaluation and printing in one
 
 Now we are ready to see how the same technique scales to modularize different
 language features. A \emph{feature} is an increment in program
-functionality~\cite{zave1999faq,lopez2005evaluating}. \Cref{fig:mini-js}
+functionality~\citep{zave1999faq,lopez2005evaluating}. \Cref{fig:mini-js}
 presents the syntax of the expressions, values and types provided by the
 features; each line is annotated with the corresponding feature sedel. Starting from a
 simple arithmetic language, we gradually introduce new features and combine them
@@ -352,13 +352,13 @@ case study, but also object types, expressed in the meta-language (\sedel) and
 manifestly ensuring well-scoped and well-typed expressions in the object
 language. What is more, the evaluator over the object expressions is type
 preserving by construction. The embedding of typed languages is directly
-inspired by Kiselyov's lecture notes~\cite{kiselyov2012typed} on the
+inspired by Kiselyov's lecture notes~\citep{kiselyov2012typed} on the
 "tagless-final" approach to embedding languages.
 
 \paragraph{Well-typed object expressions} One important issue with such
 embedding is how to deal with binders in the object language. In general there
-are two options, one can either use deBrujin indices~\cite{}, or higher-order
-abstract syntax (HOAS)~\cite{}. Each option has its cons and pros, but for this
+are two options, one can either use deBrujin indices~\citep{}, or higher-order
+abstract syntax (HOAS)~\citep{}. Each option has its cons and pros, but for this
 particular case study, we find HOAS convenient. HOAS represents object language
 abstractions as \sedel abstractions and object variables as \sedel variables. By
 utilizing the infrastructure of the meta-language, we are free of issues such as

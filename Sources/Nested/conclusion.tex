@@ -15,7 +15,7 @@ has potential for practical applications for extensible software designs.
 
 A natural direction for future work is to enrich \name with parametric
 polymorphism. There is abundant literature on logical relations for parametric
-polymorphism~\cite{reynolds1983types}. % and we foresee no fundamental difficulties
+polymorphism~\citep{reynolds1983types}. % and we foresee no fundamental difficulties
 % in extending our proof method .
 The main challenge in the definition of the
 logical relation is the clause that relates type variables with arbitrary types. Careful
@@ -24,8 +24,8 @@ impredicativity.\footnote{ Our prototype implementation already
   supports polymorphism, but we are still in the process of extending our Coq
   development with polymorphism.} With the combination of parametric polymorphism and nested
 composition, an interesting application that we intend to investigate is native
-support for a highly modular form of \textit{Object Algebras}~\cite{oliveira2012extensibility, xuan_traits} and \textsc{Visitor}s
-(or the finally tagless approach~\cite{CARETTE_2009}).
+support for a highly modular form of \textit{Object Algebras}~\citep{oliveira2012extensibility, xuan_traits} and \textsc{Visitor}s
+(or the finally tagless approach~\citep{CARETTE_2009}).
 
 Another direction for future work is to add mutable references, which would
 affect two aspects of our metatheory: type safety and coherence. For type safety,
@@ -35,7 +35,7 @@ subtyping in the presence of mutable state often needs restrictions. Given such
 suitable restrictions we expect that type-safety in the presence of mutability
 still holds. For coherence, it would be a major technical challenge to adjust
 our coherence proof and its Coq mechanization: logical relations that account
-for mutable state (e.g., see Ahmed's thesis~\cite{ahmed2004semantics}) introduce significant complexity.
+for mutable state (e.g., see Ahmed's thesis~\citep{ahmed2004semantics}) introduce significant complexity.
 
 
 

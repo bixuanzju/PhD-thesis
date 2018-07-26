@@ -2,7 +2,7 @@
 \label{sec:intro}
 
 Many dynamically typed-languages (including JavaScript, Ruby, Python
-or Racket) support \emph{first-class classes}~\cite{DBLP:conf/aplas/FlattFF06}, or related concepts
+or Racket) support \emph{first-class classes}~\citep{DBLP:conf/aplas/FlattFF06}, or related concepts
 such as first-class mixins and/or traits. In those languages classes
 are first-class values and, like any other values, they can be
 passed as an argument, or returned from a function. Furthermore
@@ -49,7 +49,7 @@ languages, there is surprisingly little work on typing of first-class
 classes (or related concepts such as first-class mixins or traits).
 First-class classes and dynamic inheritance pose well-known
 difficulties in terms of typing. For example, in his thesis,
-Bracha~\cite{bracha1992programming} comments several times on the difficulties of typing
+Bracha~\citep{bracha1992programming} comments several times on the difficulties of typing
 dynamic inheritance and first-class mixins, and proposes the
 restriction to static inheritance that is also common in
 statically-typed languages. He also observes that such restriction
@@ -59,13 +59,13 @@ to be a necessary compromise when typing was also desired.
 Only recently some progress has been made in statically typing 
 first-class classes and dynamic inheritance. In particular there are
 two works in this area: Racket's gradually
-typed first-class classes~\cite{DBLP:conf/oopsla/TakikawaSDTF12}; and Lee et al.'s model of
-typed first-class classes~\cite{DBLP:conf/ecoop/LeeASP15}. Both works provide typed models of
-first-class classes, and they enable encodings of mixins~\cite{bracha1990mixin}
+typed first-class classes~\citep{DBLP:conf/oopsla/TakikawaSDTF12}; and Lee et al.'s model of
+typed first-class classes~\citep{DBLP:conf/ecoop/LeeASP15}. Both works provide typed models of
+first-class classes, and they enable encodings of mixins~\citep{bracha1990mixin}
 similar to those employed in dynamically-typed languages.
 
 However, as far as we known no previous work supports statically-typed
-\emph{first-class traits}. Traits~\cite{scharli2003traits} are an alternative to
+\emph{first-class traits}. Traits~\citep{scharli2003traits} are an alternative to
 mixins, and other models of (multiple) inheritance. The key difference between traits and mixins lies on the
 treatment of conflicts when
 composing multiple traits/mixins. Mixins adopt an
@@ -77,7 +77,7 @@ Traits, on the other hand, employ an \emph{explicit} resolution
 strategy, where the compositions with conflicts are rejected, and the
 conflicts are explicitly resolved by programmers. 
 
-Sch\"arli et al.~\cite{scharli2003traits} make a good case for the advantages of the trait
+Sch\"arli et al.~\citep{scharli2003traits} make a good case for the advantages of the trait
 model. In particular, traits avoid bugs that could arise from
 accidental conflicts that were not detected by programmers. With the
 mixin model, such conflicts would be silently resolved, possibly
@@ -89,7 +89,7 @@ statically, greatly increasing the possibility of accidental
 conflicts. From a modularity point-of-view,
 the trait model also ensures that composition is \emph{commutative}, thus the order
 of composition is irrelevant and does not affect the
-semantics. Bracha~\cite{bracha1992programming} claims that ``\emph{The only modular
+semantics. Bracha~\citep{bracha1992programming} claims that ``\emph{The only modular
   solution is to treat the name collisions as errors...}'', strengthening the case for the use of a trait model of
 composition. Otherwise, if the semantics is affected by the order of
 composition, global knowledge about the full inheritance graph is
@@ -108,7 +108,7 @@ should be detected \emph{statically}, even in the presence of features
 such as dynamic inheritance and composition and \emph{parametric polymorphism}.
 To address the challenges of typing first-class traits and detecting conflicts statically,
 \sedel adopts a polymorphic structural type system based on
-\emph{disjoint polymorphism}~\cite{alpuimdisjoint}.
+\emph{disjoint polymorphism}~\citep{alpuimdisjoint}.
 The choice of structural typing is due to its simplicity, but we think
 similar ideas should also work in a nominal type system.
 
@@ -120,9 +120,9 @@ and \emph{abstract methods}. Previous work on disjoint intersection types is
 aimed at core record calculi, and omits important features
 for practical OO languages, including (dynamic) inheritance, dynamic
 dispatching and abstract methods. Based on Cook and Palsberg's work on the
-denotational semantics for inheritance~\cite{cook1989denotational}, we show how to design a source 
+denotational semantics for inheritance~\citep{cook1989denotational}, we show how to design a source
 language that can be elaborated into Alpuim et al.'s
-\fname~\cite{alpuimdisjoint}, a polymorphic calculus with records supporting disjoint polymorphism.
+\fname~\citep{alpuimdisjoint}, a polymorphic calculus with records supporting disjoint polymorphism.
 \sedel's elaboration into \fname is proved to be both type-safe and
 coherent. Coherence ensures that the semantics of
 \sedel is unambiguous. In particular this property is useful to ensure that
@@ -133,11 +133,11 @@ know).
 We illustrate the applicability of \sedel with several example uses for
 first-class traits. Furthermore we conduct a case study that modularizes programming 
 language interpreters using a highly modular form of
-Object Algebras~\cite{oliveira2012extensibility} and \textsc{Visitor}s.
+Object Algebras~\citep{oliveira2012extensibility} and \textsc{Visitor}s.
 In particular we show how \sedel can easily compose multiple object
 algebras into a single object algebra. Such composition operation has
 previously been shown to be highly challenging in languages like Java
-or Scala~\cite{oliveira2013feature, rendel14attributes}. The previous state-of-the-art implementations for such
+or Scala~\citep{oliveira2013feature, rendel14attributes}. The previous state-of-the-art implementations for such
 operation require employing type-unsafe reflective techniques
 % (including \lstinline[language=java]{java.lang.Class})
 to simulate the features of first-class classes. Moreover conflicts are not
@@ -148,7 +148,7 @@ type-safe, convenient to use and conflicts are statically detected.
 % Mainstream statically-typed Object-Oriented Programming (OOP) languages (such as Java,
 % C++, C\# or Scala) all use a similar programming model based on
 % classes. This programming model has its roots on the
-% origins of OOP in the 1960s in the Simula language~\cite{dahl1967simula}.
+% origins of OOP in the 1960s in the Simula language~\citep{dahl1967simula}.
 % We will refer to this model as the \emph{covariant model} for the
 % remainder of this paper, because in this model inheritance and
 % subtyping vary in the same way. More concretely
@@ -177,9 +177,9 @@ type-safe, convenient to use and conflicts are statically detected.
 % the story is not quite so simple. Since the earliest works on the theory of OOP
 % and subtyping, we have known that the covariant view of objects is somewhat
 % simplified. Already in \cite{cardelli1984semantics}'s earliest work on
-% the theoretic foundations of OOP~\cite{cardelli1984semantics}, we knew that functions do not behave in a
+% the theoretic foundations of OOP~\citep{cardelli1984semantics}, we knew that functions do not behave in a
 % strictly covariant way. However it was only until \cite{cook1989inheritance}'s
-% famous paper~\cite{cook1989inheritance} on ``\emph{Inheritance is not Subtyping}'' that the issues were
+% famous paper~\citep{cook1989inheritance} on ``\emph{Inheritance is not Subtyping}'' that the issues were
 % discussed in more detail. As \cite{cook1989inheritance} argued inheritance and subtyping are
 % different relations: subtyping being a relation on types and inheritance being a
 % relation on objects. In the covariant model the subtype relation is based on the
@@ -206,7 +206,7 @@ type-safe, convenient to use and conflicts are statically detected.
 % Despite being proposed almost 30 years ago, and one of the most famous papers in
 % OOP, \cite{cook1989inheritance}'s paper has not had much impact on the design of mainstream OOP
 % languages (although it has influenced the design of several academic
-% languages~\cite{america1991designing,graver1989type,chambers1992object,bruce1995polytoil}).
+% languages~\citep{america1991designing,graver1989type,chambers1992object,bruce1995polytoil}).
 % %Certainly this is not because
 % %researchers or designer of OOP language are unaware of the subtleties
 % %of covariance and contravariance. Indeed over the years, and for other
@@ -232,12 +232,12 @@ type-safe, convenient to use and conflicts are statically detected.
 % form of inheritance (where concrete implementations of the inherited code are
 % possibly unknown) is highly desirable in practice. Thus we are naturally led to
 % a OO language design using \emph{delegation} (or \emph{dynamic
-%   inheritance})~\cite{ungar1988self,chambers1992object}. Finally, we present
+%   inheritance})~\citep{ungar1988self,chambers1992object}. Finally, we present
 % \sedel\footnote{\sedel stands for: {\bf S}afe and {\bf E}xpressive {\bf
 %     DEL}egation}: a purely functional OO language that puts these ideas into
 % practice using a polymorphic structural type system based on \emph{disjoint
-%   intersection types}~\cite{oliveira2016disjoint} and \emph{disjoint
-%   polymorphism}~\cite{alpuimdisjoint}. The choice of structural typing is due to
+%   intersection types}~\citep{oliveira2016disjoint} and \emph{disjoint
+%   polymorphism}~\citep{alpuimdisjoint}. The choice of structural typing is due to
 % its simplicity, but we think similar ideas should also work in a nominal type
 % system.
 
@@ -247,7 +247,7 @@ type-safe, convenient to use and conflicts are statically detected.
 % support for extensibility in programming languages
 % ~\cite{Prehofer97,Tarr99ndegrees,Harrison93subject,McDirmid01Jiazzi,Aracic06CaesarJ,Smaragdakis98mixin,nystrom2006j,togersen:2004,Zenger-Odersky2005,oliveira09modular,oliveira2012extensibility}.
 % Some of the more recent work on extensibility is focused on design patterns such
-% as Extensible Visitors~\cite{togersen:2004,oliveira09modular} or Object Algebras
+% as Extensible Visitors~\citep{togersen:2004,oliveira09modular} or Object Algebras
 % \cite{oliveira2012extensibility}. Although such design patterns give practical
 % benefits in terms of extensibility, they also expose limitations in existing
 % mainstream OOP languages. In particular there are two main issues:
@@ -279,7 +279,7 @@ type-safe, convenient to use and conflicts are statically detected.
 % combinators and their uses, while at the same time ensuring that the composition
 % is \emph{conflict-free}. The mechanism that enables this is called
 % \emph{dynamically composable traits}, since the model is quite close to
-% traits~\cite{scharli2003traits}, but based on dynamic inheritance.
+% traits~\citep{scharli2003traits}, but based on dynamic inheritance.
 % \end{comment}
 
 
@@ -291,8 +291,8 @@ type-safe, convenient to use and conflicts are statically detected.
 % provide a language implementation and conduct case studies to evaluate a
 % language design. What their work does is to develop core calculi that support an
 % expressive form of \emph{intersection
-%   types}~\cite{coppo1981functional,pottinger1980type} with a \emph{merge
-%   construct}~\cite{dunfield2014elaborating}. In \sedel subtyping is modelled with
+%   types}~\citep{coppo1981functional,pottinger1980type} with a \emph{merge
+%   construct}~\citep{dunfield2014elaborating}. In \sedel subtyping is modelled with
 % disjoint intersection types, and inheritance is modelled with the merge
 % construct. \sedel inherits the key properties of these calculi, which are
 % type-safety and coherence.
@@ -322,8 +322,8 @@ In summary the contributions of this paper are:
 \item \textbf{Elaboration of first-class traits into disjoint intersection types/polymorphism:}
   We show how the semantics of
   \sedel can be defined by elaboration into Alpuim et al.'s
-  \fname~\cite{alpuimdisjoint}. The elaboration is inspired by the
-  work of Cook and Palsberg~\cite{cook1989denotational} to model inheritance.
+  \fname~\citep{alpuimdisjoint}. The elaboration is inspired by the
+  work of Cook and Palsberg~\citep{cook1989denotational} to model inheritance.
 
 %\item {\bf Case Study and Improved variants of extensible designs:} We present
 %  improved variants of \emph{Object
@@ -334,7 +334,7 @@ In summary the contributions of this paper are:
   evaluate \sedel we conduct a case study. The case study shows that support for
   composition of Object Algebras and \textsc{Visitor}s is greatly improved in \sedel.
   Using such improved design patterns we re-code the interpreters in
-  Cook's undergraduate Programming Languages book~\cite{poplcook} in
+  Cook's undergraduate Programming Languages book~\citep{poplcook} in
   a modular way in \sedel.
 
 \end{itemize}
@@ -346,7 +346,7 @@ In summary the contributions of this paper are:
 % Mixins. This programming style is very flexible and enables forms
 % of reuse not usually available in more statically typed languages like Java.
 % However, mixins in JavaScript fundamentally rely on an \emph{object-level composition}
-% operator for inheritance~\cite{}. This requires a very dynamic form of
+% operator for inheritance~\citep{}. This requires a very dynamic form of
 % inheritance/delegation that is not available in most class-based
 % statically-typed OO languages. Ideally the essence of such
 % form of mixins should be capturable in statically-typed languages.

@@ -6,12 +6,12 @@
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \namee. Compared
-to prior work~\cite{alpuimdisjoint, oliveira2016disjoint}, \namee has a more
+to prior work~\citep{alpuimdisjoint, oliveira2016disjoint}, \namee has a more
 powerful subtyping relation. The new subtyping relation is inspired by BCD-style
 subtyping, but with two noteworthy differences: subtyping is coercive (in
 contrast to traditional formulations of BCD); and it is extended with records.
 We also have a new target language with explicit coercions inspired by the coercion calculus of
-Henglein~\cite{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
+Henglein~\citep{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
 
 
 \subsection{Syntax}
@@ -58,7 +58,7 @@ singleton records $[[ {l = ee}]]$, and record selections $[[ee.l ]]$.
 
 \paragraph{BCD-Style Subtyping.}
 The subtyping rules are essentially those of the BCD type
-system~\cite{Barendregt_1983}, extended with subtyping for singleton records.
+system~\citep{Barendregt_1983}, extended with subtyping for singleton records.
 \Rref{S-top,S-rcd} for top types and record types are straightforward.
 \Rref{S-arr} for function subtyping is standard. \Rref{S-andl,S-andr,S-and} for
 intersection types axiomatize that $[[A & B]]$ is the greatest lower bound of
@@ -166,7 +166,7 @@ disjointness judgement $[[A ** B]]$ used in \rref{T-merge} is shown in
 that their least upper bound is (isomorphic to) $[[Top]]$. The disjointness judgement is
 important in order to rule out ambiguous expressions such as $\mer{1}{2}$. Most
 of the typing and disjointness rules are standard and are explained in detail in
-previous work~\cite{oliveira2016disjoint, alpuimdisjoint}.
+previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
 %We refer
 %the reader to their papers for further explanation.
 
@@ -212,7 +212,7 @@ types to \tname types, and extends naturally to typing contexts.
 
 The separate syntactic category for explicit coercions is a distinct
 difference from the prior works (in which they are regular terms). Our coercions
-are based on those of Henglein~\cite{Henglein_1994}, and we add more forms due to our
+are based on those of Henglein~\citep{Henglein_1994}, and we add more forms due to our
 extra subtyping rules.
 Metavariable $[[c]]$ ranges over coercions.\footnote{Coercions $[[pp1]]$ and $[[pp2]]$ subsume the first and second projection of pairs, respectively.}
 Coercions express the conversion
@@ -262,7 +262,7 @@ $[[e --> e']]$ for reduction of expressions. The first three lines are reduction
 rules for coercions. They do not contribute to computation but merely rearrange
 coercions. Our coercion reduction rules are quite standard but not efficient in
 terms of space. Nevertheless, there is existing work on space-efficient
-coercions~\cite{Siek_2015, herman2010space}, which should be applicable to our
+coercions~\citep{Siek_2015, herman2010space}, which should be applicable to our
 work as well. \Rref{r-app} is the usual $\beta$-rule that performs actual
 computation, and \rref{r-ctxt} handles reduction under an evaluation context. As
 standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
@@ -332,7 +332,7 @@ Apart from the extra subtyping rules, there is an important difference from the
 \oname subtyping relation. The subtyping relation of \oname employs an
 auxiliary unary relation called $\mathsf{ordinary}$, which plays a fundamental
 role for ensuring coherence and obtaining an
-algorithm~\cite{Davies_2000}. The \namee calculus discards the notion of
+algorithm~\citep{Davies_2000}. The \namee calculus discards the notion of
 ordinary types completely; this yields a clean and elegant formulation of the
 subtyping relation. Another minor difference is that due to the addition of the
 transitivity axiom (\rref{S-trans}), \rref{S-andl,S-andr} are simplified: an

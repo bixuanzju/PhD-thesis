@@ -9,7 +9,7 @@ we simplify the examples in \cref{sec:trait:overview} to make better use of trai
 
 \subsection{Traits in \sedel}
 
-\sedel supports a simple, yet expressive form of traits~\cite{scharli2003traits}.
+\sedel supports a simple, yet expressive form of traits~\citep{scharli2003traits}.
 Traits provide a simple mechanism for find-grained code reuse, which
 can be regarded as a disciplined form of multiple inheritance. A trait is
 similar to a mixin in that it encapsulates a collection of related methods to be
@@ -34,7 +34,7 @@ due to the use of structural types, a trait name is \textit{not} a type.
 \paragraph{Traits as Templates for Creating Objects.}
 
 An obvious difference between traits in \sedel and many other models of
-traits~\cite{scharli2003traits,fisher2004typed,odersky2005scalable} is that they
+traits~\citep{scharli2003traits,fisher2004typed,odersky2005scalable} is that they
 directly serve as templates for objects. In many other trait models, traits are
 complemented by classes, which take the responsibility for object creation. In
 particular, most models of traits do not allow constructors for traits. However,
@@ -76,7 +76,7 @@ In \sedel, self-types of traits are known as trait \emph{requirements}.
 
 \paragraph{Classes and/or Traits}
 
-In the literature on traits~\cite{Ducasse_2006, scharli2003traits}, the
+In the literature on traits~\citep{Ducasse_2006, scharli2003traits}, the
 aforementioned two roles are considered as competing. One reason of the two
 roles conflicting in class-based languages is because a class must adopt a fixed
 position in the class hierarchy and therefore it can be difficult to reuse and
@@ -104,7 +104,7 @@ reason for having both classes and traits.
 
 \paragraph{Object Types and Trait Types.}
 \sedel adopts a relatively standard foundational model of object-oriented
-constructs~\cite{DBLP:conf/ecoop/LeeASP15} where objects are encoded as records
+constructs~\citep{DBLP:conf/ecoop/LeeASP15} where objects are encoded as records
 with a structural type. This is why the object \lstinline{a_editor1}
 has the record type \lstinline{IDEEditor}. In \sedel, an object type is
 different from a trait type. A trait type is specified with the keyword
@@ -152,7 +152,7 @@ parameter is the same as the class being defined.
 
 \paragraph{Intersection Types Model Subtyping.}
 \lstinline{IDEEditor} is defined as an intersection type (\lstinline{Editor & Version & Spelling & ModalEdit}).
-Intersection types~\cite{coppo1981functional,pottinger1980type} have been woven
+Intersection types~\citep{coppo1981functional,pottinger1980type} have been woven
 into many modern languages these days. A notable example is Scala, which makes
 fundamental use of intersection types to express a class/trait that extends
 multiple other traits. An intersection type such as \lstinline{T1 & T2} contains
@@ -174,7 +174,7 @@ and \lstinline{T2}. Unsurprisingly, \lstinline{IDEEditor} is a subtype of
 % (using \lstinline{new} and the \lstinline{&} operator).
 
 %Under the hood, inheritance is accomplished by using the \emph{merge operator}
-%(denoted by \lstinline{,,}). The merge operator~\cite{dunfield2014elaborating}
+%(denoted by \lstinline{,,}). The merge operator~\citep{dunfield2014elaborating}
 %allows two arbitrary values to be merged, with the resulting type being an
 %intersection type.
 %For example the type of \lstinline{2 ,, true} is

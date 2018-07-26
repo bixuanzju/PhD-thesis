@@ -53,18 +53,26 @@
 % identifier and citing everything in simple brackets. The first names,
 % if present, will be initialized. DOIs and URLs will be preserved.
 
-\usepackage[%
-  hyperref     = true,
-  natbib       = true,
-  sortcites    = true,
-  maxbibnames  = 9,
-  maxcitenames = 2,
-  style        = numeric,
-  ]{biblatex}
+% \usepackage[%
+%   hyperref     = true,
+%   natbib       = true,
+%   sortcites    = true,
+%   maxbibnames  = 9,
+%   maxcitenames = 2,
+%   style        = authoryear,
+%   ]{biblatex}
+
+
+\usepackage{natbib}
+\setcitestyle{%
+    authoryear,%
+    open={[},close={]},citesep={;},%
+    aysep={},yysep={,},%
+    notesep={, }}
+
 
 % \input{bibliography-mimosis}
-% \bibliographystyle{ACM-Reference-Format}
-\bibliography{Thesis}
+\bibliographystyle{ACM-Reference-Format}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
@@ -80,24 +88,24 @@
 
 \renewcommand{\th}{\textsuperscript{\textup{th}}\xspace}
 
-\newacronym[description={Principal component analysis}]{PCA}{PCA}{principal component analysis}
-\newacronym                                            {SNF}{SNF}{Smith normal form}
-\newacronym[description={Topological data analysis}]   {TDA}{TDA}{topological data analysis}
+% \newacronym[description={Principal component analysis}]{PCA}{PCA}{principal component analysis}
+% \newacronym                                            {SNF}{SNF}{Smith normal form}
+% \newacronym[description={Topological data analysis}]   {TDA}{TDA}{topological data analysis}
 
-\newglossaryentry{LaTeX}{%
-  name        = {\LaTeX},
-  description = {A document preparation system},
-  sort        = {LaTeX},
-}
+% \newglossaryentry{LaTeX}{%
+%   name        = {\LaTeX},
+%   description = {A document preparation system},
+%   sort        = {LaTeX},
+% }
 
-\newglossaryentry{Real numbers}{%
-  name        = {$\real$},
-  description = {The set of real numbers},
-  sort        = {Real numbers},
-}
+% \newglossaryentry{Real numbers}{%
+%   name        = {$\real$},
+%   description = {The set of real numbers},
+%   sort        = {Real numbers},
+% }
 
-\makeindex
-\makeglossaries
+% \makeindex
+% \makeglossaries
 
 % 12pt, please
 % \KOMAoptions{fontsize=12pt}
@@ -248,15 +256,19 @@ diploma or other qualifications.
 \bookmarksetup{startatroot}
 \backmatter
 
-  \begingroup
-    \let\clearpage\relax
-    \glsaddall
-    \printglossary[type=\acronymtype]
-    \newpage
-    \printglossary
-  \endgroup
+\bibliography{Thesis}
 
-  \printindex
-  \printbibliography
+\appendix
+
+  % \begingroup
+  %   \let\clearpage\relax
+  %   \glsaddall
+  %   \printglossary[type=\acronymtype]
+  %   \newpage
+  %   \printglossary
+  % \endgroup
+
+  % \printindex
+  % \printbibliography
 
 \end{document}

@@ -7,7 +7,7 @@ uses and applications, as well as the typing challenges that arise
 from their use.
 We start by describing a hypothetical JavaScript library for text editing
 widgets, inspired and adapted from Racket's GUI
-toolkit~\cite{DBLP:conf/oopsla/TakikawaSDTF12}. The example is illustrative of
+toolkit~\citep{DBLP:conf/oopsla/TakikawaSDTF12}. The example is illustrative of
 typical uses of dynamic inheritance/composition, and also the typing challenges
 in the presence of first-class classes/traits. Without diving into
 technical details, we then give the corresponding typed version in
@@ -16,7 +16,7 @@ technical details, we then give the corresponding typed version in
 \subsection{First-Class Classes in JavaScript}
 
 A class construct was officially added to JavaScript in the ECMAScript
-2015 Language Specification~\cite{EcmaScript:15}. One purpose of
+2015 Language Specification~\citep{EcmaScript:15}. One purpose of
 adding classes to JavaScript was to support a construct that is more
 familiar to programmers who come from mainstream class-based languages,
 such as Java or C++. However classes in JavaScript are
@@ -125,7 +125,7 @@ Therefore \lstinline{spellMixin} can be applied to any base class at
 \emph{runtime}. This is impossible to do, in a type-safe way, in
 conventional statically-typed class-based languages like Java or
 C++.\footnote{With C++ templates, it is possible to
-  implement a so-called mixin pattern~\cite{DBLP:conf/gcse/SmaragdakisB00}, which enables extending
+  implement a so-called mixin pattern~\citep{DBLP:conf/gcse/SmaragdakisB00}, which enables extending
 a parameterized class. However C++ templates defer type-checking until
 instantiation, and such pattern still does not allow selection of the
 base class at runtime (only at up to class instantiation time).}
@@ -213,7 +213,7 @@ method in the \lstinline{Editor} class.
 \paragraph{Trait Model.}
 Because of the total ordering and the limited means for resolving conflicts imposed by the mixin model,
 researchers have proposed a simple compositional model called
-traits~\cite{scharli2003traits, Ducasse_2006}. Traits are lightweight entities and serve as
+traits~\citep{scharli2003traits, Ducasse_2006}. Traits are lightweight entities and serve as
 the primitive units of code reuse. Among others, the key difference from
 mixins is that the order of trait composition is irrelevant, and conflicting
 methods must be resolved \emph{explicitly}. This gives programmers
@@ -256,7 +256,7 @@ we will see next.
 % languages. As it
 % turns out, designing a sound type system that fully supports first-class classes
 % is notoriously hard; there are only a few, quite sophisticated, languages that
-% manage this~\cite{DBLP:conf/oopsla/TakikawaSDTF12, DBLP:conf/ecoop/LeeASP15}. We
+% manage this~\citep{DBLP:conf/oopsla/TakikawaSDTF12, DBLP:conf/ecoop/LeeASP15}. We
 % pushed it further: \sedel has support for typed first-class
 % traits.\bruno{Better to say there's no work on typed first-class
 %   traits, and little work on first-class classes/mixins, despite
@@ -278,7 +278,7 @@ class \lstinline{Editor}. The \lstinline{editor} trait defines the same set of
 methods: \lstinline{on_key}, \lstinline{do_cut} and \lstinline{show_help}:
 \lstinputlisting[linerange=23-27]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR
 The first thing to notice is that \sedel uses a syntax (similar to Scala's
-self type annotations~\cite{odersky2004overview}) where we can give a type annotation to the
+self type annotations~\citep{odersky2004overview}) where we can give a type annotation to the
 \lstinline{self} reference. In the type of \lstinline{self} we use
 \lstinline{&} construct to create intersection types. \lstinline{Editor} and \lstinline{Version} are two record types:
 \lstinputlisting[linerange=10-17]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
@@ -328,8 +328,8 @@ We discuss these in the following.
 
 \paragraph{Disjoint Polymorphism and Conflict Detection.}
 
-\sedel uses a type system based on \emph{disjoint intersection types}~\cite{oliveira2016disjoint} and
-\emph{disjoint polymorphism}~\cite{alpuimdisjoint}. Disjoint intersections
+\sedel uses a type system based on \emph{disjoint intersection types}~\citep{oliveira2016disjoint} and
+\emph{disjoint polymorphism}~\citep{alpuimdisjoint}. Disjoint intersections
 empower \sedel to detect conflicts statically when trying to compose two
 traits with identically named features. For example composing two traits
 \lstinline{a} and \lstinline{b} that both provide \lstinline{foo} gives a
@@ -380,7 +380,7 @@ is essential to correctly model the mixin semantics. From the type we know
 something more denoted by \lstinline{A}. By inheriting \lstinline{base}, we are
 guaranteed that the result trait will have everything that is already contained
 in \lstinline{base}, plus more features. This is in some sense similar to row
-polymorphism~\cite{wand1994type} in that the result trait is prohibited from
+polymorphism~\citep{wand1994type} in that the result trait is prohibited from
 forgetting methods from the argument trait. As we will discuss in
 \cref{sec:related}, disjoint polymorphism is more expressive than row
 polymorphism.
