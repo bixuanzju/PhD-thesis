@@ -1,6 +1,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Background}
+\label{chap:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -25,8 +26,149 @@ Talk about previous approach
 
 \section{Nested Composition and Family Polymorphism}
 
+% %-------------------------------------------------------------------------------
+% \subsection{Motivation: Family Polymorphism}
 
-talk about expression problem
+In OOP \emph{family polymorphism} is the ability to
+simultaneously refine a family of related classes through inheritance. This is
+motivated by a need to not only refine individual classes, but also to preserve
+and refine their mutual relationships. \citet{Nystrom_2004} call this
+\emph{scalable extensibility}: ``the ability to extend a body of code while
+writing new code proportional to the differences in functionality''.
+%
+A well-studied mechanism to achieve family inheritance is \emph{nested
+inheritance}~\citep{Nystrom_2004}. Nested inheritance combines two aspects.
+Firstly, a class can have nested class members; the outer class is then a
+family of (inner) classes. Secondly, when one family extends another, it
+inherits (and can override) all the class members, as well as the relationships
+within the family (including subtyping) between the class members. However,
+the members of the new family do not become subtypes of those in the parent family.
+
+\paragraph{The Expression Problem, Scandinavian Style.}
+\citet{Ernst_2001} illustrates the benefits of nested inheritance for modularity
+and extensibility with one of the most elegant and concise solutions to the
+\emph{Expression Problem}~\citep{wadler1998expression}. The objective of the
+Expression Problem is to extend a datatype, consisting of several cases,
+together with several associated operations in two dimensions: by adding more
+cases to the datatype and by adding new operations for the datatype. Ernst
+solves the Expression Problem in the gbeta language, which he adorns with a
+Java-like syntax for presentation purposes, for a small abstract syntax tree
+(AST) example. His starting point is the code shown in \cref{fig:lang}. The
+outer class \lstinline{Lang} contains a family of related AST classes: the
+common superclass \lstinline{Exp} and two cases, \lstinline{Lit} for literals
+and \lstinline{Add} for addition. The AST comes equipped with one operation,
+\lstinline{toString}, which is implemented by both cases. Notice that all the
+inner classes are \textit{virtual}, in the same sense of virtual methods, which
+means that they may be redefined in subclasses of the enclosing class.
+
+
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+\begin{lstlisting}[language=gbeta]
+class Lang {
+  virtual class Exp {
+    String toString() {}
+  }
+  virtual class Lit extends Exp {
+    int value;
+    Lit(int value) {
+      this.value = value;
+    }
+    String toString() {
+      return value;
+    }
+  }
+  virtual class Add extends Exp {
+    Exp left,right;
+    Add(Exp left, Exp right) {
+      this.left = left;
+      this.right = right;
+    }
+    String toString() {
+      return left + "+" + right;
+    }
+  }
+}
+\end{lstlisting}
+\subcaption{Base family: the language \lstinline{Lang}} \label{fig:lang}
+    \end{subfigure} ~
+    \begin{subfigure}[b]{0.5\textwidth}
+\begin{lstlisting}[language=gbeta,  xleftmargin=1mm]
+// Adding a new operation
+class LangEval extends Lang {
+  refine class Exp {
+    int eval() {}
+  }
+  refine class Lit {
+    int eval { return value; }
+  }
+  refine class Add {
+    int eval { return
+      left.eval() + right.eval();
+    }
+  }
+}
+// Adding a new case
+class LangNeg extends Lang {
+  virtual class Neg extends Exp {
+    Neg(Exp exp) { this.exp = exp; }
+    String toString() {
+      return "-(" + exp + ")";
+    }
+    Exp exp;
+  }
+}
+\end{lstlisting}
+\subcaption{Extending in two dimensions} \label{fig:extend}
+    \end{subfigure}
+    \caption{The Expression Problem, Scandinavian Style}
+\end{figure}
+
+\paragraph{Adding a New Operation.}
+
+One way to extend the family is to add an additional evaluation operation, as
+shown in the top half of \cref{fig:extend}. This is done by subclassing the
+\lstinline{Lang} class and refining all the contained classes by implementing
+the additional \lstinline{eval} method. The semantics of the keyword
+\lstinline[language=gbeta]{refine} is that the virtual class is constrained to
+be a subclass of the new declaration. In other words, \lstinline{Exp},
+\lstinline{Lit} and \lstinline{Add} are all extended with the \lstinline{eval}
+method. Note that the inheritance between, e.g., \lstinline{Lang.Exp} and
+\lstinline{Lang.Lit} is transferred to \lstinline{LangEval.Exp} and
+\lstinline{LangEval.Lit}. Similarly, the \lstinline{Lang.Exp} type of the
+\lstinline{left} and \lstinline{right} fields in \lstinline{Lang.Add} is
+automatically refined to \lstinline{LangEval.Exp} in \lstinline{LangEval.Add}.
+
+\paragraph{Adding a New Case.}
+
+A second dimension to extend the family is to add a case for negation, shown in
+the bottom half of \cref{fig:extend}. This is similarly achieved by subclassing
+\lstinline{Lang}, and now adding a new contained virtual class \lstinline{Neg}
+that represents the unary negation operator. Note that \lstinline{Neg} is
+declared to be a subclass of \lstinline{Exp}, which means that the extension to
+\lstinline{Exp} will also be added to \lstinline{Neg}.
+
+
+\paragraph{Combining Both Extensions.}
+
+Finally, the two extensions are naturally combined by means of
+multiple inheritance, closing the diamond.
+\begin{lstlisting}[language=gbeta]
+class LangNegEval extends LangEval & LangNeg {
+  refine class Neg {
+    int eval() { return -exp.eval(); }
+  }
+}
+\end{lstlisting}
+The only effort required is to implement the one missing operation
+case, evaluation of negated expressions.
+
+% \paragraph{A solution in \namee using nested composition:} Show a
+% solution in \namee with records implemented in SEDEL. Justify the connection to the
+% class-based solution. Mention that type system support
+% for family polymorphism is known to be hard.
+
 
 \section{Mixins and Traits}
 

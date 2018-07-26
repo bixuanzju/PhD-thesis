@@ -15,11 +15,352 @@
 % \end{center}
 
 
-% Here is the start\index{start} of my document.
+This thesis investigates the use of disjoint intersection types, a variant of
+intersection types, focusing on its theoretical foundation and applications to
+Object-Oriented Programming in the presence of multiple inheritance. The results
+are three new typed calculi, the first two being core calculi and the last one a
+source calculus, combining the power of parametric polymorphism, a rich subtyping
+relation with the fine-grained expressiveness of disjoint intersection types.
 
-\input{Sources/Nested/introduction.tex}
 
-\input{Sources/Traits/introduction.tex}
+\section{(Disjoint) Intersection Types}
+
+
+Intersection types~\citep{pottinger1980type,coppo1981functional} have a long
+history in programming languages. They were originally introduced to
+characterize exactly all strongly normalizing lambda terms. Since then, starting
+with \citeauthor{reynolds1988preliminary}'s work on
+Forsythe~\citep{reynolds1988preliminary}, they have also been employed to
+express useful programming language constructs, such as key aspects of
+\emph{multiple inheritance}~\citep{compagnoni1996higher} in Object-Oriented
+Programming (OOP). One notable example is the Scala
+language~\citep{odersky2004overview} and its DOT
+calculus~\citep{amin2012dependent}, which make fundamental use of intersection
+types to express a class/trait that extends multiple other traits. Other modern
+languages, such as TypeScript~\citep{typescript}, Flow~\citep{flow} and
+Ceylon~\citep{ceylon}, also adopt some form of intersection types.
+
+Intersection types come in different varieties in the literature. Some calculi
+provide an \emph{explicit} introduction form for intersections, called the
+\emph{merge operator}. This operator was introduced by \citeauthor{reynolds1988preliminary} in Forsythe~\citep{reynolds1988preliminary} and
+adopted by a few other calculi~\citep{Castagna_1992, dunfield2014elaborating, oliveira2016disjoint, alpuimdisjoint}. Unfortunately,
+while the merge operator is powerful, it also makes it hard to get a \emph{coherent}
+(or unambiguous) semantics.
+%A semantics is said to be coherent if all valid programs have the
+%same meaning.\tom{The previous sentence is easily misunderstood.}
+Unrestricted uses of the merge operator can be ambiguous, leading to an incoherent semantics
+where the same program can evaluate to different values.
+%Perhaps because of this
+%issue the merge operator has not been adopted by many language designs.
+A far more common form of intersection types are the so-called \emph{refinement
+  types}~\citep{Freeman_1991, Davies_2000, dunfield2003type}. Refinement types
+restrict the formation of intersection types so that the two types in an
+intersection are refinements of the same simple (unrefined) type. Refinement
+intersection increases only the expressiveness of types and not of terms.
+For this reason, \citet{dunfield2014elaborating} argues that refinement
+intersection is unsuited for encoding various useful language features
+that require the merge operator (or an equivalent term-level operator).
+
+
+Recently, \citet{oliveira2016disjoint} proposed \oname: a calculus with a variant of intersection types
+called \emph{disjoint intersection types}.
+Calculi with disjoint intersection types feature the merge
+operator, with restrictions that all expressions in a merge
+operator must have disjoint types and all well-formed intersections
+are also disjoint. A bidirectional type system and the disjointness restrictions
+ensure that the semantics of the resulting calculi remains
+coherent.
+
+\begin{comment}
+The merge operator was introduced by Reynolds
+and Forsythe and adopted by a few other calculi as well~\citep{}.
+Unfortunately, while the merge operator is powerful, it makes
+it hard to get a \emph{coherent} semantics. \bruno{what is coherence}
+Perhaps because
+of this issue the merge operator has not been adopted by
+many language designs. Disjoint intersection types provide
+a remedy for the coherence problem, by imposing restrictions
+on the uses of merges and on the formation of intersection types.
+\bruno{merge operator ==> models inheritance; intersection types ==>
+model subtyping}
+
+In essence disjoint intersection types retain most of the
+expressive power of the merge operator.
+For example, they can
+be used to model powerful forms of extensible records~\citep{}.
+\end{comment}
+
+Disjoint intersection types have great potential to serve as a foundation for
+powerful, flexible and yet type-safe OO languages that are easy to reason
+about. As shown by \citet{alpuimdisjoint}, calculi with disjoint intersection
+types are very
+expressive and can be used to statically type-check JavaScript-style programs
+using mixins. Yet they retain both type safety and coherence. While
+coherence may seem at first of mostly theoretical relevance, it
+turns out to be very relevant for OOP. Multiple
+inheritance is renowned for being tricky to get right, largely because of the
+possible \emph{ambiguity} issues caused by the same field/method names
+inherited from different parents~\citep{bracha1990mixin, scharli2003traits}. Disjoint intersection types
+enforce that the types of parents are disjoint and thus that no conflicts exist.
+Any violations are statically detected and can be manually resolved by the
+programmer.
+%(for example by dropping one
+%of the conflicting field/methods from one of the parents).
+This is very similar to existing trait models~\citep{scharli2003traits, Ducasse_2006}. Therefore in an OO language
+modelled on top of disjoint intersection types, coherence implies
+that no ambiguity arises from multiple inheritance. This makes
+reasoning a lot simpler.
+
+\section{Family Polymorphism.}
+One powerful and long-standing idea in OOP is \emph{family
+  polymorphism}~\citep{Ernst_2001}. In family polymorphism inheritance is
+extended to work on a \emph{whole family of classes}, rather than just a single
+class. This enables high degrees of modularity and reuse, including simple
+solutions to hard programming language problems, like the Expression
+Problem~\citep{wadler1998expression}. An essential feature of family
+polymorphism is \emph{nested composition}~\citep{Corradi_2012, ErnstVirtual,
+  Nystrom_2004}, which allows the automatic inheritance/composition of nested
+(or inner) classes when the top-level classes containing them are composed.
+Designing a sound type system that fully supports family polymorphism and nested
+composition is notoriously hard; there are only a few, quite sophisticated,
+languages that manage this~\citep{ErnstVirtual, Nystrom_2004,
+  pubsdoc:tribe-virtual-calculus, SAITO_2007}. This thesis shows that the
+combination of the merge operator and a rich subtyping relation captures the
+essence of nested composition.
+
+%To make matters worse, combining
+%multiple inheritance with family polymorphism requires dealing with the various
+%issues of both ideas.
+
+
+\section{First-Class Classes, Mixins and Traits}
+
+Many dynamically-typed languages (including JavaScript, Ruby, Python or Racket)
+support \emph{first-class classes}, or related concepts such as first-class
+traits and/or mixins. In those languages classes are first-class values and,
+like any other values, they can be passed as an argument, or returned from a
+function. Furthermore first-class classes support \emph{dynamic inheritance}:
+i.e. they can inherit from other classes at \emph{runtime}, enabling programmers
+to abstract over the inheritance hierarchy. In contrast, type system limitations
+prevent most statically-typed languages from having first-class classes and
+dynamic inheritance. Traits~\citep{scharli2003traits, Ducasse_2006} are an alternative to
+mixins, and other models of (multiple) inheritance. The key difference between
+traits and mixins lies on the treatment of conflicts when composing multiple
+traits/mixins. Mixins adopt an \emph{implicit} resolution strategy for
+conflicts, where the compiler automatically picks one implementation in case of
+conflicts. For example, Scala uses the order of mixin composition to determine
+which implementation to pick in case of conflicts. Traits, on the other hand,
+employ an \emph{explicit} resolution strategy, where the compositions with
+conflicts are rejected, and the conflicts are explicitly resolved by
+programmers.
+
+\citet{scharli2003traits} make a good case for the advantages of the trait
+model. In particular, traits avoid bugs that could arise from accidental
+conflicts that were not detected by programmers. With the mixin model, such
+conflicts would be silently resolved, possibly resulting in unexpected runtime
+behaviour due to a wrong method implementation choice. In a setting with dynamic
+inheritance and first-class classes this problem is exacerbated by not knowing
+all components being composed statically, greatly increasing the possibility of
+accidental conflicts. From a modularity point-of-view, the trait model also
+ensures that composition is \emph{commutative}, thus the order of composition is
+irrelevant and does not affect the semantics. \citet{bracha1992programming}
+claims that ``\emph{The only modular solution is to treat the name collisions as
+  errors...}'', strengthening the case for the use of a trait model of
+composition. Otherwise, if the semantics is affected by the order of
+composition, global knowledge about the full inheritance graph is required to
+determine which implementations are chosen. \citet{scharli2003traits} discuss
+several other issues with mixins, which can be improved by traits. We refer to
+their paper for further details. This thesis shows that with the merge operator
+and disjoint intersection types, we are able to encode typed first-class traits.
+Combined with the power of parametric polymorphism, we can further encode a very
+dynamic form of mixin compositions, enabling highly modular designs with Object
+Algebras~\citep{oliveira2012extensibility}.
+
+
+\section{Contributions}
+
+In this thesis, we present three calculi, each building on top of the previous one.
+
+\subsection{The \namee Calculus}
+
+The first calculus named \namee is an improved variant of \oname: a simple calculus
+with records and disjoint intersection types that supports \emph{nested
+  composition}. Nested composition enables encoding simple forms of family
+polymorphism. More complex forms of family polymorphism, involving binary
+methods~\citep{bruce1995binary} and mutable state are not yet supported, but are
+interesting avenues for future work. Nevertheless, in \namee, it is possible, for
+example, to encode Ernst's elegant family-polymorphism
+solution~\citep{Ernst_2001} to the Expression Problem. Compared to \oname the
+essential novelty of \namee are distributivity rules between function/record
+types and intersection types. These rules are the delta that enable extending
+the simple forms of multiple inheritance/composition supported by \oname into a
+more powerful form supporting nested composition. The distributivity rule
+between function types and intersections is common in calculi with intersection
+types aimed at capturing the set of all strongly normalizable terms, and was
+first proposed by Barendregt et al.~\citep{Barendregt_1983} (BCD). However the
+distributivity rule is not common in calculi or languages with intersection
+types aimed at programming. For example the rules employed in languages that
+support intersection types (such as Scala, TypeScript, Flow or Ceylon) lack
+distributivity rules. Moreover distributivity is also missing from several
+calculi with a merge operator. This includes all calculi with disjoint
+intersection types and Dunfield's work on elaborating intersection types, which
+was the original foundation for \oname. A possible reason for this omission in
+the past is that distributivity adds substantial complexity (both
+algorithmically and metatheoretically), without having any obvious practical
+applications. This paper shows how to deal with the complications of BCD
+subtyping, while identifying a major reason to include it in a programming
+language: BCD enables nested composition and subtyping, which is of significant
+practical interest.
+
+%The distributivity rules for records are
+%new. Moreover, as far as we know, no previous work
+%establishes the relation between BCD-style subtyping and nested composition.
+
+\namee differs significantly from previous BCD-based calculi in that it has to
+deal with the possibility of incoherence, introduced by the merge operator. Incoherence
+is a non-issue in the previous BCD-based calculi because they do not feature
+this merge operator or any other source of incoherence.
+Although previous work on disjoint intersection types
+proposes a solution to coherence, the solution imposes several ad-hoc restrictions
+to guarantee the uniqueness of the elaboration and thus allow for a simple
+syntactic proof of coherence. Most
+importantly, it makes it hard or impossible to adapt the proof to extensions of
+the calculus, such as the new subtyping rules required by the BCD system.
+
+In this work we remove the brittleness of the previous syntactic method to prove
+coherence, by employing a more semantic proof method based on \emph{logical
+  relations}~\citep{tait, plotkin1973lambda, statman1985logical}. This new proof method has several
+advantages. Firstly, with the new proof method, several restrictions that were
+enforced by \oname to enable the syntactic proof method are removed. For example
+the work on \oname has to carefully distinguish between so-called \emph{top-like
+  types} and other types.
+%This is necessary because top-like types can be
+%non-disjoint (unlike other types), and yet they need to be allowed in a calculus
+%with top types.
+In \namee this distinction is not necessary; top-like types are handled like all
+other types. Secondly, the method based on logical relations is more powerful
+because it is based on semantic rather than syntactic equality. Finally, the
+removal of the ad-hoc side-conditions makes adding new extensions, such as
+support for BCD-style subtyping, easier. In order to deal with the complexity of
+the elaboration semantics of \namee, we employ binary logical relations that are
+heterogeneous, parameterized by two types; the fundamental property is also
+reformulated to account for bidirectional type-checking.
+
+
+In summary we make the following contributions:
+\begin{itemize}
+
+\item \namee: a calculus with (disjoint) intersection types
+that features both \emph{BCD-style subtyping} and \emph{the merge operator}.
+This calculus is both type-safe and coherent, and supports \emph{nested
+composition}.
+
+\item A more flexible notion of disjoint intersection types where
+only merges need to be checked for disjointness. This removes the need
+for enforcing disjointness for all well-formed types, making the
+calculus more easily extensible.
+
+\item An extension of BCD subtyping with both records and elaboration into coercions,
+  and
+  algorithmic subtyping rules with coercions, inspired by
+  Pierce's decision
+  procedure~\citep{pierce1989decision}.
+
+\item A more powerful proof strategy for coherence of disjoint
+  intersection types based on logical
+  relations.
+
+\item Illustrations of how the calculus can encode essential features
+of \emph{family polymorphism} through nested composition.
+
+\item A comprehensive Coq mechanization of all meta-theory. This has notably revealed
+  several missing lemmas and oversights
+  in Pierce's manual proof~\citep{pierce1989decision} of BCD's algorithmic
+  subtyping. % As a by-product, we obtain the first mechanically verified
+  % BCD-style subtyping algorithm with coercions.
+  We also have an implementation of a language built on top of \name; it runs and type-checks all examples shown in
+  the paper.\footnote{The Coq formalization and implementation are available at \url{https://goo.gl/R5hUAp}.}
+
+
+\end{itemize}
+
+
+
+\subsection{The \fnamee Calculus}
+
+
+
+\subsection{\sedel}
+
+Lastly we present the design of \sedel: a polymorphic statically-typed
+(pure) language with \emph{first-class traits}, supporting \emph{dynamic
+  inheritance} as well as conventional OO features such as
+\emph{dynamic dispatching} and \emph{abstract methods}.
+Traits pose additional challenges when compared to
+models with first-class classes or mixins, because method conflicts
+should be detected \emph{statically}, even in the presence of features
+such as dynamic inheritance and composition and \emph{parametric polymorphism}.
+To address the challenges of typing first-class traits and detecting conflicts statically,
+\sedel adopts a polymorphic structural type system based on
+\emph{disjoint polymorphism}~\citep{alpuimdisjoint}.
+The choice of structural typing is due to its simplicity, but we think
+similar ideas should also work in a nominal type system.
+
+The main contribution of this paper is to show how to model source language
+constructs for first-class traits and dynamic inheritance, supporting standard
+OO features such as \emph{dynamic dispatching} and \emph{abstract methods}.
+Previous work on disjoint intersection types is aimed at core record calculi,
+and omits important features for practical OO languages, including (dynamic)
+inheritance, dynamic dispatching and abstract methods. Based on Cook and
+Palsberg's work on the denotational semantics for
+inheritance~\citep{cook1989denotational}, we show how to design a source
+language that can be elaborated into \fnamee. \sedel's elaboration into \fnamee
+is proved to be both type-safe and coherent. Coherence ensures that the
+semantics of \sedel is unambiguous. In particular this property is useful to
+ensure that programs using traits are free of conflicts/ambiguities (even when
+the types of the object parts being composed are not fully statically know).
+
+We illustrate the applicability of \sedel with several example uses for
+first-class traits. Furthermore we conduct a case study that modularizes
+programming language interpreters using a highly modular form of Object
+Algebras~\citep{oliveira2012extensibility} and \textsc{Visitor}s. In particular
+we show how \sedel can easily compose multiple object algebras into a single
+object algebra. Such composition operation has previously been shown to be
+highly challenging in languages like Java or Scala~\citep{oliveira2013feature,
+  rendel14attributes}. The previous state-of-the-art implementations for such
+operation require employing type-unsafe reflective techniques
+% (including \lstinline[language=java]{java.lang.Class})
+to simulate the features of first-class classes. Moreover conflicts are not
+statically detected. In contrast the approach in this paper is fully
+type-safe, convenient to use and conflicts are statically detected.
+
+In summary the contributions are:
+\begin{itemize}
+
+\item \textbf{Typed first-class traits}: We present \sedel: a statically-typed
+  language design that supports first-class traits, dynamic
+  inheritance, as well as standard high-level OO constructs such as
+  dynamic dispatching and abstract methods.
+
+
+\item \textbf{Elaboration of first-class traits into disjoint intersection
+    types/polymorphism:} We show how the semantics of \sedel can be defined by
+  elaboration into \fnamee. The elaboration is inspired by the work of
+  \citet{cook1989denotational} to model inheritance.
+
+%\item {\bf Case Study and Improved variants of extensible designs:} We present
+%  improved variants of \emph{Object
+%    Algebras} and \emph{Extensible Visitors} in \sedel.
+
+\item \textbf{Implementation and modularization case study:} \sedel is implemented
+  and available.\footnote{The implementation, case study code and proofs are available at \url{https://goo.gl/uFrWkr}.} To
+  evaluate \sedel we conduct a case study. The case study shows that support for
+  composition of Object Algebras and \textsc{Visitor}s is greatly improved in \sedel.
+  Using such improved design patterns we re-code the interpreters in
+  Cook's undergraduate Programming Languages book~\citep{poplcook} in
+  a modular way in \sedel.
+
+\end{itemize}
 
 
 \section{Structure of the Thesis}
@@ -30,4 +371,5 @@ structure of the thesis
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: ../Thesis.bib
 %%% End:

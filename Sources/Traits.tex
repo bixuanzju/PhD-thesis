@@ -15,9 +15,93 @@ In this chapter and \cref{chap:case_study}, we present two applications of
 how to model source-level constructs for first-class traits and dynamic
 inheritance, supporting standard object-oriented features such as dynamic
 dispatching and abstract methods. It is remarkable that all of these can be
-explained by plain \fnamee expressions, showing its supreme expressive power.
+explained by plain \fnamee expressions, showing its expressive power.
 In \cref{chap:case_study} we conduct a case study of modularizing programming
 language features by the means of first-class traits.
+
+
+
+\section{Motivation: First-Class Classes and Dynamic Inheritance}
+
+Many dynamically typed-languages (including JavaScript, Ruby, Python
+or Racket) support \emph{first-class classes}~\citep{DBLP:conf/aplas/FlattFF06}, or related concepts
+such as first-class mixins and/or traits. In those languages classes
+are first-class values and, like any other values, they can be
+passed as an argument, or returned from a function. Furthermore
+first-class classes support \emph{dynamic inheritance}: i.e., they
+can inherit from other classes at \emph{runtime}, enabling
+programmers to abstract over the inheritance hierarchy.
+Those features make first-class classes very powerful and expressive,
+and enable highly modular and reusable pieces of code, such as:
+\begin{lstlisting}[language=JavaScript]
+const mixin = Base => {
+  return class extends Base { ... }
+};
+\end{lstlisting}
+In this piece of JavaScript code, \lstinline{mixin} is
+parameterized by a class \lstinline{Base}. Note that the concrete
+implementation of \lstinline{Base} can be
+even dynamically determined at runtime, for example
+after reading a configuration file to decide which
+class to use as the base class.  When applied to an argument,
+\lstinline{mixin} will create a new class on-the-fly and return that
+as a result. Later that class can be instantiated and used to create
+new objects, as any other classes.
+
+In contrast, most statically-typed
+languages do not have first-class classes and dynamic
+inheritance. While all statically-typed OO languages allow first-class
+\emph{objects} (i.e. objects can be passed as arguments and returned
+as results), the same is not true for classes. Classes in languages such
+Scala, Java or C++ are typically a second-class construct, and the
+inheritance hierarchy is \emph{statically determined}. The closest thing
+to first-class classes in
+languages like Java or Scala are classes such as
+\lstinline[language=java]{java.lang.Class} that enable representing classes and
+interfaces as part of their reflective framework. \lstinline[language=java]{java.lang.Class} can be used to
+mimic some of the uses of first-class classes, but in an essentially
+dynamically-typed way. Furthermore simulating first-class classes
+using such mechanisms is highly cumbersome because classes need to be
+manipulated programmatically. For example instantiating a new class
+cannot be done using the standard \lstinline{new} construct, but
+rather requires going through API methods of
+\lstinline[language=java]{java.lang.Class}, such as \lstinline{newInstance}, for
+creating a new instance of a class.
+
+Despite the popularity and expressive power of first-class classes in dynamically-typed
+languages, there is surprisingly little work on typing of first-class
+classes (or related concepts such as first-class mixins or traits).
+First-class classes and dynamic inheritance pose well-known
+difficulties in terms of typing. For example, in his thesis,
+\citet{bracha1992programming} comments several times on the difficulties of typing
+dynamic inheritance and first-class mixins, and proposes the
+restriction to static inheritance that is also common in
+statically-typed languages. He also observes that such restriction
+poses severe limitations in terms of expressiveness, but that appeared
+(at the time)
+to be a necessary compromise when typing was also desired.
+Only recently some progress has been made in statically typing
+first-class classes and dynamic inheritance. In particular there are
+two works in this area: Racket's gradually
+typed first-class classes~\citep{DBLP:conf/oopsla/TakikawaSDTF12}; and Lee et al.'s model of
+typed first-class classes~\citep{DBLP:conf/ecoop/LeeASP15}. Both works provide typed models of
+first-class classes, and they enable encodings of mixins~\citep{bracha1990mixin}
+similar to those employed in dynamically-typed languages.
+
+However, as far as we known no previous work supports statically-typed
+\emph{first-class traits}. Traits~\citep{scharli2003traits, Ducasse_2006} are an
+alternative to mixins, and other models of (multiple) inheritance. The key
+difference between traits and mixins lies on the treatment of conflicts when
+composing multiple traits/mixins. Mixins adopt an \emph{implicit} resolution
+strategy for conflicts, where the compiler automatically picks one
+implementation in case of conflicts. For example, Scala uses the order of mixin
+composition to determine which implementation to pick in case of conflicts.
+Traits, on the other hand, employ an \emph{explicit} resolution strategy, where
+the compositions with conflicts are rejected, and the conflicts are explicitly
+resolved by programmers. In what follows, we present \sedel: the first design of
+typed first-class traits.
+
+
 
 \input{Sources/Traits/overview.tex}
 \input{Sources/Traits/traits.tex}
@@ -29,4 +113,5 @@ language features by the means of first-class traits.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: ../Thesis.bib
 %%% End:
