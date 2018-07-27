@@ -11,6 +11,70 @@ solution to the Expression Problem based on family polymorphism. We then discuss
 the algorithmic aspects of \namee. The coherence property of \namee is discussed
 in \cref{chap:coherence:simple}.
 
+\section{Introduction}
+
+\namee is a simple calculus with records and disjoint intersection types that
+supports \emph{nested composition}. Nested composition enables encoding simple
+forms of family polymorphism. More complex forms of family polymorphism,
+involving binary methods~\citep{bruce1995binary} and mutable state are not yet
+supported, but are interesting avenues for future work. Nevertheless, in \namee,
+it is possible, for example, to encode Ernst's elegant family-polymorphism
+solution~\citep{Ernst_2001} to the Expression Problem (cf.
+\cref{nested:sec:overview}). Compared to \oname the essential novelty of
+\namee are distributivity rules between function/record types and intersection
+types. These rules are the delta that enable extending the simple forms of
+multiple inheritance/composition supported by \oname into a more powerful form
+supporting nested composition. The distributivity rule between function types
+and intersections is common in calculi with intersection types aimed at
+capturing the set of all strongly normalizable terms, and was first proposed by
+\citet{Barendregt_1983} (BCD). However the distributivity rule is not common in
+calculi or languages with intersection types aimed at programming. For example
+the rules employed in languages that support intersection types (such as Scala,
+TypeScript, Flow or Ceylon) lack distributivity rules. Moreover distributivity
+is also missing from several calculi with a merge operator. This includes all
+calculi with disjoint intersection types~\citep{oliveira2016disjoint,
+  alpuimdisjoint} and \citeauthor{dunfield2014elaborating}'s work on elaborating
+intersection types~\citep{dunfield2014elaborating}, which was the original
+foundation for \oname. A possible reason for this omission in the past is that
+distributivity adds substantial complexity (both algorithmically and
+meta-theoretically), without having any obvious practical applications. This
+thesis shows how to deal with the complications of BCD subtyping, while
+identifying a major reason to include it in a programming language: BCD enables
+nested composition and subtyping, which is of significant practical interest.
+
+%The distributivity rules for records are
+%new. Moreover, as far as we know, no previous work
+%establishes the relation between BCD-style subtyping and nested composition.
+
+\namee differs significantly from previous BCD-based calculi in that it has to
+deal with the possibility of incoherence, introduced by the merge operator. Incoherence
+is a non-issue in the previous BCD-based calculi because they do not feature
+this merge operator or any other source of incoherence.
+Although previous work on disjoint intersection types
+proposes a solution to coherence, the solution imposes several ad-hoc restrictions
+to guarantee the uniqueness of the elaboration and thus allow for a simple
+syntactic proof of coherence (cf. \cref{sec:comparision}). Most
+importantly, it makes it hard or impossible to adapt the proof to extensions of
+the calculus, such as the new subtyping rules required by the BCD system.
+
+In \namee we remove the brittleness of the previous syntactic method to prove
+coherence, by employing a more semantic proof method based on \emph{logical
+  relations}~\citep{tait, plotkin1973lambda, statman1985logical}. This new proof method has several
+advantages. Firstly, with the new proof method, several restrictions that were
+enforced by \oname to enable the syntactic proof method are removed. For example
+the work on \oname has to carefully distinguish between so-called \emph{top-like
+  types} and other types.
+%This is necessary because top-like types can be
+%non-disjoint (unlike other types), and yet they need to be allowed in a calculus
+%with top types.
+In \namee this distinction is not necessary; top-like types are handled like all
+other types. Secondly, the method based on logical relations is more powerful
+because it is based on semantic rather than syntactic equality. Finally, the
+removal of the ad-hoc side-conditions makes adding new extensions, such as
+support for BCD-style subtyping, easier. In order to deal with the complexity of
+the elaboration semantics of \namee, we employ binary logical relations that are
+heterogeneous, parameterized by two types; the fundamental property is also
+reformulated to account for bidirectional type-checking.
 
 
 \input{Sources/Nested/overview.tex}
