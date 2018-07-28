@@ -57,9 +57,9 @@ A far more common form of intersection types are the so-called \emph{refinement
 restrict the formation of intersection types so that the two types in an
 intersection are refinements of the same simple (unrefined) type. For example,
 we can refine a type $\mathsf{Int}$ of integers with a subtype $\mathsf{Odd}$ of
-even numbers, then an integer $1$ can be typed as follows:
+odd numbers, then an integer $1$ can be typed as follows:
 \[
-  1 : \mathsf{Int}\ \& \ \mathsf{Odd}
+  1 : \inter{\mathsf{Int}}{\mathsf{Odd}}
 \]
 which satisfies the restriction: both $\mathsf{Int}$ and $\mathsf{Odd}$ refine a
 single simple type $\mathsf{Int}$. Refinement intersection increases only the
@@ -250,7 +250,7 @@ conflicts/ambiguities (even when the types of the object parts being composed
 are not fully statically know). We illustrate the applicability of \sedel with
 several example uses for first-class traits. Furthermore we conduct a case study
 that modularizes programming language interpreters using a highly modular form
-of Object Algebras~\citep{oliveira2012extensibility} and \textsc{Visitor}s.
+of visitors.
 
 In summary the contributions of this theis are:
 
@@ -285,14 +285,14 @@ In summary the contributions of this theis are:
   by-product, we obtain the first mechanically verified BCD-style subtyping
   algorithm with coercions.
 
-\item An implementation of a language built on top of \sedel; it runs and
-  type-checks all the examples in this thesis.\footnote{The Coq formalization
-    and implementation are available at \url{https://goo.gl/R5hUAp}.} We also
-  conduct a case study, which shows that support for composition of Object
-  Algebras and \textsc{Visitor}s is greatly improved in \sedel. Using such
-  improved design patterns we re-code the interpreters in
-  \citeauthor{poplcook}'s undergraduate Programming Languages
-  book~\citep{poplcook} in a modular way.
+\item A full-blown implementation of \sedel; it runs and type-checks all the
+  examples in this thesis.\footnote{The Coq formalization and implementation are
+    available at \url{https://goo.gl/R5hUAp}.} We also conduct a case study,
+  which shows that support for composition of Object
+  Algebras~\citep{oliveira2012extensibility} and \textsc{Visitor}s is greatly
+  improved in \sedel. Using such improved design patterns we re-code the
+  interpreters from an undergraduate textbook on programming
+  languages~\citep{poplcook} in a modular way.
 
 \end{itemize}
 

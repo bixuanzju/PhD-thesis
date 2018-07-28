@@ -117,7 +117,7 @@ sty, A, B, C, t :: 'sty_' ::=
   | p ( A )      :: :: pa
   | pq ( A )      :: :: pa2
   | fs -> A ::  :: lst
-  | N ::  :: n  {{ tex \mathsf{N} }}
+  | N ::  :: n  {{ tex \mathsf{I} }}
   | S ::  :: s  {{ tex \mathsf{S} }}
   | string ::  :: ss   {{ tex \mathsf{String} }}
   | | AA | :: :: trans

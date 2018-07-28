@@ -1,5 +1,5 @@
 
-\section{Overview}
+\section{\namee by Examples}
 \label{nested:sec:overview}
 
 This section illustrates \namee with an encoding of a family polymorphism
@@ -11,25 +11,30 @@ features.
 \subsection{The Expression Problem, \namee Style}
 
 The \namee calculus allows us to solve the Expression Problem in a way that is
-very similar to \citeauthor{Ernst_2001}'s gbeta solution in \cref{chap:background}. However, the underlying mechanisms of
-\namee are quite different from those of gbeta. In particular, \namee features a
-structural type system in which we can model objects with records, and object
-types with record types. For instance, we model the interface of \lstinline{Lang.Exp}
-with the singleton record type \lstinline${ print : String }$. For the sake of
-conciseness, we use type aliases to abbreviate types.
+very similar to \citeauthor{Ernst_2001}'s gbeta solution in \cref{sec:ernst}.
+However, the underlying mechanisms of \namee are quite different from those of
+gbeta. In particular, \namee features a structural type system in which we can
+model objects with records, and object types with record types. For instance, we
+model the interface of \lstinline{Lang.Exp} with the singleton record type
+\lstinline${ print : String }$. For the sake of conciseness, we use \lstinline{type} aliases
+to abbreviate types.
 \lstinputlisting[linerange=4-4]{./examples/overview.sl}% APPLY:linerange=PRINT_INTERFACE
 Similarly, we capture the interface of the \lstinline{Lang} family in a record,
 with one field for each case's constructor.
 \lstinputlisting[linerange=8-8]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY
 Here is the implementation of \lstinline{Lang}.
 \lstinputlisting[linerange=17-24]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
+We assume several primitive types: fixed width integers \lstinline{Int},
+\lstinline{Double} for numeric operations and \lstinline{String} for text
+manipulation. A \namee program consists of a collection of definitions and
+declarations, separated by semicolon \lstinline{;}.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Adding Evaluation.}
 We obtain \lstinline{IPrint & IEval}, which is the corresponding type for \lstinline{LangEval.Exp}, by
 intersecting \lstinline{IPrint} with \lstinline{IEval} where
 \lstinputlisting[linerange=29-29]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
-The type for \lstinline{LangEval} is then:
+The type for \lstinline{LangEval} is then
 \lstinputlisting[linerange=34-37]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
 We obtain an implementation for \lstinline{LangEval} by merging the existing
 \lstinline{Lang} implementation \lstinline{implLang} with the new evaluation
@@ -147,14 +152,14 @@ methods is to be adopted by the subclass. In the case where the two parent class
 have a common superclass, this is known as the \emph{diamond problem}.
 The ambiguity problem also appears in \namee,
 e.g., if we merge two numbers to obtain $\mer{1}{2}$ of type
-$\inter{\mathsf{Nat}}{\mathsf{Nat}}$. Is the result of $\mer{1}{2} + 3$
+$\inter{\mathsf{Int}}{\mathsf{Int}}$. Is the result of $\mer{1}{2} + 3$
 either $4$ or $5$?
 
 Disjoint intersection types offer to statically detect potential ambiguity and
 to ask the programmer to explicitly resolve the ambiguity by rejecting the
 program in its ambiguous form. In the previous work on \oname, ambiguity is
 avoided by dictating that all intersection types have to be disjoint, i.e.,
-$\inter{\mathsf{Nat}}{\mathsf{Nat}}$ is ill-formed because the first component
+$\inter{\mathsf{Int}}{\mathsf{Int}}$ is ill-formed because the first component
 has the same type as the second.
 
 \paragraph{Duplication is Harmless.}
@@ -162,7 +167,7 @@ While requiring that all intersections are disjoint is sufficient to guarantee
 coherence, it is not necessary. In fact,
 such requirement unnecessarily encumbers the subtyping definition with disjointness constraints
 and an ad-hoc treatment of ``top-like'' types. Indeed, the value $\mer{1}{1}$
-of the non-disjoint type $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ is entirely unambiguous, and
+of the non-disjoint type $\inter{\mathsf{Int}}{\mathsf{Int}}$ is entirely unambiguous, and
 $(\mer{1}{1}) + 3$ can obviously only result in $4$. More generally, when the
 overlapping components of an intersection type have the same value, there is no
 ambiguity problem. \namee uses this idea to relax \oname's enforcement of
@@ -176,45 +181,17 @@ Yet, disjointness is no longer required for the well-formedness
 of types and overlapping intersections can be created implicitly through
 subtyping, which results in duplicating values at runtime. For instance, while
 $\mer{1}{1}$ is not expressible
-$ 1 : \inter{\mathsf{Nat}}{\mathsf{Nat}}$ creates the equivalent value implicitly.
+$ 1 : \inter{\mathsf{Int}}{\mathsf{Int}}$ creates the equivalent value implicitly.
 % The consequence of this relaxation of disjointness is a much simplified
 % type system for \namee.
-In short, duplication is harmless and subtyping only generates duplicated
-values for non-disjoint types.
+In short, duplication is harmless and subtyping only generates duplicated values
+for non-disjoint types. We refer to \cref{chap:coherence:simple} for a detailed
+discussion of coherence.
 
 % Disjoint intersection types ensure unambiguity and conflicts are
 % statically detected and manually resolved by programmers. This
 % is similar to the trait model.
 
-%-------------------------------------------------------------------------------
-\subsection{Logical Relations for Coherence}
-
-Coherence is easy to establish for \oname as its rigid rules mean that there is
-at most one possible subtyping derivation between any two types.  As a
-consequence there is only one possible elaboration and thus one
-possible behavior for any program.
-
-Two factors make establishing coherence for \namee much more difficult: the
-relaxation of disjointness and the adoption of the more expressive subtyping
-rules from the BCD system (for which \oname lacks). These two factors mean that subtyping proofs are no
-longer unique and hence that there are multiple elaborations of the same source
-program. For instance, $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ is a subtype of $\mathsf{Nat}$ in two
-ways: by projection on either the first or second component.
-Hence the fact that all elaborations yield the same result when evaluated has
-become a much more subtle property that requires sophisticated reasoning.
-For instance, in the example, we can see that coherence holds because  at
-runtime any value of type $\inter{\mathsf{Nat}}{\mathsf{Nat}}$ has identical components, and
-thus both projections yield the same result.
-
-For \namee in general, we show coherence by capturing the non-ambiguity
-invariant in a logical relation and showing that it is preserved by the
-operational semantics. A complicating factor is that not one, but two languages
-are involved: the source language \namee and the target language, essentially
-the simply-typed lambda calculus extended with coercions. The
-logical relation does not hold for target programs and program contexts in
-general, but only for those that are the image of a corresponding source
-program or program context. Thus we must view everything through the lens of
-elaboration. We refer to \cref{chap:coherence:simple} for a detailed discussion of coherence.
 
 % Local Variables:
 % TeX-master: "../../Thesis"

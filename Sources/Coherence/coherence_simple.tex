@@ -14,6 +14,39 @@ definition, and the connection between logical equivalence and coherence.
 \Cref{chap:coherence:poly} builds on the idea in this chapter to prove coherence for
 \fnamee.
 
+%-------------------------------------------------------------------------------
+\section{Overview}
+
+Coherence is easy to establish for \oname as its rigid rules mean that there is
+at most one possible subtyping derivation between any two types.  As a
+consequence there is only one possible elaboration and thus one
+possible behavior for any program.
+
+Two factors make establishing coherence for \namee much more difficult: the
+relaxation of disjointness and the adoption of the more expressive subtyping
+rules from the BCD system (for which \oname lacks). These two factors mean that subtyping proofs are no
+longer unique and hence that there are multiple elaborations of the same source
+program. For instance, $\inter{\mathsf{Int}}{\mathsf{Int}}$ is a subtype of $\mathsf{Int}$ in two
+ways: by projection on either the first or second component.
+Hence the fact that all elaborations yield the same result when evaluated has
+become a much more subtle property that requires sophisticated reasoning.
+For instance, in the example, we can see that coherence holds because  at
+runtime any value of type $\inter{\mathsf{Int}}{\mathsf{Int}}$ has identical components, and
+thus both projections yield the same result.
+
+For \namee in general, we show coherence by capturing the non-ambiguity
+invariant in a logical relation and showing that it is preserved by the
+operational semantics. A complicating factor is that not one, but two languages
+are involved: the source language \namee and the target language. In order to
+deal with the complexity of the elaboration semantics of \namee, we employ
+binary logical relations that are heterogeneous, parameterized by two types; the
+fundamental property is also reformulated to account for bidirectional
+type-checking. The logical relation does not hold for target programs and
+program contexts in general, but only for those that are the image of a
+corresponding source program or program context. Thus we must view everything
+through the lens of elaboration.
+
+
 
 \section{In Search of Coherence}
 

@@ -2,7 +2,7 @@
 \newcommand{\rulehl}[2][gray!40]{%
   \colorbox{#1}{$\displaystyle#2$}}
 
-\section{Syntax and Semantics}
+\section{Syntax and Semantics of the Source}
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \namee. Compared
@@ -11,7 +11,7 @@ powerful subtyping relation. The new subtyping relation is inspired by BCD-style
 subtyping, but with two noteworthy differences: subtyping is coercive (in
 contrast to traditional formulations of BCD); and it is extended with records.
 We also have a new target language with explicit coercions inspired by the coercion calculus of
-Henglein~\citep{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
+\citet{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
 
 
 \subsection{Syntax}
@@ -84,8 +84,7 @@ derivable from the existing subtyping rules, as shown below:
   \end{footnotesize}
 \Rref{S-distRcd}, which is not found in the original BCD system,
 prescribes the distribution of records over intersection types. The two
-distributivity rules are the key to enable nested composition. The rule
-\rref*{S-topArr} is standard in BCD subtyping, and the new
+distributivity rules are the key to enable nested composition. \Rref*{S-topArr} is standard in BCD subtyping, and the new
 \rref{S-topRcd} plays a similar role for record types.
 
 \paragraph{Non-Algorithmic.}
@@ -171,7 +170,8 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
 %the reader to their papers for further explanation.
 
 
-\subsection{Elaboration Semantics}
+
+\section{Syntax and Semantics of the Target}
 \label{sec:elaboration}
 
 \begin{figure}[t]
@@ -189,12 +189,15 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
   \label{fig:target}
 \end{figure}
 
-The operational semantics of \namee is given by elaborating source expressions
+The dynamic semantics of \namee is given by elaborating source expressions
 $[[ee]]$ into target terms $[[e]]$. Our target language \tname is the standard
-simply-typed call-by-value $\lambda$-calculus extended with products and coercions.
-The syntax of \tname is shown in \cref{fig:target}. The
-meta-function $| \cdot |$ shown in \cref{def:type:translate} transforms \namee
-types to \tname types, and extends naturally to typing contexts.
+simply-typed call-by-value $\lambda$-calculus extended with products and
+coercions. The syntax of \tname is shown in \cref{fig:target}. The meta-function
+$| \cdot |$ shown in \cref{def:type:translate} transforms \namee types to \tname
+types. It is worth pointing out that we use the erasure semantics to model
+record labels, i.e., labels are erased during elaboration. It is equally fine to
+keep labels in the target. The notation $| \cdot |$ is also overloaded for
+context translation from \namee contexts $[[GG]]$ to \tname contexts $[[gg]]$.
 
 \begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
   \begin{align*}
@@ -208,11 +211,11 @@ types to \tname types, and extends naturally to typing contexts.
 
 
 
-\paragraph{Explicit Coercions and Coercive Subtyping.}
+\subsection{Explicit Coercions and Coercive Subtyping}
 
 The separate syntactic category for explicit coercions is a distinct
 difference from the prior works (in which they are regular terms). Our coercions
-are based on those of Henglein~\citep{Henglein_1994}, and we add more forms due to our
+are based on those of \citet{Henglein_1994}, and we add more forms due to our
 extra subtyping rules.
 Metavariable $[[c]]$ ranges over coercions.\footnote{Coercions $[[pp1]]$ and $[[pp2]]$ subsume the first and second projection of pairs, respectively.}
 Coercions express the conversion
@@ -230,7 +233,8 @@ specific form of coercion.
 %subtyping.\bruno{Why not discuss the form of coercions directly here?}
 
 
-\paragraph{Target Typing.}
+\subsection{Typing of \tname}
+
 The typing of \tname has the form $[[gg |- e : T]]$, which is entirely standard. Only the typing of coercion
 applications, shown below, deserves attention:
 \begin{mathpar}
@@ -248,7 +252,8 @@ shown in \cref{fig:co}.
   \label{fig:co}
 \end{figure}
 
-\paragraph{Dynamic Semantics.}
+
+\subsection{Dynamic Semantics}
 
 \begin{figure}[t]
   \centering
@@ -276,9 +281,8 @@ Now we can show that \tname is type safe:
 \end{theorem}
 
 
+\subsection{Elaboration Semantics}
 
-
-\paragraph{Elaboration.}
 \begin{comment}
 The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the subtyping
 derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that is used to convert a
@@ -318,10 +322,10 @@ to \tname terms.
   By structural induction on the derivation of typing.
 \end{proof}
 
-\subsection{Comparison with \oname}
+\section{Comparison with \oname}
 \label{sec:comparision}
 
-Below we identify major differences between \namee and \oname, which, when
+In this section we identify major differences from \oname, which, when
 taken together, yield a simpler and more elegant system. The differences may seem
 superficial, but they have far-reaching impacts on the semantics, especially on
 coherence, our major topic in \cref{chap:coherence:simple}.
@@ -361,7 +365,7 @@ adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 A key difference from the type system of \oname is the complete omission of the
 well-formedness judgement. In \oname, the well-formedness judgement $[[GG |- A]]$
 appears in both \rref{T-abs,T-sub}. The sole purpose of this judgement is
-to enforce the invariant that all intersection types are disjoint. However, as
+to enforce that all intersection types are disjoint. However, as
 \cref{chap:coherence:simple} will explain, the syntactic restriction is unnecessary for
 coherence, and merely complicates the type system. The \namee calculus discards
 this well-formedness judgement altogether in favour of a simpler design that is

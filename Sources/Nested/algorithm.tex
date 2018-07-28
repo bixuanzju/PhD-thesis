@@ -56,7 +56,7 @@ queue of types and labels. Definition~\ref{def:fs} converts a queue to a type:
     [[ (fs , {l}) -> A]] = [[fs -> {l : A}]]
   \end{mathpar}
 \end{definition}
-For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
+\noindent For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
 The basic idea of $[[fs |- A <: B ~~> c]]$ is to first perform a structural
 analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
@@ -76,20 +76,25 @@ derivation (for space reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and
 which is essentially the one used by the \lstinline{add} field in \cref{nested:sec:overview}. The
 readers can try to give a corresponding derivation using the declarative
 subtyping and see how \rref{S-trans} plays an essential role there.
-\begin{small}
+\begin{footnotesize}
 \begin{mathpar}
   \inferrule*[right=\rref*{A-rcd}]
-  { \inferrule*[right=\rref*{A-arr}(\textit{twice})]
-    { \inferrule*[right=\rref*{A-and}]
-      { D \\ D' }
-      { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N & S]] }  }
+  { \inferrule*[right=\rref*{A-arr}]
+    {  \inferrule*[right=\rref*{A-arr}]
+      { \inferrule*[right=\rref*{A-and}]
+        {D \\ D'}
+        { \{ [[l]]  \} , [[N & S]] , [[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N & S]] }
+      }
+      {  \{ [[l]]  \}, [[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N & S -> N & S]] }
+    }
     { \{ [[l]]  \} \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[ N & S -> N & S -> N & S ]]}      }
-  {  [[{l : N -> N -> N} & {l : S -> S -> S}]] \prec : [[{l : N & S -> N & S -> N & S}]]   }
+  {  [[ [] |- {l : N -> N -> N} & {l : S -> S -> S} <: {l : N & S -> N & S -> N & S} ]] }
 \end{mathpar}
-\end{small}
-where the sub-derivation $D$ is shown below ($D'$ is similar):
+\end{footnotesize}
+where the sub-derivations $D$ and $D'$ are shown below:
 \begin{small}
-\begin{mathpar}
+  \begin{mathpar}
+    D =
 \inferrule*[right=\rref*{A-andN1}]
         { \inferrule*[right=\rref*{A-rcdNat}]
           { \inferrule*[right=\rref*{A-arrNat}]
@@ -99,6 +104,18 @@ where the sub-derivation $D$ is shown below ($D'$ is similar):
             {[[N & S]] ,[[N & S]] \vdash [[N -> N -> N]] \prec : [[N]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N}]] \prec : [[N]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
+\end{mathpar}
+\begin{mathpar}
+  D' =
+\inferrule*[right=\rref*{A-andN2}]
+        { \inferrule*[right=\rref*{A-rcdNat}]
+          { \inferrule*[right=\rref*{A-arrNat}]
+            { \inferrule*{ \vdots } { [[ [] |- N & S <: S]]  }
+              \\
+              \inferrule* {\vdots} { [[N & S]] \vdash [[S -> S]] \prec : [[S]] }     }
+            {[[N & S]] ,[[N & S]] \vdash [[S -> S -> S]] \prec : [[S]]} }
+          { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : S -> S -> S}]] \prec : [[S]] } }
+        { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[S]] }
 \end{mathpar}
 \end{small}
 Now consider the coercions. Algorithmic subtyping uses the same set of
@@ -203,12 +220,12 @@ We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 \end{proof}
 
 \begin{remark}
-  Lemma~\ref{lemma:set_trans} is not found in \citeauthor{pierce1989decision}'s proofs~\citep{pierce1989decision}, which is
-  crucial in Lemma~\ref{lemma:refl0}, from which reflexivity (Lemma~\ref{lemma:refl})
+  \cref{lemma:set_trans} is not found in \citeauthor{pierce1989decision}'s proofs~\citep{pierce1989decision}, which is
+  crucial in \cref{lemma:refl0}, from which reflexivity (\cref{lemma:refl})
   follows immediately.
 \end{remark}
 
-% Next we show the following lemma from which reflexivity (Lemma~\ref{lemma:refl})
+% Next we show the following lemma from which reflexivity (\cref{lemma:refl})
 
 \begin{lemma} \label{lemma:refl0}
   If $[[fs -> B]] \in \UU{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
@@ -227,7 +244,7 @@ Now it immediately follows that the algorithmic subtyping is reflexive.
   For every $[[A]]$ there exists $[[c]]$ such that $[[ [] |- A <: A ~~> c]]$.
 \end{lemma}
 \begin{proof}
-  Immediate from Lemma~\ref{lemma:set_refl} and Lemma~\ref{lemma:refl0}.
+  Immediate from \cref{lemma:set_refl} and \cref{lemma:refl0}.
 \end{proof}
 
 % We omit the details of the proof of transitivity.
@@ -261,8 +278,9 @@ With reflexivity and transitivity in position, we show the main theorem.
 
 \begin{remark}
   It is worth pointing out that the two coercions $[[c]]$ and $[[c']]$ in
-  Theorem~\ref{thm:complete} are contextually equivalent, which follows from
-  Theorem~\ref{thm:soundness} and Corollary~\ref{lemma:coercion_same}.
+  \cref{thm:complete} are \textit{contextually equivalent} (the precise
+  definition is found in \cref{chap:coherence:simple}), which follows from
+  \cref{thm:soundness} and \cref{lemma:coercion_same}.
 \end{remark}
 
 % Local Variables:
