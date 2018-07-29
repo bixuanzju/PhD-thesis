@@ -5,31 +5,71 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The chapter sets the stage for the three typed calculi that we are going to
-present in later chapters by first reviewing intersection types in more details.
-We start with
+present in later chapters by reviewing some relevant topics in this thesis. In
+\cref{bg:sec:intersection} we start with the traditional formulation of
+intersection types, followed by the introduction of the merge operator and the
+issue of coherence. We then review the \oname calculus, the first calculus
+featuring disjoint intersection types, and briefly discuss how disjointness
+achieve coherence. In \cref{sec:ernst} we introduce family polymorphism by
+means of presenting \citeauthor{Ernst_2001}'s elegant solution to the expression problem.
+Finally in \cref{sec:bg:mixin:trait} we review the concepts of mixins and
+traits, their drawbacks and strengths.
+
+
 
 
 \section{Intersection Types}
 \label{bg:sec:intersection}
 
 
-\subsection{BCD Type System}
+Intersection types in the pure $\lambda$-calculus were developed in the late
+1970s by \citet{coppoInter}, and independently by \citet{pottinger1980type}. The
+original motivation to introduce intersection types was to devise a
+type-assignment system \`a la Curry~\citep{CurryFeys} that satisfies the
+following two properties:
+\begin{enumerate}
+\item The typing of a term should be preserved under $\beta$-conversion. (Under
+  Curry's system, $\beta$-reduction preserves types but $\beta$-expansion, in
+  general, does not.)
+\item Every (strongly) normalizable term has a meaningful type. (We refer the
+  reader to their paper for a precise definition of ``meaningful''.)
+\end{enumerate}
 
-talk about intersection types as capturing  strongly normalizing terms, BCD subtyping
+The idea of intersection types is remarkably simple and natural. From the
+set-theoretic perspective, an intersection type $[[A & B]]$ for every pair of
+types $[[A]]$ and $[[B]]$ is thought of as containing all the elements of
+$[[A]]$ that are also elements of $[[B]]$; from the type-theoretic point of
+view, $[[A & B]]$ is a subtype of $[[A]]$, as well as of $[[B]]$; from the
+order-theoretic point of view, $[[A & B]]$ is a greatest lower bound of $[[A]]$
+and $[[B]]$~\footnote{We use ``a'' instead of ``the'' is because there are
+  multiple such greatest lower bounds, although they are ``equal'' in a sense
+  that will be made more precise later.}. What may seem surprising to OO programmers
+is that $[[A & B]]$ can also be viewed as a natural analog of \textit{multiple
+  inheritance}. If we read the subtyping $[[A <: B]]$ as ``$[[A]]$ is a subclass
+of $[[B]]$'', then $[[A & B]]$ is a name of a class with all the common
+properties of $[[A]]$ and $[[B]]$. Of course, this analog is not exact, in the
+same sense that inheritance is not subtyping~\citep{cook1989inheritance}. But it
+is intuitively appealing, and as we will see, can be made more precise in a
+sufficiently enriched calculus based on intersection types.
 
 
+
+
+
+% talk about intersection types as capturing  strongly normalizing terms, BCD subtyping
+
+
+\subsection{The Merge Operator}
+
+talk about Dunfield's system
 
 \subsection{Coherence}
 
 Talk about previous approach
 
-
 \subsection{Disjoint Intersection Types}
 
-
-talk about Dunfield's system and lambda i
-
-talk about Fi
+talk about lambda i
 
 
 \begin{comment}
@@ -203,6 +243,7 @@ case, evaluation of negated expressions.
 
 
 \section{Mixins and Traits}
+\label{sec:bg:mixin:trait}
 
 talk about the connection with mixins/traits in OO.
 
