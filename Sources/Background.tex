@@ -4,21 +4,52 @@
 \label{chap:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The chapter sets the stage for the three typed calculi that we are going to
+present in later chapters by first reviewing intersection types in more details.
+We start with
 
-\section{BCD Type System}
+
+\section{Intersection Types}
+\label{bg:sec:intersection}
+
+
+\subsection{BCD Type System}
 
 talk about intersection types as capturing  strongly normalizing terms, BCD subtyping
 
 
-\section{(Disjoint) Intersection Types}
-\label{bg:sec:intersection}
 
-talk about Dunfield's system and lambda i
-talk about Fi
-
-\section{Coherence}
+\subsection{Coherence}
 
 Talk about previous approach
+
+
+\subsection{Disjoint Intersection Types}
+
+
+talk about Dunfield's system and lambda i
+
+talk about Fi
+
+
+\begin{comment}
+The merge operator was introduced by Reynolds
+and Forsythe and adopted by a few other calculi as well~\citep{}.
+Unfortunately, while the merge operator is powerful, it makes
+it hard to get a \emph{coherent} semantics. \bruno{what is coherence}
+Perhaps because
+of this issue the merge operator has not been adopted by
+many language designs. Disjoint intersection types provide
+a remedy for the coherence problem, by imposing restrictions
+on the uses of merges and on the formation of intersection types.
+\bruno{merge operator ==> models inheritance; intersection types ==>
+model subtyping}
+
+In essence disjoint intersection types retain most of the
+expressive power of the merge operator.
+For example, they can
+be used to model powerful forms of extensible records~\citep{}.
+\end{comment}
 
 
 \section{Family Polymorphism and Nested Composition}
@@ -26,12 +57,12 @@ Talk about previous approach
 % %-------------------------------------------------------------------------------
 % \subsection{Motivation: Family Polymorphism}
 
-In OOP \emph{family polymorphism} is the ability to
-simultaneously refine a family of related classes through inheritance. This is
-motivated by a need to not only refine individual classes, but also to preserve
-and refine their mutual relationships. \citet{Nystrom_2004} call this
-\emph{scalable extensibility}: ``the ability to extend a body of code while
-writing new code proportional to the differences in functionality''.
+\emph{Family polymorphism} is the ability to simultaneously refine a family of
+related classes through inheritance. This is motivated by a need to not only
+refine individual classes, but also to preserve and refine their mutual
+relationships. \citet{Nystrom_2004} call this \emph{scalable extensibility}:
+``the ability to extend a body of code while writing new code proportional to
+the differences in functionality''.
 %
 A well-studied mechanism to achieve family inheritance is \emph{nested
 inheritance}~\citep{Nystrom_2004}. Nested inheritance combines two aspects.
@@ -42,9 +73,13 @@ within the family (including subtyping) between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
 
 \paragraph{The Expression Problem, Scandinavian Style.}
+
 \citet{Ernst_2001} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
-\emph{Expression Problem}~\citep{wadler1998expression}. The objective of the
+\emph{Expression Problem}~\citep{wadler1998expression}.
+
+
+The objective of the
 Expression Problem is to extend a datatype, consisting of several cases,
 together with several associated operations in two dimensions: by adding more
 cases to the datatype and by adding new operations for the datatype. Ernst
@@ -176,4 +211,5 @@ talk about the connection with mixins/traits in OO.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: ../Thesis.bib
 %%% End:
