@@ -109,9 +109,11 @@ sty, A, B, C, t :: 'sty_' ::=
   | X            :: :: tvar
   | A -> B       :: :: arrow
   | A & B        :: :: and
+  | A1 & ... & An               :: :: and2
   | \ X ** A . B :: :: all {{ tex \forall ( [[X]] [[**]] [[A]] ) .\,[[B]] }}
   | \ X . A        :: :: forall   {{ tex \forall [[X]].\,[[A]] }}
   | { l : A }    :: :: rcd
+  | { l1 : A1 , ... , ln : An } :: :: rcd2
   | ( A )        :: :: paren
   | [ B / X ] A  :: :: subst
   | p ( A )      :: :: pa
@@ -145,6 +147,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | letrec x : A = ee1 in ee2 :: :: letrec
   | let x = ee1 in ee2  :: :: let
   | 1 ::  :: one   {{ tex 1  }}
+  | 2 ::  :: two   {{ tex 2  }}
   | ( ee ) :: :: parens
 
 
@@ -236,6 +239,9 @@ exp, e, v :: 'exp_'     ::=
   | < e1 , e2 >   :: :: pair
   | c e           :: :: capp
   | { l = e }     :: :: rcd
+  | { l1 = e1 , ... , ln = en }     :: :: rcdn
+  | e1 , ... , en ::  :: merge
+  | e1 ,, e2 :: :: merge2
   | e . l           :: :: proj
   | \ X . e       :: :: tabs  {{ tex \Lambda [[X]].\,[[e]] }}
   | e T           :: :: tapp
@@ -421,6 +427,7 @@ formula :: 'formula_' ::=
   | ( e1 , e2 ) in E ( T  ) with pq :: :: term3 {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[T]]}_{[[pq]]}    }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
+  | e : A :: :: typet2
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
   | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
   | ee -->> e :: :: red
