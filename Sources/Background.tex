@@ -7,7 +7,7 @@
 The chapter sets the stage for the three typed calculi that we are going to
 present in later chapters by reviewing some relevant topics in this thesis. In
 \cref{bg:sec:intersection} we start with the traditional formulation of
-intersection types, followed by the introduction of the merge operator and the
+intersection types, followed by an introduction of the merge operator and the
 issue of coherence. We then review the \oname calculus, the first calculus
 featuring disjoint intersection types, and briefly discuss how disjointness
 achieves coherence. In \cref{sec:ernst} we introduce family polymorphism by
@@ -175,7 +175,7 @@ intersection types.
 \subsection{Coherence}
 
 While \citeauthor{dunfield2014elaborating}'s approach is simple and powerful, it
-has serious usability issue. More specifically, it lacks the theoretically and
+has serious usability issues. More specifically, it lacks the theoretically and
 practically important property of \textit{coherence}~\citep{Reynolds_1991}: the
 meaning of a target program depends on the choice of elaboration typing
 derivation. For example, according to the elaboration rules, the expression $[[1
@@ -194,7 +194,7 @@ addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 
 \subsection{Disjoint Intersection Types}
 
-Disjoint intersection types provide a remedy for the coherence problem, by
+Disjoint intersection types~\citep{oliveira2016disjoint} provide a remedy for the coherence problem, by
 imposing restrictions on the uses of merges and on the formation of intersection
 types. Central to their approach is the notion of \textit{disjointness}. In a
 nutshell, for two types to be disjoint, they must not have any sub-components
