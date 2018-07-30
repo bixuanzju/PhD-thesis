@@ -240,7 +240,7 @@ exp, e, v :: 'exp_'     ::=
   | c e           :: :: capp
   | { l = e }     :: :: rcd
   | { l1 = e1 , ... , ln = en }     :: :: rcdn
-  | e1 , ... , en ::  :: merge
+  | e1 ,, ... ,, en ::  :: merge
   | e1 ,, e2 :: :: merge2
   | e . l           :: :: proj
   | \ X . e       :: :: tabs  {{ tex \Lambda [[X]].\,[[e]] }}

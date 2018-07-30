@@ -61,7 +61,7 @@ Three subtyping rules capture the order-theoretic properties of intersection typ
 \end{mathpar}
 Two nice consequences follow:
 \begin{enumerate}
-\item The top type $[[Top]]$ can be regarded as the nullary intersection. It is
+\item The top type $[[Top]]$ can be regarded as the 0-ary form of intersection. It is
   a maximum element of the subtyping ordering, i.e., $[[A <: Top]]$ for every
   type $[[A]]$.
 \item Multiple-field record types can be thought of as an intersection of
@@ -103,7 +103,7 @@ $[[B]]$:
 \]
 The corresponding elimination form allows us to derive, given a derivation of
 $[[ e : A1 & A2 ]]$, that $[[e : A1]]$ and $ [[e : A2]]$. But this already
-follows from \rref{S-interL,S-interior} and the subsumption rule; so we need not
+follows from \rref{S-interL,S-interR} and the subsumption rule; so we need not
 to add the elimination rule explicitly to the calculus.
 
 
@@ -113,19 +113,20 @@ to add the elimination rule explicitly to the calculus.
 Intersection types were first incorporated into a practical programming language
 named Forsythe by \cite{reynolds1988preliminary, reynolds1997design}. who used
 them to encode features such as operator overloading by means of a so-called
-``merge'' operator $p_1 , p_2$ --- ``a construction for intersecting or
+``merge'' operator $p_1 ,, p_2$ --- ``a construction for intersecting or
 `merging' meanings''~\citep[p. 24]{reynolds1997design}.
-\citet{reynolds1997design} demonstrated the power of the merge operator by
-developing an encoding of records by using intersection types; similar ideas also appear in \citet{Castagna_1992}. The idea
-is to add single-field records as a primitive notion, with the introduction form
-$[[ { l = e } ]]$ of type $[[ {l : A} ]]$ and the usual elimination form. Thus
-instead of
+(\citeauthor{reynolds1997design} actually used single comma $p_1 , p_2$,
+but here we use double commas for consistency.) \citeauthor{reynolds1997design}
+demonstrated the power of the merge operator by developing an encoding of
+records by using intersection types; similar ideas also appear in
+\citet{Castagna_1992}. The idea is to have only single-field records with the introduction form $[[ { l = e } ]]$ of type $[[ {l : A} ]]$ and
+the usual eliminations (projection and pattern matching). Thus instead of
 \[
   [[ {  l1 = e1, ... , ln = en   }       ]]
 \]
 we can write
 \[
-  [[ { l1 = e1} , ... , {ln = en} ]]
+  [[ { l1 = e1} ,, ... ,, {ln = en} ]]
 \]
 which plays nicely with the syntactic sugar of multiple-field record types as
 an intersection of single-field record types.
@@ -209,8 +210,8 @@ by the following definition:
 \end{mathpar}
 Now the expression $[[1 ,, 2]]$ is not typable because $[[nat]]$ and $[[nat]]$
 are not disjoint (they have a common supertype $[[nat]]$). Combined with
-bidirectional type-checking, \citeauthor{reynolds1988preliminary} formalized the
-\oname calculus, which ensures that there is at most one elaboration derivation
+bidirectional type-checking, \citet{oliveira2016disjoint} formalized the
+\oname calculus, with the property that says there is at most one elaboration derivation
 for any expression, and as a consequence, there is only one possible target
 program and thus coherence follows trivially.
 
@@ -220,7 +221,7 @@ extensible records~\citep{alpuimdisjoint}. However, forcing every intersection
 types to be disjoint is unnecessarily restrictive. For instance,
 $[[1 : nat & nat]]$ is undoubtedly unambiguous, but is rejected by \oname. Our starting point
 in this thesis is to lift this restriction and makes room for more
-expressiveness power to calculi with disjoint intersection types.
+expressiveness for calculi with disjoint intersection types.
 
 
 \section{Family Polymorphism and Nested Composition}
