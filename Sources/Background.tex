@@ -11,7 +11,7 @@ intersection types, followed by an introduction of the merge operator and the
 issue of coherence. We then review the \oname calculus, the first calculus
 featuring disjoint intersection types, and briefly discuss how disjointness
 achieves coherence. In \cref{sec:ernst} we introduce family polymorphism by
-means of presenting \citeauthor{Ernst_2001}'s elegant solution to the expression problem.
+means of presenting \citeauthor{ernst2004expression}'s elegant solution to the expression problem.
 Finally in \cref{sec:bg:mixin:trait} we review the concepts of mixins and
 traits, their drawbacks and strengths.
 
@@ -241,29 +241,54 @@ inheritance}~\citep{Nystrom_2004}. Nested inheritance combines two aspects.
 Firstly, a class can have nested class members; the outer class is then a
 family of (inner) classes. Secondly, when one family extends another, it
 inherits (and can override) all the class members, as well as the relationships
-within the family (including subtyping) between the class members. However,
+within the family between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
+
+\paragraph{The Expression Problem}
+
+\citet{ernst2004expression} illustrates the benefits of nested inheritance for modularity
+and extensibility with one of the most elegant and concise solutions to the
+\emph{Expression Problem}~\citep{wadler1998expression}. The expression problem,
+as surveyed by \citet{togersen:2004}, is to answer the question:
+\begin{quote}
+  ``To which degree can your application be structured in such a way that both
+  the data model and the set of virtual operations over it can be extended
+  without the need to modify existing code, without the need for code repetition
+  and without runtime type errors.''
+\end{quote}
+The expression problem is concerned with two-dimensional extensions:
+\begin{inparaenum}[(1)]
+\item adding new variants to the datatype;
+\item and adding new operations on the datatype.
+\end{inparaenum}
+Depending on the programming style used in the code, it is usually
+straightforward to add either new variants or new operations. For example, in an
+OO language such as Java where an abstract datatype is represented by means of
+classes whose methods are the operations on the datatype, it is easy to extend
+the set of variants by writing another class. On the other hand, in a functional
+language such as Haskell where the abstract datatype is modeled by means of
+algebraic datatypes with a set of pattern matching functions as the operations,
+then it is easy to add new operations by writing new pattern matching functions.
+In either case, it is much harder to perform both extensions in the
+\textit{same} language.
+
 
 \paragraph{The Expression Problem, Scandinavian Style.}
 
-\citet{Ernst_2001} illustrates the benefits of nested inheritance for modularity
-and extensibility with one of the most elegant and concise solutions to the
-\emph{Expression Problem}~\citep{wadler1998expression}.
-
-
-The objective of the
-Expression Problem is to extend a datatype, consisting of several cases,
-together with several associated operations in two dimensions: by adding more
-cases to the datatype and by adding new operations for the datatype. Ernst
-solves the Expression Problem in the gbeta language, which he adorns with a
-Java-like syntax for presentation purposes, for a small abstract syntax tree
-(AST) example. His starting point is the code shown in \cref{fig:lang}. The
-outer class \lstinline{Lang} contains a family of related AST classes: the
-common superclass \lstinline{Exp} and two cases, \lstinline{Lit} for literals
-and \lstinline{Add} for addition. The AST comes equipped with one operation,
-\lstinline{toString}, which is implemented by both cases. Notice that all the
-inner classes are \textit{virtual}, in the same sense of virtual methods, which
-means that they may be redefined in subclasses of the enclosing class.
+Nowadays we know many solutions to the expression problem, for example see
+\citet{oliveira2012extensibility, wang2016expression, oliveira09modular,
+  swierstra_2008, Zenger-Odersky2005}, to name a few. Among all of them,
+\citeauthor{ernst2004expression}'s solution is perhaps one of the most elegant
+solutions out there. \citeauthor{ernst2004expression} solves the Expression
+Problem in the \textsf{gbeta} language~\citep{ernst2000gbeta}, which he adorns with a Java-like syntax for
+presentation purposes, for a small abstract syntax tree (AST) example. His
+starting point is the code shown in \cref{fig:lang}. The outer class
+\lstinline{Lang} contains a family of related AST classes: the common superclass
+\lstinline{Exp} and two cases, \lstinline{Lit} for literals and \lstinline{Add}
+for addition. The AST comes equipped with one operation, \lstinline{toString},
+which is implemented by both cases. Notice that all the inner classes are
+\textit{virtual}, in the same sense of virtual methods, which means that they
+may be redefined in subclasses of the enclosing class.
 
 
 \begin{figure}[t]
