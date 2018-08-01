@@ -197,7 +197,7 @@ addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 Disjoint intersection types~\citep{oliveira2016disjoint} provide a remedy for the coherence problem, by
 imposing restrictions on the uses of merges and on the formation of intersection
 types. Central to their approach is the notion of \textit{disjointness}. In a
-nutshell, for two types to be disjoint, they must not have any sub-components
+nutshell, for two types $[[A]]$ and $[[B]]$ to be disjoint (written $[[A ** B]]$), they must not have any sub-components
 sharing the same type. In a type system without $[[Top]]$, this can be ensured
 by the following definition:
 \begin{definition}[Simple disjointness] \label{def:disjoint_spec}
@@ -275,9 +275,9 @@ In either case, it is much harder to perform both extensions in the
 
 \paragraph{The Expression Problem, Scandinavian Style.}
 
-Nowadays we know many solutions to the expression problem, for example see
+Nowadays we know many solutions to the expression problem (for example, see
 \citet{oliveira2012extensibility, wang2016expression, oliveira09modular,
-  swierstra_2008, Zenger-Odersky2005}, to name a few. Among all of them,
+  swierstra_2008, Zenger-Odersky2005}, to cite a few). Among all of them,
 \citeauthor{ernst2004expression}'s solution is perhaps one of the most elegant
 solutions out there. \citeauthor{ernst2004expression} solves the Expression
 Problem in the \textsf{gbeta} language~\citep{ernst2000gbeta}, which he adorns with a Java-like syntax for
@@ -402,9 +402,95 @@ case, evaluation of negated expressions.
 \section{Mixins and Traits}
 \label{sec:bg:mixin:trait}
 
-talk about the connection with mixins/traits in OO.
+
+Programmers have long realized that single inheritance is not flexible enough
+when it comes to structuring a class hierarchy. For example, consider two
+classes in different branches of the inheritance hierarchy, and assume that they
+share features not inherited from their (unique) common parent. Attempting to
+share the implementation of the common features may lead to putting the common
+methods \textit{too high} in the hierarchy (i.e., they are forced into their
+common parent), and these methods will be inherited by other classes in the same
+hierarchy, which may not be desirable. On the other hand, putting those methods
+in a \textit{lower} position results in code duplication. To overcome this
+limitation, \textit{multiple inheritance} was proposed as a generalization of
+single inheritance. However, as \citet{cook:multi} put it:
+\begin{quote}
+  ``Multiple inheritance is good, but there is no good way to do it.''
+\end{quote}
+One of the problems in multiple inheritance is the ambiguity issue that arises
+when conflicting features are inherited along different paths. A classic
+situation is the \emph{diamond problem}~\citep{bracha1990mixin} where a class
+inherits from two parent classes that have a common superclass, as depicted by
+\cref{fig:diamond}.
 
 
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/diamond.eps}
+    \subcaption{The diamond problem} \label{fig:diamond}
+  \end{subfigure} ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/mixin.eps}
+    \subcaption{Mixin composition} \label{fig:mixin}
+  \end{subfigure}
+  \caption{Multiple inheritance and mixins}
+\end{figure}
+
+
+Mixins and traits are two well-studied mechanisms to provide some form of
+multiple inheritance. Mixins~\citep{bracha1990mixin} provide a simple mechanism
+for multiple inheritance without the ambiguity issue. A mixin is a subclass
+declaration parameterized over a superclass. Or simply put, a mixin can be
+treated as a function from classes to classes. Thus the same mixin can be used to
+extend a variety of parent classes with the same set of features.
+\Cref{fig:mixin} shows a typical class hierarchy when using mixins. In the mixin
+model, a class can inherit from another class by means of single inheritance as
+usual. Apart from that, it can also have several mixins applied \textit{one at a
+  time}. Let us take a close look at \cref{fig:mixin}. Both mixins
+\lstinline{M1} and \lstinline{M2} contain a method \lstinline{m}, a question
+arises as to which one is inherited in the class \lstinline{C}. The answer is
+\lstinline{m} from the mixin \lstinline{M2}. This is because mixin composition
+is \textit{linear}: methods defined in mixins appearing later override all the
+identically named methods of earlier mixins. While this simple mechanism does
+avoid conflicts, it also lead to other problems. For example, though we can
+obtain the method \lstinline{m} from the mixin \lstinline{M1} by switching the
+order of \lstinline{M1} and \lstinline{M2}, no suitable order of composition
+exists to obtain \lstinline{m} from the superclass \lstinline{A}.
+
+In respondence to the problems in the then compositional models,
+\citet{scharli2003traits} proposed a mechanism called \textit{traits} as a
+better way to foster code reuse in object-oriented programs. A trait is
+essentially \textit{a set of pure methods}, divorced from any class hierarchy. A
+trait \textit{provides} a set of methods to implement the behavior, and it may
+also specify a set of \textit{required methods} that parameterize the provided
+behavior. \Cref{fig:trait} shows a simple trait \lstinline{TCircle}, which
+provides two methods \lstinline{hash} and \lstinline{area}, and requires a
+method \lstinline{radius}. A class is then constructed by inheriting from a
+superclass and incorporating a collection of traits, as shown in
+\cref{fig:trait:conflict}. Also notice that there is a conflicting method
+\lstinline{hash} that is provided by both \lstinline{TCircle} and
+\lstinline{TDraw}. This is where the trait model is very different from the
+mixin model. Unlike mixins that force a linear order in their composition,
+traits can be composed in arbitrary order, and as a consequence, conflicting
+methods must be resolved \textit{explicitly}, either by overriding the
+conflicting methods, or by excluding a method from all but one trait.
+\citet{scharli2003traits} discuss several other issues with mixins, which can be
+improved by traits. We refer to their paper for a detailed account of traits.
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[scale=0.85]{figures/trait1.eps}
+    \subcaption{A simple trait} \label{fig:trait}
+  \end{subfigure} ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/trait3.eps}
+    \subcaption{Trait composition with conflicts} \label{fig:trait:conflict}
+  \end{subfigure}
+  \caption{Traits and conflicts}
+\end{figure}
 
 %%% Local Variables:
 %%% mode: latex
