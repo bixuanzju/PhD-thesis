@@ -5,7 +5,7 @@
 
 metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }}, Z ::=
 
-metavar var, x , y, R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
+metavar var, x, y, f, R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
 
 indexvar i, j, k, n, m ::=
 
@@ -140,6 +140,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | ee A           :: :: tapp
   | ee : A         :: :: anno
   | { l = ee }     :: :: rcd
+  | { l1 = ee1 , ... , ln = een }     :: :: rcdn
   | ee . l         :: :: proj
   | [ee2 / x ] ee1 :: :: subst
   | [ A / X ] ee   :: :: tsubst
@@ -239,9 +240,6 @@ exp, e, v :: 'exp_'     ::=
   | < e1 , e2 >   :: :: pair
   | c e           :: :: capp
   | { l = e }     :: :: rcd
-  | { l1 = e1 , ... , ln = en }     :: :: rcdn
-  | e1 ,, ... ,, en ::  :: merge
-  | e1 ,, e2 :: :: merge2
   | e . l           :: :: proj
   | \ X . e       :: :: tabs  {{ tex \Lambda [[X]].\,[[e]] }}
   | e T           :: :: tapp
@@ -253,6 +251,7 @@ exp, e, v :: 'exp_'     ::=
   | p ( e )       :: :: psubst
   | 1 ::  :: one   {{ tex 1  }}
   | EE . e   :: :: Ctx {{ tex [[EE]] [ [[e]] ] }}
+  | [ A , e ] :: :: co {{ tex \llbracket [[A]] \rrbracket_{[[e]]} }}
 
 
 EE :: 'EE_' ::= {{ tex \mathcal{E} }}
@@ -427,12 +426,13 @@ formula :: 'formula_' ::=
   | ( e1 , e2 ) in E ( T  ) with pq :: :: term3 {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[T]]}_{[[pq]]}    }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
-  | e : A :: :: typet2
+  | ee : A :: :: types
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
   | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
   | ee -->> e :: :: red
   | p in DD  :: :: trel  {{ tex [[p]] \in \ddR{[[DD]]} }}
   | CC : ( DD ; GG dir A ) ~> ( DD' ; GG' dir' B ) ~~> cc :: :: typctx
+  | A ord   :: :: ord {{ tex [[A]] \ \mathsf{ordinary} }}
 
 
 
@@ -442,6 +442,88 @@ parsing
   sty_arrow right sty_arrow
   ty_arrow <= ty_prod
   ty_arrow right ty_arrow
+  exp_abs <= exp_app
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% lambda^i subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+JSubtype :: '' ::=
+
+defn
+A <: B ~~> e :: :: osub :: s_ by
+
+
+---------------------- :: int
+nat <: nat ~~> \x . x
+
+
+
+---------------------- :: top
+A <: Top ~~> \x. unit
+
+
+
+B1 <: A1 ~~> e1
+A2 <: B2 ~~> e2
+----------------------------------------------- :: arr
+A1 -> A2 <: B1 -> B2 ~~> \f. \x. e2 (f (e1 x))
+
+
+A1 <: A2 ~~> e1
+A1 <: A3 ~~> e2
+---------------------------- :: and
+A1 <: A2 & A3 ~~> \x . < e1 x, e2 x >
+
+
+A1 <: A3 ~~> e
+A3 ord
+------------------------- :: andl
+A1 & A2 <: A3 ~~> \x . [ A3 , e (pp1 x) ]
+
+
+A2 <: A3 ~~> e
+A3 ord
+------------------------------- :: andr
+A1 & A2 <: A3 ~~> \x. [ A3 , e (pp2 x) ]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% lambda^i well-formedness
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+WFi :: '' ::=
+
+defn GG |- A :: :: WFi :: 'wf_' by
+
+-------------- :: int
+GG |- nat
+
+-------------- :: top
+GG |- Top
+
+
+GG |- A
+GG |- B
+A ** B
+---------------- :: and
+GG |- A & B
+
+
+GG |- A
+GG |- B
+---------------- :: arr
+GG |- A -> B
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -704,17 +786,14 @@ defn GG  |- ee dir A ~~> e ::  :: has_type :: 'T_'
 {{ tex [[GG]] [[|-]] [[ee]] [[dir]] [[A]] \rulehl{[[~~>]] [[e]]} }}
 by
 
-uniq GG
 ----------------- :: top
 GG |- Top => Top ~~> unit
 
 
-uniq GG
 ----------------- :: lit
 GG |- ii => nat ~~> ii
 
 
-uniq GG
 x : A in GG
 --------------------- :: var
 GG |- x => A ~~> x
@@ -731,7 +810,6 @@ GG |- ee2 => A2 ~~> e2
 A1 ** A2
 ----------------------------------------------- :: merge
 GG |- ee1 ,, ee2 => A1 & A2 ~~> < e1 , e2 >
-
 
 
 GG |- ee => A ~~> e
@@ -755,10 +833,25 @@ GG, x : A |- ee <= B ~~> e
 GG |- \ x . ee <= A -> B ~~> \ x . e
 
 
-GG |- ee => B ~~> e
-B <: A ~~> c
+GG |- A
+GG, x : A |- ee <= B ~~> e
+--------------------------------- :: lam
+GG |- \ x . ee <= A -> B ~~> \ x . e
+
+
+GG |- ee => A ~~> e
+A <: B ~~> c
 --------------------- :: sub
-GG |- ee <= A ~~> c e
+GG |- ee <= B ~~> c e
+
+
+GG |- B
+GG |- ee => A ~~> e
+A <: B ~~> e'
+--------------------- :: Sub
+GG |- ee <= B ~~> e' e
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1634,7 +1727,6 @@ SD |- X
 
 SD |- AA
 SD |- BB
-SD |- AA ** BB
 ---------------- :: and
 SD |- AA & BB
 
