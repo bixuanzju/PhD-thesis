@@ -55,9 +55,9 @@ on intersection types.
 
 Three subtyping rules capture the order-theoretic properties of intersection types:
 \begin{mathpar}
-  \inferrule*[right=S-interL]{ }{ [[A & B <: A]] } \and
-  \inferrule*[right=S-interR]{ }{ [[A & B <: B]] } \and
-  \inferrule*[right=S-inter]{ [[C <: A]] \\ [[ C <: B  ]]  }{ [[C <: A & B ]] }
+  \inferrule*[lab=S-interL]{ }{ [[A & B <: A]] } \and
+  \inferrule*[lab=S-interR]{ }{ [[A & B <: B]] } \and
+  \inferrule*[lab=S-inter]{ [[C <: A]] \\ [[ C <: B  ]]  }{ [[C <: A & B ]] }
 \end{mathpar}
 Two nice consequences follow:
 \begin{enumerate}
@@ -82,13 +82,13 @@ intersection types (e.g., see \citet{reynolds1988preliminary, Barendregt_1983}).
 The first one captures the relation between intersections and function spaces,
 allowing intersections to distribute over the right-hand side of $[[->]]$'s:
 \[
-    \inferrule*[right=S-distArr]{ }{ [[(A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3]] }
+    \inferrule*[lab=S-distArr]{ }{ [[(A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3]] }
 \]
 Note that the other direction is also derivable (cf. \cref{sec:typesystem}).
 The second rule captures the relation between intersections and (singleton)
 records, allowing intersections to distribute over record labels:
 \[
-    \inferrule*[right=S-distRcd]{ }{ [[  { l : A } & { l : B } <: { l : A & B }   ]] }
+    \inferrule*[lab=S-distRcd]{ }{ [[  { l : A } & { l : B } <: { l : A & B }   ]] }
 \]
 
 These two rules, though intuitively reasonable, will have a strong effect on both
@@ -99,7 +99,7 @@ The introduction form of intersection types says that a term $[[ee]]$ can be
 given type $[[A & B]]$ if it inhabits both $[[A]]$ and
 $[[B]]$:
 \[
-    \inferrule*[right=T-interI]{ [[ee : A1]] \\  [[ee : A2]]   }{   [[ee : A1 & A2]]   }
+    \inferrule*[lab=T-interI]{ [[ee : A1]] \\  [[ee : A2]]   }{   [[ee : A1 & A2]]   }
 \]
 The corresponding elimination form allows us to derive, given a derivation of
 $[[ ee : A1 & A2 ]]$, that $[[ee : A1]]$ and $ [[ee : A2]]$. But this already
@@ -139,8 +139,8 @@ distinct terms, and can be checked against various parts of an intersection
 type. In his system, the introduction form of intersection types is still
 \rref{T-interI}, and two additional rules for the merge operator are added:
 \begin{mathpar}
-    \inferrule*[right=T-mergeL]{ [[  ee1 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] } \and
-    \inferrule*[right=T-mergeR]{ [[  ee2 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] }
+    \inferrule*[lab=T-mergeL]{ [[  ee1 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] } \and
+    \inferrule*[lab=T-mergeR]{ [[  ee2 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] }
 \end{mathpar}
 In other words, a merge expression can choose to type one subterm and ignore the
 other. In combination of \rref{T-interI}, they allow to type check
@@ -196,12 +196,10 @@ addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 
 \begin{figure}
   \centering
-  \begin{small}
   \drules[s]{$[[A <: B ~~> e]]$}{Subtyping}{int, top, arr, and, andl, andr}
   \drules[wf]{$[[GG |- A]]$}{Well-formedness of types}{int, top, and, arr}
   \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, merge}
   \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{lam, Sub}
-  \end{small}
   \caption{Type system of \oname}
   \label{fig:lambdai}
 \end{figure}
@@ -224,7 +222,7 @@ the well-formedness of intersection types (\rref{wf-and}). Now the expression
 $[[1 ,, 2]]$ is not typable because $[[nat]]$ and $[[nat]]$ are not disjoint
 (they have a common supertype $[[nat]]$). To ensure that subtyping produces
 unique coercions, they also employ the notion of \textit{ordinary types} ---
-those which are not intersection types --- and use the judgment $[[ A ord ]]$ in
+those which are not intersection types --- and use the judgment ``$[[ A ord ]]$'' in
 \rref{s-andl, s-andr}. Ordinary types and disjointness are sufficient to ensure
 a coherent semantics of a type system without $[[Top]]$.
 
@@ -237,13 +235,14 @@ captured by a predicate $ \rceil \cdot \lceil $. With top-types,
 \cref{def:disjoint_spec2}. However, a careful analysis of
 \cref{def:disjoint_spec2} shows that intersection types such as $[[ Top & Top
 ]]$ and $[[Top & nat]]$ are not well-formed because their constitute types are
-not disjoint. This is one of the limitations in \oname, since a merge of two
+not disjoint. This is one of the limitations in \oname, since ``a merge of two
 $[[Top]]$-types will always return the same value regardless of which component
-of the merge is chosen. In other words, $[[Top]]$ is always disjoint to every
-other type. This restriction was later lifted by \citet{alpuimdisjoint} in the
-\fname calculus by a set of inference rules, but whether a specification of
-disjointness exists or not was not known at that time. We will present a
-suitable specification in \cref{sec:category}.
+of the merge is chosen''~\citep{alpuimdisjoint}. In other words, $[[Top]]$ is
+always disjoint to every other type. This restriction was later lifted by
+\citet{alpuimdisjoint} in the \fname calculus by a set of inference rules, but
+whether a corresponding specification of disjointness exists or not was not
+known at that time. We will present a suitable specification in
+\cref{sec:category}.
 
 \begin{definition}[$[[Top]]$-Disjointness] \label{def:disjoint_spec2}
   $[[A ** B]] \defeq \neg \rceil [[A]] \lceil \ \land \ \neg \rceil [[B]] \lceil \ \land \

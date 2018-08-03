@@ -291,18 +291,6 @@ In summary the contributions of this theis are:
 \end{itemize}
 
 
-This thesis is largely based on two publications by the author, which are
-indicated in the list below. The work on \fnamee is based on an on-going draft
-by the author. In comparison to the original publications, this thesis contains
-a more in-depth and consistent treatment of disjoint intersection types.
-
-\begin{itemize}
-\item Xuan Bi, Bruno C. d. S. Oliveira, and Tom Schrijvers. 2018. ``The Essence
-  of Nested Composition''. In \textit{European Conference on Object-Oriented Programming (ECOOP)}.
-\item Xuan Bi and Bruno C. d. S. Oliveira. 2018. ``Typed First-Class Traits''.
-  In \textit{European Conference on Object-Oriented Programming (ECOOP)}.
-\end{itemize}
-
 % The author also contributed to the following publications that do not directly
 % relate to the topics of this thesis:
 % \begin{itemize}
@@ -320,8 +308,10 @@ a more in-depth and consistent treatment of disjoint intersection types.
 
 \section{Structure of the Thesis}
 
-The structure of the thesis is organized as follows:
-
+We begin with some background in the main topics of this thesis in
+\cref{chap:background} in order to keep this thesis as self-contained as
+possible and also to put our methods and contributions into context. The
+structure of the technical content in the thesis is divided into three parts:
 \begin{description}
 \item[Part I:] \Cref{chap:nested,chap:fi} formally define the type systems of
   \namee and \fnamee, respectively. We first give the syntax and semantics of
@@ -343,17 +333,33 @@ The structure of the thesis is organized as follows:
   \sedel. In particular we show how to elaborate source-level constructs for
   first-class traits into expressions of \fnamee. In \cref{chap:case_study} we
   conduct a case study of modularizing programming language features using a
-  highly modular form of \visitor. Finally \cref{sec:related} reviews related
-  work and \cref{chap:conclusion} presents some future work and concludes.
+  highly modular form of \visitor.
 \end{description}
+Finally \cref{sec:related} reviews related work and \cref{chap:conclusion}
+presents some future work and concludes.
+
+This thesis is largely based on two publications by the author, which are shown
+in the list below with corresponding chapters indicated. The work on \fnamee is
+based on an on-going draft by the author (\cref{chap:fi,chap:coherence:poly}).
+In comparison to the original publications, this thesis contains a more in-depth
+and consistent treatment of disjoint intersection types.
+
+\begin{description}
+\item[\cref{chap:nested,chap:coherence:simple}:] Xuan Bi, Bruno C. d. S.
+  Oliveira, and Tom Schrijvers. 2018. ``The Essence of Nested Composition''. In
+  \textit{European Conference on Object-Oriented Programming (ECOOP)}.
+\item[\cref{chap:traits,chap:case_study}:] Xuan Bi and Bruno C. d. S. Oliveira.
+  2018. ``Typed First-Class Traits''. In \textit{European Conference on Object-Oriented Programming (ECOOP)}.
+\end{description}
+
+\noindent\makebox[\linewidth]{\rule{0.7\textwidth}{0.4pt}}
+
+\vspace{1.5\baselineskip}
 
 This thesis assumes familiarity with basic knowledge of programming languages
 theory and object-oriented programming. We recommend
 \citeauthor{DBLP:books/daglib/0005958}'s excellent textbook on programming
-languages~\citep{DBLP:books/daglib/0005958} for a general introduction. In order
-to keep this thesis as self-contained as possible, we begin with some
-background in the main topics of this thesis, to set the stage for later
-chapters.
+languages~\citep{DBLP:books/daglib/0005958} for a general introduction.
 
 
 %%% Local Variables:

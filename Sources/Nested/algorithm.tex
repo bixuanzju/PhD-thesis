@@ -35,20 +35,12 @@ find some errors and missing lemmas in \citeauthor{pierce1989decision}'s origina
 
 \subsection{The Subtyping Algorithm}
 
-\begin{figure}[t]
-  \centering
-  \begin{small}
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{and, arr, rcd, top, arrNat, rcdNat, andNOne, andNTwo, nat}
-  \end{small}
-  \caption{Algorithmic subtyping of \name}
-  \label{fig:algorithm}
-\end{figure}
-
-
 \Cref{fig:algorithm} shows the algorithmic subtyping judgement $[[fs |- A <: B ~~> c]]$.
 This judgement is the algorithmic counterpart of the declarative
 judgement $[[A <: fs -> B ~~> c]]$, where the symbol $[[fs]]$ stands for a
-queue of types and labels. Definition~\ref{def:fs} converts a queue to a type:
+queue tracking types and labels. Definition~\ref{def:fs} converts a queue to a type.
+For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
+
 \begin{definition} $[[fs -> A]]$ is inductively defined as follows: \label{def:fs}
   \begin{mathpar}
     [[ [] -> A]] = [[A]] \and
@@ -56,7 +48,6 @@ queue of types and labels. Definition~\ref{def:fs} converts a queue to a type:
     [[ (fs , {l}) -> A]] = [[fs -> {l : A}]]
   \end{mathpar}
 \end{definition}
-\noindent For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
 The basic idea of $[[fs |- A <: B ~~> c]]$ is to first perform a structural
 analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
@@ -118,6 +109,19 @@ where the sub-derivations $D$ and $D'$ are shown below:
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[S]] }
 \end{mathpar}
 \end{small}
+
+
+\begin{figure}[t]
+  \centering
+  \begin{small}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{and, arr, rcd, top, arrNat, rcdNat, andNOne, andNTwo, nat}
+  \end{small}
+  \caption{Algorithmic subtyping of \namee}
+  \label{fig:algorithm}
+\end{figure}
+
+
+
 Now consider the coercions. Algorithmic subtyping uses the same set of
 coercions as declarative subtyping. However, because algorithmic
 subtyping has a different structure, the rules generate slightly more
@@ -125,6 +129,8 @@ complicated coercions. Two meta-functions $\llbracket \cdot \rrbracket_{\top}$
 and $\llbracket \cdot \rrbracket_{\&}$ used in \rref{A-top,A-and} respectively,
 are meant to generate correct forms of coercions. They are defined recursively
 on $[[fs]]$ and are shown in \cref{fig:coercion}.
+
+
 
 \begin{figure}[t]
     \centering

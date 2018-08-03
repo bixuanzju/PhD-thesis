@@ -226,6 +226,35 @@ The reader can refer to our supplementary material for the source code of the ca
 \section{Evaluation}
 \label{sec:evaluate}
 
+\begin{table}[t]
+  \centering
+  \begin{small}
+  \begin{tabular}{|r|ccc||l|ccc|}
+    \hline
+     Feature & \textbf{eval} & \textbf{print} & \textbf{check} & Lang sedel & \sedel & \textbf{Haskell} & \textbf{\% Reduced}  \\
+    \hline
+    $\mathit{natF}$(7) & 23 & 7 & 39 & \lstinline$simplenat$ & 3 & 33 & 91\%  \\
+    $\mathit{boolF}$(4) & 9 & 4 & 17 & \lstinline$simplebool$ & 3 & 16 & 81\% \\
+    $\mathit{compF}$(4) & 12 & 4 & 20 & \lstinline$natbool$ & 5 & 74 & 93\% \\
+    $\mathit{logicF}$(4) & 12 & 4 & 20 & \lstinline$varbool$ & 4 & 24 & 83\% \\
+    $\mathit{varF}$(4) & 7 & 4 & 7 & \lstinline$varnat$ & 4 & 41 & 90\% \\
+    $\mathit{funcF}$(3) & 10 & 3 & 9 & \lstinline$simplelogic$ & 4 & 28 & 86\% \\
+     & & & & \lstinline$varlogic$ & 6 & 36 & 83\% \\
+     & & & & \lstinline$arith$ & 8 & 94 & 91\% \\
+     & & & & \lstinline$arithlogic$ & 8 & 114 & 93\% \\
+     & & & & \lstinline$vararith$ & 8 & 107 & 93\% \\
+     & & & & \lstinline$vararithlogic$ & 8 & 127 & 94\% \\
+     & & & & \lstinline$mini-JS$ & 33 & 149 & 78\% \\
+    \hline
+    \textbf{Total} & & & 237 & & 331 & 843 & 61\% \\
+    \hline
+  \end{tabular}
+  \end{small}
+  \caption{SLOC statistics: \sedel implementation vs. vanilla AST implementation}
+  \label{fig:sloc}
+\end{table}
+
+
 To evaluate \sedel's implementation of the case study,
 \Cref{fig:sloc} compares the number of source lines of code
 (SLOC, lines of code without counting empty lines and comments) for
@@ -262,33 +291,3 @@ that the case study is already non-trivial in that we need to solve EP. Note
 that Scala traits alone are not sufficient on their own to solve EP. While there
 are solutions to EP in both Haskell and Scala, they
 introduce significant complexity, as explained in \cref{sec:ob}.
-
-
-
-\begin{table}[t]
-  \centering
-  \begin{small}
-  \begin{tabular}{|r|ccc||l|ccc|}
-    \hline
-     Feature & \textbf{eval} & \textbf{print} & \textbf{check} & Lang sedel & \sedel & \textbf{Haskell} & \textbf{\% Reduced}  \\
-    \hline
-    $\mathit{natF}$(7) & 23 & 7 & 39 & \lstinline$simplenat$ & 3 & 33 & 91\%  \\
-    $\mathit{boolF}$(4) & 9 & 4 & 17 & \lstinline$simplebool$ & 3 & 16 & 81\% \\
-    $\mathit{compF}$(4) & 12 & 4 & 20 & \lstinline$natbool$ & 5 & 74 & 93\% \\
-    $\mathit{logicF}$(4) & 12 & 4 & 20 & \lstinline$varbool$ & 4 & 24 & 83\% \\
-    $\mathit{varF}$(4) & 7 & 4 & 7 & \lstinline$varnat$ & 4 & 41 & 90\% \\
-    $\mathit{funcF}$(3) & 10 & 3 & 9 & \lstinline$simplelogic$ & 4 & 28 & 86\% \\
-     & & & & \lstinline$varlogic$ & 6 & 36 & 83\% \\
-     & & & & \lstinline$arith$ & 8 & 94 & 91\% \\
-     & & & & \lstinline$arithlogic$ & 8 & 114 & 93\% \\
-     & & & & \lstinline$vararith$ & 8 & 107 & 93\% \\
-     & & & & \lstinline$vararithlogic$ & 8 & 127 & 94\% \\
-     & & & & \lstinline$mini-JS$ & 33 & 149 & 78\% \\
-    \hline
-    \textbf{Total} & & & 237 & & 331 & 843 & 61\% \\
-    \hline
-  \end{tabular}
-  \end{small}
-  \caption{SLOC statistics: \sedel implementation vs. vanilla AST implementation}
-  \label{fig:sloc}
-\end{table}
