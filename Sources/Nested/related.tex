@@ -3,11 +3,11 @@
 
 \paragraph{Coherence.}
 In calculi that feature coercive subtyping, a semantics that interprets the
-subtyping judgement by introducing explicit coercions is typically defined on
-typing derivations rather than on typing judgements. A natural
+subtyping judgment by introducing explicit coercions is typically defined on
+typing derivations rather than on typing judgments. A natural
 question that arises
 for such systems is whether the semantics is \textit{coherent}, i.e.,
-distinct typing derivations of the same typing judgement possess the same
+distinct typing derivations of the same typing judgment possess the same
 meaning. Since Reynolds~\citep{Reynolds_1991} proved the coherence of a calculus with
 intersection types, based on the denotational semantics for intersection types,
 many researchers have studied the problem of coherence in a variety of typed
@@ -18,11 +18,11 @@ calculi. Below we summarize two commonly-found approaches in the literature.
 Breazu-Tannen et al.~\citep{Breazu_Tannen_1991} proved
 the coherence of a coercion translation from Fun~\citep{cardelli1985understanding}
 extended with recursive types to System F by showing that any two
-typing derivations of the same judgement are normalizable to a unique
+typing derivations of the same judgment are normalizable to a unique
 normal derivation. % where the correctness of the normalization steps is justified
 % by an equational theory in the target calculus, i.e., System F.
 Ghelli~\citep{Curien_1992} presented a translation of System F$_\leq$ into a calculus
-with explicit coercions and showed that any derivations of the same judgement are
+with explicit coercions and showed that any derivations of the same judgment are
 translated to terms that are normalizable to a unique normal form. Following the
 same approach, Schwinghammer~\citep{SCHWINGHAMMER_2008} proved the coherence of coercion
 translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with subtyping.
@@ -32,7 +32,7 @@ translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with s
 
 Central to the first approach is to find a normal form for a representation of
 the derivation and show that normal forms are unique for a given typing
-judgement. However, this approach cannot be directly applied to Curry-style
+judgment. However, this approach cannot be directly applied to Curry-style
 calculi, i.e, where the lambda abstractions are not type annotated. Also this
 line of reasoning cannot be used when the calculus has general recursion.
 Biernacki and Polesiuk~\citep{biernacki2015logical} considered the coherence

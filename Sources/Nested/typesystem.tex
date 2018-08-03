@@ -120,7 +120,7 @@ The bidirectional type system for \namee is shown in \cref{fig:type_system}.
 Again we ignore the \hll{highlighted} parts for now.
 
 % The main difference to \oname is the absence of a well-formedness
-% judgement. Unlike \oname, which requires a well-formedness judgement to ensure
+% judgment. Unlike \oname, which requires a well-formedness judgment to ensure
 % that all intersection types are disjoint, \namee only requires a disjointness
 % check at the merge operator. Non-disjoint types such as $[[nat & nat]]$ are
 % allowed in other parts of the program.
@@ -156,13 +156,13 @@ to continue ignoring the gray-shaded parts until \cref{sec:elaboration}.
 
 As with traditional bidirectional type systems, we employ two modes: the
 inference mode ($[[=>]]$) and the checking mode ($[[<=]]$). The inference
-judgement $[[GG |- ee => A]]$ says that we can synthesize a type $[[A]]$ for
-expression $[[ee]]$ in the context $[[GG]]$. The checking judgement $[[GG |- ee
+judgment $[[GG |- ee => A]]$ says that we can synthesize a type $[[A]]$ for
+expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee
 <= A]]$ checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The
-disjointness judgement $[[A ** B]]$ used in \rref{T-merge} is shown in
+disjointness judgment $[[A ** B]]$ used in \rref{T-merge} is shown in
 \cref{fig:disjoint}, which states that the types $[[A]]$ and $[[B]]$ are
 \textit{disjoint}. The intuition of two types being disjoint is
-that their least upper bound is (isomorphic to) $[[Top]]$. The disjointness judgement is
+that their least upper bound is (isomorphic to) $[[Top]]$. The disjointness judgment is
 important in order to rule out ambiguous expressions such as $\mer{1}{2}$. Most
 of the typing and disjointness rules are standard and are explained in detail in
 previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
@@ -223,7 +223,7 @@ of a term from one type to another. Because of the addition of coercions, the
 grammar contains explicit coercion applications $[[c e]]$ as a term, and various
 unsaturated coercion applications as values. The use of explicit coercions is useful for the new semantic
 proof of coherence based on logical relations.
-The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the
+The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the
 subtyping derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that converts
 terms of type $[[ |A| ]]$ to type $[[ |B| ]]$. Each subtyping rule has its own
 specific form of coercion.
@@ -240,7 +240,7 @@ applications, shown below, deserves attention:
 \begin{mathpar}
 \drule{t-capp}
 \end{mathpar}
-Here the judgement $[[c |- T1 tri T2]]$ expresses the typing of coercions, which
+Here the judgment $[[c |- T1 tri T2]]$ expresses the typing of coercions, which
 are essentially functions from $[[T1]]$ to $[[T2]]$. Their typing
 rules correspond exactly to the subtyping rules of \namee, as
 shown in \cref{fig:co}.
@@ -284,12 +284,12 @@ Now we can show that \tname is type safe:
 \subsection{Elaboration Semantics}
 
 \begin{comment}
-The subtyping judgement in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the subtyping
+The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the subtyping
 derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that is used to convert a
 term of type $[[ |A| ]]$ to type $[[ |B| ]]$. Each
 subtyping rule has its own specific form of coercion.
 \end{comment}
-We are now in a position to explain the elaboration judgements $[[GG |- ee
+We are now in a position to explain the elaboration judgments $[[GG |- ee
 => A ~~> e]]$ and $[[GG |- ee <= A ~~> e]]$ in \cref{fig:type_system}. The only
 interesting rule is \rref{T-sub}, which applies the coercion $[[c]]$ produced by
 subtyping to the target term $[[e]]$ to form a coercion application
@@ -360,15 +360,15 @@ adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
 
 
-\paragraph{No Well-Formedness Judgement.}
+\paragraph{No Well-Formedness Judgment.}
 
 A key difference from the type system of \oname is the complete omission of the
-well-formedness judgement. In \oname, the well-formedness judgement $[[GG |- A]]$
-appears in both \rref{T-abs,T-sub}. The sole purpose of this judgement is
+well-formedness judgment. In \oname, the well-formedness judgment $[[GG |- A]]$
+appears in both \rref{T-abs,T-sub}. The sole purpose of this judgment is
 to enforce that all intersection types are disjoint. However, as
 \cref{chap:coherence:simple} will explain, the syntactic restriction is unnecessary for
 coherence, and merely complicates the type system. The \namee calculus discards
-this well-formedness judgement altogether in favour of a simpler design that is
+this well-formedness judgment altogether in favour of a simpler design that is
 still coherent. An important implication is that even without adding BCD subtyping,
 \namee is already more expressive than \oname: an expression such as $1 : [[nat & nat]]$ is accepted in
 \namee but rejected in \oname. This simplification is based on an important

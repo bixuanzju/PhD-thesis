@@ -35,9 +35,9 @@ find some errors and missing lemmas in \citeauthor{pierce1989decision}'s origina
 
 \subsection{The Subtyping Algorithm}
 
-\Cref{fig:algorithm} shows the algorithmic subtyping judgement $[[fs |- A <: B ~~> c]]$.
-This judgement is the algorithmic counterpart of the declarative
-judgement $[[A <: fs -> B ~~> c]]$, where the symbol $[[fs]]$ stands for a
+\Cref{fig:algorithm} shows the algorithmic subtyping judgment $[[fs |- A <: B ~~> c]]$.
+This judgment is the algorithmic counterpart of the declarative
+judgment $[[A <: fs -> B ~~> c]]$, where the symbol $[[fs]]$ stands for a
 queue tracking types and labels. Definition~\ref{def:fs} converts a queue to a type.
 For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 

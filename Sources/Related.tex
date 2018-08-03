@@ -4,94 +4,103 @@
 \label{sec:related}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This chapter briefly reviews existing literature on the various topics discussed
-in this thesis.
+
+There is a great deal of work related to this thesis. We have touched some most
+relevant work (notably intersection types) in \cref{chap:background}. In this
+chapter, we briefly review other related work, starting with a summary of two
+most common approaches on coherence (\cref{sec:related:coherence}). We then
+consider various existing mechanisms to foster modularity and code reuse in the
+rest of this chapter.
 
 
 \section{Coherence}
+\label{sec:related:coherence}
 
 In calculi that feature coercive subtyping, a semantics that interprets the
-subtyping judgement by introducing explicit coercions is typically defined on
-typing derivations rather than on typing judgements. A natural
-question that arises
-for such systems is whether the semantics is \textit{coherent}, i.e.,
-distinct typing derivations of the same typing judgement possess the same
-meaning. Since Reynolds~\citep{Reynolds_1991} proved the coherence of a calculus with
+subtyping judgment by introducing explicit coercions is typically defined on
+typing derivations rather than on typing judgments. A natural question that
+arises for such systems is whether the semantics is \textit{coherent}, i.e.,
+distinct typing derivations of the same typing judgment possess the same
+meaning. Since \citet{Reynolds_1991} proved the coherence of a calculus with
 intersection types, based on the denotational semantics for intersection types,
 many researchers have studied the problem of coherence in a variety of typed
 calculi. Below we summarize two commonly-found approaches in the literature.
 
-\paragraph{Normalization-based Approach}
-% The first approach is based on normalization.
-Breazu-Tannen et al.~\citep{Breazu_Tannen_1991} proved
-the coherence of a coercion translation from Fun~\citep{cardelli1985understanding}
-extended with recursive types to System F by showing that any two
-typing derivations of the same judgement are normalizable to a unique
-normal derivation. % where the correctness of the normalization steps is justified
-% by an equational theory in the target calculus, i.e., System F.
-Ghelli~\citep{Curien_1992} presented a translation of System F$_\leq$ into a calculus
-with explicit coercions and showed that any derivations of the same judgement are
+\subsection{Normalization-based Approach}
+The first approach is based on normalization. \citet{Breazu_Tannen_1991} proved
+the coherence of a coercion translation from
+\textsf{Fun}~\citep{cardelli1985understanding} extended with recursive types to
+System F by showing that any two typing derivations of the same judgment are
+normalizable to a unique normal derivation where the correctness of the
+normalization steps is justified by an equational theory in System F.
+\citet{Curien_1992} presented a translation of System F$_\leq$ into a calculus
+with explicit coercions and showed that any derivations of the same judgment are
 translated to terms that are normalizable to a unique normal form. Following the
-same approach, Schwinghammer~\citep{SCHWINGHAMMER_2008} proved the coherence of coercion
-translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with subtyping.
+same approach, \citet{SCHWINGHAMMER_2008} proved the coherence of coercion
+translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with
+subtyping.
 
 
-\paragraph{Logical-relations-based Approach}
+\subsection{Context-based Approach}
 
 Central to the first approach is to find a normal form for a representation of
 the derivation and show that normal forms are unique for a given typing
-judgement. However, this approach cannot be directly applied to Curry-style
+judgment. However, this approach cannot be directly applied to Curry-style
 calculi, i.e, where the lambda abstractions are not type annotated. Also this
 line of reasoning cannot be used when the calculus has general recursion.
-Biernacki and Polesiuk~\citep{biernacki2015logical} considered the coherence
-problem of coercion semantics. Their criterion for coherence of the translation is
-\textit{contextual equivalence} in the target calculus. They presented a construction of
-logical relations for establishing so constructed coherence for coercion semantics,
-applicable in a variety of calculi, including delimited continuations and
-control-effect subtyping.
+\citet{biernacki2015logical} considered the coherence problem of coercion
+semantics. Their criterion for coherence of the translation is
+\textit{contextual equivalence} in the target calculus. They presented a
+construction of logical relations for establishing so constructed coherence for
+coercion semantics, showing that this approach is applicable in a variety of
+calculi, including delimited continuations and control-effect subtyping.
 
-As far as we know, our work is the first to use logical relations
-to show the coherence for intersection types and the merge operator. The BCD
-subtyping in our setting poses a non-trivial complication over Biernacki and
-Polesiuk's simple structural subtyping. Indeed, because any two coercions
-between given types are behaviorally equivalent in the target language, their
-coherence reasoning can all take place in the target language. This is not true
-in our setting, where coercions can be distinguished by arbitrary target
-programs, but not those that are elaborations of source programs. Hence, we have to
-restrict our reasoning to the latter class, which is reflected in a more
-complicated notion of contextual equivalence and our logical relation's
-non-trivial treatment of pairs.
+As far as we know, our work is the first to use logical relations to show the
+coherence for intersection types and the merge operator. The BCD subtyping in
+our setting poses a non-trivial complication over
+\citeauthor{biernacki2015logical}'s simple structural subtyping. Indeed, because
+any two coercions between given types are behaviorally equivalent in the target
+language, their coherence reasoning can all take place in the target language.
+This is not true in our setting, where coercions can be distinguished by
+arbitrary target programs, but not those that are elaborations of source
+programs. (Recall that $ \lambda \ottmv{x} .\, \pi_1 \, \ottmv{x} $ and $ \lambda \ottmv{x} .\, \pi_2 \, \ottmv{x} $ should be equated in our setting.)
+Hence, we have to restrict our reasoning to the latter class, which is reflected
+in a more complicated notion of contextual equivalence and our logical
+relation's non-trivial treatment of pairs.
 
 \section{Intersection Types and the Merge Operator}
 
-Forsythe~\citep{reynolds1988preliminary} has intersection types and a merge-like
-operator. However to ensure coherence, various restrictions were added to limit
-the use of merges. For example, in Forsythe merges cannot contain more than one
-function. Castagna et al.~\citep{Castagna_1992} proposed a coherent calculus
-with a special merge operator that works on functions only. More recently,
-Dunfield~\citep{dunfield2014elaborating} shows significant expressiveness of
-type systems with intersection types and a merge operator. However his calculus
-lacks coherence. The limitation was addressed by Oliveira et
-al.~\citep{oliveira2016disjoint}, who introduced disjointness to ensure
+Much has been said in \cref{chap:background}. Here we give a short summary of
+the work that inspired ours. Forsythe~\citep{reynolds1988preliminary} has
+intersection types and a merge-like operator. However to ensure coherence,
+various restrictions were added to limit the use of merges. For example, in
+Forsythe merges cannot contain more than one function. \citet{Castagna_1992}
+proposed a coherent calculus with a special merge operator that works on
+functions only. More recently, \citet{dunfield2014elaborating} shows significant
+expressiveness of type systems with (unrestricted) intersection types and a
+merge operator. However his calculus lacks coherence. The limitation was
+addressed by \citet{oliveira2016disjoint}, who introduced disjointness to ensure
 coherence. The combination of intersection types, a merge operator and
 parametric polymorphism, while achieving coherence was first studied in the
-\fname calculus~\citep{alpuimdisjoint}. Compared to prior work, \namee simplifies
-type systems with disjoint intersection types by removing several restrictions.
-Furthermore, \namee adopts a more powerful subtyping relation based on BCD
-subtyping, which in turn requires the use of a more powerful logical relations
-based method for proving coherence.
+\fname calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in
+this thesis simplifies type systems with disjoint intersection types by removing
+several restrictions. Furthermore, our calculi adopt a more powerful subtyping
+relation based on BCD subtyping, which in turn requires the use of a more
+powerful logical relations based method for proving coherence. On a pragmatic
+note, dynamic inheritance, self-references and abstract methods are all missing
+from prior work, but, as shown in this thesis, they can be encoded using an
+elaboration that employs ideas from the denotational model of
+inheritance~\citep{cook1989denotational}.
+
+
+
 
 % The combination of intersection types, a merge
 % construct and parametric polymorphism, while achieving coherence was first
 % studied in the \fname calculus~\citep{alpuimdisjoint}.
 % % where they proposed the notion of disjoint polymorphism.
 % \fname serves as the target language
-% of \namee. Dynamic inheritance, self-references and abstract methods
-% are all missing from \fname but, as shown in this paper, they can be
-% encoded using an elaboration that employs ideas from Cook and
-% Palsberg's denotational model of inheritance~\citep{cook1989denotational}.
-
-
+% of \namee.
 % \bruno{This is an example of a typical mistake when writting related
 %   work: you describe existing work, but do not say how it
 %   relates/differs from the work presented in the paper.}
@@ -99,18 +108,19 @@ based method for proving coherence.
 
 \section {BCD Type System and Decidability}
 
-The BCD type system was first introduced by Barendregt et al.~\citep{Barendregt_1983}. It is
+The BCD type system was first introduced by \citet{Barendregt_1983}. It is
 derived from a filter lambda model in order to characterize exactly the strongly
 normalizing terms. The BCD type system features a powerful subtyping relation,
-which serves as a base for our subtyping relation. Bessai et al.~\citep{DBLP:journals/corr/BessaiDDCd15}
-showed how to type classes and mixins in a BCD-style record calculus with Bracha-Cook's merge operator~\citep{bracha1990mixin}.
-Their merge can only operate on records, and they only study a type assignment system.
-The decidability of BCD subtyping has been shown in several
+which serves as a base for our subtyping relation.
+\citet{DBLP:journals/corr/BessaiDDCd15} show how to type classes and mixins in
+a BCD-style record calculus with a merge-like operator~\citep{bracha1990mixin}
+that only operates on records, and they only study a type assignment system. The
+decidability of BCD subtyping has been shown in several
 works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
-Laurent~\citep{laurent2012intersection} has formalized the relation in Coq in
-order to eliminate transitivity cuts from it, but his formalization does not
-deliver an algorithm. Based on Statman's work~\citep{Statman_2015}, Bessai et
-al.~\citep{bessaiextracting} show a formally verified subtyping algorithm in Coq.
+\citet{laurent2012intersection} formalized the relation in Coq in order to
+eliminate transitivity cuts from it, but his formalization does not deliver an
+algorithm. Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
+\citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
 Our Coq formalization follows a different idea based on Pierce's decision
 procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
 coercions and records. In the course of our mechanization we identified several
@@ -118,34 +128,37 @@ mistakes in Pierce's proofs, as well as some important missing lemmas.
 
 \section{Family Polymorphism}
 
-There has been much work on family polymorphism since Ernst's
+There has been much work on family polymorphism since \citeauthor{Ernst_2001}'s
 original proposal~\citep{Ernst_2001}. Family polymorphism provides an elegant
-solution to the Expression Problem. Although a simple Scala solution does exist without
-requiring family polymorphism (e.g., see Wang and Oliveira~\citep{wang2016expression}), Scala
-does not support nested composition: programmers need to manually compose
-all the classes from multiple extensions. Generally speaking, systems that support
-family polymorphism usually require quite sophisticated mechanisms such as
-dependent types.
+solution to the Expression Problem. Although a simple Scala solution does exist
+without requiring family polymorphism (e.g., see \citet{wang2016expression}), Scala does not support nested composition:
+programmers need to manually compose all the classes from multiple extensions.
+Generally speaking, systems that support family polymorphism can be divided into
+two categories: those that support \textit{object families} and those that
+support \textit{class families}. The original object family approach of
+\textsc{Beta }(e.g., virtual classes~\citep{Madsen_1989}) treats nested classes as
+attributes of objects of the family classes, whereas in class families,
+classes are nested in other classes. The former choice is considered more
+expressive~\citep{ErnstVirtual}, but requires a complex type system usually
+involving dependent types. The object and class family approaches have even been
+combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
 
-% Broadly speaking, systems that support
-% family polymorphism can be divided into two categories: those that support
-% \textit{object families} and those that support \textit{class families}. In
-% object families, classes are nested in objects, whereas in class families,
-% classes are nested in other classes. The former choice is considered more
-% expressive~\citep{ErnstVirtual}, but requires a complex type system usually
-% involving dependent types.
+\paragraph{Object Families.}
 
-%\paragraph{Object Families}
-There are two approaches to family polymorphism: the original \textit{object family}
-approach of Beta (e.g., virtual classes~\citep{Madsen_1989}) treats nested classes
-as attributes of objects of the family classes. Path-dependent types are used to
-ensure type safety for virtual types and virtual classes in the calculus
-\textit{vc}~\citep{ErnstVirtual}. As for conflicts, \textit{vc} follows the
-mixin-style by allowing the rightmost class to take precedence. This is in
-contrast to \namee where conflicts are detected statically and resolved
-explicitly. In the \textit{class family} approach of Concord~\citep{jolly2004simple},
-Jx and J\&~\citep{Nystrom_2004,Nystrom:2006:JNI:1167473.1167476},
-nested classes and types are attributes of the family classes directly.
+Virtual classes~\citep{Madsen_1989} as introduced in
+\textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
+families. However, the virtual class mechanism in \textsc{Beta} is unsound.
+Path-dependent types are used to ensure type safety for virtual types and
+virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinct
+difference from our calculi is that \textit{vc} follows the mixin-style by
+allowing the rightmost class to take precedence. whereas in \namee conflicts are
+detected statically and resolved explicitly.
+
+\paragraph{Class Families.}
+
+Concord~\citep{jolly2004simple}, Jx~\citep{Nystrom_2004} and
+J\&~\citep{Nystrom:2006} follow the class family approach, where nested classes
+and types are attributes of the family classes directly.
 % Unlike virtual classes, subclass and subtype relationships are preserved by inheritance: the
 % overriding class is also a subtype of the class it overrides.
 %Nested inheritance
@@ -153,125 +166,79 @@ nested classes and types are attributes of the family classes directly.
 %easily extended to incorporate parametric polymorphism.
 Jx supports \textit{nested inheritance}, a class family mechanism that allows
 nesting of arbitrary depth. J\& is a language that supports \textit{nested
-  intersection}, building on top of Jx. Similar to \namee, intersection types
-play an important role in J\&, which are used to compose packages/classes.
-Unlike \namee, J\& does not have a merge-like operator. When conflicts arise,
-prefix types can be exploited to resolve the ambiguity.
-J\&$_s$~\citep{Qi:2009:SCF:1542476.1542508} is an extension of the Java language
-that adds class sharing to J\&. Saito et al.~\citep{SAITO_2007} identified a
-minimal, lightweight set of language features to enable family polymorphism,
-% though inheritance relations between nested classes are not preserved by
-% extension.
-Corradi et al.~\citep{Corradi_2012} present a language design that
-integrates modular composition and nesting of Java-like classes. It features a
-set of composition operators that allow to manipulate nested classes at any
-depth level. More recently, a Java-like language called
-Familia~\citep{Zhang_2017} were proposed to combine subtyping polymorphism,
-parametric polymorphism and family polymorphism. The object and class family approaches have even been
-combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
+  intersection}, building on top of Jx. Similar to our calculi, intersection
+types play an important role in J\&, which are used to compose packages/classes.
+However, J\& does not have a merge-like operator. When conflicts arise, prefix
+types can be exploited to resolve the ambiguity. J\&$_s$~\citep{Qi:2009} is an
+extension of the Java language that adds class sharing to J\&.
+\citet{SAITO_2007} identified a minimal, lightweight set of language features to
+enable family polymorphism,
 
-% This % flexibility allows a further bound class to be a subtype of the class it
-% overrides.
+Compared with those systems, which usually focus on getting a relatively complex
+Java-like language with family polymorphism, our work on \namee focuses on a
+minimal calculus that supports nested composition. We have shown that a calculus
+with the merge operator and a variant of BCD subtyping captures the essence of nested
+composition. Moreover \namee enables new insights on the subtyping relations of
+families. Our goal in this thesis is not to support full family polymorphism
+which, besides nested composition, also requires dealing with other features
+such as self types~\citep{bruce95thistype,saito09matching} and mutable state.
+But we expect to investigate those features in the future.
 
-
-% Interestingly, conflicts are distinguished in J\&. If a name was introduced in a
-% common ancestor of the intersected namespaces, it is not considered a conflict.
-% This is somewhat similar to \namee where a value such as $1 :
-% \inter{\mathsf{Nat}}{\mathsf{Nat}}$ is allowed. Otherwise, the name is assumed
-% to refer to distinct members that coincidentally have the same name, then
-% ambiguity occurs, and resolution is required by exploiting prefix type notation.
-
-
-
-
-
-% The original design of virtual
-% classes in BETA is not statically safe.
-% To ensure type safety, virtual classes were formalized using in the calculus \textit{vc}. Due to the introduction
-% of dependent types, their system is rather complex. Subtyping in \textit{vc} is
-% more restrictive, compared to \namee, in that there is no subtyping relationship
-% between classes in the base family and classes in the derived family, nor is there between
-% the base family and the derived family.
-
-
-
-
-
-
-Compared with those systems, which usually focus on getting
-a relatively complex Java-like language with family polymorphism,
-\namee focuses on a minimal calculus that supports
-nested composition. \namee shows that a calculus with the merge
-operator and a variant of BCD captures the
-essence of nested composition. Moreover \namee enables new insights
-on the subtyping relations of families.
- \namee's goal is not to support full family
-polymorphism which, besides nested composition, also requires
-dealing with other features such as
-self types~\citep{bruce95thistype,saito09matching} and mutable state. Supporting these features is not the
-focus of this paper, but we expect to investigate those features in the future.
-
-
-% \bruno{Probably comparison, in this last paragraph, can be improved a
-%   bit. Also perhaps the discussion does not need to be so detailed. }
 
 \section{Typed First-Class Classes/Mixins/Traits}
 
-First-class~\citep{DBLP:conf/aplas/FlattFF06} classes have been used in
-Racket, along with mixin support, and
-have shown great practical value. For example, DrRacket
-IDE~\citep{DBLP:journals/jfp/FindlerCFFKSF02} makes extensive use of layered
-combinations of mixins to implement text editing features. The topic of
-first-class classes with static typing has been explored by Takikawa et
-al.~\citep{DBLP:conf/oopsla/TakikawaSDTF12} in Typed Racket. They designed a
-gradual type system that supports first-class classes. Of particular interest is
-their use of row polymorphism~\citep{wand1994type} to type mixins.
-% For example,
-% \lstinline{modal_mixin} from \cref{sec:overview} implemented in Typed Racket has
-% type:
-% \begin{lstlisting}
-% (All (r / on-key toggle-mode)
-%      (Class ([on-key : (String -> Void)] | r)) ->
-%      (Class ([toggle-mode : (-> Void)] [on-key : (String -> Void)] | r)))
-% \end{lstlisting}
+First-class classes have been used in Racket~\citep{DBLP:conf/aplas/FlattFF06},
+along with mixin support, and have shown great practical value. For example,
+DrRacket IDE~\citep{DBLP:journals/jfp/FindlerCFFKSF02} makes extensive use of
+layered combinations of mixins to implement text editing features. The topic of
+first-class classes with static typing has been explored by
+\citet{DBLP:conf/oopsla/TakikawaSDTF12} in Typed Racket. They designed a gradual
+type system that supports first-class classes. Of particular interest is their
+use of row polymorphism~\citep{wand1994type} to type mixins. For example,
+\lstinline{modal_mixin} from \cref{sec:trait:overview} implemented in Typed
+Racket has type:
+\begin{lstlisting}
+(All (r / on-key toggle-mode)
+     (Class ([on-key : (String -> Void)] | r)) ->
+     (Class ([toggle-mode : (-> Void)] [on-key : (String -> Void)] | r)))
+\end{lstlisting}
 As with our use of disjoint polymorphism, row polymorphism can express
 constraints on the presence or absence of members. Unlike disjoint polymorphism,
-row polymorphism prohibits forgetting class members.
-% While this is reasonable in
-% the setting of mixins, in some cases, a function taking one class as an argument
-% can return another class that has fewer methods.
-For example, in \namee we can write:
+row polymorphism prohibits forgetting class members. While this is reasonable in
+the setting of mixins, in some cases, a function taking one class as an argument
+can return another class that has fewer methods. For example, in \sedel we can write:
 \lstinputlisting[linerange=101-101]{./examples/overview2.sl}% APPLY:linerange=FOO
-where \lstinline{foo} drops \lstinline{bar} from its argument trait \lstinline{t},
-which is impossible to express in Typed Racket. Also as we pointed out in \cref{sec:merge}, row polymorphism
-alone cannot express the \lstinline{merge} function that is able to compose objects of statically unknown types.
-In this sense, we argue disjoint polymorphism is more powerful than row polymorphism in terms of expressivity.
-It would be interesting to investigate the relationship between disjoint polymorphism and row polymorphism. We leave it
-as future work.
+where \lstinline{foo} drops \lstinline{bar} from its argument trait
+\lstinline{t}, which is impossible to express using row polymorphism. As a
+consequence, Typed Racket ends up with two subtyping mechanisms: one for
+first-class classes (via row polymorphism) and the other for objects (via normal
+width subtyping). In contrast, \sedel uses only one mechanism --- disjoint
+polymorphism --- to deal with both. Also as we pointed out in \cref{sec:merge},
+row polymorphism alone cannot express the \lstinline{merge} function that is
+able to compose objects of statically unknown types. In this sense, we argue
+disjoint polymorphism is more powerful than row polymorphism in terms of
+expressiveness. It would be interesting to investigate the relationship between
+disjoint polymorphism and row polymorphism. We leave it as future work.
 
 
-% As a consequence, Typed Racket ends up with two subtyping mechanisms:
-% one for first-class classes (via row polymorphism) and the other for objects (via normal width subtyping). In
-% contrast, \namee uses only one mechanism -- disjoint polymorphism -- to deal with
-% both.
-
-More recently, Lee et al.~\citep{DBLP:conf/ecoop/LeeASP15} proposed a model for typed first-class
-classes based on tagged objects. Like our development, the semantics
-of their source language is defined by a translation into a target language.
-One notable difference to \namee is that they require the use of a variable
-rather than an expression in the \lstinline{extends} clause, whereas we do not
-have this restriction. In their source language, subclasses define subtypes,
-which limits its applicability to extensible designs. Also their target calculus is significantly more complex
-than ours due to the use of dependent function types and dependent sum types. As
-they admitted, they omit inheritance in their formalization.
+More recently, \citet{DBLP:conf/ecoop/LeeASP15} proposed a model for typed
+first-class classes based on tagged objects. Like our development, the semantics
+of their source language is defined by a translation into a target language. One
+notable difference to \sedel is that they require the use of a variable rather
+than an expression in the \lstinline{extends} clause, whereas we do not have
+this restriction. In their source language, subclasses define subtypes, which
+limits its applicability to extensible designs. Also their target calculus is
+significantly more complex than ours due to the use of dependent function types
+and dependent sum types. As they admitted, they omit inheritance in their
+formalization.
 
 Racket also supports a \emph{dynamically-typed model} of first-class
-traits~\citep{DBLP:conf/aplas/FlattFF06}. However, unlike Racket's first-class classes and
-mixins, there's no type system supporting the use of first-class
-traits. A key difficulty is \emph{statically} detecting conflicts.
-% In the mixin model this is not a problem because conflicts are implicitly
-% resolved using the order of composition.
-As far as we know, \namee is the first design for typed first-class traits.
+traits~\citep{DBLP:conf/aplas/FlattFF06}. However, unlike Racket's first-class
+classes and mixins, there is no type system supporting the use of first-class
+traits. A key difficulty is \emph{statically} detecting conflicts. In the mixin
+model this is not a problem because conflicts are implicitly resolved using the
+order of composition. As far as we know, \sedel is the first design for typed
+first-class traits.
 
 
 % There are multiple flavours of inheritance. To avoid confusion, since the same
@@ -377,62 +344,52 @@ As far as we know, \namee is the first design for typed first-class traits.
 
 \section{Mixin-Based Inheritance}
 
-% Mixins have become very popular in many OO languages~\citep{flatt1998classes,bono1999core, ancona2003jam}.
-Bracha and Cook's seminal paper~\citep{bracha1990mixin} extends Modula-3 with
-mixins. Since then, many mixin-based models have been proposed~\citep{flatt1998classes,bono1999core, ancona2003jam}.
-Mixin-based inheritance requires that mixins are composed linearly, and
-as such, conflicts are resolved implicitly. In comparison, the trait
-model in \namee requires conflicts to be resolved explicitly. We want to emphasize
-that conflict detection is essential in expressing composition operators
-for Object Algebras, without running into ambiguities. Bracha's
-Jigsaw~\citep{bracha1992programming} formalized mixin composition, along with a rich
-trait algebra including merge, restrict, select, project, overriding and rename operators.
-Lagorio et al.~\citep{LAGORIO201286} proposed \textsc{FJig} that reformulates Jigsaw constructs
-in a Java-like setting.
-Allen et al.~\citep{DBLP:conf/oopsla/AllenBC03} described how to add first-class generic
-types -- including mixins -- to OO languages with nominal typing.
-As such, classes and mixins, though they enjoy static typing, are still second-class
-constructs, and thus their system cannot express dynamic inheritance. Bessai et
-al.~\citep{DBLP:journals/corr/BessaiDDCd15} showed how to type classes and mixins
-with intersection types and Bracha-Cook's merge operator~\citep{bracha1990mixin}.
-% In contrast to our merge operator, their merge operator can only work for
-% records, thus limiting its expressive power.
+\citeauthor{bracha1990mixin}'s seminal paper~\citep{bracha1990mixin} extends
+Modula-3 with mixins. Since then, many mixin-based models have been
+proposed~\citep{flatt1998classes,bono1999core, ancona2003jam}. Mixin-based
+inheritance requires that mixins are composed linearly, and as such, conflicts
+are resolved implicitly. In comparison, the trait model in \sedel requires
+conflicts to be resolved explicitly. We want to emphasize that conflict
+detection is essential in expressing composition operators for Object Algebras,
+without running into ambiguities. \citeauthor{bracha1992programming}'s Jigsaw
+framework~\citep{bracha1992programming} formalized mixin composition, along with
+a rich trait algebra including merge, restrict, select, project, overriding and
+rename operators. \citet{LAGORIO201286} proposed \textsc{FJig} that reformulates
+Jigsaw constructs in a Java-like setting. \citet{DBLP:conf/oopsla/AllenBC03}
+described how to add first-class generic types --- including mixins --- to OO
+languages with nominal typing. \citet{Corradi_2012} described an extension of
+\textsc{FJig} that integrates modular composition and nesting of Java-like
+classes. It features a set of composition operators that allow to manipulate
+nested classes at any depth level. In all of these systems, classes and mixins,
+though they enjoy static typing, are still second-class constructs, and thus
+their systems cannot express dynamic inheritance.
 
 
 \section{Trait-Based Inheritance}
 
-
-Traits were proposed by Sch{\"a}rli et al.~\citep{scharli2003traits, Ducasse_2006} as a mechanism
-for fine-grained code reuse to overcome many limitations of class-based inheritance. The original proposal
-of traits were implemented in the dynamically-typed class-based language \textsc{Squeak/Smalltalk}.
-Since then various formalizations of traits in a Java-like (statically-typed) setting
-have been proposed~\citep{fisher2004typed,scharli2003traitsformal,chai_trait, JOT:issue_2006_05/article4}.
-% Explicit conflict resolution is the hallmark of trait-based inheritance, compared with
-% mixin-based inheritance.
-In most of the above proposals, trait composition and class-based inheritance live together.
-\namee, in the spirit of \textit{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419}, embraces
-traits as the sole mechanism for code reuse.
-% differs from prior models of (second-class)
-% traits in that they support \emph{classes} in addition to traits, and consider
-% the interaction between them, whereas in \namee the mechanism for code reuse is
-% purely traits.
-The deviation from traditional class-based inheritance is not only
-because of its simplicity, but also because we need a very \emph{dynamic} form
-of inheritance.
-
-% Compared to the traditional trait mode, traits in \namee have the following
-% differences: 1) traditional traits cannot be instantiated but only composed with
-% a class, whereas traits in \namee can be instantiated directly; 2) traditional
-% traits cannot take constructor parameters whereas ours can; 3) the trait system
-% in \namee lacks a proper notation of inheritance relationship. For example in the
-% traditional trait model, if the same method (i.e., from the same trait) is
-% obtained more than once via different paths, there is no conflict. This is not
-% the case in \namee; and 4) traits in \namee support dynamic
-% inheritance.
-%In the
-%traditional trait model, when it comes to inheritance, the traits being
-%inherited must be statically known.
-
+Traits were originally proposed by \citet{scharli2003traits}, and later formalized by ~\cite{Ducasse_2006} as a mechanism
+for fine-grained code reuse to overcome many limitations of class-based
+inheritance. The original proposal of traits were implemented in the
+dynamically-typed class-based language \textsc{Squeak/Smalltalk}. Since then
+various formalizations of traits in a Java-like (statically-typed) setting have
+been proposed~\citep{fisher2004typed,scharli2003traitsformal,chai_trait,
+  JOT:issue_2006_05/article4}. In most of the above proposals, trait composition
+complements class-based inheritance. \sedel, in the spirit of \textit{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419},
+embraces traits as the sole mechanism for code reuse. The deviation from
+traditional class-based inheritance is not only because of its simplicity, but
+also because we need a very \emph{dynamic} form of inheritance. In comparison to
+the traditional trait mode, traits in \sedel have the following differences:
+\begin{inparaenum}[(1)]
+\item traditional traits cannot be instantiated but only composed with a class,
+  whereas traits in \sedel can be instantiated directly;
+\item traditional traits cannot take constructor parameters whereas ours can;
+\item the trait system in \sedel lacks a proper notion of inheritance
+  relationship. For example in the traditional trait model, if the \textit{same}
+  method is obtained more than once via different paths, there is no conflict.
+  This is not the case in \sedel;
+\item and finally traits in \sedel are first-class and support dynamic
+  inheritance.
+\end{inparaenum}
 
 
 
@@ -482,19 +439,21 @@ of inheritance.
 
 \textsc{Self}~\citep{ungar1988self} is a dynamically-typed, prototype-based
 language with a simple and uniform object model. \textsc{Self}'s inheritance
-model is typical of what we call \textit{mutable inheritance}, because an object's parent
-slot may be assigned new values at runtime. Mutable inheritance is rather
-unstructured, and oftentimes access to any clashing methods will generate a
-``messageAmbiguous'' error at runtime. Although \namee's dynamic inheritance is
-not as powerful as mutable inheritance, its static type system can guarantee
-that no such errors occur at runtime. Eiffel~\citep{meyer1987eiffel} supports a
-sophisticated class-based multiple inheritance with deep renaming, exclusion
-and repeated inheritance. Of particular interest is that in Eiffel, name
-collisions are considered programming errors, and ambiguities must be resolved
-explicitly by the programmer (by means of renaming). In this regard, \namee is
-quite like Eiffel. However, the type system in \namee is more lenient in that two
-identically named methods with different signatures can coexist. Grace~\citep{DBLP:journals/jot/NobleBBHJ17, DBLP:conf/ecoop/0002HNB16}
-is an object-based language designed for education, where objects are created by
+model is typical of what we call \textit{mutable inheritance}, because an
+object's parent slot may be assigned new values at runtime. Mutable inheritance
+is rather unstructured, and oftentimes access to any clashing methods will
+generate a ``messageAmbiguous'' error at runtime. Although \sedel's dynamic
+inheritance is not as powerful as mutable inheritance, its static type system
+can guarantee that no such errors occur at runtime.
+Eiffel~\citep{meyer1987eiffel} supports a sophisticated class-based multiple
+inheritance with deep renaming, exclusion and repeated inheritance. Of
+particular interest is that in Eiffel, name collisions are considered
+programming errors, and ambiguities must be resolved explicitly by the
+programmer (by means of renaming). In this regard, \sedel is quite like Eiffel.
+However, the type system in \sedel is more lenient in that two identically named
+methods with different signatures can coexist.
+Grace~\citep{DBLP:journals/jot/NobleBBHJ17, DBLP:conf/ecoop/0002HNB16} is an
+object-based language designed for education, where objects are created by
 \textit{object constructors}.
 % In that regard, Grace is similar to \namee in that
 % both are not class-based.
@@ -507,19 +466,20 @@ inheritance mechanism with various restrictions.
 % generate a new object. As a consequence, the expression after
 % \lstinline{inherit} could not be a variable, which seems to preclude
 % dynamic inheritance.
-Since \namee is pure, a relatively simple
+Since \sedel is pure, a relatively simple
 % delegation-based
 encoding of traits with late binding of \lstinline{self}
 suffices for our applications. Grace's support for multiple inheritance is
-based on so-called \emph{instantiable traits}.
+based on what they call \emph{instantiable traits}.
 % Still the freshness constraint applies.
-We believe that there is plenty to be learned from
-Grace's design of traits if we want to extend our trait model with
-features such as mutable state. \textsc{MetaFJig}~\citep{SERVETTO2014219} (an extension of \textsc{FJig})
-supports \textit{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907, Ducasse_2006},
-a feature for changing the behavior of an object at runtime by replacing one trait for another.
-
-
+We believe that there is plenty to be learned from Grace's design of traits if
+we want to extend our trait model with features such as mutable state.
+\textsc{MetaFJig}~\citep{SERVETTO2014219} (an extension of \textsc{FJig})
+supports \textit{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907,
+  Ducasse_2006}, a feature for changing the behavior of an object at runtime by
+replacing one trait for another. More recently, a Java-like language called
+Familia~\citep{Zhang_2017} were proposed to combine subtyping polymorphism,
+parametric polymorphism and family polymorphism.
 
 
 % There are many other class-based OO languages that are equipped with more
@@ -563,16 +523,16 @@ a feature for changing the behavior of an object at runtime by replacing one tra
 \section{Module Systems}
 
 In parallel to OOP, the ML module system originally proposed by
-MacQueen~\citep{MacQueen_1984} also offers powerful support for flexible program
-construction, data abstraction and code reuse. Mixin modules in the
-Jigsaw framework~\citep{Bracha92modularitymeets} provides a suite of operators
-for adapting and combining modules. The MixML~\citep{Rossberg_2013} module
-system incorporates mixin module composition, while retaining the full
-expressive powerful of ML modules. Module systems usually put more emphasis on
-supporting type abstraction. Support for type abstraction
-adds considerable complexity, which is not needed in \namee. \namee is focused on
-OOP and supports, among others, method overriding, self references and dynamic
-dispatching, which (generally speaking) are all missing features in module systems.
+\citet{MacQueen_1984} also offers powerful support for flexible program
+construction, data abstraction and code reuse. Mixin modules in the Jigsaw
+framework~\citep{Bracha92modularitymeets} provides a suite of operators for
+adapting and combining modules. The MixML~\citep{Rossberg_2013} module system
+incorporates mixin module composition, while retaining the full expressive
+powerful of ML modules. Module systems usually put more emphasis on supporting
+type abstraction. Support for type abstraction adds considerable complexity,
+which is not needed in \sedel. \sedel is focused on OOP and supports, among
+others, method overriding, self references and dynamic dispatching, which
+(generally speaking) are all missing features in module systems.
 % One similarity between MixML and SEDEL is that
 % both use an elaboration approach into a System F-like calculus.
 
