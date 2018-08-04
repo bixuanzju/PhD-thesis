@@ -11,9 +11,9 @@ features.
 \subsection{The Expression Problem, \namee Style}
 
 The \namee calculus allows us to solve the Expression Problem in a way that is
-very similar to \citeauthor{Ernst_2001}'s gbeta solution in \cref{sec:ernst}.
+very similar to \citeauthor{Ernst_2001}'s \textsf{gbeta} solution in \cref{sec:ernst}.
 However, the underlying mechanisms of \namee are quite different from those of
-gbeta. In particular, \namee features a structural type system in which we can
+\textsf{gbeta}. In particular, \namee features a structural type system in which we can
 model objects with records, and object types with record types. For instance, we
 model the interface of \lstinline{Lang.Exp} with the singleton record type
 \lstinline${ print : String }$. For the sake of conciseness, we use \lstinline{type} aliases
@@ -79,8 +79,8 @@ implLang : Lang = { lit = ... } ,, { add = ... };
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Subtyping.}
-A big difference compared to gbeta is that many more \namee types are related through
-subtyping. Indeed, gbeta is unnecessarily conservative~\citep{ernst_hoh}: none of the families is related
+A big difference compared to \textsf{gbeta} is that many more \namee types are related through
+subtyping. Indeed, \textsf{gbeta} is unnecessarily conservative~\citep{ernst_hoh}: none of the families is related
 through subtyping, nor is any of the class members of one family related to any
 of the class members in another family. For instance, \lstinline{LangEval} is
 not a subtype of \lstinline{Lang}, nor is \lstinline{LangNeg.Lit} a subtype
@@ -91,11 +91,11 @@ structure of types. The primary source of subtyping are intersection types:
 any intersection type is a subtype of its components. For instance, 
 \lstinline{IPrint & IEval} is a subtype of both \lstinline{IPrint} and
 \lstinline{IEval}. Similarly \lstinline{LangNeg = Lang & NegPrint} is a subtype
-of \lstinline{Lang}. Compare this to gbeta where \lstinline{LangEval.Expr} is
+of \lstinline{Lang}. Compare this to \textsf{gbeta} where \lstinline{LangEval.Expr} is
 not a subtype of \lstinline{Lang.Expr}, nor is the family \lstinline{LangNeg} a
 subtype of the family \lstinline{Lang}.
 
-However, gbeta and \namee agree that \lstinline{LangEval} is not a subtype of
+However, \textsf{gbeta} and \namee agree that \lstinline{LangEval} is not a subtype of
 \lstinline{Lang}. The \namee-side of this may seem contradictory at first, as we
 have seen that intersection types arise from the use of the merge operator, and
 we have created an implementation for \lstinline{LangEval} with
@@ -119,11 +119,13 @@ of \lstinline{add} is not covariantly refined and thus admitting the subtyping
 is unsound. For the same reason \lstinline{Lang} is not a subtype of \lstinline{LangEval}.
 
 
-\Cref{fig:diagram} shows the various relationships between the language
-components. Admittedly, the figure looks quite complex because our calculus
-features a structural type system (as often more foundational calculi do),
-whereas mainstream OO languages have nominal type systems. This is part of the
-reason why we have so many subtyping relations in \cref{fig:diagram}.
+A summary of the various relationships between the language components is shown
+in \cref{fig:diagram}. Admittedly, the figure looks quite complex because our
+calculus features a structural type system (as often more foundational calculi
+do) where more types are related through subtyping, whereas mainstream OO
+languages have nominal type systems.
+
+
 
 \begin{figure}[t]
   \centering
@@ -134,58 +136,34 @@ reason why we have so many subtyping relations in \cref{fig:diagram}.
 
 
 \paragraph{Stand-Alone Extensions.}
-Unlike in gbeta and other class-based inheritance systems, in \namee
+Unlike in \textsf{gbeta} and other class-based inheritance systems, in \namee
 the extension \lstinline{implEval} is not tied to \lstinline{LangEval}. In that
 sense, it resembles trait and mixin systems that can apply the same extension
 to different classes. However, unlike those systems, \lstinline{implEval} can also
 exist as a value on its own, i.e., it is not an extension per se.
 
 %-------------------------------------------------------------------------------
-\subsection{Disjoint Intersection Types and Ambiguity}
+% \subsection{Disjoint Intersection Types and Ambiguity}
 
-The above example shows that intersection types and the merge operator
-are closely related to multiple
-inheritance. Indeed, they share a major concern with multiple inheritance,
-namely ambiguity. When a subclass inherits an implementation of the same
-method from two different parent classes, it is unclear which of the two
-methods is to be adopted by the subclass. In the case where the two parent classes
-have a common superclass, this is known as the \emph{diamond problem}.
-The ambiguity problem also appears in \namee,
-e.g., if we merge two numbers to obtain $\mer{1}{2}$ of type
-$\inter{\mathsf{Int}}{\mathsf{Int}}$. Is the result of $\mer{1}{2} + 3$
-either $4$ or $5$?
+% The above example shows that intersection types and the merge operator
+% are closely related to multiple
+% inheritance. Indeed, they share a major concern with multiple inheritance,
+% namely ambiguity. When a subclass inherits an implementation of the same
+% method from two different parent classes, it is unclear which of the two
+% methods is to be adopted by the subclass. In the case where the two parent classes
+% have a common superclass, this is known as the \emph{diamond problem}.
+% The ambiguity problem also appears in \namee,
+% e.g., if we merge two numbers to obtain $\mer{1}{2}$ of type
+% $\inter{\mathsf{Int}}{\mathsf{Int}}$. Is the result of $\mer{1}{2} + 3$
+% either $4$ or $5$?
 
-Disjoint intersection types offer to statically detect potential ambiguity and
-to ask the programmer to explicitly resolve the ambiguity by rejecting the
-program in its ambiguous form. In the previous work on \oname, ambiguity is
-avoided by dictating that all intersection types have to be disjoint, i.e.,
-$\inter{\mathsf{Int}}{\mathsf{Int}}$ is ill-formed because the first component
-has the same type as the second.
+% Disjoint intersection types offer to statically detect potential ambiguity and
+% to ask the programmer to explicitly resolve the ambiguity by rejecting the
+% program in its ambiguous form. In the previous work on \oname, ambiguity is
+% avoided by dictating that all intersection types have to be disjoint, i.e.,
+% $\inter{\mathsf{Int}}{\mathsf{Int}}$ is ill-formed because the first component
+% has the same type as the second.
 
-\paragraph{Duplication is Harmless.}
-While requiring that all intersections are disjoint is sufficient to guarantee
-coherence, it is not necessary. In fact,
-such requirement unnecessarily encumbers the subtyping definition with disjointness constraints
-and an ad-hoc treatment of ``top-like'' types. Indeed, the value $\mer{1}{1}$
-of the non-disjoint type $\inter{\mathsf{Int}}{\mathsf{Int}}$ is entirely unambiguous, and
-$(\mer{1}{1}) + 3$ can obviously only result in $4$. More generally, when the
-overlapping components of an intersection type have the same value, there is no
-ambiguity problem. \namee uses this idea to relax \oname's enforcement of
-disjointness. In the case of a merge, it is hard to statically decide whether
-the two arguments have the same value, and thus \namee still requires
-disjointness. This is why in \cref{fig:diagram} we cannot define
-\lstinline{implLangNegEval} by directly composing the two existing implementation
-\lstinline{implLangEval} and \lstinline{implLangNeg}, even though the latter two
-both contain the same \lstinline{implLang}.
-Yet, disjointness is no longer required for the well-formedness
-of types and overlapping intersections can be created implicitly through
-subtyping, which results in duplicating values at runtime. For instance, while
-$\mer{1}{1}$ is not expressible
-$ 1 : \inter{\mathsf{Int}}{\mathsf{Int}}$ creates the equivalent value implicitly.
-% The consequence of this relaxation of disjointness is a much simplified
-% type system for \namee.
-In short, duplication is harmless and subtyping only generates duplicated values
-for non-disjoint types. We shall return to this point in \cref{chap:coherence:simple}.
 
 % Disjoint intersection types ensure unambiguity and conflicts are
 % statically detected and manually resolved by programmers. This

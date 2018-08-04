@@ -33,6 +33,16 @@ find some errors and missing lemmas in \citeauthor{pierce1989decision}'s origina
 %the text can be improved.}
 
 
+\begin{figure}[t]
+  \centering
+  \begin{small}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{prim, and, arr, rcd, top, arrR, rcdR, andROne, andRTwo}
+  \end{small}
+  \caption{Algorithmic subtyping of \namee}
+  \label{fig:algorithm}
+\end{figure}
+
+
 \subsection{The Subtyping Algorithm}
 
 \Cref{fig:algorithm} shows the algorithmic subtyping judgment $[[fs |- A <: B ~~> c]]$.
@@ -52,21 +62,28 @@ For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbre
 The basic idea of $[[fs |- A <: B ~~> c]]$ is to first perform a structural
 analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
 into the right side of $[[->]]$'s (\rref{A-arr}), and into the fields of records
-(\rref{A-rcd}) until it reaches one of the two base cases, $[[nat]]$ or
-$[[Top]]$. If the base case is $[[Top]]$, then the subtyping holds trivially
-(\rref{A-top}). If the base case is $[[nat]]$, the algorithm performs a
-structural analysis of $[[A]]$, in which $[[fs]]$ plays an important role. The
-left sides of $[[->]]$'s are pushed onto $[[fs]]$ as they are encountered in
-$[[B]]$ and popped off again later, left to right, as $[[->]]$'s are encountered
-in $[[A]]$ (\rref{A-arrNat}). Similarly, the labels are pushed onto $[[fs]]$ as
-they are encountered in $[[B]]$ and popped off again later, left to right, as
-records are encountered in $[[A]]$ (\rref{A-rcdNat}). The remaining rules are
-similar to their declarative counterparts. Let us illustrate the algorithm
-with an example
-derivation (for space reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and $[[string]]$ respectively),
-which is essentially the one used by the \lstinline{add} field in \cref{nested:sec:overview}. The
-readers can try to give a corresponding derivation using the declarative
-subtyping and see how \rref{S-trans} plays an essential role there.
+(\rref{A-rcd}) until it reaches one of the two base cases, $[[Top]]$ or $[[  B rigid ]]$.
+If the base case is $[[Top]]$, then the subtyping holds trivially
+(\rref{A-top}). For the other base case, we introduce the notion of \textit{rigid types} --- those that do not have distributivity rules --- captured
+by the predicate $ \rfloor \cdot \lfloor $, and defined as follows:
+\[
+  [[  pri rigid  ]]
+\]
+For now, the only rigid type is the primitive type $[[pri]]$, but will be
+extended when we have more rich types. If the base case is a rigid type, the
+algorithm performs a structural analysis of $[[A]]$, in which $[[fs]]$ plays an
+important role. The left sides of $[[->]]$'s are pushed onto $[[fs]]$ as they
+are encountered in $[[B]]$ and popped off again later, left to right, as
+$[[->]]$'s are encountered in $[[A]]$ (\rref{A-arrR}). Similarly, the labels are
+pushed onto $[[fs]]$ as they are encountered in $[[B]]$ and popped off again
+later, left to right, as records are encountered in $[[A]]$ (\rref{A-rcdR}). The
+remaining rules are similar to their declarative counterparts. Let us illustrate
+the algorithm with an example derivation (for formatting reasons we use $[[N]]$
+and $[[S]]$ to denote $[[nat]]$ and $[[string]]$ respectively, which are both
+rigid types), which is essentially the one used by the \lstinline{add} field in
+\cref{nested:sec:overview}. The readers can try to give a corresponding
+derivation using the declarative subtyping and see how \rref{S-trans} plays an
+essential role there.
 \begin{footnotesize}
 \begin{mathpar}
   \inferrule*[right=\rref*{A-rcd}]
@@ -83,25 +100,27 @@ subtyping and see how \rref{S-trans} plays an essential role there.
 \end{mathpar}
 \end{footnotesize}
 where the sub-derivations $D$ and $D'$ are shown below:
+
 \begin{small}
   \begin{mathpar}
     D =
-\inferrule*[right=\rref*{A-andN1}]
-        { \inferrule*[right=\rref*{A-rcdNat}]
-          { \inferrule*[right=\rref*{A-arrNat}]
-            { \inferrule*{ \vdots } { [[ [] |- N & S <: N]]  }
+\inferrule*[right=\rref*{A-andR1}]
+        { \inferrule*[right=\rref*{A-rcdR}]
+          { \inferrule*[right=\rref*{A-arrR}]
+            { \inferrule*{ [[  [] |- N <: N  ]] } { [[ [] |- N & S <: N]]  }
               \\
               \inferrule* {\vdots} { [[N & S]] \vdash [[N -> N]] \prec : [[N]] }     }
             {[[N & S]] ,[[N & S]] \vdash [[N -> N -> N]] \prec : [[N]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N}]] \prec : [[N]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
 \end{mathpar}
+
 \begin{mathpar}
   D' =
-\inferrule*[right=\rref*{A-andN2}]
-        { \inferrule*[right=\rref*{A-rcdNat}]
-          { \inferrule*[right=\rref*{A-arrNat}]
-            { \inferrule*{ \vdots } { [[ [] |- N & S <: S]]  }
+\inferrule*[right=\rref*{A-andR2}]
+        { \inferrule*[right=\rref*{A-rcdR}]
+          { \inferrule*[right=\rref*{A-arrR}]
+            { \inferrule*{ [[ [] |- S <: S    ]] } { [[ [] |- N & S <: S]]  }
               \\
               \inferrule* {\vdots} { [[N & S]] \vdash [[S -> S]] \prec : [[S]] }     }
             {[[N & S]] ,[[N & S]] \vdash [[S -> S -> S]] \prec : [[S]]} }
@@ -109,16 +128,6 @@ where the sub-derivations $D$ and $D'$ are shown below:
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[S]] }
 \end{mathpar}
 \end{small}
-
-
-\begin{figure}[t]
-  \centering
-  \begin{small}
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{and, arr, rcd, top, arrNat, rcdNat, andNOne, andNTwo, nat}
-  \end{small}
-  \caption{Algorithmic subtyping of \namee}
-  \label{fig:algorithm}
-\end{figure}
 
 
 
@@ -278,7 +287,7 @@ With reflexivity and transitivity in position, we show the main theorem.
   \end{mathpar}
   where he concludes from the inductive
   hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (his rules 6a and 3).
-  However his rule 6a (our \rref{A-arrNat}) only works for \textit{primitive types}, and is thus not applicable in this case. Instead we
+  However his rule 6a (our \rref{A-arrR}) only works for \textit{primitive types}, and is thus not applicable in this case. Instead we
   need a few technical lemmas to support the argument.
 \end{remark}
 

@@ -196,10 +196,10 @@ addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 
 \begin{figure}
   \centering
-  \drules[s]{$[[A <: B ~~> e]]$}{Subtyping}{int, top, arr, and, andl, andr}
+  \drules[Si]{$[[A <: B ~~> e]]$}{Subtyping}{int, top, arr, and, andL, andR}
   \drules[wf]{$[[GG |- A]]$}{Well-formedness of types}{int, top, and, arr}
-  \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, merge}
-  \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{lam, Sub}
+  \drules[Ti]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, merge}
+  \drules[Ti]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
   \caption{Type system of \oname}
   \label{fig:lambdai}
 \end{figure}
@@ -221,10 +221,10 @@ Disjointness judgment is used in the typing rule of merges (\rref{T-merge}) and
 the well-formedness of intersection types (\rref{wf-and}). Now the expression
 $[[1 ,, 2]]$ is not typable because $[[nat]]$ and $[[nat]]$ are not disjoint
 (they have a common supertype $[[nat]]$). To ensure that subtyping produces
-unique coercions, they also employ the notion of \textit{ordinary types} ---
-those which are not intersection types --- and use the judgment ``$[[ A ord ]]$'' in
-\rref{s-andl, s-andr}. Ordinary types and disjointness are sufficient to ensure
-a coherent semantics of a type system without $[[Top]]$.
+unique coercions, they also employ the notion of \textit{ordinary types}~\citep{Davies_2000} --- those which are not intersection types --- and
+use the judgment ``$[[ A ord ]]$'' in \rref{s-andl, s-andr}. Ordinary types and
+disjointness are sufficient to ensure a coherent semantics of a type system
+without $[[Top]]$.
 
 $[[Top]]$ brings extra complication, because \cref{def:disjoint_spec} does not
 hold anymore ($[[Top]]$ is trivially a supertype of every type). To address this

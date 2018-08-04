@@ -136,13 +136,17 @@ As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 \paragraph{Algorithmic subtyping.}
 
 The algorithmic subtyping for \fnamee is a straightforward extension of \namee's
-algorithmic subtyping, because we can treat $[[ \ X ** A . B ]]$ and $[[X]]$
-like $[[nat]]$. \Cref{fig:algo:sub:fi} only shows the extended rules compared
-with \cref{fig:algorithm}.
+algorithmic subtyping. First we need to extend the definition of rigid types to
+include type variables and disjoint quantification:
+\begin{mathpar}
+  [[  X rigid    ]] \and [[  \X ** A . B rigid   ]]
+\end{mathpar}
+\Cref{fig:algo:sub:fi} only shows the extended rules compared with
+\cref{fig:algorithm}.
 
 \begin{figure}
   \centering
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{forall,var,rcdVar,rcdAll,andVarOne,andVarTwo,andAllOne,andAllTwo,arrVar,arrAll}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{forall,var}
   \caption{Algorithmic subtyping of \fnamee (extended rules)}
   \label{fig:algo:sub:fi}
 \end{figure}

@@ -4,14 +4,14 @@
 \label{chap:nested}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This chapter presents \namee, a calculus with disjoint intersection types that
+This chapter presents \namee, a calculus based on \oname~\citep{oliveira2016disjoint} with disjoint intersection types that
 features both BCD-style subtyping and the merge operator, which we believe
-capture the essence of nested composition. We illustrate this by showing a neat
+capture the essence of nested composition. We illustrate this by presenting a
 solution to the Expression Problem based on family polymorphism. We then discuss
 the algorithmic aspects of \namee. The coherence property of \namee is discussed
 in \cref{chap:coherence:simple}.
 
-\section{Introduction}
+\section{Overview}
 
 \namee is a simple calculus with records and disjoint intersection types that
 supports \emph{nested composition}. Nested composition enables encoding simple
@@ -37,7 +37,7 @@ intersection types~\citep{dunfield2014elaborating}, which was the original
 foundation for \oname. A possible reason for this omission in the past is that
 distributivity adds substantial complexity (both algorithmically and
 meta-theoretically), without having any obvious practical applications. This
-thesis shows how to deal with the complications of BCD subtyping, while
+chapter shows how to deal with the complications of BCD subtyping, while
 identifying a major reason to include it in a programming language: BCD enables
 nested composition and subtyping, which is of significant practical interest.
 
@@ -60,17 +60,17 @@ In \namee we remove the brittleness of the previous syntactic method to prove
 coherence, by employing a more semantic proof method based on \emph{logical
   relations}~\citep{tait, plotkin1973lambda, statman1985logical}. This new proof method has several
 advantages. Firstly, with the new proof method, several restrictions that were
-enforced by \oname to enable the syntactic proof method are removed. For example
-the work on \oname has to carefully distinguish between so-called \emph{top-like
-  types} and other types.
+enforced by \oname to enable the syntactic proof are removed. For example
+the work on \oname has to carefully distinguish between \emph{top-like types} and other types.
 %This is necessary because top-like types can be
 %non-disjoint (unlike other types), and yet they need to be allowed in a calculus
 %with top types.
 In \namee this distinction is not necessary; top-like types are handled like all
 other types. Secondly, the method based on logical relations is more powerful
-because it is based on semantic rather than syntactic equality. Finally, the
-removal of the ad-hoc side-conditions makes adding new extensions, such as
-support for BCD-style subtyping, easier.
+because it is based on observational equivalence rather than syntactic equality,
+which is more robust when the type system is extended. Finally, the removal of
+the ad-hoc side-conditions makes adding new extensions, such as support for
+BCD-style subtyping, easier.
 
 
 \input{Sources/Nested/overview.tex}
@@ -83,4 +83,5 @@ support for BCD-style subtyping, easier.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: ../Thesis.bib
 %%% End:

@@ -20,22 +20,22 @@ We also have a new target language with explicit coercions inspired by the coerc
 % with the differences from \oname \hll{highlighted}.
 % \namee is a simple calculus with intersection types, the merge operator
 % and singleton records.
-For brevity of the meta-theoretic study, we do not
-consider primitive operations on integers, or other primitive types.
-They can be easily added to the language, and our prototype implementation is
-indeed equipped with common primitive types and their operations.
-Metavariables $[[A]], [[B]], [[C]]$ range over types. Types include the type of integers
-$[[nat]]$, a top type $[[Top]]$, function types $[[A -> B]]$, intersection types
-$[[A & B]]$, and singleton record types $[[ {l : A} ]]$. Metavariable $[[ee]]$
-ranges over expressions. Expressions include variables $[[x]]$, integers $[[i]]$,
-a canonical top value $[[Top]]$, lambda abstractions $[[\x . ee]]$,
-applications $[[ee1 ee2]]$, merges $[[ee1 ,, ee2]]$, annotated terms $[[ee : A]]$,
-singleton records $[[ {l = ee}]]$, and record selections $[[ee.l ]]$.
+For brevity of the meta-theoretic study, we do not consider primitive operations
+on primitive types. They can be easily added to the language, and our prototype
+implementation is indeed equipped with common primitive types and their
+operations. Metavariables $[[A]], [[B]], [[C]]$ range over types. Types include
+primitive types (e.g., $[[nat]], [[string]]$, denoted by metavariable
+$[[pri]]$), a top type $[[Top]]$, function types $[[A -> B]]$, intersection
+types $[[A & B]]$, and singleton record types $[[ {l : A} ]]$. Metavariable
+$[[ee]]$ ranges over expressions. Expressions include variables $[[x]]$,
+literals $[[i]]$, a canonical top value $[[Top]]$, lambda abstractions $[[\x .
+ee]]$, applications $[[ee1 ee2]]$, merges $[[ee1 ,, ee2]]$, annotated terms
+$[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record selections $[[ee.l]]$.
 
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll}\toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[nat]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[pri]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]  $ \\
   & & $\mid$ & $ [[ { l = ee } ]] \mid [[ee.l]] $ \\
   Typing contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
@@ -95,7 +95,7 @@ for the sake of establishing coherence, the declarative subtyping relation is
 sufficient.
 
 
-\paragraph{Property of Subtyping.}
+\paragraph{Properties of Subtyping.}
 The subtyping relation is vacuously \textit{reflexive} and \textit{transitive}.
 
 
@@ -154,15 +154,19 @@ to continue ignoring the gray-shaded parts until \cref{sec:elaboration}.
 
 \paragraph{Typing Rules and Disjointness.}
 
+The typing rules of \namee are mostly ported from \oname in \cref{fig:lambdai}.
 As with traditional bidirectional type systems, we employ two modes: the
 inference mode ($[[=>]]$) and the checking mode ($[[<=]]$). The inference
 judgment $[[GG |- ee => A]]$ says that we can synthesize a type $[[A]]$ for
-expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee
-<= A]]$ checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The
-disjointness judgment $[[A ** B]]$ used in \rref{T-merge} is shown in
-\cref{fig:disjoint}, which states that the types $[[A]]$ and $[[B]]$ are
-\textit{disjoint}. The intuition of two types being disjoint is
-that their least upper bound is (isomorphic to) $[[Top]]$. The disjointness judgment is
+expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee <= A]]$
+checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The set of
+inference rules of disjointness $[[A ** B]]$ is shown in \cref{fig:disjoint}.
+Note that our set of disjointness rules is different from that in
+\oname~\citep[Figure 10]{oliveira2016disjoint}, where the latter does not have
+\rref{D-topL,D-topR}.
+% The intuition of two types being disjoint is
+% that their least upper bound is (isomorphic to) $[[Top]]$.
+The disjointness judgment is
 important in order to rule out ambiguous expressions such as $\mer{1}{2}$. Most
 of the typing and disjointness rules are standard and are explained in detail in
 previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
@@ -195,9 +199,11 @@ simply-typed call-by-value $\lambda$-calculus extended with products and
 coercions. The syntax of \tname is shown in \cref{fig:target}. The meta-function
 $| \cdot |$ shown in \cref{def:type:translate} transforms \namee types to \tname
 types. It is worth pointing out that we use the erasure semantics to model
-record labels, i.e., labels are erased during elaboration. It is equally fine to
-keep labels in the target. The notation $| \cdot |$ is also overloaded for
-context translation from \namee contexts $[[GG]]$ to \tname contexts $[[gg]]$.
+record labels, i.e., labels are erased during elaboration. (This is different from
+the original publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in the target.)
+% It is equally fine to % keep labels in the target.
+The notation $| \cdot |$ is also overloaded for
+context translation from $[[GG]]$ to $[[gg]]$.
 
 \begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
   \begin{align*}
@@ -325,23 +331,23 @@ to \tname terms.
 \section{Comparison with \oname}
 \label{sec:comparision}
 
-In this section we identify major differences from \oname, which, when
-taken together, yield a simpler and more elegant system. The differences may seem
-superficial, but they have far-reaching impacts on the semantics, especially on
-coherence, our major topic in \cref{chap:coherence:simple}.
+In this section we identify major differences from \oname (cf.
+\cref{fig:lambdai}), which, when taken together, yield a simpler and more
+elegant system. The differences may seem superficial, but they have a strong
+effect on coherence, our major topic in \cref{chap:coherence:simple}.
 
 \paragraph{No Ordinary Types.}
 
 Apart from the extra subtyping rules, there is an important difference from the
-\oname subtyping relation. The subtyping relation of \oname employs an
-auxiliary unary relation called $\mathsf{ordinary}$, which plays a fundamental
-role for ensuring coherence and obtaining an
-algorithm~\citep{Davies_2000}. The \namee calculus discards the notion of
-ordinary types completely; this yields a clean and elegant formulation of the
-subtyping relation. Another minor difference is that due to the addition of the
-transitivity axiom (\rref{S-trans}), \rref{S-andl,S-andr} are simplified: an
-intersection type $[[A & B]]$ is a subtype of both $[[A]]$ and $[[B]]$, instead
-of the more general form $[[ A & B <: C]]$.
+\oname subtyping relation. The subtyping relation of \oname employs an auxiliary
+unary relation ``$[[A ord]]$'' (cf. \rref{Si-andL,Si-andR} in
+\cref{bg:sec:intersection}), which plays a fundamental role for ensuring
+coherence and obtaining an algorithm. The \namee calculus
+discards the notion of ordinary types completely; this yields a clean and
+elegant formulation of the subtyping relation. Another minor difference is that
+due to the addition of the transitivity axiom (\rref{S-trans}),
+\rref{S-andl,S-andr} are simplified: an intersection type $[[A1 & A2]]$ is a
+subtype of both $[[A1]]$ and $[[A2]]$, instead of the more general form $[[ A1 & A2 <: A3]]$.
 
 % \paragraph{Example}
 % The following example shows the derivation tree of the subtyping example
@@ -351,29 +357,29 @@ of the more general form $[[ A & B <: C]]$.
 
 \paragraph{No Top-Like Types.}
 
-There is a notable difference from the coercive subtyping of \oname. Because of
-their syntactic proof method, they have special treatment for coercions of
-\textit{top-like types} in order to retain coherence. For \namee, as
-with ordinary types, we do not need this kind of ad-hoc treatment, thanks to the
-adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
-
-
+Another notable difference from the coercive subtyping of \oname is that,
+because of their syntactic proof method, they have special treatment for
+coercions of \textit{top-like types} in order to retain coherence (see the
+coercion parts in \rref{Si-andL,Si-andR}). For \namee, as with ordinary types, we
+do not need this kind of ad-hoc treatment; top-like types are handled like all
+other types.
+% thanks to the adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
 
 \paragraph{No Well-Formedness Judgment.}
 
 A key difference from the type system of \oname is the complete omission of the
-well-formedness judgment. In \oname, the well-formedness judgment $[[GG |- A]]$
-appears in both \rref{T-abs,T-sub}. The sole purpose of this judgment is
-to enforce that all intersection types are disjoint. However, as
-\cref{chap:coherence:simple} will explain, the syntactic restriction is unnecessary for
-coherence, and merely complicates the type system. The \namee calculus discards
-this well-formedness judgment altogether in favour of a simpler design that is
-still coherent. An important implication is that even without adding BCD subtyping,
-\namee is already more expressive than \oname: an expression such as $1 : [[nat & nat]]$ is accepted in
-\namee but rejected in \oname. This simplification is based on an important
-observation: incoherence can only originate in merges. Therefore disjointness
-checking is only necessary in \rref{T-merge}.
+well-formedness judgment $[[GG |- A]]$, which appears in \rref{Ti-abs} (our
+\rref{T-abs}) and \rref{Ti-sub} (our \rref{T-sub}). The sole purpose of this
+judgment is to enforce that all intersection types are disjoint. However, as
+\cref{chap:coherence:simple} will explain, the syntactic restriction is
+unnecessary for coherence, and merely complicates the type system. Thus \namee
+discards this well-formedness judgment altogether in favour of a simpler design
+that is still coherent. As a consequence, \namee is already more expressive than
+\oname even without adding BCD subtyping: an expression such as $1 : [[nat &
+nat]]$ is accepted in \namee but rejected in \oname. This simplification is
+based on an important observation: incoherence can only originate in merges.
+Therefore disjointness checking is only necessary in \rref{T-merge}.
 
 
 % Local Variables:
