@@ -2,13 +2,15 @@
 \section{Algorithmic Subtyping}
 \label{sec:alg}
 
-This section presents an algorithm that implements the subtyping relation in
-\cref{fig:subtype_decl}. While BCD subtyping is well-known, the
-presence of a transitivity axiom in the rules means that the system is
-not algorithmic. This raises an obvious question: how to obtain an
-algorithm for this subtyping relation? \citet{Laurent12note} has shown that simply dropping
-the transitivity rule from the BCD system is not possible without losing expressivity. Hence, this avenue for
-obtaining an algorithm is not available. 
+This section considers the algorithmic aspects of \namee. The bidirectional type
+system is obviously syntax directed, so the only source of non-determinism comes
+from the subtyping relation. In this section, we present an algorithm that
+implements the subtyping relation. While BCD subtyping is well-known, the
+presence of a transitivity axiom in the rules means that the system is not
+algorithmic. This raises an obvious question: how to obtain an algorithm for
+this subtyping relation? \citet{Laurent12note} has shown that simply dropping
+the transitivity rule from the BCD system is not possible without losing
+expressivity. Hence, this avenue for obtaining an algorithm is not available.
 %Moreover, even if transitivity elimination
 %would be possible, the remaining rules are still highly overlapping, and pose
 %difficulties for an implementation.  
@@ -65,10 +67,14 @@ into the right side of $[[->]]$'s (\rref{A-arr}), and into the fields of records
 (\rref{A-rcd}) until it reaches one of the two base cases, $[[Top]]$ or $[[  B rigid ]]$.
 If the base case is $[[Top]]$, then the subtyping holds trivially
 (\rref{A-top}). For the other base case, we introduce the notion of \textit{rigid types} --- those that do not have distributivity rules --- captured
-by the predicate $ \rfloor \cdot \lfloor $, and defined as follows:
-\[
-  [[  pri rigid  ]]
-\]
+by the predicate ``$ [[A rigid]] $'' over types, and defined as follows:
+
+\begin{definition}[Rigid types]
+  \[
+    [[  pri rigid  ]]
+  \]
+\end{definition}
+
 For now, the only rigid type is the primitive type $[[pri]]$, but will be
 extended when we have more rich types. If the base case is a rigid type, the
 algorithm performs a structural analysis of $[[A]]$, in which $[[fs]]$ plays an
@@ -101,7 +107,7 @@ essential role there.
 \end{footnotesize}
 where the sub-derivations $D$ and $D'$ are shown below:
 
-\begin{small}
+\begin{footnotesize}
   \begin{mathpar}
     D =
 \inferrule*[right=\rref*{A-andR1}]
@@ -109,7 +115,10 @@ where the sub-derivations $D$ and $D'$ are shown below:
           { \inferrule*[right=\rref*{A-arrR}]
             { \inferrule*{ [[  [] |- N <: N  ]] } { [[ [] |- N & S <: N]]  }
               \\
-              \inferrule* {\vdots} { [[N & S]] \vdash [[N -> N]] \prec : [[N]] }     }
+              \inferrule*
+              { \inferrule*{ [[  [] |- N <: N   ]]   }{[[  []   |- N & S <: N   ]]} \\ [[  []  |- N <: N  ]]}
+              { [[N & S]] \vdash [[N -> N]] \prec : [[N]] }
+            }
             {[[N & S]] ,[[N & S]] \vdash [[N -> N -> N]] \prec : [[N]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N}]] \prec : [[N]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
@@ -122,12 +131,12 @@ where the sub-derivations $D$ and $D'$ are shown below:
           { \inferrule*[right=\rref*{A-arrR}]
             { \inferrule*{ [[ [] |- S <: S    ]] } { [[ [] |- N & S <: S]]  }
               \\
-              \inferrule* {\vdots} { [[N & S]] \vdash [[S -> S]] \prec : [[S]] }     }
+              \inferrule* {  \inferrule*{  [[  [] |- S <: S  ]]    }{[[  []  |- N & S <: S    ]]}  \\ [[  [] |- S <: S   ]]     } { [[N & S]] \vdash [[S -> S]] \prec : [[S]] }     }
             {[[N & S]] ,[[N & S]] \vdash [[S -> S -> S]] \prec : [[S]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : S -> S -> S}]] \prec : [[S]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[S]] }
 \end{mathpar}
-\end{small}
+\end{footnotesize}
 
 
 

@@ -31,8 +31,8 @@ calculi or languages with intersection types aimed at programming. For example
 the rules employed in languages that support intersection types (such as Scala,
 TypeScript, Flow or Ceylon) lack distributivity rules. Moreover distributivity
 is also missing from several calculi with a merge operator. This includes all
-calculi with disjoint intersection types~\citep{oliveira2016disjoint,
-  alpuimdisjoint} and \citeauthor{dunfield2014elaborating}'s work on elaborating
+calculi with disjoint intersection types~\citep{oliveira2016disjoint, alpuimdisjoint}
+and \citeauthor{dunfield2014elaborating}'s work on elaborating
 intersection types~\citep{dunfield2014elaborating}, which was the original
 foundation for \oname. A possible reason for this omission in the past is that
 distributivity adds substantial complexity (both algorithmically and
@@ -66,11 +66,12 @@ the work on \oname has to carefully distinguish between \emph{top-like types} an
 %non-disjoint (unlike other types), and yet they need to be allowed in a calculus
 %with top types.
 In \namee this distinction is not necessary; top-like types are handled like all
-other types. Secondly, the method based on logical relations is more powerful
-because it is based on observational equivalence rather than syntactic equality,
-which is more robust when the type system is extended. Finally, the removal of
-the ad-hoc side-conditions makes adding new extensions, such as support for
-BCD-style subtyping, easier.
+other types. Secondly, the new proof method is more powerful because it is based
+on observational equivalence rather than syntactic equality; it is more robust
+when the type system is extended. Finally, the removal of the ad-hoc
+side-conditions makes adding new extensions, such as support for BCD-style
+subtyping, easier. We shall return to this point in
+\cref{chap:coherence:simple}.
 
 
 \input{Sources/Nested/overview.tex}

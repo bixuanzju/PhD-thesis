@@ -74,9 +74,8 @@ derivable from the existing subtyping rules, as shown below:
   {  \inferrule*[right=\rref*{S-arr}]{ [[ A1 <: A1  ]] \\ [[ A2 & A3 <: A2  ]]  }{[[   A1 -> A2 & A3 <: A1 -> A2  ]]} \\
     \inferrule*[right=\rref*{S-arr}]{ [[ A1 <: A1  ]] \\ [[ A2 & A3 <: A3  ]] }{[[ A1 -> A2 & A3 -> A1 -> A3      ]]}  }
   {  [[ A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)  ]]  }
-\end{mathpar}
-\begin{mathpar}
-  \inferrule*[right=\rref*{S-trans}]
+  \and
+    \inferrule*[right=\rref*{S-trans}]
   {  \inferrule*[right=\rref*{S-andl}]{ }{[[ (A1 -> A2) & (A3 -> A2) <: A1 -> A2   ]]} \\
     \inferrule*[right=\rref*{S-arr}]{ [[ A1 & A3 <: A1  ]] \\ [[ A2 <: A2  ]] }{[[ A1 -> A2 <: A1 & A3 -> A2  ]]}  }
   {  [[  (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2  ]]   }
@@ -162,7 +161,7 @@ expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee <
 checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The set of
 inference rules of disjointness $[[A ** B]]$ is shown in \cref{fig:disjoint}.
 Note that our set of disjointness rules is different from that in
-\oname~\citep[Figure 10]{oliveira2016disjoint}, where the latter does not have
+\oname~\citep[Figure 10]{oliveira2016disjoint}; the latter does not have
 \rref{D-topL,D-topR}.
 % The intuition of two types being disjoint is
 % that their least upper bound is (isomorphic to) $[[Top]]$.
@@ -193,17 +192,18 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
   \label{fig:target}
 \end{figure}
 
-The dynamic semantics of \namee is given by elaborating source expressions
-$[[ee]]$ into target terms $[[e]]$. Our target language \tname is the standard
-simply-typed call-by-value $\lambda$-calculus extended with products and
-coercions. The syntax of \tname is shown in \cref{fig:target}. The meta-function
-$| \cdot |$ shown in \cref{def:type:translate} transforms \namee types to \tname
-types. It is worth pointing out that we use the erasure semantics to model
-record labels, i.e., labels are erased during elaboration. (This is different from
-the original publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in the target.)
+We elaborate well-typed source expression $[[ee]]$ into target terms $[[e]]$.
+Our target language \tname is the standard simply-typed call-by-value
+$\lambda$-calculus extended with products and coercions. The syntax of \tname is
+shown in \cref{fig:target}. The meta-function $| \cdot |$ shown in
+\cref{def:type:translate} transforms \namee types to \tname types. It is worth
+pointing out that we use the erasure semantics to model record labels, i.e.,
+labels are erased during elaboration. (This is different from the original
+publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in the
+target.)
 % It is equally fine to % keep labels in the target.
 The notation $| \cdot |$ is also overloaded for
-context translation from $[[GG]]$ to $[[gg]]$.
+translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 
 \begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
   \begin{align*}
@@ -278,10 +278,12 @@ work as well. \Rref{r-app} is the usual $\beta$-rule that performs actual
 computation, and \rref{r-ctxt} handles reduction under an evaluation context. As
 standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
 Now we can show that \tname is type safe:
-\begin{theorem}[Preservation]
+
+\begin{theorem}[Preservation] \label{thm:target_preserve}
   If $[[empty |- e : T]]$ and $[[e --> e']]$, then $[[empty |- e' : T]]$.
 \end{theorem}
-\begin{theorem}[Progress]
+
+\begin{theorem}[Progress] \label{thm:target_progress}
   If $[[empty |- e : T]]$, then either $[[e]]$ is a value, or there exists $[[e']]$ such
   that $[[e --> e']]$.
 \end{theorem}
@@ -289,36 +291,30 @@ Now we can show that \tname is type safe:
 
 \subsection{Elaboration Semantics}
 
-\begin{comment}
-The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the subtyping
-derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that is used to convert a
-term of type $[[ |A| ]]$ to type $[[ |B| ]]$. Each
-subtyping rule has its own specific form of coercion.
-\end{comment}
-We are now in a position to explain the elaboration judgments $[[GG |- ee
-=> A ~~> e]]$ and $[[GG |- ee <= A ~~> e]]$ in \cref{fig:type_system}. The only
+
+We are now in a position to explain the elaboration judgments $[[GG |- ee => A ~~> e]]$
+and $[[GG |- ee <= A ~~> e]]$ in \cref{fig:type_system}. The only
 interesting rule is \rref{T-sub}, which applies the coercion $[[c]]$ produced by
 subtyping to the target term $[[e]]$ to form a coercion application
 $[[c e]]$. All the other rules do straightforward translations between
 source and target expressions.
 
 
-To conclude, we show two lemmas that relate \namee expressions
-to \tname terms.
+To conclude, we show two lemmas that relate source expressions to target terms.
 % (Note that in this and subsequent sections, we only provide
-% a proof sketch for each lemma and theorem. We refer the interested reader
+% proof sketches for each lemma and theorem. We refer the interested reader
 % to our Coq development for the full proofs.)
 
-\begin{lemma}[Coercions preserve types]
+\begin{lemma}[Coercions preserve types]   \label{lemma:sub-correct}
   If $[[A <: B ~~> c]]$, then $[[c |-  |A| tri |B|]]$.
-  \label{lemma:sub-correct}
 \end{lemma}
 \begin{proof}
   By structural induction on the derivation of subtyping.
 \end{proof}
 
 
-\begin{lemma}[Elaboration soundness] We have that:
+\begin{lemma}[Elaboration soundness] \label{thm:elab_safe}
+  We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$, then $|\Gamma| \vdash e : |A| $.
   \item If $[[GG |- ee <= A ~~> e]]$, then $|\Gamma| \vdash e : |A| $.
@@ -327,6 +323,10 @@ to \tname terms.
 \begin{proof}
   By structural induction on the derivation of typing.
 \end{proof}
+
+As a corollary, \namee is type safe due to \cref{thm:target_preserve,thm:target_progress} and \cref{thm:elab_safe}.
+
+
 
 \section{Comparison with \oname}
 \label{sec:comparision}
@@ -375,11 +375,11 @@ judgment is to enforce that all intersection types are disjoint. However, as
 \cref{chap:coherence:simple} will explain, the syntactic restriction is
 unnecessary for coherence, and merely complicates the type system. Thus \namee
 discards this well-formedness judgment altogether in favour of a simpler design
-that is still coherent. As a consequence, \namee is already more expressive than
-\oname even without adding BCD subtyping: an expression such as $1 : [[nat &
-nat]]$ is accepted in \namee but rejected in \oname. This simplification is
-based on an important observation: incoherence can only originate in merges.
-Therefore disjointness checking is only necessary in \rref{T-merge}.
+that is still coherent. As a consequence, \namee already subsumes \oname even
+without adding BCD subtyping: an expression such as $1 : [[nat & nat]]$ is
+accepted in \namee but rejected in \oname. This simplification is based on an
+important observation: incoherence can only originate in merges. Therefore
+disjointness checking is only necessary in \rref{T-merge}.
 
 
 % Local Variables:
