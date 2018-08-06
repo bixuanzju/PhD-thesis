@@ -20,7 +20,7 @@
 \Cref{fig:syntax:fi} shows the syntax of \fnamee. Metavariables $[[A]], [[B]],
 [[C]]$ range over types. Apart from \namee types, \fnamee also includes type
 variables $[[X]]$ and disjoint quantification $[[ \X ** A . B ]]$. Monotypes
-$[[t]]$ are the same, less the universal quantification. Metavariable $[[ee]]$
+$[[t]]$ are the same, minus the universal quantification. Metavariable $[[ee]]$
 ranges over expressions. We extend \namee expressions with two standard
 constructs in System F: type abstractions $[[ \X ** A . ee ]]$ and type
 applications $[[ee A]]$. The former also includes an extra disjointness
@@ -37,38 +37,74 @@ latter track bound type variables $[[X]]$ with their disjointness constraints
 $[[A]]$. This formulation is also convenient for the presentation of logical
 relations in \cref{chap:coherence:poly}.
 
-\begin{figure}
+\begin{figure}[t]
   \centering
   \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
   \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
   \drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
-  \caption{Well-formedness of contexts and types}
+  \caption{Well-formedness of types and contexts}
   \label{fig:well-formedness:fi}
 \end{figure}
 
-\paragraph{Well-formedness of contexts.}
+\paragraph{Well-formedness of types and contexts.}
 
-The well-formedness judgments for contexts and types, as shown in
-\cref{fig:well-formedness:fi} are quite standard. They together ensure that each
-type appearing in the contexts is well-formed in the sense that there are no
-unbound free variables.
+Our well-formedness judgments for types and contexts in
+\cref{fig:well-formedness:fi}, though quite standard in System F, is the key
+difference from \fname. The \fname calculus follows \oname where they add a
+disjointness condition $[[ A ** B ]]$ in \rref{swft-and}. This is crucial for
+them to ensure coherence due to their syntactic proof method, it also
+complicates the metatheory a lot with extra efforts required to show that all
+types in \fname is well-formed. In particular, they only have a weaker version
+of the substitution lemma, shown in \cref{lemma:weaker_lemma}: the general
+substitution lemma as shown in \cref{lemma:general_lemma} does not hold in
+\fname, but holds in \fnamee.
 
+\begin{lemma}[Types are stable under substitution in \fname] \label{lemma:weaker_lemma}
+  If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$ and $\hlmath{[[ DD |- B ** C ]]}$
+  and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
+\end{lemma}
+
+\begin{lemma}[Types are stable under substitution in \fnamee] \label{lemma:general_lemma}
+  If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$
+  and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
+\end{lemma}
+
+
+
+\begin{figure}[t]
+  \centering
+  \begin{drulepar}[S]{$ [[A <: B ~~> c]]  $}{Declarative subtyping}{}
+    \drule{refl}
+    \drule{trans}
+    \drule{top}
+    \drule{rcd}
+    \drule{arr}
+    \drule{andl}
+    \drule{andr}
+    \drule{and}
+    \drule{distArr}
+    \drule{topArr}
+    \drule{distRcd}
+    \drule{topRcd} \and
+    \hlmath{\drule{forall}}
+  \end{drulepar}
+  \caption{Declarative subtyping of \fnamee}
+  \label{fig:subtype_decl:fi}
+\end{figure}
 
 \paragraph{Declarative Subtyping.}
-
 
 
 % \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
 % ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
 % \cref{sec:elaboration:fi}.
-We naturally extend the subtyping rules of \namee in \cref{fig:subtype_decl}
-with only one rule \rref*{S-forall}:
-\[
-  \drule{S-forall}
-\]
-which specifies the subtyping relation between two universal quantifiers. In
-\rref{S-forall}, a universal quantifier is covariant in its body, and
-contravariant in its disjointness constraint. A minor comment is that since
+We naturally extend the subtyping rules of \namee with only one rule
+\rref*{S-forall}, highlighted in \cref{fig:subtype_decl:fi}, which specifies the
+subtyping relation between two universal quantifiers. In \rref{S-forall}, a
+universal quantifier is covariant in its body, and contravariant in its
+disjointness constraint. We also need a new coercion $[[ \ c ]]$ to expression the
+conversion between two polymorphic types.
+A minor comment is that since
 \fnamee features explicit polymorphism, type variables are neutral to subtyping,
 i.e., $[[X <: X]]$, which is already contained in \rref{S-refl}. As with \namee
 subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
@@ -76,7 +112,7 @@ subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
 
 \begin{remark}
   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are
-  well-formed with respect to some type context, resulting in the subtyping
+  well-formed relative to some type context, resulting in the subtyping
   judgment $[[DD |- A <: B]]$. But this is not very important
   for the purpose of presentation, thus we omit contexts.
 \end{remark}
@@ -110,9 +146,10 @@ The new rules are the inferring rules for type abstractions \rref*{FT-tabs} and
 type applications \rref*{FT-tapp}. In \rref{FT-tabs}, the disjointness
 constraint is added to the type context. During a type application in
 \rref{FT-tapp}, the type system checks that the type argument agrees with the
-disjointness constraint. This, together with \rref{FT-merge} are the only two
-rules that use the disjointness checking. Moreover, since \fnamee is
-predicative, we require that the type being instantiated is a monotype.
+disjointness constraint; this is the rule where we diverge from System F and
+\fname, and allow only monotype instantiations ($[[t]]$ rather than $[[A]]$).  We shall return to this point in
+\cref{chap:coherence:poly}. \Rref{FT-merge,FT-tapp} are the
+only two rules that use the disjointness checking.
 
 
 

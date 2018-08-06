@@ -12,7 +12,7 @@
 \end{figure}
 
 
-In this section we present the formal rules of disjointness, as show in
+In this section we present the inference rules of disjointness, as show in
 \cref{fig:disjoint:fi}. The disjointness rules of \fnamee are directly inherited
 from \fname~\citep{alpuimdisjoint}, which consists of two judgments.
 
@@ -37,7 +37,7 @@ sense, we have the following:
 \end{lemma}
 \begin{proof}
   By double induction, first on the subtyping derivation, and then on the
-  type $[[A]]$. In the case for \rref{FS-forall}, we need \cref{lemma:narrow:disjoint}.
+  type $[[A]]$. In the case for \rref{S-forall}, we need \cref{lemma:narrow:disjoint}.
 \end{proof}
 
 \begin{lemma}[Narrowing of disjointness] \label{lemma:narrow:disjoint}
@@ -64,7 +64,7 @@ cannot be instantiated to $[[nat]]$ (among others) and in the second type
 $[[X]]$ cannot be instantiated to $[[char]]$. Therefore for both bodies to be disjoint,
 $[[X]]$ can only be instantiated to types that are disjoint with both $[[nat]]$
 and $[[char]]$. More formally, in \rref{FD-forall}, we add to the context a new
-constraint $[[A1 & A2]]$ by intersecting the two constraints $[[A1]]$ and $[[A2]]$, and check for disjointness in the bodies
+constraint $[[A1 & A2]]$ by intersecting the two constraints $[[A1]]$ and $[[A2]]$, and check for disjointness of the bodies
 under the extended context.
 
 \paragraph{Disjointness axioms.}
@@ -73,7 +73,7 @@ Disjointness axioms $[[ A **a B ]]$  take care of two types with different type 
 except for when one of them is $[[Top]]$, an intersection type or a type
 variable, which are all dealt with by the main judgment.
 
-To conclude this section, we show that disjointness is symmetric:
+To conclude this section, we show that disjointness is also symmetric:
 
 \begin{lemma}[Symmetry of disjointness]
   If $[[ DD |- A ** B  ]]$, then $[[  DD |- B ** A   ]]$.

@@ -167,6 +167,7 @@ DD {{ tex \Delta }} :: 'stctx'  ::=
   | empty       :: ::  empty
   | DD , X ** A :: :: cons
   | | SD |   :: :: trans
+  | [ A / X ] DD :: :: subst
 
 
 %% Expression contexts
@@ -273,7 +274,7 @@ co, c :: 'co_' ::=   {{ com coercion }}
   | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
   | top         :: :: top
   | c1 -> c2    :: :: arr
-  | \ c :: :: forall {{ tex \Lambda [[c]] }}
+  | \ c :: :: forall {{ tex [[c]]_{\forall} }}
   | < c1 , c2 > :: :: pair
   | pp1          :: :: proj1
   | pp2          :: :: proj2

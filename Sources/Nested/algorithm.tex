@@ -37,9 +37,7 @@ find some errors and missing lemmas in \citeauthor{pierce1989decision}'s origina
 
 \begin{figure}[t]
   \centering
-  \begin{small}
   \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{prim, and, arr, rcd, top, arrR, rcdR, andROne, andRTwo}
-  \end{small}
   \caption{Algorithmic subtyping of \namee}
   \label{fig:algorithm}
 \end{figure}
@@ -69,7 +67,7 @@ If the base case is $[[Top]]$, then the subtyping holds trivially
 (\rref{A-top}). For the other base case, we introduce the notion of \textit{rigid types} --- those that do not have distributivity rules --- captured
 by the predicate ``$ [[A rigid]] $'' over types, and defined as follows:
 
-\begin{definition}[Rigid types]
+\begin{definition}[Rigid types] \label{def:rigid}
   \[
     [[  pri rigid  ]]
   \]
@@ -84,13 +82,18 @@ $[[->]]$'s are encountered in $[[A]]$ (\rref{A-arrR}). Similarly, the labels are
 pushed onto $[[fs]]$ as they are encountered in $[[B]]$ and popped off again
 later, left to right, as records are encountered in $[[A]]$ (\rref{A-rcdR}). The
 remaining rules are similar to their declarative counterparts. Let us illustrate
-the algorithm with an example derivation (for formatting reasons we use $[[N]]$
-and $[[S]]$ to denote $[[nat]]$ and $[[string]]$ respectively, which are both
-rigid types), which is essentially the one used by the \lstinline{add} field in
-\cref{nested:sec:overview}. The readers can try to give a corresponding
-derivation using the declarative subtyping and see how \rref{S-trans} plays an
-essential role there.
+the algorithm in \cref{fig:example_deri} with an example derivation (for
+formatting reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and
+$[[string]]$ respectively, which are both rigid types), which is essentially the
+one used by the \lstinline{add} field in \cref{nested:sec:overview}. The readers
+can try to give a corresponding derivation using the declarative subtyping and
+see how \rref{S-trans} plays an essential role there.
+
+
+\begin{figure}[t]
+  \centering
 \begin{footnotesize}
+  \begin{tabular}{l}
 \begin{mathpar}
   \inferrule*[right=\rref*{A-rcd}]
   { \inferrule*[right=\rref*{A-arr}]
@@ -104,12 +107,11 @@ essential role there.
     { \{ [[l]]  \} \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[ N & S -> N & S -> N & S ]]}      }
   {  [[ [] |- {l : N -> N -> N} & {l : S -> S -> S} <: {l : N & S -> N & S -> N & S} ]] }
 \end{mathpar}
-\end{footnotesize}
-where the sub-derivations $D$ and $D'$ are shown below:
 
-\begin{footnotesize}
-  \begin{mathpar}
-    D =
+    \\ \\
+
+    \begin{mathpar}
+      D =
 \inferrule*[right=\rref*{A-andR1}]
         { \inferrule*[right=\rref*{A-rcdR}]
           { \inferrule*[right=\rref*{A-arrR}]
@@ -122,10 +124,12 @@ where the sub-derivations $D$ and $D'$ are shown below:
             {[[N & S]] ,[[N & S]] \vdash [[N -> N -> N]] \prec : [[N]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N}]] \prec : [[N]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[N]] }
-\end{mathpar}
+    \end{mathpar}
 
-\begin{mathpar}
-  D' =
+    \\ \\
+
+    \begin{mathpar}
+          D' =
 \inferrule*[right=\rref*{A-andR2}]
         { \inferrule*[right=\rref*{A-rcdR}]
           { \inferrule*[right=\rref*{A-arrR}]
@@ -135,9 +139,14 @@ where the sub-derivations $D$ and $D'$ are shown below:
             {[[N & S]] ,[[N & S]] \vdash [[S -> S -> S]] \prec : [[S]]} }
           { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : S -> S -> S}]] \prec : [[S]] } }
         { \{ [[l]]  \}, [[N & S]] ,[[N & S]] \vdash [[{l : N -> N -> N} & {l : S -> S -> S} ]] \prec : [[S]] }
-\end{mathpar}
-\end{footnotesize}
 
+      \end{mathpar}
+
+  \end{tabular}
+\end{footnotesize}
+  \caption{Example derivation}
+  \label{fig:example_deri}
+\end{figure}
 
 
 Now consider the coercions. Algorithmic subtyping uses the same set of
@@ -152,7 +161,6 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
 
 \begin{figure}[t]
     \centering
-    \begin{small}
     \begin{subfigure}[b]{0.5\textwidth}
       \begin{align*}
         [[ < [] >1 ]] &=  [[top]] \\
@@ -167,7 +175,6 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
         [[ < A , fs >2 ]] &= [[(id -> < fs >2) o distArr]]
       \end{align*}
     \end{subfigure}
-    \end{small}
     \caption{Meta-functions of coercions}\label{fig:coercion}
 \end{figure}
 
@@ -205,7 +212,7 @@ The following two lemmas connect the declarative subtyping with the meta-functio
 
 The proof of soundness is straightforward.
 \begin{theorem}[Soundness] \label{thm:soundness}
-  If $[[ fs |- A <: B ~~> c]]$ then $[[A]] <: [[fs]] \rightarrow [[B]] [[~~>]] [[c]]$.
+  If $[[ fs |- A <: B ~~> c]]$ then $ [[   A <: fs -> B ~~> c  ]]   $.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of the algorithmic subtyping and applying \cref{lemma:top,lemma:and} where appropriate.
