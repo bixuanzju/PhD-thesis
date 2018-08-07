@@ -23,17 +23,16 @@ While requiring that all intersections are disjoint as in \oname is sufficient
 to guarantee coherence, it is not necessary. In fact, such requirement
 unnecessarily encumbers the subtyping definition with disjointness constraints
 and an ad-hoc treatment of ``top-like'' types. Indeed, the value $[[1 ,, 1]]$ of
-the non-disjoint type $[[ nat & nat ]]$ is entirely
-unambiguous, and $(\mer{1}{1}) + 3$ can obviously only result in $4$. More
-generally, when the overlapping components of an intersection type have the same
-value, there is no ambiguity problem. \namee uses this idea to relax \oname's
-enforcement of disjointness. In the case of a merge, it is hard to statically
-decide whether the two arguments have the same value, and thus \namee still
-requires disjointness. Yet, disjointness is no longer required for the
-well-formedness of types and overlapping intersections can be created implicitly
-through subtyping, which results in duplicating values at runtime. For instance,
-while $[[ 1,, 1]]$ is not expressible $[[ 1 : nat & nat]]$
-creates the equivalent value implicitly.
+the non-disjoint type $[[ nat & nat ]]$ is entirely unambiguous, and
+$(\mer{1}{1}) + 3$ can obviously only result in $4$. More generally, when the
+overlapping components of an intersection type have the same value, there is no
+ambiguity problem. \namee uses this idea to relax \oname's enforcement of
+disjointness. In the case of a merge, it is hard to statically decide whether
+the two arguments have the same value, and thus \namee still requires
+disjointness. Yet, disjointness is no longer required for the well-formedness of
+types and overlapping intersections can be created implicitly through subtyping,
+which results in duplicating values at runtime. For instance, while $[[ 1,, 1]]$
+is not expressible $[[ 1 : nat & nat]]$ creates the equivalent value implicitly.
 % The consequence of this relaxation of disjointness is a much simplified
 % type system for \namee.
 In short, duplication is harmless and subtyping only generates duplicated values
@@ -59,7 +58,7 @@ thus both projections yield the same result.
 For \namee in general, we show coherence by capturing the non-ambiguity
 invariant in a logical relation and showing that it is preserved by the
 operational semantics. A complicating factor is that not one, but two languages
-are involved: the source language \namee and the target language. In order to
+are involved: the source language and the target language. In order to
 deal with the complexity of the elaboration semantics of \namee, we employ
 binary logical relations that are heterogeneous, parameterized by two types; the
 fundamental property is also reformulated to account for bidirectional
@@ -82,19 +81,18 @@ rules such as those in \cref{fig:subtype_decl}.
 
 If we permit ourselves to consider only the syntactic aspects of expressions,
 then very few expressions can be considered equal. The syntactic view also conflicts
-with the intuition that the significance of an expression lies in its
-contribution to the \textit{outcome} of a computation~\citep{Harper_2016}.
+with the intuition that ``the significance of an expression lies in its
+contribution to the \textit{outcome} of a computation''~\citep{Harper_2016}.
 Drawing inspiration from a wide range of literature on contextual
 equivalence~\citep{morris1969lambda}, we want a context-based notion of
 coherence. It is helpful to consider several examples before presenting the
 formal definition of our new semantically-founded notion of coherence.
 
 \begin{example} \label{eg:1}
-The same \namee expression $3$ can be typed $[[nat]]$ in many ways: for instance, by \rref{T-lit}; by
-\rref{T-sub,S-refl}; or by \rref{T-sub,S-trans,S-refl}, resulting in \tname
-terms $3$, $\app{[[id]]}{3}$ and $\app{([[id o id]])}{3}$, respectively. It is apparent
-that these three \tname terms are ``equal'' in the sense that all reduce to the
-same numeral $3$.
+The same \namee expression $1$ can be typed $[[nat]]$ in many ways: for instance, by \rref{T-lit}; by
+\rref{T-sub,S-refl}; or by \rref{T-sub,S-trans,S-refl}, resulting in translations
+$[[1]]$, $[[id 1]]$ and $[[ (id o id) 1 ]]$, respectively. It is apparent
+that these three \tname terms are ``equal'' in the sense that all reduce to the same numeral $[[1]]$.
 \end{example}
 
 \subsection{Expression Contexts and Contextual Equivalence.}
@@ -105,12 +103,12 @@ $[[__]]$ (possibly under some binders) in it. The syntax of \tname expression
 contexts can be found in \cref{fig:contexts}. The only operation of expression
 contexts is \textit{replacement}, which is the process of filling a hole in an
 expression context $[[cc]]$ with an expression $[[e]]$, written $[[ cc{e} ]]$.
-An important difference is that replacement \textit{is not} substitution, that
+An important point is that replacement \textit{is not} substitution, that
 is, the free variables of $[[e]]$ that are exposed by $[[cc]]$ are captured by
 replacement. The static semantics of \tname is extended to expression contexts
 by defining the typing judgment
 \[
-  [[cc : (gg |- T) ~~> (gg' |- T')]]
+  [[cc : (gg |- T) ~> (gg' |- T')]]
 \]
 where $([[gg |- T]])$ indicates the type of the hole. This judgment is
 inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
@@ -137,33 +135,35 @@ the notion of \textit{contextual equivalence}.
 \begin{definition}[\tname Contextual Equivalence] \label{def:cxtx}
   \begin{align*}
     [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
-                                 & \qquad \forall [[cc]].\ [[cc : (gg |- T) ~~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}
+                                 & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{definition}
 
-Regarding \cref{eg:1}, it seems adequate to say that $3$ and
-$\app{[[id]]}{3}$ are contextually equivalent. Does this imply that coherence
-can be based on \cref{def:cxtx}? Unfortunately it cannot, as
-demonstrated by the following example.
+In other words, for all possible experiments ($[[ cc ]]$), the outcome of an
+experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
+($\kleq{[[cc{e1}]]}{[[cc{e2}]]}$), which is an equivalence relation. Regarding
+\cref{eg:1}, it seems adequate to say that $3$ and $\app{[[id]]}{3}$ are
+contextually equivalent. Does this imply that coherence can be based on
+\cref{def:cxtx}? Unfortunately it cannot, as demonstrated by the following
+example.
 
 
 \begin{example} \label{eg:2} It may be counter-intuitive that two \tname terms
   $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ should also be considered equal. To see
-  why, first note that they are both the translations of the same \namee expression:
-  $[[(\x . x) : nat & nat -> nat]]$. What can we do with this lambda
-  abstraction? We can apply it to $1 : [[nat & nat]]$ for example, which leads to
-  two translations $\app{[[(\x . pp1 x)]]}{\pair{1}{1}}$ and $\app{[[(\x . pp2 x)]]}{\pair{1}{1}}$.
-  It is obvious that both reduce to the same numeral $1$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$
-  are definitely not equal according to \cref{def:cxtx}, as one can find a
-  context $\app{[[__]]}{\pair{1}{2}}$ where the two terms reduce to two
-  different numerals.
-  The problem is that
+  why, first note that they are both the translations of the same \namee
+  expression: $[[(\x . x) : nat & nat -> nat]]$. What can we do with this lambda
+  abstraction? We can apply it to $[[1]]$ for example, which leads
+  to two translations $[[  (\x . pp1 x) <1 , 1>  ]]$ and $[[ (\x . pp2 x) <1, 1>  ]]$. It is obvious that both reduce to the same numeral
+  $[[1]]$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ are definitely \textit{not} equal
+  according to \cref{def:cxtx}, as one can find a context
+  $[[ __ <1, 2> ]]$ in which the two terms reduce to two different
+  numerals. The problem is that
   % not every well-typed \tname term
   % can be obtained from a well-typed \namee expression through the
   % elaboration semantics. For example,
-  $\app{[[__]]}{\pair{1}{2}}$ should not be considered because the
-  (non-disjoint) source expression $\mer{1}{2}$ is rejected by the type system
-  of the source calculus \namee and thus never gets elaborated into $\pair{1}{2}$.
+  $[[ __ <1, 2>  ]]$ should not be considered because the
+  (non-disjoint) source expression $[[ 1 ,, 2 ]]$ is rejected by the type system
+  of the source calculus \namee and thus never gets elaborated into $[[ < 1, 2>  ]]$.
 \end{example}
 
 
@@ -185,15 +185,17 @@ We write $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$ to abbreviate the above 4
 different forms. Take $[[CC : (GG => A) ~> (GG' => A') ~~> cc]]$ for example
 (whose typing rules are shown in \cref{fig:ctyp}), it reads that if
 $[[GG |- ee => A]]$, then $[[GG' |- CC{ee} => A']]$. The judgment also generates
-a \tname context $[[cc]]$ so that $[[cc : (|GG| |- |A|) ~~> (|GG'| |- |A'|)]]$
-holds by construction. The full typing rules appear in the appendix. Now we are
+a \tname context $[[cc]]$ so that $[[cc : (|GG| |- |A|) ~> (|GG'| |- |A'|)]]$
+holds by construction. The full typing rules appear in \cref{appendix:lambdai}. Now we are
 ready to refine \cref{def:cxtx}'s contextual equivalence to take into
 consideration both \namee and \tname contexts.
 
 
-\begin{figure}
+\begin{figure}[t]
   \centering
+  \begin{small}
 \drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne}
+  \end{small}
 \caption{\namee context typing (excerpt)}
 \label{fig:ctyp}
 \end{figure}
@@ -203,20 +205,15 @@ consideration both \namee and \tname contexts.
 \begin{definition}[\namee Contextual Equivalence] \label{def:cxtx2}
   \begin{align*}
     [[GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[GG |- ee1 => A ~~> e1]] \land [[GG |- ee2 => A ~~> e2]] \ \land \\
-                                & \qquad \forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => nat) ~~> cc]]   \\
-                                & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}
+                                & \qquad (\forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => nat) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{definition}
 
-
-\begin{remark}
-  That is, two source expressions are contextually equivalent if their
-  translations are equivalent in any source context. For brevity we only
-  consider expressions in the inference mode. Our Coq formalization is complete
-  with two modes.
-\end{remark}
-
-Regarding \cref{eg:2}, a possible \namee context is
+In other words, two source expressions are contextually equivalent if their
+translations are equivalent in all possible source contexts. For brevity we only
+consider expressions in the inference mode. Our Coq formalization is complete
+with two modes.
+Now regarding \cref{eg:2}, a possible \namee context is
 \[
 [[ __ 1 : (empty => nat & nat -> nat) ~> (empty => nat) ~~> __ <1 , 1>]]
 \]
@@ -234,12 +231,12 @@ in the following sense:
   \end{itemize}
 \end{restatable}
 
-That is, coherence is just a special case of
-\cref{def:cxtx2} where we set $[[ee1]]$ and $[[ee2]]$ to be the same source
-expression. % For the same reason as in \cref{def:cxtx2}, we only
-% consider expressions in the inference mode.
-The rest of the chapter is devoted to proving that \cref{thm:coherence}
-holds.
+That is, coherence is just a special case of \cref{def:cxtx2} where we set
+$[[ee1]]$ and $[[ee2]]$ to be the same source expression. At first glance this
+is underwhelming: of course $[[ee]]$ behave the same as itself! The tricky part is
+that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
+itself but all its translations $[[e]]$ that should behave the same!
+The rest of the chapter is devoted to proving the validity of \cref{thm:coherence}.
 
 \section{Logical Relation, Formally Defined}
 
@@ -265,7 +262,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
-  \caption{Logical relation for \namee}
+  \caption{Canonicity for \namee}
   \label{fig:logical}
 \end{figure}
 
@@ -275,43 +272,45 @@ It is worth pausing to ponder what kind of relation we are looking for. % From
 % \cref{eg:2}, it is clear that pairs have a special status in \tname. Indeed they
 % ought to be, since pairs originate from merges or subtyping. Also disjointness
 % on intersection types should correspond to some sort of constraints over pairs.
-The high-level intuition behind the relation is to capture the
-notion of ``coherent'' values. These values are unambiguous in every (source) context. A
-moment of thought leads us to the following observations:
+The high-level intuition behind the relation is to capture the notion of
+``coherent'' values. These values are unambiguous in all possible (source)
+contexts. A moment of thought leads us to the following observations:
 
 \begin{observation}[Disjoint values are unambiguous] \label{ob:1}
 
   The relation should relate values originating from disjoint intersection
   types. Those values are essentially translated from merges, and since
-  \rref{T-merge} ensures disjointness, they are unambiguous. For example, pairs
-  of values of the types $[[nat]]$ and $[[ { l : nat}]]$ are always unambiguous
-  in any source context.
+  \rref{T-merge} ensures disjointness, they are unambiguous. For example, two
+  values of types $[[nat]]$ and $[[ { l : nat}]]$ can always be distinguished by
+  any source context.
 \end{observation}
 
 \begin{observation}[Duplication is unambiguous] \label{ob:2}
 
-  The relation should relate values originating from non-disjoint intersection
+  The relation should also relate values originating from non-disjoint intersection
   types, only if the values are duplicates. This may sound baffling, since the
   whole point of disjointness is to rule out (ambiguous) expressions such as
-  $\mer{1}{2}$. However, $\mer{1}{2}$ never gets elaborated, and the only values
-  corresponding to $[[nat & nat]]$ are those pairs such as $\pair{1}{1}$,
-  $\pair{2}{2}$, etc. Those values are essentially generated from \rref{T-sub}
+  $[[ 1 ,, 2   ]]$. However, $[[ 1,, 2 ]]$ never gets elaborated, and the only values
+  corresponding to $[[nat & nat]]$ are those pairs such as $[[ <1 , 1>   ]]$,
+  $[[ <2 , 2>   ]]$, etc. Those values are essentially generated from \rref{T-sub} by subtyping
   and are also unambiguous.
 \end{observation}
 
-\Cref{fig:logical} defines the logical relation intended to capture
-``coherent'' values based on the above observations. The value relation
-$\valR{[[A]]}{[[B]]}$ relates \textit{closed} values, i.e., well-typed values
-with no free variables. Similarly, the expression relation $\eeR{[[A]]}{[[B]]}$
-relates closed expressions. For succinctness, we write $\valRR{[[A]]}$ to mean
-$\valR{[[A]]}{[[A]]}$, and $\eeRR{[[A]]}$ for $\eeR{[[A]]}{[[A]]}$.
+\paragraph{Canonicity.}
 
-
-\begin{remark}
-  Our logical relation is a family of binary relations over \tname values.
-  indexed by two \namee types. The definition seeks to combine equality checking
-  from traditional (homogeneous) logical relations with disjointness checking.
-\end{remark}
+In order to deal with the complexity of the elaboration semantics, we introduce
+in \cref{fig:logical} what we call \textit{canonicity} to capture ``canonical''
+values based on the above observations. Canonicity is a family of binary
+relations over \tname values that are \textit{heterogeneous}, i.e., indexed by
+two \namee types. Heterogeneity allows us to relate values of different types,
+and in particular values of disjoint types. Canonicity seeks to combine equality
+checking from traditional (homogeneous) logical relations (\cref{ob:2}) with
+disjointness checking (\cref{ob:1}). It consists of two relations. The
+value relation $\valR{[[A]]}{[[B]]}$ relates \textit{closed} values, i.e.,
+well-typed values with no free variables. Similarly, the expression relation
+$\eeR{[[A]]}{[[B]]}$ relates closed expressions. For brevity, we write
+$\valRR{[[A]]}$ to mean $\valR{[[A]]}{[[A]]}$, and $\eeRR{[[A]]}$ for
+$\eeR{[[A]]}{[[A]]}$.
 
 % \begin{remark}
 %   The logical relations resemble those given by Biernacki and
@@ -324,11 +323,14 @@ $\valR{[[A]]}{[[A]]}$, and $\eeRR{[[A]]}$ for $\eeR{[[A]]}{[[A]]}$.
 % \end{remark}
 
 
+
 First let us consider the relation $\valR{[[A]]}{[[B]]}$, which specifies when
 two closed values $[[v1]]$ and $[[v2]]$ are related at the types $[[A]]$ and
 $[[B]]$. The definition for integers and records are straightforward. Two
-integers are related if they are equal. Two values are related at two
-record types of the same label if they are related at the two field types.
+integers are related if they are equal. For records, recall that in
+\cref{sec:elaboration}, record labels are erased during translation. Therefore
+two values are related at two record types of the same label if they are related
+at the two field types.
 
 Functions $[[v1]]$ and $[[v2]]$ are related at the types $[[A1 -> B1]]$ and
 $[[A2 -> B2]]$ if given two arguments $[[v1']]$ and $[[v2']]$ related at the
@@ -344,12 +346,12 @@ coercion application of a function type.
 
 The definition of $\valR{[[A]]}{[[B]]}$ is made more interesting when one of the
 indexed types is an intersection type. In that case, the relation distributes
-over the type constructor $[[&]]$. It is instructive to compare it with product
-types. The traditional way of relating pairs is by relating their components
-pairwise. That is, $[[<v1,v2>]]$ and $[[<v1', v2'>]]$ are related if (1)
-$[[v1]]$ and $[[v1']]$ are related and (2) $[[v2]]$ and $[[v2']]$ are related.
+over the type constructor $[[&]]$. It is instructive to compare the type constructor $[[&]]$ with product
+types $[[*]]$. The traditional way of relating pairs is by relating their components
+pairwise. That is, $[[<v1,v2>]]$ and $[[<v1', v2'>]]$ are related at $[[ A * B  ]]$ if (1)
+$[[v1]]$ and $[[v1']]$ are related at $[[A]]$ and (2) $[[v2]]$ and $[[v2']]$ are related at $[[B]]$.
 According to our definition, we also require that (3) $[[v1]]$ and $[[v2']]$ are
-related and (4) $[[v2]]$ and $[[v1']]$ are related. To see the reason, consider
+related and (4) $[[v2]]$ and $[[v1']]$ are related. To see why this is the case, consider
 whether $(\pair{1}{2}, \pair{1}{2}) \in \valRR{[[nat & nat]]}$. If we regard
 $[[nat & nat]]$ as a normal product type, then these two pairs are related.
 However, as we mentioned, $\pair{1}{2}$ should not be considered as the image of
@@ -357,16 +359,16 @@ some source expression at the type $[[nat & nat]]$, and our definition correctly
 rejects it because $1$ is not equal to $2$, while accepting pairs such as
 $\pair{1}{1}, \pair{2}{2}$, etc.
 
-The acute reader may have noticed the structural similarity between the
-definition and the disjointness rules for intersection types:
+The acute reader may have noticed the structural similarity between the two
+clauses for intersection types and the disjointness rules for intersection types:
 \begin{mathpar}
  \drule{D-andL} \and \drule{D-andR}
 \end{mathpar}
-This is not a coincidence -- we can show that disjointness and the value relation
+This is not a coincidence --- we can show that disjointness and the value relation
 are connected by the following lemma:
 
 \begin{lemma}[Disjoint values are related] \label{lemma:disjoint}
-  If $[[A ** B]]$, $[[  v1 : |A|  ]]$ and
+  If $[[A ** B]]$ and $[[  v1 : |A|  ]]$ and
   $[[  v2 : |B|  ]]$,
   then $[[   (v1, v2) in V ( A ; B  )    ]]$.
 \end{lemma}
@@ -382,8 +384,13 @@ they evaluate to two values $[[v1]]$ and $[[v2]]$ that are related.
 
 \paragraph{Logical Equivalence.}
 
-The logical relation can be lifted to open terms in the usual way. First we
-give the semantic interpretation of typing contexts:
+The logical relation can be lifted to open terms in the usual way. First we give
+the semantic interpretation of typing contexts. A \textit{closing substitution}
+$[[ g ]]$ for the typing context $ [[GG]] = [[x1]] : [[A1]], \dots , [[xn]] :
+[[An]] $ is a finite function assigning closed values
+$[[ v1 ]] : [[ |A1|]], \dots , [[vn]] : [[ |An| ]]$ to $[[ x1 ]] , \dots , [[xn]]$, respectively.
+We write $[[ g(e) ]]$ for the substitution $[  [[v1]], \dots, [[vn]]  / [[x1]], \dots, [[xn]]   ] [[e]]  $.
+The interruption of typing contexts, written $[[  (g1, g2) in GG ]]$ is inductively defined as follows:
 
 \begin{definition}[Interpretation of value contexts]
   \begin{mathpar}
@@ -397,7 +404,7 @@ makes them related:
 \begin{definition}[Logical equivalence]
   \begin{align*}
     [[GG |- e1 == e2 : A ; B]] & \defeq [[|GG| |- e1 : |A|]] \land [[|GG| |- e2 : | B | ]] \ \land \\
-                                 & \qquad \forall [[g1]], [[g2]] .\, [[(g1, g2) in GG ]] \Longrightarrow [[(g1 (e1), g2 (e2))  in E (A ; B) ]]
+                                 & \qquad (\forall [[g1]], [[g2]] .\, [[(g1, g2) in GG ]] \Longrightarrow [[(g1 (e1), g2 (e2))  in E (A ; B) ]])
   \end{align*}
 \end{definition}
 For succinctness, we write $[[GG |- e1 == e2 : A]]$ to mean $[[GG |- e1 == e2 : A ; A]]$.
@@ -482,8 +489,8 @@ We show that logical equivalence is preserved by \namee contexts:
 
 
 Next up is the proof that logical relation is sound with respect to contextual
-equivalence -- that is, if two programs are logically related then they are
-contextually equivalent -- which justifies the use of logical relation for
+equivalence --- that is, if two programs are logically related then they are
+contextually equivalent --- which justifies the use of logical relation for
 proving contextual equivalence of programs.
 
 \begin{theorem}[Soundness w.r.t. Contextual Equivalence] \label{thm:log-sound}

@@ -110,6 +110,7 @@ sty, A, B, C, t :: 'sty_' ::=
   | X            :: :: tvar
   | A -> B       :: :: arrow
   | A & B        :: :: and
+  | A * B  :: :: prod
   | A1 & ... & An               :: :: and2
   | \ X ** A . B :: :: all {{ tex \forall ( [[X]] [[**]] [[A]] ) .\,[[B]] }}
   | \ X . A        :: :: forall   {{ tex \forall [[X]].\,[[A]] }}
@@ -252,6 +253,7 @@ exp, e, v :: 'exp_'     ::=
   | g ( e )       :: :: gsubst
   | p ( e )       :: :: psubst
   | 1 ::  :: one   {{ tex 1  }}
+  | 2 ::  :: two   {{ tex 2  }}
   | EE . e   :: :: Ctx {{ tex [[EE]] [ [[e]] ] }}
   | [ A , e ] :: :: co {{ tex \llbracket [[A]] \rrbracket_{[[e]]} }}
 
@@ -410,7 +412,7 @@ formula :: 'formula_' ::=
   | DD ; GG  |- ee dir A :: :: inferChk2
   | SD ; SG  |- E dir AA :: :: sedel
   | GG |- A :: :: well
-  | cc : ( gg |- T ) ~~> ( gg' |- T' ) :: :: ctxt
+  | cc : ( gg |- T ) ~> ( gg' |- T' ) :: :: ctxt
   | gg |- T :: :: hole
   | GG |- e1 == e2 : A ; B :: :: logeq3 {{ tex [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] ; [[B]] }}
   | DD ; GG  |- e1 == e2 : A ; B :: :: logeq5 {{ tex [[DD]] ; [[GG]] [[|-]] \logeq{[[e1]]}{[[e2]]} : [[A]] ; [[B]] }}
