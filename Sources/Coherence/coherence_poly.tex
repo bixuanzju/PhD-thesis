@@ -7,12 +7,13 @@
 In this chapter, we extend the proof technique introduced in
 \cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly we review
 the parametric logical relation for System F~\citep{reynolds1983types} in
-\cref{sec:para:lr}. We then talk about a failed attempt on naturally extending
-it to deal with disjoint intersection types in \cref{sec:failed:lr}. The technical
-difficulty stems from the interaction between impredicativity and disjointness.
-Finally in \cref{sec:succeed:lr}, we present our (predicative) logical relation
-that is specially crafted to prove coherence for \fnamee, and talk about
-a potential solution to lift the predicativity restriction.
+\cref{sec:para:lr}. We then talk about a failed attempt on a natural extension
+to deal with disjoint intersection types in \cref{sec:failed:lr}. The technical
+difficulty is \textit{well-foundedness}, stemming from the interaction between
+impredicativity and disjointness. Finally in \cref{sec:succeed:lr}, we present
+our (predicative) logical relation that is specially crafted to prove coherence
+for \fnamee, and talk about a potential solution to lift the predicativity
+restriction.
 
 
 \section{Review of the Parametric Logical Relation}
@@ -45,7 +46,7 @@ at its type, which \citet{wadler1989theorems} christened \textit{theorems for fr
 
 Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
-function of the same type -- i.e., all expressions with this type have to be constant
+function of the same type --- i.e., all expressions with this type have to be constant
 functions.
 
 \begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
@@ -62,7 +63,7 @@ and type variables. Intuitively, for two values $[[v1]]$ and $[[v2]]$ of type
 $[[\X . T]]$ to behave the same, their instantiations must behave the same.
 However, because $[[v1]]$ and $[[v2]]$ do not manipulate the values of type
 $[[X]]$, it is not required that they should behave the same at the
-\textit{same} instantiation. Indeed, as we see in \cref{thm:free}, we shall be
+\textit{same} instantiation. Indeed, as we saw in \cref{thm:free}, we shall be
 able to consider \textit{separately} instances of $[[v1]]$ and $[[v2]]$ by types
 $[[T1]]$ and $[[T2]]$, and treat the type variable $[[X]]$ as standing for any
 relation $[[R]]$ between $[[T1]]$ and $[[T2]]$. Now it is apparent that the
@@ -78,54 +79,89 @@ relation associated with $[[X]]$ in the mapping $[[pq]]$.
 
 Based on the parametric logical relation of System F, it is not hard to come up
 with a heterogeneous version, similar to \cref{fig:logical}, but with a
-relational mapping. Below is the definition for functions and intersection types.
+relational mapping.
 \begin{align*}
  [[(v1, v2)  in V(A1 -> B1; A2 -> B2) with pq ]] &\defeq \forall [[(v'1, v'2) in V (A1; A2) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (B1 ; B2) with pq   ]] \\
   [[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) with pq ]]  &\defeq [[ (v1, v3)  in V (A ; C) with pq ]] \land [[ (v2, v3)  in V (B ; C) with pq ]] \\
-  [[( v3 , < v1 , v2 >  )  in V ( C ; A & B  ) with pq ]]  &\defeq [[ (v3, v1)  in V (C ; A) with pq ]] \land [[ (v3, v2)  in V (C ; B) with pq ]]
+  [[( v3 , < v1 , v2 >  )  in V ( C ; A & B  ) with pq ]]  &\defeq [[ (v3, v1)  in V (C ; A) with pq ]] \land [[ (v3, v2)  in V (C ; B) with pq ]] \\
+  [[(v1, v2)  in V(X; X) with pq ]] &\defeq ([[v1]], [[v2]]) \in [[pq]]([[X]])
 \end{align*}
-They do not manipulate $[[pq]]$ and are thus directly ported from
-\cref{fig:logical}. For type abstractions, we follow the definition for System
-F, but also take care of disjointness constraint, as shown below.
+The first three cases do not manipulate $[[pq]]$ and are directly ported from
+\cref{fig:logical}. The case for type variables is directly copied from
+\cref{fig:logical:f}. For type abstractions, we follow the definition for System
+F, but also take care of disjointness constraints, as shown below.
 \begin{align*}
   [[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]] &\defeq \forall [[empty |- C1 ** pq(A1 & A2) ]], [[empty |- C2 ** pq(A1 & A2)]], \\
                                                             & \quad [[R]] \subseteq [[C1]] \times [[C2]]. \\
                                                             & \quad [[ ( v1 |C1|, v2 |C2|) in E (B1 ; B2) with pq[X -> R]    ]]
 \end{align*}
-That is, it quantifies over all types that meet the disjointness constraint. For
-type variables, things become a bit complicated. If we have the same type
-variable, it falls back to the familiar definition for System F.
-\begin{align*}
-  [[(v1, v2)  in V(X; X) with pq ]] &\defeq ([[v1]], [[v2]]) \in [[pq]]([[X]])
-\end{align*}
-But what about when they are different variables, or one is a different type? A
-seemingly innocuous definition is as follows.
+Compared with the one for System F, here we cannot pick arbitrary two types
+except those that respect the disjointness constraints, due to the typing rule
+for type applications (\rref{FT-tapp}). Let us see an example in action to get a
+taste of how this definition works. Suppose $[[e]]$ is any expression
+corresponding to type $[[ \X ** bool . \Y ** X . X & Y -> Y & X ]]$, for any
+integer $[[v1]]$ and character $[[v2]]$, it can be shown that
+\[
+  [[e nat char <v1 , v2> -->> <v2 , v1>   ]]
+\]
+First, we have $[[ (e, e) in E( \X ** bool . \Y ** X . X & Y -> Y & X ) ]]$.
+Choose $\mathsf{R}_1 = \{ ([[v1]], [[v1]]) \}$ and $\mathsf{R}_2 = \{ ([[v2]], [[v2]]) \}$.
+This is allowed because $[[nat]]$ and $[[char]]$ both respect the
+disjointness constraints. Suppose $[[ e nat char -->> v  ]]$ for some $[[v]]$ and we have
+\[
+  [[(v, v) in V (X & Y -> Y & X) with emp[X -> R1][Y -> R2] ]]
+\]
+Note that the input $[[  <v1, v2>  ]]$ is related to itself at $[[ X & Y   ]]$
+\[
+  [[ (<v1, v2>, <v1, v2>) in V (X & Y) with emp[X -> R1][Y -> R2] ]]
+\]
+So the outputs of $[[v]]$ are related at $[[ Y & X ]]$
+\[
+  [[ (v <v1, v2>, v <v1, v2>) in E (Y & X) with emp[X -> R1][Y -> R2] ]]
+\]
+Suppose $[[  v <v1, v2> -->> <v3 , v4>  ]]$, we have
+\[
+  [[ (<v3, v4>, <v3, v4>) in V (Y & X) with emp[X -> R1][Y -> R2] ]]
+\]
+We have $([[v3]], [[v3]]) \in \mathsf{R}_2$ and $([[v4]], [[v4]]) \in \mathsf{R}_1$, which means
+$[[v3]] = [[v2]]$ and $[[v4]] = [[v1]]$. So we have shown
+\[
+  [[ e nat char <v1, v2> -->> v <v1, v2> ]] [[-->>]] [[  <v2, v1>  ]]
+\]
+
+Heterogeneity forces us to consider the case for
+$\valR{[[X]]}{[[A]]}$ where $[[A]] \neq [[X]]$. A seemingly innocuous definition
+is as follows:
 \begin{align*}
   [[(v1, v2)  in V(X; A) with pq ]] &\defeq [[ (v1, v2) in V(pq(X); pq(A)) with emp  ]]
 \end{align*}
-That is, given $[[v1]]$ of type $[[X]]$ and $[[v2]]$ of type $[[A]]$ ($[[A]]
-\neq [[X]]$), they are related at $[[X]]$ and $[[A]]$ if and only if they are
-related at $[[pq(X)]]$ and $[[pq(A)]]$~\footnote{Here we are abusing the
-  notation with the intention that $[[pq(X)]]$ means the assigned type of
-  $[[X]]$ in $[[pq]]$; and $[[pq(A)]]$ means substituting all the variables
-  mentioned in $[[pq]]$ with the corresponding types in $[[A]]$.}. To see why we
-need to get the assigned type of $[[X]]$ in $[[pq]]$, suppose we have an
-expression $[[\ X ** bool . \x . x]]$ of type $[[ \ X ** bool . X & nat -> X & nat ]]$,
-we should expect the following to hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
+That is, given $[[v1]]$ of type $[[X]]$ and $[[v2]]$ of type $[[A]]$, they are
+related at $[[X]]$ and $[[A]]$ if and only if they are related at $[[pq(X)]]$
+and $[[pq(A)]]$.
+% \footnote{Here we are abusing the notation with the intention
+%   that $[[pq(X)]]$ means the assigned type of $[[X]]$ in $[[pq]]$; and
+%   $[[pq(A)]]$ means substituting all the variables mentioned in $[[pq]]$ with
+%   the corresponding types in $[[A]]$.}
+Let us see another example to motivate this definition. Suppose
 \[
-  [[(\ X ** bool . \x . x) nat 1 -->> <1 , 1> ]]
+  [[ee]] = [[\ X ** bool . (\x . x) : X & nat -> X & nat]]
 \]
-According to the definition in question, it boils down to verify the following:
+we should expect the following to
+hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
+\[
+  [[ee nat 1 -->> <1 , 1> ]]
+\]
+It boils down to verifying the following:
 \[
   [[  (1 , 1) in V (X ; nat) with pq  ]]
 \]
-where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. And if we
-replace $[[X]]$ with $[[nat]]$ then the above holds trivially.
+where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. If we
+replace $[[X]]$ with $[[nat]]$ then the above holds obviously.
 
 
-However, the seemingly innocuous definition for type variables has a serious
-issue with impredicativity -- i.e, the relation in question is \textit{not
-  well-founded}. We could pick a bad instantiation to make the relation ``go
+Unfortunately, the seemingly innocuous definition for type variables has a serious
+issue with impredicativity --- in other words, the relation in question is \textit{not well-founded}.
+We could pick a bad instantiation to make the relation ``go
 into a loop''. For example, suppose $[[pq]]$ only contains a mapping from $[[X]]$ to
 $[[\X . \Y . Y]]$, we then have the following infinite chain of equational reasoning:
 \[
@@ -133,17 +169,19 @@ $[[\X . \Y . Y]]$, we then have the following infinite chain of equational reaso
 \]
 The culprit is the polymorphic instantiation $[[\X . \Y . Y]]$, which is larger
 than $[[\Y . Y]]$. This is the exact circumstance where in \cref{fig:logical:f}
-substitution is deliberately avoided in the definition for type abstractions.
+substitution is deliberately avoided for type abstractions.
 
 \section{Predicative Logical Relation}
 \label{sec:succeed:lr}
 
 In light of the fact that substitution in the logical relation seems unavoidable
 in our setting, and that impredicativity conflicts with substitution, we turn
-to, for the lack of a better logical relation, predicativity. On the other hand,
-a predicative system seems to be a reasonable choice in that later we want to
-study implicit polymorphism based on \fnamee, which is briefly discussed in
-\cref{sec:implicit}.
+to, for the lack of a better logical relation, \textit{predicativity}. The
+restriction to predicativity, though reducing the expressiveness in theory, does
+not cost much in practice. Languages based on the Hindley–Milner type
+system~\citep{milner1978theory, hindley1969principal}, such as Haskell and ML,
+have such restriction. We also plan to study a variant of \fnamee with implicit polymorphism,
+as briefly discussed in \cref{sec:implicit}.
 
 \begin{figure}
   \centering
@@ -168,11 +206,12 @@ study implicit polymorphism based on \fnamee, which is briefly discussed in
 Substitution with predicative instantiations does not prevent well-foundedness.
 \Cref{fig:logical:fi} presents the logical relation for \fnamee. We extend the
 logical relation in \cref{fig:logical} with a new clause (highlighted) for
-disjoint quantification. Notice that it quantifies over a \textit{single}
-monotype $[[t]]$, unlike the tradition formulation (see \cref{fig:logical:f}).
-This suffices for our purposes to prove coherence. Also notice that we directly
-substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$ and $[[B2]]$. It can shown that
-the resulting term $[[ [t / X] B1 ]]$ is smaller than $[[ \X ** A1 . B1 ]]$.
+disjoint quantification. Notice that it does not quantify over arbitrary
+relations, which means that our logical relation \textit{does not} imply
+parametricity, and in particular, \cref{thm:free} is impossible to prove using
+our logical relation. However, it suffices for our purposes to prove coherence.
+Also notice that we directly substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$
+and $[[B2]]$. It can be shown that the relation is well-founded.
 
 \begin{lemma}[Well-foundedness]
   The logical relation as defined in \cref{fig:logical:fi} is well-founded.
@@ -194,7 +233,7 @@ the resulting term $[[ [t / X] B1 ]]$ is smaller than $[[ \X ** A1 . B1 ]]$.
 
 Another noticeable thing is that in the value relation $ \valR{[[A]]}{[[B]]} $
 (and $\eeR{[[A]]}{[[B]]} $), we keep the invariant that $[[A]]$ and $[[B]]$
-are closed types. That is why we do not need to consider type variables in the
+are closed types. This is why we do not need to consider type variables in the
 logical relation, which simplifies the proof a lot. We show that the logical
 relation is symmetric.
 
@@ -205,7 +244,7 @@ relation is symmetric.
 \begin{proof}
   Symmetry of \cref{fig:logical} is trivial. For \cref{fig:logical:fi}, the
   proof proceeds by first induction on $ | [[A]] |_{\forall} $ then simultaneous
-  induction the structures of $[[A]]$ and $[[B]]$.
+  induction on the structures of $[[A]]$ and $[[B]]$.
 \end{proof}
 
 \section{Establishing Coherence}
@@ -239,8 +278,8 @@ free type and term variables.
 \begin{definition}[Logical equivalence]
   \begin{align*}
     [[DD ; GG |- e1 == e2 : A ; B]]  & \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
-                                       & \qquad \forall [[p]], [[g1]], [[g2]]. \ ([[p in DD]] \land [[(g1, g2) in GG with p ]]) \\
-                                       &  \qquad \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]]
+                                       & \qquad (\forall [[p]], [[g1]], [[g2]]. \ ([[p in DD]] \land [[(g1, g2) in GG with p ]]) \\
+                                       & \qquad \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]])
   \end{align*}
 \end{definition}
 
@@ -250,8 +289,8 @@ free type and term variables.
 \begin{figure}
   \centering
 \begin{tabular}{llll}\toprule
-  \tnamee contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid [[\ X . cc]]  \mid [[ cc T  ]] \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $ \\
-  \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
+  \tnamee contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid \hlmath{[[\ X . cc]]}  \mid \hlmath{[[ cc T  ]]} \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $ \\
+  \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid \hlmath{[[\ X ** A. CC]]} \mid \hlmath{[[ CC A  ]]} \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
   & & $\mid$ & $[[ { l = CC}  ]]  \mid [[ CC . l]]   $  \\ \bottomrule
 \end{tabular}
   \caption{Expression contexts of \tnamee and \fnamee}
@@ -260,22 +299,23 @@ free type and term variables.
 
 
 To define the contextual equivalence, we must define the expression contexts for
-\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi}. As with before,
-the typing judgment of \fnamee contexts has 4 different forms:
+\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi} (highlighted for
+the differences from \namee contexts). The typing judgment of
+\fnamee contexts has 4 different forms:
 \begin{mathpar}
   [[CC : (DD; GG => A) ~> (DD'; GG' => A') ~~> cc]] \and
   [[CC : (DD; GG <= A) ~> (DD'; GG' => A') ~~> cc]] \and
   [[CC : (DD; GG => A) ~> (DD'; GG' <= A') ~~> cc]] \and
   [[CC : (DD; GG <= A) ~> (DD'; GG' <= A') ~~> cc]]
 \end{mathpar}
-The full typing rules are similar to \cref{fig:ctyp} and appear in the appendix.
+The full typing rules are similar to \cref{fig:ctyp} and appear in \cref{appendix:fi}.
 Now we may give the definition of contextual equivalence for \fname as follows:
 
 \begin{definition}[\fnamee Contextual Equivalence]
   \begin{align*}
     [[DD ; GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
-                                     & \qquad \forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]   \\
-                                     & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]}
+                                     & \qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]   \\
+                                     & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{definition}
 
@@ -345,11 +385,13 @@ Finally \fnamee is coherent.
 
 \paragraph{Final remarks.}
 
-It would be interesting to study parametricity of \fnamee. Firstly logical
-relation as defined in \cref{fig:logical:fi} is not powerful enough, as it does
-not quantify any relation over values. So \cref{thm:free} is impossible to
-prove using our logical relation. Secondly, as we have seen, it is not obvious
-how to extend the parametric logical relation as defined in \cref{fig:logical:f}
-to account for disjointness, and avoid potential circularity due to
-impredicativity. A possible solution is to use step-indexed logical relations.
-We have yet investigated further on that direction.
+It would be interesting to study parametricity of \fnamee. As we have seen, it
+is not obvious how to extend the parametric logical relation as defined in
+\cref{fig:logical:f} to account for disjointness, and avoid potential
+circularity due to impredicativity. A possible solution is to use step-indexed
+logical relations. We have yet investigated further on that direction.
+
+% Local Variables:
+% TeX-master: "../../Thesis"
+% org-ref-default-bibliography: ../../Thesis.bib
+% End:

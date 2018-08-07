@@ -425,9 +425,12 @@ formula :: 'formula_' ::=
   | ( v1 , v2 ) in V ( A ; B ) with pq :: :: value4 {{ tex ( [[v1]] , [[v2]] ) \in \valR{[[A]]}{[[B]]}_{[[pq]]} }}
   | ( v1 , v2 ) in V ( A  ) :: :: value {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[A]]} }}
   | ( v1 , v2 ) in V ( T  ) with pq :: :: value3 {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[T]]}_{[[pq]]} }}
+  | ( v1 , v2 ) in V ( A  ) with pq :: :: valuee {{ tex ( [[v1]] , [[v2]] ) \in \valRR{[[A]]}_{[[pq]]} }}
   | ( e1 , e2 ) in E ( A ; B ) :: :: term2 {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[A]]}{[[B]]} }}
   | ( e1 , e2 ) in E ( A ; B ) with pq :: :: term4 {{ tex ( [[e1]] , [[e2]] ) \in \eeR{[[A]]}{[[B]]}_{[[pq]]} }}
   | ( e1 , e2 ) in E ( T  ) with pq :: :: term3 {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[T]]}_{[[pq]]}    }}
+  | ( e1 , e2 ) in E ( A  ) :: :: termm {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[A]]}   }}
+  | ( e1 , e2 ) in E ( A  ) with pq :: :: termmm {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[A]]}_{[[pq]]}   }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
   | ee : A :: :: types
