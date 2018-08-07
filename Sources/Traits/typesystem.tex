@@ -4,13 +4,15 @@
 \section{Formalizing Typed First-Class Traits}
 \label{sec:trait:typesystem}
 
-This section presents the syntax and semantics of \sedel. In particular,
-we show how to elaborate high-level source language constructs (self-references, abstract methods, first-class traits, dynamic inheritance, etc.)
-to \fnamee. The treatment of the self-reference and dynamic dispatching is
-inspired by \citeauthor{cook1989denotational}'s work on the denotational semantics for
+This section presents the syntax and semantics of \sedel. In particular, we show
+how to elaborate high-level source language constructs (self-references,
+abstract methods, first-class traits, dynamic inheritance, etc.) to \fnamee. The
+treatment of the self-reference and dynamic dispatching is inspired by
+\citeauthor{cook1989denotational}'s work on the denotational semantics for
 inheritance~\citep{cook1989denotational}. We then prove the elaboration is type
 safe, i.e., well-typed \sedel expressions are translated to well-typed \fnamee
-terms. Finally we show that \sedel is coherent. Full proofs can be found in the appendix.
+terms. Finally we show that \sedel is coherent. All manual proofs about \sedel
+can be found in \cref{appendix:proofs}.
 
 \subsection{Syntax}
 
@@ -18,7 +20,7 @@ terms. Finally we show that \sedel is coherent. Full proofs can be found in the 
 \centering
 \begin{small}
 \begin{tabular}{lrcl}
-  Types  & $[[AA]], [[BB]], [[CT]]$ & $\Coloneqq$ & $[[Top]] \mid [[nat]] \mid [[AA -> BB]] \mid [[AA & BB]] \mid  [[{ l : AA }]] \mid [[X]] \mid [[\ X ** AA  . BB]] \mid \hlmath{[[ Trait[AA,BB] ]]}$ \\
+  Types  & $[[AA]], [[BB]], [[CT]]$ & $\Coloneqq$ & $[[Top]] \mid [[pri]] \mid [[AA -> BB]] \mid [[AA & BB]] \mid  [[{ l : AA }]] \mid [[X]] \mid [[\ X ** AA  . BB]] \mid \hlmath{[[ Trait[AA,BB] ]]}$ \\
   Expressions & $[[E]]$ & $\Coloneqq$ & $[[Top]] \mid [[ii]] \mid [[x]] \mid [[\ x . E]] \mid [[E1 E2]] \mid [[\ X ** AA  . E]] \mid [[E AA]] \mid [[E1 ,, E2]] \mid [[E : AA]] $ \\
          & & $\mid$ & $[[{ l = E }]] \mid [[E . l]] \mid [[letrec x : AA = E1 in E2]] \mid \hlmath{[[new [ AA ] (</ Ei // i />) ]]} \mid \hlmath{[[E1 ^ E2]]} $ \\
          & & $\mid$ & $\hlmath{[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA ]]}$ \\
@@ -43,7 +45,7 @@ consider definitions, which can be added in standard ways.
 
 \paragraph{Types.}
 Metavariables $[[AA]]$, $[[BB]]$, $[[CT]]$ range over types. Types include a top
-type $[[Top]]$, type of integers $[[nat]]$, function types $[[AA -> BB]]$, intersection types $[[AA & BB]]$,
+type $[[Top]]$, primitive types $[[pri]]$, function types $[[AA -> BB]]$, intersection types $[[AA & BB]]$,
 singleton record types $[[{l : AA}]]$,  type variables $[[X]]$ and disjoint
 (universal) quantification $[[\ X ** A . B]]$. The main
 novelty is the type of first-class traits $[[ Trait[AA, BB] ]]$, which expresses
@@ -59,10 +61,12 @@ $[[E.l]]$, recursive let bindings $[[letrec x : AA = E1 in E2]]$, disjoint type
 abstraction $[[\ X ** AA . E]]$ and type application $[[E AA]]$.
 The calculus also supports a merge construct $[[E1 ,, E2]]$ for creating values of intersection
 types and annotated expressions $[[E : AA]]$. We also include a canonical top
-value $[[Top]]$ and integer literals $[[ii]]$.
+value $[[Top]]$ and literals $[[ii]]$.
 
 \paragraph{First-class traits and trait expressions.}
-The central construct of \sedel is the trait
+
+Using the vector notation $\overline{[[E]]}$ to indicate a sequence of zero or more $[[E]]$ (i.e., $[[E1]], \dots, [[En]]$),
+the central construct of \sedel is the trait
 expression $[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA]]$,
 which specifies a (possibly empty) list
 of trait expressions $\overline{[[Ei]]}$ in the \lstinline{inherits} clause, an explicit
@@ -82,33 +86,30 @@ expressions are syntactic sugar for merges of single-field records.
 
 \subsection{Semantics}
 
+\paragraph{Subtyping and Well-formedness.}
+
+\Cref{fig:trait:typesystem} shows the well-formedness and subtyping rules for
+\sedel. The well-formedness rule (\rref{WF-trait}) for trait types is straightforward. The
+subtyping rule for trait types (\rref{TS-trait}) resembles the one for function
+types in that it is contravariant on the first type $[[AA]]$ and covariant on
+the second type $[[BB]]$. The rest of the rules are direct analogies of \fnamee.
+
 \begin{figure}[t]
   \centering
-  \begin{mathpar}
-    \drule{TS-trait} \and
-    \drule{WF-trait}
-  \end{mathpar}
-  \caption{Subtyping and well-formedness of \sedel (excerpt)}
+  \begin{small}
+  \drules[WF]{$[[ SD |- AA   ]]$}{Well-formedness of types}{top,int,arr,rcd,var,and,forall,trait}
+  \drules[TS]{$[[  AA <: BB  ]]$}{Subtyping}{refl, trans, top, rcd, arr, andL, andR, and, distArr, topArr, distRcd, topRcd, trait}
+  \end{small}
+  \caption{Well-formedness and subtyping of \sedel}
   \label{fig:trait:typesystem}
 \end{figure}
 
 
-\paragraph{Subtyping and Well-formedness.}
-
-\Cref{fig:trait:typesystem} shows the most relevant subtyping and well-formedness
-rules for \sedel. Omitted rules are standard and can be found in the appendix.
-The subtyping rule for trait types (\rref{TS-trait}) resembles the one for function
-types in that it is contravariant on the first type $[[AA]]$
-and covariant on the second type $[[BB]]$. The well-formedness rule for trait
-types is straightforward.
-
-\begin{figure}[t]
+\begin{figure}
   \centering
-\begin{small}
-  \drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{trait, traitArrOne, traitArrTwo, ax}
-  \drules[SDax]{$[[ AA **a BB ]]$}{Disjointness axiom}{intTrait, traitForall, traitRec}
-\end{small}
-\caption{Disjointness rules of \sedel (excerpt)}
+  \drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall, trait, traitArrOne, traitArrTwo, ax}
+  \drules[SDax]{$[[ AA **a BB ]]$}{Disjointness axiom}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd, intTrait, traitAll, traitRcd}
+\caption{Disjointness rules of \sedel}
   \label{fig:disjoint:sedel}
 \end{figure}
 
@@ -131,34 +132,24 @@ with function types.
 % These rules capture the notion that any two types are disjoint unless one of
 % them is an intersection types, a type variable or $[[top]]$.
 
-\begin{figure}[t]
+\begin{figure}
   \centering
   \begin{small}
-  \drules[ST]{$[[ SD ; SG  |- E => AA ~~> ee]]$}{Infer}{trait,traitSuper,new,forward}
+  \drules[ST]{$[[ SD ; SG  |- E => AA ~~> ee]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj, trait,new,forward}
+  \drules[ST]{$[[ SD ; SG  |- E <= AA ~~> ee]]$}{Checking}{abs,sub}
   \end{small}
-  \caption{Typing of \sedel (excerpt)}
+  \caption{Typing rules of \sedel}
   \label{fig:type}
 \end{figure}
 
 \paragraph{Typing Traits.}
 
-The typing rules of trait related constructs are shown in \cref{fig:type}. The full set of rules can be found in the appendix.
+The typing rules of trait related constructs are shown in \cref{fig:type}.
 The reader is advised to ignore the translation parts ($[[~~>]] [[ee]]$) for now.
 As with \fnamee, \sedel employs two modes: the inference mode
 ($[[=>]]$) and the checking mode ($[[<=]]$). The inference judgment $[[ SD ; SG |- E => AA]]$
 says that we can synthesize a type $[[AA]]$ for expression $[[E]]$.
 The checking judgment $[[SD; SG |- E <= AA]]$ checks $[[E]]$ against $[[AA]]$.
-% One representative of inference rules is
-% \begin{mathpar}
-%  \drule{st-merge}
-% \end{mathpar}
-% which says that a merge of two expressions is valid only if their types are disjoint. This is the underlying
-% mechanism for conflict detection. One representative of checking rules is
-% \begin{mathpar}
-%  \drule{ST-sub}
-% \end{mathpar}
-% typically known as the subsumption rule,
-% where subtyping is used to coerce expressions of one type to another.
 
 
 To type-check a trait (\rref{ST-trait}) we first type-check if its inherited
@@ -170,11 +161,7 @@ ensures that we do not have conflicting methods (in inherited traits and the
 body). The subtyping judgments $\overline{[[BB <: BBi]]}$ ensure that the
 $[[self]]$ parameter satisfies the requirements imposed by each inherited trait.
 Finally the subtyping judgment $[[CT1 & .. & CTn & CT <: AA]]$ sanity-checks
-that the assigned type $[[AA]]$ is compatible. We also include a variant
-(\rref{ST-traitSuper}) of \rref{Inf-trait} where it implicitly assumes a
-$[[super]]$ variable pointing to the \lstinline{inherits} clause in the
-context when type checking the trait body.
-
+that the assigned type $[[AA]]$ is compatible.
 
 Trait instantiation (\rref{ST-new}) requires that each instantiated trait is valid.
 There are also several side-conditions, which serve the same
@@ -184,22 +171,27 @@ $[[E2]]$ must satisfy the requirement of $[[E1]]$.
 
 
 
-\paragraph{Treatments of Exclusion and Override.}
+\paragraph{Treatments of Super, Exclusion and Override.}
 
-One may have noticed that in \cref{fig:sedel_syntax} we did not include the
-exclusion operator in the core \sedel syntax, neither do \lstinline{super} and
-\lstinline{override} appear. The reason is that in principle all
-uses of the exclusion operator can be replaced by type annotations. For example
-to exclude a \lstinline{bar} field from \lstinline${foo = a, bar = b, baz = c}$,
-all we need is to annotate the record with type \lstinline${foo : A, baz : C}$
-(suppose \lstinline{a} has type \lstinline{A}, etc). By the subsumption rule, the resulting
-record is guaranteed to contain no \lstinline{bar} field. In the same vein,
-the use of \lstinline{override} can be explained using the exclusion operator.
-We omit all of these features in the meta-theoretic study in order to focus our attention on
-the essence of first-class traits.
-However in practice, this is rather inconvenient as we need to write down
-all types we wish to retain rather than the one to exclude. So in our
-implementation we offer all of them.
+We also include a variant (\rref{ST-traitSuper}) of \rref{ST-trait} where it
+implicitly assumes a $[[super]]$ variable pointing to the \lstinline{inherits}
+clause in the context when type checking the trait body.
+\[
+  \drule{ST-traitSuper}
+\]
+One may have also noticed that in \cref{fig:sedel_syntax} we did not include the
+exclusion operator in the core \sedel syntax, neither does \lstinline{override}
+appear. The reason is that in principle all uses of the exclusion operator can
+be replaced by type annotations. For example to exclude a \lstinline{bar} field
+from \lstinline${foo = a, bar = b, baz = c}$, all we need is to annotate the
+record with type \lstinline${foo : A, baz : C}$ (suppose \lstinline{a} has type
+\lstinline{A}, etc). By the subsumption rule, the resulting record is guaranteed
+to contain no \lstinline{bar} field. In the same vein, the use of
+\lstinline{override} can be explained using the exclusion operator. We omit all
+of these features in the meta-theoretic study in order to focus our attention on
+the essence of first-class traits. However in practice, this is rather
+inconvenient as we need to write down all types we wish to retain rather than
+the one to exclude. So in our implementation we offer all of them.
 
 \paragraph{Elaboration.}
 
@@ -216,7 +208,7 @@ In essence a trait corresponds to what \citet{cook1989denotational} call a \emph
 of the inherited traits (i.e., $\overline{[[eei]]}$) are each applied to
 $[[self]]$ and then merged with the translation of the trait body $[[ee]]$. Now
 it is clear why we require $[[BB]]$ (the type of $[[self]]$) to be a subtype of each
-$[[BBi]]$ (the requirement of each inherited trait). Note that we abuse the bar
+$[[BBi]]$ (the requirement of each inherited trait). Note that we abuse the vector
 notation here with the intention that $[[</ (eei self) // i IN 1..n />]]$ means
 $[[ee1 self ,, .. ,, een self]]$.
 Here is an example of translating the \lstinline{ide_editor} trait from \cref{sec:trait:overview} into

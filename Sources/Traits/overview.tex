@@ -64,7 +64,7 @@ is instantiated). % Typically an
 % defined.
 Secondly, notice that there is no definition of
 the \lstinline{version} method in the class body, but such method is used inside the
-\lstinline{showHelp} method. In a untyped language, such as JavaScript, using
+\lstinline{showHelp} method. In an untyped language, such as JavaScript, using
 undefined methods is error prone -- accidentally instantiating \lstinline{Editor}
 and then calling \lstinline{showHelp} will cause a runtime error!
 Statically-typed languages usually provide some means to protect us from this
@@ -115,6 +115,9 @@ const spellMixin = Base => {
   }
 };
 \end{lstlisting}
+
+\paragraph{Dynamic Inheritance.}
+
 In JavaScript, a mixin is simply a function with a superclass as input and a
 subclass extending that superclass as an output. Concretely, \lstinline{spellMixin}
 adds a method \lstinline{check} for spell checking. It also provides
@@ -153,7 +156,7 @@ composition.
 
 
 \paragraph{Mixin Composition and Conflicts.}
-The real power of mixins is that \lstinline{spellMixin}'s functionality is not
+The powerful part of mixins is that \lstinline{spellMixin}'s functionality is not
 tied to a particular class hierarchy and is composable with other features. For
 example, we can define another mixin that adds simple modal editing -- as in Vim
 -- to an arbitrary editor:
@@ -284,17 +287,17 @@ self type annotations~\citep{odersky2004overview}) where we can give a type anno
 \lstinputlisting[linerange=10-17]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
 For the sake of conciseness, \sedel uses \lstinline{type} aliases to abbreviate types.
 
-\paragraph{Self-Types Encode Abstract Methods.}
+\paragraph{Type of \lstinline{self} Encodes Abstract Methods.}
 Recall that in the JavaScript class \lstinline{Editor}, the \lstinline{version}
 method is undefined, but is used inside \lstinline{showHelp}. How can we express
-this in the typed setting, if not with an abstract method? In \sedel, self-types
-play the role of trait requirements. As the first approximation, we
+this in the typed setting, if not with an abstract method? In \sedel, the type of \lstinline{self}
+plays the role of trait requirements. As the first approximation, we
 can justify the use of \lstinline{self.version} by noticing that (part of) the
 type of \lstinline{self} (i.e., \lstinline{Version}) contains the declaration of
 \lstinline{version}. An interesting aspect of \sedel's trait model is that there
 is no need for abstract methods. Instead, abstract methods can be simulated as
 requirements of a trait. Later, when the trait is composed with other
-traits, \emph{all} requirements on the self-types must be
+traits, \emph{all} requirements on the type of \lstinline{self} must be
 satisfied and one of the traits in the composition must provide an
 implementation of the method \lstinline{version}.
 %to this point in \cref{sec:traits}.
@@ -328,8 +331,8 @@ We discuss these in the following.
 
 \paragraph{Disjoint Polymorphism and Conflict Detection.}
 
-\sedel uses a type system based on \emph{disjoint intersection types}~\citep{oliveira2016disjoint} and
-\emph{disjoint polymorphism}~\citep{alpuimdisjoint}. Disjoint intersections
+\sedel uses a type system based on \emph{disjoint intersection types} (cf. \cref{chap:nested}) and
+\emph{disjoint polymorphism} (cf. \cref{chap:fi}). Disjoint intersections
 empower \sedel to detect conflicts statically when trying to compose two
 traits with identically named features. For example composing two traits
 \lstinline{a} and \lstinline{b} that both provide \lstinline{foo} gives a
@@ -346,7 +349,7 @@ full set of methods is not statically known. As can be seen,
 parametric polymorphism, in \sedel, a type variable can also have a disjointness
 constraint. For instance, \lstinline{A * Spelling & OnKey}
 means that \lstinline{A} can be instantiated to any type as long as it \emph{does not}
-contain \lstinline{check} and \lstinline{on_key}. Note that this is the minimal constraints of \lstinline{A},
+contain \lstinline{check} and \lstinline{on_key}. Note that these are the minimal constraints of \lstinline{A},
 as
 \begin{inparaenum}[(1)]
   \item \lstinline{A} cannot contain the \lstinline{on_key} method because it will conflict with that in the type \lstinline{Editor};
@@ -396,7 +399,7 @@ an IDE editor:
 As with the JavaScript version, we need to fill in the missing
 \lstinline{version} method. It is easy to verify that the \lstinline{on_key} method
 in \lstinline{modal_mixin} is inherited. Compared with the untyped version,
-here this behaviour is reasonable because in each mixin we specifically tags the
+here this behaviour is reasonable because in each mixin we specifically tag the
 \lstinline{on_key} method to be an overriding method. Let us take a close look
 at the mixin applications. Since \sedel is currently explicitly typed, we need to
 provide concrete types when applying \lstinline{modal_mixin} and \lstinline{spell_mixin}.
@@ -413,7 +416,7 @@ Unsurprisingly, changing the mixin application order to
 \begin{lstlisting}
   inherits spell_mixin ModalEdit (modal_mixin Top editor)
 \end{lstlisting}
-gives the expected behavior.
+gives the same (expected) behavior.
 
 
 Admittedly the typed version is unnecessarily complicated as we were

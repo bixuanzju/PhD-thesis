@@ -61,7 +61,7 @@ Our \lstinline{spell_mixin} function in \cref{sec:trait:overview} is more compli
 This is because we were mimicking classes as traits, and
 mixins as functions over traits. Instead, traits already provide a mechanism of
 code reuse. To illustrate this, we simplify \lstinline{spell_mixin} as follows:
-\lstinputlisting[linerange=107-110]{./examples/overview2.sl}% APPLY:linerange=HELP
+\lstinputlisting[linerange=112-115]{./examples/overview2.sl}% APPLY:linerange=HELP
 This is much cleaner. The trait \lstinline{spell} adds a method
 \lstinline{check}. It also defines a method \lstinline{on_key}.
 A key difference with \lstinline{spell_mixin} is that \lstinline{on_key} is invoked on the \lstinline{self}
@@ -69,9 +69,9 @@ parameter instead of \lstinline{super}. Note that this does not necessarily mean
 defined in the same trait. As we will see, the actual behaviour entirely depends on how we compose \lstinline{spell}
 with other traits. One minor difference is that we do not need to tag \lstinline{on_key}
 with the \lstinline{override} keyword, because \lstinline{spell} stands as a standalone entity.
-Another interesting point is that the self-type \lstinline{OnKey}
+Another interesting point is that the type of \lstinline{self} (i.e., \lstinline{OnKey})
 is not the same as that of the trait body, which also contains the \lstinline{check} method.
-In \sedel, self-types of traits are known as trait \emph{requirements}.
+In \sedel's traits, the type of \lstinline{self} serves as trait \emph{requirements}.
 
 
 \paragraph{Classes and/or Traits}
@@ -81,8 +81,8 @@ aforementioned two roles are considered as competing. One reason of the two
 roles conflicting in class-based languages is because a class must adopt a fixed
 position in the class hierarchy and therefore it can be difficult to reuse and
 resolve conflicts, whereas in \sedel, a trait is a standalone entity and is not
-tied to any particular hierarchy. Therefore we can view our traits either as
-generators of instances, or as units of code reuse. Another important reason why our
+tied to any particular hierarchy. Therefore we can view our traits either as templates for creating objects,
+or as units of code reuse. Another important reason why our
 model can do just with traits is because we have a pure language. Mutable state
 can often only appear in classes in imperative models of traits, which is a good
 reason for having both classes and traits.
@@ -115,8 +115,9 @@ different from a trait type. A trait type is specified with the keyword
 In general, a trait type
 \lstinline{Trait[T1, T2]} specifies both the \emph{requirements} \lstinline{T1}
 and the \emph{functionality} \lstinline{T2} of a trait. The requirements of a trait denote the types/methods that the
-trait needs to support for defining the functionality it provides. Both are
-reflected in the trait type. For example, \lstinline{spell} has type
+trait needs to support for defining the functionality it provides. % Both are
+% reflected in the trait type.
+For example, \lstinline{spell} has type
 \lstinline{Trait[OnKey, OnKey & Spelling]}, which means that \lstinline{spell}
 requires some implementation of the \lstinline{on_key} method, and it provides
 implementations for the \lstinline{on_key} and \lstinline{check} methods.
@@ -125,28 +126,39 @@ has no requirements, the absence of a requirement is denoted by using
 the top type (\lstinline{Top}). A simplified sugar \lstinline{Trait[T]} is
 used to denote a trait without requirements, but providing functionality \lstinline{T}.
 
+
+
+
 \paragraph{Trait Requirements as Abstract Methods.}
 
-Let us go back to our very first trait \lstinline{editor} in \cref{sec:trait:overview}. Note how in
-\lstinline{editor} the type of the \lstinline{self} parameter is
-\lstinline{Editor & Version}, where \lstinline{Version} contains a declaration of the
-\lstinline{version} method that is needed for the definition of
-\lstinline{show_help}. Note also that the trait itself does not actually contain
-a \lstinline{version} definition. In many other OO models a similar program
-could be achieved by having an \emph{abstract} definition of
-\lstinline{version}. In \sedel there are no abstract definitions (methods or
-fields), but a similar result can be achieved via trait requirements.
-Requirements of a trait are met at the object creation point. For example, as we
-mentioned before, the \lstinline{editor} trait alone cannot be instantiated
-since it lacks \lstinline{version}. However, when it is composed with a trait that
-provides \lstinline{version}, the composition can be instantiated, as shown below:
+Let us go back to our very first trait \lstinline{editor} in
+\cref{sec:trait:overview}. Note how in \lstinline{editor} the type of the
+\lstinline{self} parameter is \lstinline{Editor & Version}, where
+\lstinline{Version} contains a declaration of the \lstinline{version} method
+that is needed for the definition of \lstinline{show_help}. Note also that the
+trait itself does not actually contain a \lstinline{version} definition. In many
+other OO models a similar program could be achieved by having an \emph{abstract}
+definition of \lstinline{version}. In \sedel there are no abstract definitions
+(methods or fields), but a similar result can be achieved via trait
+requirements. Requirements of a trait are met at the object creation point. For
+example, as we mentioned before, the \lstinline{editor} trait alone cannot be
+instantiated since it lacks \lstinline{version}. However, when it is composed
+with a trait that provides \lstinline{version}, the composition can be
+instantiated, as shown below:
 \lstinputlisting[linerange=93-96]{./examples/overview2.sl}% APPLY:linerange=HELP2
-\sedel uses a syntax where the self parameter
-can be explicitly named (not necessarily named \lstinline{self}) with a
-type annotation. When the self parameter is omitted (for example in the
-\lstinline{foo} trait above), its type defaults to \lstinline{Top}. This
-is different from typical OO languages, where the default type of the self
-parameter is the same as the class being defined.
+\sedel uses a syntax where the self parameter can be explicitly named (not
+necessarily named \lstinline{self}) with a type annotation. When the self
+parameter is omitted (for example in the \lstinline{foo} trait above), its type
+defaults to \lstinline{Top}. This is different from typical OO languages, where
+the default type of the self parameter is the same as the class being defined.
+This also makes trait requirements ``pay as you go'' in the sense that if the
+self-parameter is not used in the body, then there is no requirements on the
+trait. Otherwise, suppose the type of the self-parameter in the trait
+\lstinline{foo} implicitly defaults to \lstinline{Version}:
+\lstinputlisting[linerange=105-107]{./examples/overview2.sl}% APPLY:linerange=HELP3
+then \lstinline{Version} will pollute the type of the self-parameter of any trait that
+uses \lstinline{foo}, cascading down the inheritance hierarchy, even though \lstinline{self}
+is not used in the body of \lstinline{foo}.
 
 
 
@@ -198,7 +210,7 @@ syntax with parameters, a trait with parameters is just a function that produces
 a trait expression, since functions already have parameters of their own. This
 is one benefit of having first-class traits in terms of language economy. To
 illustrate, let us simplify \lstinline{modal_mixin} in a similar way as in \lstinline{spell_mixin}:
-\lstinputlisting[linerange=114-118]{./examples/overview2.sl}% APPLY:linerange=MODAL2
+\lstinputlisting[linerange=119-123]{./examples/overview2.sl}% APPLY:linerange=MODAL2
 The first thing to notice is that \lstinline{modal} is a function with one
 argument, and returns a trait expression, which essentially makes
 \lstinline{modal} a trait with one parameter.
@@ -222,7 +234,7 @@ the type system. \sedel provides a means to help resolve conflicts.
 We start by assembling all the traits defined in this section
 to create the final editor with the same functionality as
 \lstinline{ide_editor} in \cref{sec:trait:overview}. Our first try is as follows:
-\lstinputlisting[linerange=128-132]{./examples/overview2.sl}% APPLY:linerange=MODAL_CONFLICT
+\lstinputlisting[linerange=133-137]{./examples/overview2.sl}% APPLY:linerange=MODAL_CONFLICT
 Unfortunately the above trait gets rejected by \sedel because
 \lstinline{editor}, \lstinline{spell} and \lstinline{modal} all define an \lstinline{on_key} method.
 Recall that in \cref{sec:trait:overview}, when we use a mixin-style composition,
@@ -234,18 +246,20 @@ method \lstinline{on_key}, thus violating the disjointness conditions
 imposed by disjoint intersection types.
 
 \paragraph{Resolving Conflicts.}
-To resolve the conflict, we need to explicitly state which
+To resolve the conflict, we need to explicitly state which implementation of the method
 \lstinline{on_key} gets to stay. \sedel provides such a means, the so-called
 \emph{exclusion} operator (denoted by \lstinline$\$), which allows one to
 exclude a field/method from a given trait. The following matches the behaviour
 in \cref{sec:trait:overview} where \lstinline{on_key} in the \lstinline{modal} trait
 is selected:
-\lstinputlisting[linerange=139-145]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK
+\lstinputlisting[linerange=144-150]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK
 Now the above code type checks. We can also select \lstinline{on_key} in the \lstinline{spell} trait as easily:
-\lstinputlisting[linerange=150-155]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
+\lstinputlisting[linerange=155-160]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
 In \cref{sec:trait:overview} we mentioned that in the mixin style, it is impossible
 to select \lstinline{on_key} in the \lstinline{editor} trait, but this is not a problem here:
-\lstinputlisting[linerange=159-164]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
+\lstinputlisting[linerange=164-169]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
+Using the exclusion operator, we can drop \lstinline{on_key} from \lstinline{spell} and \lstinline{modal} while
+keeping it from \lstinline{editor}.
 
 
 % Moreover, we can reason that the version number
@@ -270,7 +284,7 @@ to select \lstinline{on_key} in the \lstinline{editor} trait, but this is not a 
 % \lstinline{version_num} from \lstinline{modal_edit} and define a new
 % \lstinline{version_num} in the body. We can also use the keyword
 % \lstinline{override} to achieve the same:
-% \lstinputlisting[linerange=150-155]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
+% \lstinputlisting[linerange=155-160]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
 % That is, by labeling a method as a overriding method, the type system will
 % automatically exclude this method from the inherited traits. Note that if the
 % overriding method is not present in the inherited traits, a type error would
@@ -283,7 +297,7 @@ to select \lstinline{on_key} in the \lstinline{editor} trait, but this is not a 
 % \lstinline{super} to achieve this. In the following, we access the overridden
 % field \lstinline{version_num} from \lstinline{modal_edit} through the use of
 % the keyword \lstinline{super}:
-% \lstinputlisting[linerange=159-164]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
+% \lstinputlisting[linerange=164-169]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
 
 \paragraph{The Forwarding Operator.}
 Another operator that \sedel provides is the so-called \emph{forwarding}
@@ -291,7 +305,7 @@ operator, which can be useful when we want to access some method that has been
 explicitly excluded in the \lstinline{inherits} clause. This is a common scenario in
 diamond inheritance, where \lstinline{super} is not enough. Below we show a
 variant of \lstinline{ide_editor}:
-\lstinputlisting[linerange=169-177]{./examples/overview2.sl}% APPLY:linerange=MODAL_WIRE
+\lstinputlisting[linerange=174-182]{./examples/overview2.sl}% APPLY:linerange=MODAL_WIRE
 Notice that \lstinline{on_key} in \lstinline{spell} has been
 excluded. However, we can
 still access it by using the forwarding operator as in \lstinline{spell ^ self},
@@ -299,7 +313,7 @@ which gives full access to all the methods in \lstinline{spell}. Also note that
 using \lstinline{super} only gives us access to \lstinline{on_key} in the
 \lstinline{modal} trait. To see \lstinline{ide_editor4} in action, we create a
 small test:
-\lstinputlisting[linerange=181-183]{./examples/overview2.sl}% APPLY:linerange=MODAL_USE
+\lstinputlisting[linerange=186-189]{./examples/overview2.sl}% APPLY:linerange=MODAL_USE
 % \jeremy{Compare this to trait alias operator?}
 % \jeremy{would it be better to use forwarding operator in mix-style \lstinline{ide_editor} in
 %   \cref{sec:trait:overview}, where we show how to access \lstinline{on_key} from editor, which is impossible in JavaScript?}

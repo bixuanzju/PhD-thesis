@@ -50,7 +50,7 @@ type ModalEdit = {mode : String, toggle_mode : String};
 modal_mixin [A * ModalEdit & OnKey]
             (base : Trait[Editor & Version, Editor & A]) =
   trait [self : Editor & Version] inherits base => {
-    override on_key(key : String) = "Process " ++ key ++ " on modal editor";
+    override on_key(key : String) = "Process" ++ key ++ "on modal editor";
     mode = "command";
     toggle_mode = "toggle succeeded"
   };
@@ -101,6 +101,11 @@ bar = new[Editor & Version] foo & editor;
 foo [A * {bar : String}] (t : Trait[{bar : String} & A]) : Trait[A] = t;
 -- END_FOO
 
+--BEGIN_HELP3
+trait foo [self : Version] => {
+  version = "0.2"
+};
+--END_HELP3
 
 
 --BEGIN_HELP
@@ -180,5 +185,6 @@ ide_editor4 (init_mode : String) =
 --BEGIN_MODAL_USE
 a_editor2 = new[IDEEditor] (ide_editor4 "command");
 main = a_editor2.do_cut
--- Output: "Process C-x on modal editor and Process C-x on spell editor for cutting text"
+-- Output:
+-- "Process C-x on modal editor and Process C-x on spell editor for cutting text"
 --END_MODAL_USE

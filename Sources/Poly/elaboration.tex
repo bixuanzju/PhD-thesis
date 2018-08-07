@@ -7,7 +7,7 @@
 \begin{figure}
   \centering
 \begin{tabular}{llll} \toprule
-  Types & $[[T]]$ & $\Coloneqq$ & $[[nat]] \mid [[Unit]] \mid [[T1 -> T2]]  \mid [[T1 * T2]] \mid \hlmath{[[X]] } \mid \hlmath{[[\ X . T]]}$\\
+  Types & $[[T]]$ & $\Coloneqq$ & $[[pri]] \mid [[Unit]] \mid [[T1 -> T2]]  \mid [[T1 * T2]] \mid \hlmath{[[X]] } \mid \hlmath{[[\ X . T]]}$\\
   Expressions & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[< e1 , e2>]]  \mid [[c e]] \mid \hlmath{[[\X . e]]} \mid \hlmath{[[ e T ]]}$ \\
   Coercions & $[[c]]$ & $\Coloneqq$ & $[[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[c1 -> c2]] \mid [[< c1 , c2 >]] \mid [[pp1]] \mid [[pp2]] $ \\
   & & $\mid$ & $ [[distArr]] \mid [[topArr]] \mid \hlmath{[[\ c]]} $ \\
@@ -32,7 +32,7 @@ quantification, we simply erase the disjointness constraints and translate the b
 
 \begin{definition}[Type translation from \fnamee to \tnamee] \label{def:type:translate:fi}
   \begin{align*}
-    | [[nat]] | &= [[nat]] \\
+    | [[pri]] | &= [[pri]] \\
     | [[Top]] | &= \langle \rangle \\
     | [[A -> B]]  | &= [[ | A | -> | B |  ]] \\
     | [[ A & B  ]] | &= [[ | A | * | B |  ]] \\

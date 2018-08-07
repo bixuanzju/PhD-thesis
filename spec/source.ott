@@ -20,6 +20,7 @@ grammar
 AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}, CT {{ tex \mathcal{C} }}  :: 'AA_' ::=
   | Top                           :: :: top
   | nat                           :: :: int
+  | pri                           :: :: pri
   | AA -> BB                      :: :: arr
   | AA & BB                       :: :: and
   | X                             :: :: tvar
@@ -33,6 +34,7 @@ AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}, CT {{ tex \mathcal{C} }}  ::
   | char                          :: :: char
   | string                        :: :: string
   | [ AA / X ] BB                 :: :: subst
+  | ( AA )                        :: :: paren
 
 
 %% Programs
@@ -78,7 +80,7 @@ E {{ tex \mathcal{T} }}  :: 'E_' ::=
   | E1 /= E2                                                                :: :: neq
   | E1 < E2                                                                 :: :: lt
   | E1 > E2                                                                 :: :: gt
-  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \wedge [[E2]] }}
+  | E1 ^ E2                                                                 :: :: lift {{ tex [[E1]] \ \textasciicircum \ [[E2]] }}
   | { l1 = E1 , ... , ln = En }                                             :: :: rcd2
   | { l1 = E1 } ,, ... ,, { ln = En }                                       :: :: rcd3
   | ( E )                                                                   :: :: paren
@@ -104,7 +106,7 @@ SD {{ tex \Delta }} :: 'SD_' ::=
 
 sty, A, B, C, t :: 'sty_' ::=
   | nat          :: :: nat
-  | pri          :: :: pri {{ tex \rho }}
+  | pri          :: :: pri
   | bool          :: :: bool
   | Top          :: :: top
   | X            :: :: tvar
@@ -219,6 +221,7 @@ pq {{ tex \rho }} :: 'pq_' ::=
 
 ty, T {{ tex \tau }} :: 'ty_' ::=
   | nat            :: :: nat
+  | pri            :: :: pri
   | Unit           :: :: unit
   | X              :: :: var
   | T1 -> T2       :: :: arrow
@@ -367,6 +370,7 @@ terminals :: 'terminals_' ::=
     | id      :: :: id  {{ tex \mathsf{id} }}
     | Top     :: :: Top  {{ tex \top }}
     | nat     :: :: nat  {{ tex \mathsf{Int} }}
+    | pri     :: :: pri  {{ tex \rho }}
     | char    :: :: char  {{ tex \mathsf{Char} }}
     | bool    :: :: bool  {{ tex \mathsf{Bool} }}
     % | ,,      :: :: Merge  {{ tex \,,,\, }}
@@ -633,11 +637,11 @@ A1 <: A3 ~~> c2
 A1 <: A2 & A3 ~~> <c1, c2>
 
 
-------------------------- :: andl
+------------------------- :: andL
 A1 & A2 <: A1 ~~> pp1
 
 
------------------ :: andr
+----------------- :: andR
 A1 & A2 <: A2 ~~> pp2
 
 
@@ -1192,7 +1196,7 @@ gg |- unit : Unit
 
 
 ----------------- :: lit
-gg |- ii : nat
+gg |- ii : pri
 
 
 x : T in gg
@@ -1252,7 +1256,7 @@ dd ; gg |- unit : Unit
 
 dd |- gg
 ------------- :: int
-dd ; gg |- ii : nat
+dd ; gg |- ii : pri
 
 
 
@@ -1462,7 +1466,7 @@ DD |- Top
 
 
 ----------- :: int
-DD |- nat
+DD |- pri
 
 
 X ** A  in DD
@@ -1616,16 +1620,16 @@ A **a B
 
 
 --------------------- :: intArr
-nat **a A1 -> A2
+pri **a A1 -> A2
 
 
 ------------------ :: intRcd
-nat **a {l : A}
+pri **a {l : A}
 
 
 
 --------------------------------- :: intAll
-nat **a \ X ** B1 . B2
+pri **a \ X ** B1 . B2
 
 
 
@@ -1663,7 +1667,7 @@ DD ; GG |- Top => Top ~~> unit
 ||- DD
 DD ||- GG
 -------------------------- :: int
-DD ; GG |- ii => nat ~~> ii
+DD ; GG |- ii => pri ~~> ii
 
 
 ||- DD
@@ -1759,17 +1763,17 @@ SD |- Top
 
 
 --------- :: int
-SD |- nat
+SD |- pri
 
 
 SD |- AA
 SD |- BB
----------------- :: arrow
+---------------- :: arr
 SD |- AA -> BB
 
 
 SD |- AA
-------------- :: record
+------------- :: rcd
 SD |- {l : AA}
 
 
@@ -1809,24 +1813,24 @@ SDisjoint :: '' ::=
 defn SD |- AA ** BB :: :: Sdisjoint    :: 'SD_'  {{ com Disjointness }} by
 
 
-------------------- :: top
+------------------- :: topL
 SD |- Top ** AA
 
 
-------------------- :: topSym
+------------------- :: topR
 SD |- AA ** Top
 
 
 
 X ** AA in SD
 AA <: BB
--------------------- :: var
+-------------------- :: tvarL
 SD |- X ** BB
 
 
 X ** AA in SD
 AA <: BB
--------------------- :: varSym
+-------------------- :: tvarR
 SD |- BB ** X
 
 
@@ -1837,18 +1841,18 @@ SD |- \ X ** AA1 . BB1 ** \ X ** AA2 . BB2
 
 
 SD |- AA ** BB
--------------------------- :: rec
+-------------------------- :: rcdEq
 SD |- {l : AA} ** {l : BB}
 
 
 
 l1 <> l2
--------------------------- :: recn
+-------------------------- :: rcdNeq
 SD |- {l1 : AA} ** {l2 : BB}
 
 
 SD |- AA2 ** BB2
----------------------------- :: arrow
+---------------------------- :: arr
 SD |- AA1 -> AA2 ** BB1 -> BB2
 
 
@@ -1900,42 +1904,42 @@ AA **a BB
 
 
 --------------------- :: intArr
-nat **a AA1 -> AA2
+pri **a AA1 -> AA2
 
 
------------------- :: intRec
-nat **a {l : AA}
+------------------ :: intRcd
+pri **a {l : AA}
 
 
 
---------------------------------- :: intForall
-nat **a \ X ** BB1 . BB2
+--------------------------------- :: intAll
+pri **a \ X ** BB1 . BB2
 
 
 --------------------------------- :: intTrait
-nat **a Trait[AA1,AA2]
+pri **a Trait[AA1,AA2]
 
 
 
------------------------------------- :: arrForall
+------------------------------------ :: arrAll
 AA1 -> AA2 **a \ X ** BB1. BB2
 
 
 
---------------------- :: arrRec
+--------------------- :: arrRcd
 AA1 -> AA2 **a {l : BB}
 
 
--------------------------------------- :: traitForall
+-------------------------------------- :: traitAll
 Trait[AA1,AA2] **a \ X ** BB1 . BB2
 
 
-------------------------- :: traitRec
+------------------------- :: traitRcd
 Trait[AA1,AA2] **a {l : BB}
 
 
 
------------------------------------- :: forallRec
+------------------------------------ :: allRcd
 \ X ** AA1 . AA2 **a {l : BB}
 
 
@@ -1950,38 +1954,38 @@ SSubtyping :: '' ::=
 defn
 AA <: BB :: :: Ssubtyping :: 'TS_' by
 
+
+-------------- :: refl
+AA <: AA
+
+
+AA2 <: AA3
+AA1 <: AA2
+----------------------- :: trans
+AA1 <: AA3
+
+
 ---------- :: top
 AA <: Top
 
 
 AA1 <: AA2
 AA1 <: AA3
------------------ :: andR
+----------------- :: and
 AA1 <: AA2 & AA3
 
 
--------------- :: int
-nat <: nat
+-------------- :: andL
+AA1 & AA2 <: AA1
 
 
-AA1 <: AA3
--------------- :: andL1
-AA1 & AA2 <: AA3
-
-
-AA2 <: AA3
--------------- :: andL2
-AA1 & AA2 <: AA3
+-------------- :: andR
+AA1 & AA2 <: AA2
 
 
 AA <: BB
 -------------------- :: rcd
 {l : AA} <: {l : BB}
-
-
-
--------- :: var
-X <: X
 
 
 BB1 <: AA1
@@ -2002,6 +2006,22 @@ AA2 <: BB2
 Trait[AA1, AA2] <: Trait[BB1, BB2]
 
 
+--------------------------- :: topArr
+Top <: Top -> Top
+
+
+------------------------------- :: topRcd
+Top <: { l : Top }
+
+
+----------------------------------------------------- :: distArr
+(AA1 -> AA2) & (AA1 -> AA3) <: AA1 -> AA2 & AA3
+
+--------------------------------------------------- :: distRcd
+{ l : AA } & { l : BB } <: { l : AA & BB }
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SEDEL typing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2020,7 +2040,7 @@ SD ; SG |- Top => Top ~~> Top
 
 
 ------------------------- :: int
-SD ; SG |- ii => nat ~~> ii
+SD ; SG |- ii => pri ~~> ii
 
 
 x : AA in SD
