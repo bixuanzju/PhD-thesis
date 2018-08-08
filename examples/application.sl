@@ -32,6 +32,7 @@ e1 : Exp = {
 
 -- BEGIN_PRINT_DEF
 type IPrint = { print : String };
+
 trait printAlg => {
   lit (x : Int) = {
     print = x.toString
@@ -45,6 +46,7 @@ trait printAlg => {
 
 -- BEGIN_SUB_DEF
 type ExpExtAlg[E] = ExpAlg[E] & { neg : E -> E };
+
 trait negEvalAlg inherits evalAlg => {
   neg (x : IEval) = {
     eval = 0 - x.eval

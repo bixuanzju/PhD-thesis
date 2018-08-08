@@ -6,8 +6,8 @@
 
 To further illustrate the applicability of \sedel, we present a case
 study using Object Algebras~\citep{oliveira2012extensibility} and
-Extensible \textsc{Visitor}s~\citep{oliveira09modular, togersen:2004}. Encodings
-of extensible designs for Object Algebras and Extensible \textsc{Visitor}s have
+Extensible \visitor~\citep{oliveira09modular, togersen:2004}. Encodings
+of extensible designs for Object Algebras and Extensible \visitor have
 been presented in mainstream languages~\citep{oliveira09modular, togersen:2004, oliveira2012extensibility, oliveira2013feature, rendel14attributes}.
 However, prior approaches are not entirely satisfactory
 due to the limitations in existing mainstream OO languages. In \cref{sec:ob}, we show how \sedel makes those designs significantly simpler and
@@ -25,11 +25,8 @@ with that of the textbook using Haskell in terms of lines of code.
 \label{sec:ob}
 
 First we give a simple introduction to Object Algebras, a design pattern that
-can solve the Expression Problem~\citep{wadler1998expression} (EP) in languages like
-Java. The objective of EP is to \emph{modularly} extend a datatype in two
-dimensions: by adding more cases to the datatype and by adding new operations
-for the datatype.
-Our starting point is the following code:
+can solve the Expression Problem~\citep{wadler1998expression} in languages like
+Java. Our starting point is the following code:
 \lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
 \lstinline{ExpAlg[E]} is the generic interface of a simple arithmetic language
 with two cases, \lstinline{lit} for literals and \lstinline{add} for addition.
@@ -54,19 +51,19 @@ However, as we will see, this is not a problem in \sedel. We can build a value o
 
 \paragraph{Adding a New Operation.}
 We add another operation \lstinline{IPrint} to the language:
-\lstinputlisting[linerange=34-42]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
+\lstinputlisting[linerange=34-43]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
 This is done by giving another trait \lstinline{printAlg} that implements the
 additional \lstinline{print} method.
 
 
 \paragraph{Adding a New Case.}
 A second dimension for extension is to add another case for negation:
-\lstinputlisting[linerange=47-57]{./examples/application.sl}% APPLY:linerange=SUB_DEF
+\lstinputlisting[linerange=48-59]{./examples/application.sl}% APPLY:linerange=SUB_DEF
 This is achieved by extending \lstinline{evalAlg} and \lstinline{printAlg}, implementing
 missing operations for negation, respectively. We define the actual AST similarly:
-\lstinputlisting[linerange=62-64]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
+\lstinputlisting[linerange=64-66]{./examples/application.sl}% APPLY:linerange=EXPEXT_TYPE
 and build a value of \lstinline{-(2 + 3)} while reusing \lstinline{e1}:
-\lstinputlisting[linerange=69-71]{./examples/application.sl}% APPLY:linerange=VALUE_E2
+\lstinputlisting[linerange=71-73]{./examples/application.sl}% APPLY:linerange=VALUE_E2
 
 \paragraph{Relations between \lstinline{Exp} and \lstinline{ExpExt}}
 At this stage, it is interesting to point out an interesting subtyping relation
@@ -95,14 +92,14 @@ When programming with Object Algebras, oftentimes it is necessary to compose
 multiple operations together in such a way that they are executed in parallel to
 the same input. For example, in the simple language we have been developing it
 can be useful to create an object that supports both printing and evaluation.
-Oliveira and Cook~\citep{oliveira2012extensibility} addressed this problem by
+\citet{oliveira2012extensibility} addressed this problem by
 proposing \emph{Object Algebra combinators} that combine multiple algebras into
 one. However, as they noted, such combinators written in Java are difficult to
 use in practice, and they require significant amounts of boilerplate. Improved
 variants of Object Algebra combinators have been encoded in Scala using
 intersection types and an encoding of the merge
-construct~\citep{oliveira2013feature, rendel14attributes}. However, the Scala
-encoding of the merge construct is quite complex as it relies on low-level
+operator~\citep{oliveira2013feature, rendel14attributes}. However, the Scala
+encoding of the merge operator is quite complex as it relies on low-level
 type-unsafe programming features such as dynamic proxies, reflection or other
 meta-programming techniques. In \sedel, the combination of first-class traits,
 dynamic inheritance, disjoint polymorphism and nested composition allows type-safe, coherent and
@@ -118,7 +115,7 @@ of the two algebras. This combinator bears a similarity to a
 \lstinline{zip}-like operation in functional programming, and it is also directly
 related to nested composition in object-oriented programming, as we have studied
 in \cref{chap:nested}. In \sedel the definition of an Object Algebra combinator is:
-\lstinputlisting[linerange=76-78]{./examples/application.sl}% APPLY:linerange=COMBINE
+\lstinputlisting[linerange=78-80]{./examples/application.sl}% APPLY:linerange=COMBINE
 That is it. None of the boilerplate in other
 approaches~\citep{oliveira2012extensibility}, or type-unsafe meta-programming
 techniques of other approaches~\citep{oliveira2013feature,rendel14attributes} are
@@ -131,14 +128,14 @@ needed! Three points are worth noting:
   ensure two algebras (\lstinline{f} and \lstinline{g}) are conflict-free
   when being composed;
 \item nested composition is the underlying mechanism to automatically derive the
-  combined algebra by appropriately invoking (delegating) behaviors in $A \ \&\ B$ to either $A$ or $B$.
+  combined algebra by appropriately invoking (delegating) behaviors in \lstinline{A & B} to either \lstinline{A} or \lstinline{B}.
 \end{inparaenum}
 To conclude, let us see \lstinline{combine} in action. We merge the evaluation
-and printing algebras to create an \lstinline{expEvalPrint} algebra:
-\lstinputlisting[linerange=82-82]{./examples/application.sl}% APPLY:linerange=NEW_ALG
+and printing algebras to create a combined algebra \lstinline{expEvalPrint}:
+\lstinputlisting[linerange=84-84]{./examples/application.sl}% APPLY:linerange=NEW_ALG
 We can use this algebra to create an object \lstinline{o} that allows us to use
 evaluation and pretty printing at the same time:
-\lstinputlisting[linerange=87-89]{./examples/application.sl}% APPLY:linerange=USE
+\lstinputlisting[linerange=89-91]{./examples/application.sl}% APPLY:linerange=USE
 
 
 
@@ -286,7 +283,7 @@ has 33), we still get a huge gain when implementing other languages.
 
 Finally, we acknowledge the limitation of our case study in that SLOC is just
 one metric and we have not measured any other metrics. Nevertheless we believe
-that the case study is already non-trivial in that we need to solve EP. Note
-that Scala traits alone are not sufficient on their own to solve EP. While there
-are solutions to EP in both Haskell and Scala, they
+that the case study is already non-trivial in that we need to solve the
+expression problem. Note that Scala traits alone are not sufficient on their own
+to solve the expression problem. While there are solutions in both Haskell and Scala, they
 introduce significant complexity, as explained in \cref{sec:ob}.
