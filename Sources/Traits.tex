@@ -52,7 +52,7 @@ In contrast, most statically-typed
 languages do not have first-class classes and dynamic
 inheritance. While all statically-typed OO languages allow first-class
 \emph{objects} (i.e., objects can be passed as arguments and returned
-as results), the same is not true for classes. Classes in languages such
+as results), the same is not true for classes. Classes in languages such as
 Scala, Java or C++ are typically a second-class construct, and the
 inheritance hierarchy is \emph{statically determined}. The closest thing
 to first-class classes in
@@ -98,8 +98,11 @@ implementation in case of conflicts. For example, Scala uses the order of mixin
 composition to determine which implementation to pick in case of conflicts.
 Traits, on the other hand, employ an \emph{explicit} resolution strategy, where
 the compositions with conflicts are rejected, and the conflicts are explicitly
-resolved by programmers. In what follows, we present \sedel: the first design of
-typed first-class traits.
+resolved by programmers. This gives programmers fine-grained control, when
+conflicts arise, of selecting desired features from different components. Thus
+we believe traits are a better model for multiple inheritance in
+statically-typed object-oriented languages. In what follows, we present \sedel:
+the first design of typed first-class traits.
 
 
 

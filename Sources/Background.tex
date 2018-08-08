@@ -113,7 +113,7 @@ to add the elimination rule explicitly to the calculus.
 Intersection types were first incorporated into a practical programming language
 named Forsythe by \cite{reynolds1988preliminary, reynolds1997design}. who used
 them to encode features such as operator overloading by means of a
-``merge'' operator $p_1 ,, p_2$ --- ``a construction for intersecting or
+``merge'' operator $p_1 ,, p_2$---``a construction for intersecting or
 `merging' meanings''~\citep[p. 24]{reynolds1997design}.
 (\citeauthor{reynolds1997design} actually used single comma $p_1 , p_2$,
 but here we use double commas for consistency.) \citeauthor{reynolds1997design}
@@ -221,7 +221,7 @@ Disjointness judgment is used in the typing rule of merges (\rref{T-merge}) and
 the well-formedness of intersection types (\rref{wf-and}). Now the expression
 $[[1 ,, 2]]$ is not typable because $[[nat]]$ and $[[nat]]$ are not disjoint
 (they have a common supertype $[[nat]]$). To ensure that subtyping produces
-unique coercions, they also employ the notion of \textit{ordinary types}~\citep{Davies_2000} --- those which are not intersection types --- and
+unique coercions, they also employ the notion of \textit{ordinary types}~\citep{Davies_2000}---those that are not intersection types---and
 use the judgment ``$[[ A ord ]]$'' in \rref{s-andl, s-andr}. Ordinary types and
 disjointness are sufficient to ensure a coherent semantics of a type system
 without $[[Top]]$.

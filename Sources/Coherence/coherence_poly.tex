@@ -46,7 +46,7 @@ at its type, which \citet{wadler1989theorems} christened \textit{theorems for fr
 
 Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
-function of the same type --- i.e., all expressions with this type have to be constant
+function of the same type---i.e., all expressions with this type have to be constant
 functions.
 
 \begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
@@ -160,7 +160,7 @@ replace $[[X]]$ with $[[nat]]$ then the above holds obviously.
 
 
 Unfortunately, the seemingly innocuous definition for type variables has a serious
-issue with impredicativity --- in other words, the relation in question is \textit{not well-founded}.
+issue with impredicativity---in other words, the relation in question is \textit{not well-founded}.
 We could pick a bad instantiation to make the relation ``go
 into a loop''. For example, suppose $[[pq]]$ only contains a mapping from $[[X]]$ to
 $[[\X . \Y . Y]]$, we then have the following infinite chain of equational reasoning:

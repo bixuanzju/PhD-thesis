@@ -212,8 +212,8 @@ where \lstinline{foo} drops \lstinline{bar} from its argument trait
 \lstinline{t}, which is impossible to express using row polymorphism. As a
 consequence, Typed Racket ends up with two subtyping mechanisms: one for
 first-class classes (via row polymorphism) and the other for objects (via normal
-width subtyping). In contrast, \sedel uses only one mechanism --- disjoint
-polymorphism --- to deal with both. Also as we pointed out in \cref{sec:merge},
+width subtyping). In contrast, \sedel uses only one mechanism---i.e., disjoint
+polymorphism---to deal with both. Also as we pointed out in \cref{sec:merge},
 row polymorphism alone cannot express the \lstinline{merge} function that is
 able to compose objects of statically unknown types. In this sense, we argue
 disjoint polymorphism is more powerful than row polymorphism in terms of
@@ -356,7 +356,7 @@ framework~\citep{bracha1992programming} formalized mixin composition, along with
 a rich trait algebra including merge, restrict, select, project, overriding and
 rename operators. \citet{LAGORIO201286} proposed \textsc{FJig} that reformulates
 Jigsaw constructs in a Java-like setting. \citet{DBLP:conf/oopsla/AllenBC03}
-described how to add first-class generic types --- including mixins --- to OO
+described how to add first-class generic types---including mixins---to OO
 languages with nominal typing. \citet{Corradi_2012} described an extension of
 \textsc{FJig} that integrates modular composition and nesting of Java-like
 classes. It features a set of composition operators that allow to manipulate

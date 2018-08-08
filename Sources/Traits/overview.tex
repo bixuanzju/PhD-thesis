@@ -63,9 +63,9 @@ is instantiated). % Typically an
 % the subclass does not exist when the superclass \lstinline{Editor} is being
 % defined.
 Secondly, notice that there is no definition of
-the \lstinline{version} method in the class body, but such method is used inside the
+the \lstinline{version} method in the class body, but such method is used in the body of the
 \lstinline{showHelp} method. In an untyped language, such as JavaScript, using
-undefined methods is error prone -- accidentally instantiating \lstinline{Editor}
+undefined methods is error prone---accidentally instantiating \lstinline{Editor}
 and then calling \lstinline{showHelp} will cause a run-time error!
 Statically-typed languages usually provide some means to protect us from this
 situation. For example, in Java, we would need an \textit{abstract} \lstinline{version}
@@ -158,8 +158,7 @@ composition.
 \paragraph{Mixin Composition and Conflicts.}
 The powerful part of mixins is that \lstinline{spellMixin}'s functionality is not
 tied to a particular class hierarchy and is composable with other features. For
-example, we can define another mixin that adds simple modal editing -- as in Vim
--- to an arbitrary editor:
+example, we can define another mixin that adds simple modal editing---as in Vim---to an arbitrary editor:
 \begin{lstlisting}[language=JavaScript]
 const modalMixin = Base => {
   return class extends Base {
