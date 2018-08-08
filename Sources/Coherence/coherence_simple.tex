@@ -31,7 +31,7 @@ disjointness. In the case of a merge, it is hard to statically decide whether
 the two arguments have the same value, and thus \namee still requires
 disjointness. Yet, disjointness is no longer required for the well-formedness of
 types and overlapping intersections can be created implicitly through subtyping,
-which results in duplicating values at runtime. For instance, while $[[ 1,, 1]]$
+which results in duplicating values at run time. For instance, while $[[ 1,, 1]]$
 is not expressible $[[ 1 : nat & nat]]$ creates the equivalent value implicitly.
 % The consequence of this relaxation of disjointness is a much simplified
 % type system for \namee.
@@ -51,7 +51,7 @@ elaborations of the same source program. For instance, $[[ nat & nat ]]$ is a
 subtype of $[[nat]]$ in two ways: by projection on either the first or second
 component. Hence the fact that all elaborations yield the same result when
 evaluated has become a much more subtle property that requires sophisticated
-reasoning. For instance, we can see that coherence holds because at runtime any
+reasoning. For instance, we can see that coherence holds because at run time any
 value of type $[[nat & nat]]$ has identical components, and
 thus both projections yield the same result.
 

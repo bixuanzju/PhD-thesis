@@ -137,7 +137,7 @@ Many dynamically-typed languages (including JavaScript, Ruby, Python or Racket)
 support \emph{first-class classes}. In those languages classes are first-class
 values and, like any other values, they can be passed as an argument, or
 returned from a function. Furthermore first-class classes support \emph{dynamic
-  inheritance}: i.e., they can inherit from other classes at \emph{runtime},
+  inheritance}: i.e., they can inherit from other classes at \emph{run time},
 enabling programmers to abstract over the inheritance hierarchy. For example,
 mixins~\citep{bracha1990mixin} become programmer-defined constructs -- a mixin is
 simply a function that takes a class as an argument and returns a subclass. In
@@ -156,7 +156,7 @@ are rejected, and the conflicts are explicitly resolved by programmers.
 \citet{scharli2003traits} make a good case for the advantages of the trait
 model. In particular, traits avoid bugs that could arise from accidental
 conflicts that were not noticed by programmers. With the mixin model, such
-conflicts would be silently resolved, possibly resulting in unexpected runtime
+conflicts would be silently resolved, possibly resulting in unexpected run-time
 behaviour due to a wrong method implementation choice. In a setting with dynamic
 inheritance and first-class classes this problem is exacerbated by not knowing
 all components being composed statically, greatly increasing the possibility of

@@ -265,11 +265,11 @@ of inheritance.
 \textsc{Self}~\citep{ungar1988self} is a dynamically-typed, prototype-based
 language with a simple and uniform object model. \textsc{Self}'s inheritance
 model is typical of what we call \textit{mutable inheritance}, because an object's parent
-slot may be assigned new values at runtime. Mutable inheritance is rather
+slot may be assigned new values at run time. Mutable inheritance is rather
 unstructured, and oftentimes access to any clashing methods will generate a
-``messageAmbiguous'' error at runtime. Although \name's dynamic inheritance is
+``messageAmbiguous'' error at run time. Although \name's dynamic inheritance is
 not as powerful as mutable inheritance, its static type system can guarantee
-that no such errors occur at runtime. Eiffel~\citep{meyer1987eiffel} supports a
+that no such errors occur at run time. Eiffel~\citep{meyer1987eiffel} supports a
 sophisticated class-based multiple inheritance with deep renaming, exclusion
 and repeated inheritance. Of particular interest is that in Eiffel, name
 collisions are considered programming errors, and ambiguities must be resolved
@@ -299,7 +299,7 @@ We believe that there is plenty to be learned from
 Grace's design of traits if we want to extend our trait model with
 features such as mutable state. \textsc{MetaFJig}~\citep{SERVETTO2014219} (an extension of \textsc{FJig})
 supports \textit{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907, Ducasse_2006},
-a feature for changing the behavior of an object at runtime by replacing one trait for another.
+a feature for changing the behavior of an object at run time by replacing one trait for another.
 
 
 

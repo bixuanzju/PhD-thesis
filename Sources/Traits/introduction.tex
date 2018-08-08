@@ -7,7 +7,7 @@ such as first-class mixins and/or traits. In those languages classes
 are first-class values and, like any other values, they can be
 passed as an argument, or returned from a function. Furthermore
 first-class classes support \emph{dynamic inheritance}: i.e., they
-can inherit from other classes at \emph{runtime}, enabling
+can inherit from other classes at \emph{run time}, enabling
 programmers to abstract over the inheritance hierarchy. 
 Those features make first-class classes very powerful and expressive,
 and enable highly modular and reusable pieces of code, such as:
@@ -17,7 +17,7 @@ const mixin = Base => { return class extends Base { ... } };
 In this piece of JavaScript code, \lstinline{mixin} is
 parameterized by a class \lstinline{Base}. Note that the concrete
 implementation of \lstinline{Base} can be 
-even dynamically determined at runtime, for example 
+even dynamically determined at run time, for example
 after reading a configuration file to decide which 
 class to use as the base class.  When applied to an argument, 
 \lstinline{mixin} will create a new class on-the-fly and return that
@@ -81,7 +81,7 @@ Sch\"arli et al.~\citep{scharli2003traits} make a good case for the advantages o
 model. In particular, traits avoid bugs that could arise from
 accidental conflicts that were not detected by programmers. With the
 mixin model, such conflicts would be silently resolved, possibly
-resulting in unexpected runtime behaviour due to a wrong method
+resulting in unexpected run-time behaviour due to a wrong method
 implementation choice. In a setting with dynamic inheritance and
 first-class classes this problem
 is exacerbated by not knowing all components being composed

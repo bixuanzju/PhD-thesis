@@ -66,7 +66,7 @@ Secondly, notice that there is no definition of
 the \lstinline{version} method in the class body, but such method is used inside the
 \lstinline{showHelp} method. In an untyped language, such as JavaScript, using
 undefined methods is error prone -- accidentally instantiating \lstinline{Editor}
-and then calling \lstinline{showHelp} will cause a runtime error!
+and then calling \lstinline{showHelp} will cause a run-time error!
 Statically-typed languages usually provide some means to protect us from this
 situation. For example, in Java, we would need an \textit{abstract} \lstinline{version}
 method, which effectively makes \lstinline{Editor} an abstract class and
@@ -125,18 +125,18 @@ a method \lstinline{onKey}.
 The function \lstinline{spellMixin} shows the typical use of what we call \emph{dynamic inheritance}.
 Note that \lstinline{Base}, which is supposed to be a superclass being inherited, is \emph{parameterized}.
 Therefore \lstinline{spellMixin} can be applied to any base class at
-\emph{runtime}. This is impossible to do, in a type-safe way, in
+\emph{run time}. This is impossible to do, in a type-safe way, in
 conventional statically-typed class-based languages like Java or
 C++.\footnote{With C++ templates, it is possible to
   implement a so-called mixin pattern~\citep{DBLP:conf/gcse/SmaragdakisB00}, which enables extending
 a parameterized class. However C++ templates defer type-checking until
 instantiation, and such pattern still does not allow selection of the
-base class at runtime (only at up to class instantiation time).}
+base class at run time (only at up to class instantiation time).}
 
 It is noteworthy that not all applications of \lstinline{spellMixin} to base
 classes are successful. Notice the use of the \lstinline{super} keyword in the
 \lstinline{check} method. If the base class does not implement the
-\lstinline{onKey} method, then mixin application fails with a runtime error. In
+\lstinline{onKey} method, then mixin application fails with a run-time error. In
 a typed setting, a type system must express this requirement (i.e., the presence of
 the \lstinline{onKey} method) on the (statically unknown) base class being inherited.
 

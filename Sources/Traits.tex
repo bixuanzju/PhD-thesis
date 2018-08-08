@@ -29,7 +29,7 @@ such as first-class mixins and/or traits. In those languages classes
 are first-class values and, like any other values, they can be
 passed as an argument, or returned from a function. Furthermore
 first-class classes support \emph{dynamic inheritance}: i.e., they
-can inherit from other classes at \emph{runtime}, enabling
+can inherit from other classes at \emph{run time}, enabling
 programmers to abstract over the inheritance hierarchy.
 Those features make first-class classes very powerful and expressive,
 and enable highly modular and reusable pieces of code, such as:
@@ -41,7 +41,7 @@ const mixin = Base => {
 In this piece of JavaScript code, \lstinline{mixin} is
 parameterized by a class \lstinline{Base}. Note that the concrete
 implementation of \lstinline{Base} can be
-even dynamically determined at runtime, for example
+even dynamically determined at run time, for example
 after reading a configuration file to decide which
 class to use as the base class.  When applied to an argument,
 \lstinline{mixin} will create a new class on-the-fly and return that
