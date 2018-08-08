@@ -6,7 +6,7 @@
 
 This section presents the syntax and semantics of \sedel. In particular, we show
 how to elaborate high-level source language constructs (self-references,
-abstract methods, first-class traits, dynamic inheritance, etc.) to \fnamee. The
+abstract methods, first-class traits, dynamic inheritance and so on) to \fnamee. The
 treatment of the self-reference and dynamic dispatching is inspired by
 \citeauthor{cook1989denotational}'s work on the denotational semantics for
 inheritance~\citep{cook1989denotational}. We then prove the elaboration is type
@@ -68,9 +68,9 @@ value $[[Top]]$ and literals $[[ii]]$.
 Using the vector notation $\overline{[[E]]}$ to indicate a sequence of zero or more $[[E]]$ (i.e., $[[E1]], \dots, [[En]]$),
 the central construct of \sedel is the trait
 expression $[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA]]$,
-which specifies a (possibly empty) list
-of trait expressions $\overline{[[Ei]]}$ in the \lstinline{inherits} clause, an explicit
-$[[self]]$ reference (with type annotation $[[B]]$), and a set of
+which specifies a list
+of trait expressions $\overline{[[Ei]]}$ in the $\ottkw{inherits}$ clause, an explicit
+$[[self]]$ parameter (with type annotation $[[B]]$), and a set of
 methods $\{ \overline{l_j = E'_j} \}$. Intuitively this trait expression has
 type $[[ Trait[BB, AA] ]]$. Unlike the conventional trait model, a trait
 expression denotes a first-class value: it may occur anywhere where an
@@ -89,8 +89,8 @@ expressions are syntactic sugar for merges of single-field records.
 \paragraph{Subtyping and Well-formedness.}
 
 \Cref{fig:trait:typesystem} shows the well-formedness and subtyping rules for
-\sedel. The well-formedness rule (\rref{WF-trait}) for trait types is straightforward. The
-subtyping rule for trait types (\rref{TS-trait}) resembles the one for function
+\sedel. The well-formedness rule for trait types (\rref*{WF-trait}) is straightforward. The
+subtyping rule for trait types (\rref*{TS-trait}) resembles the one for function
 types in that it is contravariant on the first type $[[AA]]$ and covariant on
 the second type $[[BB]]$. The rest of the rules are direct analogies of \fnamee.
 
@@ -174,7 +174,7 @@ $[[E2]]$ must satisfy the requirement of $[[E1]]$.
 \paragraph{Treatments of Super, Exclusion and Override.}
 
 We also include a variant (\rref{ST-traitSuper}) of \rref{ST-trait} where it
-implicitly assumes a $[[super]]$ variable pointing to the \lstinline{inherits}
+implicitly assumes a $[[super]]$ variable pointing to the $\ottkw{inherits}$
 clause in the context when type checking the trait body.
 \[
   \drule{ST-traitSuper}
@@ -199,7 +199,7 @@ The operational semantics of \sedel is given by means of a type-directed
 translation into \fnamee extended with (lazy) recursive let bindings.
 This extension is standard and type-safe. Let us go back to
 \cref{fig:type}, now focusing on the translation parts, which
-denote the elaborated \fnamee terms. Most of them
+are regular \fnamee terms. Most of them
 are straightforward translations and are thus omitted. We explain the most
 involved rules regarding traits. In \rref{Inf-trait}, a trait is translated into
 a lambda abstraction with $[[self]]$ as the formal parameter.
@@ -214,8 +214,8 @@ $[[ee1 self ,, .. ,, een self]]$.
 Here is an example of translating the \lstinline{ide_editor} trait from \cref{sec:trait:overview} into
 plain \fnamee terms equipped with definitions (suppose \lstinline{modal_mixin} and \lstinline{spell_mixin}
 have been translated accordingly):
-\lstinputlisting[linerange=76-78]{./examples/overview2.sl}% APPLY:linerange=TRANS
-The translation of the \lstinline{super} keyword is also straightforward, which becomes a let binding
+\lstinputlisting[linerange=76-77]{./examples/overview2.sl}% APPLY:linerange=TRANS
+The translation of the \lstinline{super} keyword in \rref{ST-traitSuper} is also straightforward. That is, it becomes a let binding
 $[[super]]$ with the value $[[</ (eei self) // i IN 1..n />]]$, enabling access to the inherited traits.
 
 \Rref{ST-new} show the translation of trait instantiation.
@@ -231,7 +231,7 @@ traits/generators again follows the denotational inheritance model by \citet{coo
 applications. We show the translation of the
 \lstinline{a_editor1} object in \cref{sec:traits} to illustrate the
 translation of instantiation:
-\lstinputlisting[linerange=86-86]{./examples/overview2.sl}% APPLY:linerange=NEW
+\lstinputlisting[linerange=85-85]{./examples/overview2.sl}% APPLY:linerange=NEW
 
 One remarkable point is that, while \citeauthor{cook1989denotational}'s work is done in
 an untyped setting, here we apply their ideas in a setting with
@@ -242,8 +242,7 @@ denotational model of inheritance.
 \paragraph{Flattening Property.}
 
 In the literature of traits~\citep{Ducasse_2006, scharli2003traits, JOT:issue_2006_05/article4},
-a distinguished feature of traits is the
-so-called \textit{flattening property}. This property says that a (non-overridden) method in a
+a distinguished feature of traits is the \textit{flattening property}, which says that a (non-overridden) method in a
 trait has the same semantics as if it were implemented directly in the class
 that uses the trait. It would be interesting to see if our trait model has this
 property. One problem in formulating such a property is that flattening is a
@@ -277,7 +276,7 @@ In particular, we show that the type-directed elaboration is
 type-safe in the sense that well-typed \sedel expressions are elaborated into
 well-typed \fnamee terms. We also show that the source language is
 coherent and each valid source program has a unique (unambiguous)
-elaboration.
+elaboration. We refer the reader to \cref{appendix:proofs} for the detailed manual proofs.
 
 We need a meta-function $| \cdot |$ that translates \sedel types to \fnamee types, whose definition is
 straightforward. Only the translation of trait types deserves attention:
@@ -328,9 +327,9 @@ Finally we are in a position to establish the type safety property:
 \begin{theorem}[Coherence] Each well-typed \sedel expression has a unique elaboration.
 \end{theorem}
 \begin{proof}
-  By examining every elaboration rule, it is easy to see that the elaborated
+  By examining every elaboration rule in \cref{fig:type}, it is easy to see that the elaborated
   \fnamee term in the conclusion is uniquely determined by the elaborated \fnamee
-  terms in the premises. Then by the coherence property of \fnamee, we conclude
+  terms in the premises. Then by the coherence property of \fnamee (\cref{thm:coherence:fi}), we can conclude
   that each well-typed \sedel expression has a unique unambiguous elaboration,
   thus \sedel is coherent.
 \end{proof}

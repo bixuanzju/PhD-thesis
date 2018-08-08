@@ -38,7 +38,7 @@ type OnKey = {
 spell_mixin [A * Spelling & OnKey]
             (base : Trait[Editor & Version, Editor & A]) =
   trait [self : Editor & Version] inherits base => {
-    override on_key(key : String) = "Process " ++ key ++ " on spell editor";
+    override on_key(key : String) = "Process" ++ key ++ "on spell editor";
     check = super.on_key "C-c"  ++ " for spelling check"
   };
 -- END_OVERVIEW_HELP
@@ -74,8 +74,7 @@ trait ide_editor [self : IDEEditor]
 
 -- BEGIN_TRANS
 ide_editor = \ (self : IDEEditor) ->
-  (modal_mixin Spelling (spell_mixin Top editor) self) ,,
-  {version = "0.2"};
+  (modal_mixin Spelling (spell_mixin Top editor) self) ,, {version = "0.2"};
 -- END_TRANS
 
 --BEGIN_EDITOR_INST

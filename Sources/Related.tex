@@ -207,7 +207,7 @@ constraints on the presence or absence of members. Unlike disjoint polymorphism,
 row polymorphism prohibits forgetting class members. While this is reasonable in
 the setting of mixins, in some cases, a function taking one class as an argument
 can return another class that has fewer methods. For example, in \sedel we can write:
-\lstinputlisting[linerange=101-101]{./examples/overview2.sl}% APPLY:linerange=FOO
+\lstinputlisting[linerange=100-100]{./examples/overview2.sl}% APPLY:linerange=FOO
 where \lstinline{foo} drops \lstinline{bar} from its argument trait
 \lstinline{t}, which is impossible to express using row polymorphism. As a
 consequence, Typed Racket ends up with two subtyping mechanisms: one for

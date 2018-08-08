@@ -210,7 +210,7 @@ resolve conflicts by selecting features from different mixins, we may not be
 able to find a suitable order. For example, when we compose the two mixins to
 make the class \lstinline{IDEEditor}, we can choose which of them comes first,
 but in either order, \lstinline{IDEEditor} cannot access to the \lstinline{onKey}
-method in the \lstinline{Editor} class.
+method from the \lstinline{Editor} class.
 
 \paragraph{Trait Model.}
 Because of the total ordering and the limited means for resolving conflicts imposed by the mixin model,
@@ -266,9 +266,9 @@ we will see next.
 
 \subsection{A Glance at Typed First-Class Traits in \sedel}
 
-We now rewrite the above library in \sedel, but this time with types. The resulting code has the same functionality as the dynamic version, but is
+We now rewrite the above code in \sedel, but this time with types. The resulting code has the same functionality as the dynamic version, but is
 statically typed. All code snippets in this and later sections are runnable in
-our prototype implementation. Before proceeding, we ask the readers to bear in mind that in this section we are not using traits
+our prototype. Before proceeding, we ask the reader to bear in mind that in this section we are not using traits
 in the most canonical way, i.e., we use traits as if they are classes (but with
 built-in conflict detection). This is because we are trying to stay as close as possible
 to the structure of the JavaScript version for ease of comparison. In
@@ -301,10 +301,10 @@ satisfied and one of the traits in the composition must provide an
 implementation of the method \lstinline{version}.
 %to this point in \cref{sec:traits}.
 
-As in the JavaScript version, the \lstinline{on_key} method is invoked on
+As with the JavaScript version, the \lstinline{on_key} method is invoked on
 \lstinline{self} in the body of \lstinline{do_cut}. This is allowed as (part of)
 the type of \lstinline{self} (i.e., \lstinline{Editor}) contains the signature
-of \lstinline{on_key}. Comparing \lstinline{editor} to the JavaScript class
+of \lstinline{on_key}. Compared to the JavaScript class
 \lstinline{Editor}, almost everything stays the same, except that we now have
 a typed version. As a side note, since \sedel is currently a pure functional OO
 language, there is no difference between fields and methods, so we can omit
@@ -333,7 +333,7 @@ We discuss these in the following.
 \sedel uses a type system based on \emph{disjoint intersection types} (cf. \cref{chap:nested}) and
 \emph{disjoint polymorphism} (cf. \cref{chap:fi}). Disjoint intersections
 empower \sedel to detect conflicts statically when trying to compose two
-traits with identically named features. For example composing two traits
+traits with identically named features. For example, composing two traits
 \lstinline{a} and \lstinline{b} that both provide \lstinline{foo} gives a
 type error (the overloaded \lstinline{&} operator denotes trait composition):
 \begin{lstlisting}
@@ -342,17 +342,16 @@ trait b => { foo = 2 };
 trait c inherits a & b => {}; -- type error!
 \end{lstlisting}
 Disjoint polymorphism, as a more advanced mechanism, allows detecting conflicts
-even in the presence of polymorphism -- for example when a trait is parameterized and its
+even in the presence of polymorphism---for example when a trait is parameterized and its
 full set of methods is not statically known. As can be seen,
 \lstinline{spell_mixin} is actually a polymorphic function. Unlike ordinary
 parametric polymorphism, in \sedel, a type variable can also have a disjointness
 constraint. For instance, \lstinline{A * Spelling & OnKey}
 means that \lstinline{A} can be instantiated to any type as long as it \emph{does not}
-contain \lstinline{check} and \lstinline{on_key}. Note that these are the minimal constraints of \lstinline{A},
-as
+contain \lstinline{check} and \lstinline{on_key}. Note that these are the minimal constraints of \lstinline{A}, as
 \begin{inparaenum}[(1)]
-  \item \lstinline{A} cannot contain the \lstinline{on_key} method because it will conflict with that in the type \lstinline{Editor};
-  \item \lstinline{A} cannot contain the \lstinline{check} method because it will conflict with that in the trait body.
+  \item \lstinline{A} cannot contain the \lstinline{on_key} method because otherwise it will conflict with \lstinline{Editor};
+  \item \lstinline{A} cannot contain the \lstinline{check} method because otherwise it will conflict with that in the trait body.
 \end{inparaenum}
 To mimic mixins, the
 argument \lstinline{base}, which is supposed to be some trait, serves as the
@@ -380,12 +379,11 @@ old \lstinline{on_key} method. As a side note, the use of disjoint polymorphism
 is essential to correctly model the mixin semantics. From the type we know
 \lstinline{base} has some features specified by \lstinline{Editor}, plus
 something more denoted by \lstinline{A}. By inheriting \lstinline{base}, we are
-guaranteed that the result trait will have everything that is already contained
+guaranteed that the resulting trait will have everything that is already contained
 in \lstinline{base}, plus more features. This is in some sense similar to row
 polymorphism~\citep{wand1994type} in that the result trait is prohibited from
-forgetting methods from the argument trait. As we will discuss in
-\cref{sec:related}, disjoint polymorphism is more expressive than row
-polymorphism.
+forgetting methods from the argument trait.
+% As we will discuss in \cref{sec:related}, disjoint polymorphism is more expressive than row polymorphism.
 
 
 \paragraph{Typing Mixin Composition.}
@@ -395,10 +393,10 @@ Now the definition of \lstinline{modal_mixin} should be self-explanatory.
 Finally we can apply both ``mixins'' to \lstinline{editor} one at a time to create
 an IDE editor:
 \lstinputlisting[linerange=61-66]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_LINE
-As with the JavaScript version, we need to fill in the missing
+As with the JavaScript class \lstinline{IDEEditor}, we need to fill in the missing
 \lstinline{version} method. It is easy to verify that the \lstinline{on_key} method
 in \lstinline{modal_mixin} is inherited. Compared with the untyped version,
-here this behaviour is reasonable because in each mixin we specifically tag the
+here this behaviour is reasonable because we specifically tag each
 \lstinline{on_key} method to be an overriding method. Let us take a close look
 at the mixin applications. Since \sedel is currently explicitly typed, we need to
 provide concrete types when applying \lstinline{modal_mixin} and \lstinline{spell_mixin}.
