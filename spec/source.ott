@@ -5,7 +5,7 @@
 
 metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }}, Z ::=
 
-metavar var, x, y, f, R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
+metavar var, x, y, f, D , R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
 
 indexvar i, j, k, n, m ::=
 
@@ -127,6 +127,7 @@ sty, A, B, C, t :: 'sty_' ::=
   | S ::  :: s  {{ tex \mathsf{S} }}
   | string ::  :: ss   {{ tex \mathsf{String} }}
   | | AA | :: :: trans
+  | A =/ B :: :: lup {{ tex [[A]] \sqcup [[B]] }}
 
 
 %% Expressions
@@ -438,6 +439,7 @@ formula :: 'formula_' ::=
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
   | ee : A :: :: types
+  | D ; GG |- ee : A :: :: types2 {{ tex [[D]] :: [[GG]] \vdash [[ee]] : [[A]] }}
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
   | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
   | ee -->> e :: :: red
@@ -445,6 +447,7 @@ formula :: 'formula_' ::=
   | CC : ( DD ; GG dir A ) ~> ( DD' ; GG' dir' B ) ~~> cc :: :: typctx
   | A ord   :: :: ord {{ tex [[A]] \ \mathsf{ordinary} }}
   | A rigid :: :: Rigid {{ tex  [[A]] \ \mathsf{rigid} }}
+  | A == B :: :: eqq {{ tex [[A]] \approx [[B]] }}
 
 
 

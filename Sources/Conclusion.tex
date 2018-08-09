@@ -5,21 +5,236 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{mention incompatibility between distributivity and effects}
+\section{Conclusion}
 
-\todo{mention nominal typing}
 
-\section{On Categorical Semantics}
+
+
+\section{Future Work}
+
+In this section we discuss some areas where future research might extend and/or
+complement the work described in this thesis.
+
+\subsection{On Categorical Semantics}
 \label{sec:category}
 
+An interesting avenue for future work is to give a categorical semantics of
+disjoint intersection types. The main reason for doing so is that, as
+\citet{reynolds1988preliminary} nicely put it:
+\begin{quote}
+  ``by formulating succinct definitions in terms of a mathematical theory of
+  great generality, we gain an assurance that our language will be uniform and
+  general.''
+\end{quote}
+Using category theory as the basis for the type structure of a programming
+language has a long history. \citet{lambek1985cartesian} discovered that
+simply-typed $\lambda$-calculus can be interpreted in any Cartesian closed
+category. \citet{Reynolds_1991} gives a category-theoretic presentation of a
+simply-typed $\lambda$-calculus extended to include records, fixed points and
+intersection types, much similar to our \namee. Of particular interest to us is
+his method for proving coherence. Let $[[D]]$ denote derivations of typing, then
+the interpretation of a derivation $[[ D ; GG |- ee : A ]]$ is a morphism
+$\bra{[[ D ; GG |- ee : A ]]} : \bra{[[GG]]} \rightarrow \bra{[[A]]} $ in a
+suitable ``semantic ''category (i.e., being Cartesian closed and processing
+certain limits). Proving coherence in this presentation then amounts to
+establishing the commutativity of all diagrams of the following
+form\footnote{The proof actually needs a stronger inductive hypothesis.}:
+\[
+\begin{tikzcd}
+\bra{[[  GG   ]]} \arrow[rrr, "\bra{[[ D1 ; GG |- ee : A  ]]}", bend left] \arrow[rrr, "\bra{[[ D2 ; GG |- ee : A  ]]} "', bend right] &  &  & \bra{[[ A ]]}
+\end{tikzcd}
+\]
 
 
-\section{On Implicit Polymorphism}
+\paragraph{Properties of Intersection Types.}
+
+The key component of Reynolds' method is the interpretation of intersection
+types. For the sake of precision in what follows, we pause to give some basic
+properties of intersection types that are first proved by \citet{Reynolds_1991}.
+We say two types $[[A]]$ and $[[B]]$ are equivalent, written $[[ A == B ]]$,
+when $[[ A <: B ]]$ and $[[B <: A]]$. From the subtyping rules in
+\cref{fig:subtype_decl}, we can derive the following equalities:
+
+\begin{proposition}[$[[A == B]]$]\label{prop:1}
+\begin{align*}
+  [[A1 & (A2 & A3) ]]  &\approx  [[(A1 & A2) & A3]] \\
+  [[ Top & A ]] &\approx [[A]] \\
+  [[ A & Top ]] &\approx [[A]] \\
+  [[A1 & A2 ]]  &\approx  [[ A2 & A1 ]] \\
+  [[A & A ]]  &\approx  [[ A ]] \\
+  [[ {l : A1 & A2}   ]] &\approx [[  {l : A1}  & {l : A2} ]] \\
+  [[  A -> A1 & A2  ]] &\approx [[  (A -> A1) & (A -> A2)   ]] \\
+  [[  {l : Top}    ]] &\approx [[  Top   ]] \\
+  [[  A -> Top  ]] &\approx [[  Top   ]]
+\end{align*}
+\end{proposition}
+
+It can be shown that every pair of types has a \textit{least upper bound} (unique up to $\approx$-equivalence). The following suffices to compute a least
+upper bound, $[[A =/ B]]$\footnote{Note that the meta-function $\sqcup$, unlike $\&$, is not a type constructor.},
+of any types $[[A]]$ and $[[B]]$:
+
+\begin{proposition}[$[[ A =/ B   ]]$] \label{prop:2}
+\begin{align*}
+  [[  A =/ B   ]] &\approx [[B =/ A]] \\
+  [[  A =/ Top   ]] &\approx [[Top]] \\
+  [[  A1 =/ (A2 & A3)  ]] &\approx [[  (A1 =/ A2) & (A1 =/ A3)  ]] \\
+  [[  pri =/ {l : A} ]] &\approx [[  Top  ]] \\
+  [[  pri =/ (A1 -> A2) ]] &\approx [[  Top  ]] \\
+  [[  {l : A} =/ (A1 -> A2) ]] &\approx [[  Top  ]] \\
+  [[  {l : A1} =/ {l : A2} ]] &\approx [[  {l : A1 =/ A2}  ]] \\
+  [[  {l1 : A1} =/ {l2 : A2} ]] &\approx [[  Top   ]] \quad \text{when} \ [[ l1 <> l2 ]] \\
+  [[  (A1 -> A1') =/ (A2 -> A2') ]] &\approx [[  (A1 & A2) -> (A1' =/ A2')  ]]
+\end{align*}
+\end{proposition}
+
+
+\paragraph{Connecting with Disjointness.}
+
+With these properties stated, it turns out that our disjointness rules, as
+given in \cref{fig:disjoint}, can be compactly formulated using $\approx$ and $\sqcup$:
+
+\begin{theorem} \label{thm:disjoint_spec}
+  $[[A ** B]]$ if and only if $[[   A =/ B == Top  ]]$.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of disjointness. An interesting case is \rref{D-arr}
+  \[
+    \drule{D-arr}
+  \]
+  \begin{longtable}[l]{l|l}
+    $[[A2 =/ B2 == Top]]$  & By i.h \\
+    $[[  (A1 -> A2) =/ (B1 -> B2) ]] \approx [[(A1 & B1) -> (A2 =/ B2)]]$ & By \cref{prop:2} \\
+    $[[  (A1 -> A2) =/ (B1 -> B2) ]] \approx [[(A1 & B1) -> Top]]$ & By above equality \\
+    $[[(A1 & B1) -> Top == Top]]$  & By \cref{prop:1} \\
+    $[[  (A1 -> A2) =/ (B1 -> B2) == Top]]$ & By above equality
+  \end{longtable}
+\end{proof}
+
+\begin{remark}
+  We can view \cref{thm:disjoint_spec} as a specification of disjointness.
+\end{remark}
+
+
+\paragraph{Interpretation of Intersection Types.}
+
+Following Reynolds, a subtyping derivation is interpreted as a morphism $ \bra{[[ A <: B ]]} : \bra{[[A]]} \rightarrow \bra{[[B]]} $ with two requirements:
+\begin{enumerate}
+\item For all types $[[A]]$ the conversion from $ \bra{[[A]]}$ to $\bra{[[A]]}$ must be an identity arrow.
+\item Whenever $[[A <: B]]$ and $[[ B <: C  ]]$, the composition of $\bra{[[ A <: B ]]}$ and $\bra{[[  B <: C   ]]}$ must be equal to $\bra{[[  A <: C  ]]}$, i.e.,
+  \[
+    \bra{[[ A <: B ]]} ; \bra{[[  B <: C  ]]} = \bra{[[A <: C]]}
+  \]
+  (Here ``;'' denotes composition in diagrammatic order.)
+\end{enumerate}
+These requirements actually make $ \bra{\cdot} $ a functor from the
+preordered set of types (viewed as a category) to the semantics category of
+choice.
+
+\begin{remark}
+By definition, whenever $[[ A == B ]]$ we have $\bra{[[  A  ]]}$ and $\bra{[[ B ]]}$ are isomorphic to  written $\bra{[[ A ]]} \cong \bra{[[B]]}  $.
+\end{remark}
+
+Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
+\begin{enumerate}
+\item By \rref{S-andL,S-andR}, there must be two morphisms, $\bra{[[ pp1 ]]} : \bra{[[A1 & A2]]} \rightarrow \bra{[[A1]]}  $ and $\bra{[[pp2]]} : \bra{[[A1 & A2]]} \rightarrow \bra{[[A2]]}  $
+  \[
+\begin{tikzcd}
+  \bra{[[A1]]} &  & \bra{[[A2]]} \\
+  & \bra{[[A1 & A2]]} \arrow[lu, "\pi_1"'] \arrow[ru, "\pi_2"] &
+\end{tikzcd}
+  \]
+\item For any types $[[A1]]$ and $[[A2]]$, there exists a least upper bound $[[
+  A1 =/ A2 ]]$ (\cref{prop:2}), and two morphisms $\bra{[[A1 <: A1 =/ A2]]} : \bra{[[A1]]} \rightarrow \bra{[[A1 =/ A2]]}$
+  and $\bra{[[A2 <: A1 =/ A2]]} : \bra{[[A2]]} \rightarrow \bra{[[A1 =/ A2]]}$, and the following diagram should commute:
+  \[
+\begin{tikzcd}
+  & \bra{[[  A1 =/ A2 ]]} &  \\
+  \bra{[[A1]]} \arrow[ru, "\bra{[[A1 <: A1 =/ A2]]}"] &  & \bra{[[A2]]} \arrow[lu, "\bra{[[A2 <: A1 =/ A2]]}"'] \\
+  & \bra{[[A1 & A2]]} \arrow[lu, "\pi_1"'] \arrow[ru, "\pi_2"] &
+\end{tikzcd}
+  \]
+
+\item For every type $[[A]]$ such that $[[A <: A1]]$ and $[[A <: A2]]$, \rref{S-and} implies that $[[A <: A1 & A2]]$, thus
+  a morphism from $\bra{[[  A ]]}$ to $\bra{[[  A1 & A2  ]]}$. Call this $\mu_0$. The following diagram should commute:
+  \[
+\begin{tikzcd}
+  & \bra{[[  A1 =/ A2 ]]} &  \\
+  \bra{[[A1]]} \arrow[ru, "\bra{[[A1 <: A1 =/ A2]]}"] &  & \bra{[[A2]]} \arrow[lu, "\bra{[[A2 <: A1 =/ A2]]}"'] \\
+  & \bra{[[A1 & A2]]} \arrow[lu, "\pi_1"'] \arrow[ru, "\pi_2"] & \\
+  & \bra{[[A]]} \arrow[u, "\mu_0"] \arrow[luu, "\bra{[[A <: A1]]}"] \arrow[ruu, "\bra{[[A <: A2]]}"'] &
+\end{tikzcd}
+  \]
+\item Furthermore, in the above diagram, we replace $\bra{[[A]]}$ by an
+  arbitrary object $s$ and $\bra{[[A <: A1]]}$ and $\bra{[[A <: A1]]}$ by any
+  morphisms $f_1$ and $f_2$ that make the outer diamond commutes, and we require
+  the ``mediating morphism'' $\mu_0$ from $s$ to $[[A1 & A2]]$ to be unique. Specifically,
+  we define $\bra{[[A1 & A2]]}$ by requiring the following diagram must commute:
+  \[
+\begin{tikzcd}
+  & \bra{[[  A1 =/ A2 ]]} &  \\
+  \bra{[[A1]]} \arrow[ru, "\bra{[[A1 <: A1 =/ A2]]}"] &  & \bra{[[A2]]} \arrow[lu, "\bra{[[A2 <: A1 =/ A2]]}"'] \\
+  & \bra{[[A1 & A2]]} \arrow[lu, "\pi_1"'] \arrow[ru, "\pi_2"] & \\
+  & s \arrow[u, "\mu_0", dotted] \arrow[luu, "f_1"] \arrow[ruu, "f_2"'] &
+\end{tikzcd}
+  \]
+\end{enumerate}
+Thus we have defined $\bra{[[A1 & A2]]}$ to be the \textit{pullback} of
+$\bra{[[A1]]}$, $\bra{[[A2]]}$ and $\bra{[[A1 =/ A2]]}$.
+
+\paragraph{Interpretation of Disjoint Intersection Types.}
+
+Given the interpretation of intersection types, it is fairly straightforward to
+give the interpretation of disjoint intersection types. First recall that if
+$[[A ** B]]$ then $[[ A =/ B == Top ]]$ (\cref{thm:disjoint_spec}). Also we have
+$\bra{[[Top]]} = 1$---i.e., the terminal object. By specializing $\bra{[[A1 =/ A2]]}$ to be the terminal object
+($\bra{[[A1 <: A1 =/ A2]]}$ and $\bra{[[A2 <: A1 =/ A2]]}$ are then uniquely
+determined), then the pullback ``degrades'' to the \textit{product} of
+$\bra{[[A1]]}$ and $\bra{[[A2]]}$. In other words, the interpretation of
+disjoint intersection types is given by the following theorem:
+\begin{theorem}
+  If $[[A1 ** A2]]$ then $\bra{[[A1 & A2]]} \cong \bra{[[A1]]} \times \bra{[[A2]]} $.
+\end{theorem}
+\noindent It is reassuring to see that this theorem justifies our translation of
+disjoint intersection types into product types, from the categorical
+perspective.
+
+
+\paragraph{Coherence, from the categorical perspective?}
+
+What we have developed so far is the (categorical) interpretation of disjoint intersection
+types. We are still half way through the ultimate goal of (re-)establishing
+coherence, now from the categorical perspective. The main difficulty is that we
+do not know yet how to interpret bidirectional typing judgment---i.e., what are
+$\bra{[[GG |- ee => A]]}$ and $\bra{[[GG |- ee <= A]]}$, and in particular the
+interpretation of the merge operator. As we mentioned, bidirectional type checking
+(besides disjointness) is essential to coherence. It would be exciting to see
+some research along the lines of the above, so that we may have a solid
+mathematical foundation for type systems with disjoint intersection types.
+
+\subsection{On Implicit Polymorphism}
 \label{sec:implicit}
+
+
+\subsection{Disjoint Polymorphism vs. Row Polymorphism}
+
+
+
+\subsection{Extensions}
+
+\paragraph{Recusive Types}
+
+
+\paragraph{Union Types}
+
+\paragraph{Nominal Typing}
+
+
+\paragraph{Mutable State}
 
 
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: ../Thesis.bib
 %%% End:

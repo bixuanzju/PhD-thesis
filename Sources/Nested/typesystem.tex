@@ -61,7 +61,7 @@ $[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record selections $[[ee.l]]
 The subtyping rules are essentially those of the BCD type
 system~\citep{Barendregt_1983}, extended with subtyping for singleton records.
 \Rref{S-top,S-rcd} for top types and record types are straightforward.
-\Rref{S-arr} for function subtyping is standard. \Rref{S-andl,S-andr,S-and} for
+\Rref{S-arr} for function subtyping is standard. \Rref{S-andL,S-andR,S-and} for
 intersection types axiomatize that $[[A & B]]$ is the greatest lower bound of
 $[[A]]$ and $[[B]]$. \Rref{S-distArr} is perhaps the most interesting rule.
 This, so-called ``distributivity'' rule, describes the interaction between
@@ -77,7 +77,7 @@ derivable from the existing subtyping rules, as shown below:
   {  [[ A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)  ]]  }
   \and
     \inferrule*[right=\rref*{S-trans}]
-  {  \inferrule*[right=\rref*{S-andl}]{ }{[[ (A1 -> A2) & (A3 -> A2) <: A1 -> A2   ]]} \\
+  {  \inferrule*[right=\rref*{S-andL}]{ }{[[ (A1 -> A2) & (A3 -> A2) <: A1 -> A2   ]]} \\
     \inferrule*[right=\rref*{S-arr}]{ [[ A1 & A3 <: A1  ]] \\ [[ A2 <: A2  ]] }{[[ A1 -> A2 <: A1 & A3 -> A2  ]]}  }
   {  [[  (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2  ]]   }
 \end{mathpar}
@@ -220,7 +220,7 @@ translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 
 \subsection{Explicit Coercions and Coercive Subtyping}
 
-The separate syntactic category for explicit coercions is a distinct difference
+The separate syntactic category for \textit{explicit coercions} is a distinct difference
 from the prior works (in which they are regular terms). Our coercions are based
 on those of \citet{Henglein_1994}, and we add more forms due to our extra
 subtyping rules.
@@ -367,7 +367,7 @@ coherence and obtaining an algorithm. The \namee calculus
 discards the notion of ordinary types completely; this yields a clean and
 elegant formulation of the subtyping relation. Another minor difference is that
 due to the addition of the transitivity axiom (\rref{S-trans}),
-\rref{S-andl,S-andr} are simplified: an intersection type $[[A1 & A2]]$ is a
+\rref{S-andL,S-andR} are simplified: an intersection type $[[A1 & A2]]$ is a
 subtype of both $[[A1]]$ and $[[A2]]$, instead of the more general form $[[ A1 & A2 <: A3]]$.
 
 % \paragraph{Example}
