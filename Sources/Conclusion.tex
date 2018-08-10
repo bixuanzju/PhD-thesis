@@ -217,12 +217,90 @@ mathematical foundation for type systems with disjoint intersection types.
 \subsection{On Implicit Polymorphism}
 \label{sec:implicit}
 
+Another interesting and practically useful extension is to study (predicative)
+implicit polymorphism. Our \fnamee calculus features explicit polymorphism in the sense that
+we need to provide types during type applications. A classic example of implicit
+polymorphism is the identity function $[[\x . x]]$ of type $[[\X . X -> X]]$.
+When applied to $3$, for example, the type variable $[[X]]$ will be implicitly
+instantiated to $[[nat]]$. There are several approaches in the
+literature~\citep{odersky1996putting, dunfield2013complete, jones2007practical}.
+Since our declarative type system is already based on bidirectional
+type-checking, the work by \citet{dunfield2013complete} is particularly relevant
+for us. It should not be difficult to adapt their approach to our declarative
+system.
+
+\paragraph{Declarative Subtyping.}
+
+First we consider the subtyping rules. Obviously \rref{S-forall} needs to be modified.
+We replace it with the following two rules:
+\begin{mathpar}
+  \drule{IS-allL} \and \drule{IS-allR}
+\end{mathpar}
+\Rref{IS-allL} says that a type $[[\X ** A1 . A2]]$ is a subtype of $[[B]]$ if
+some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
+\citeauthor{dunfield2013complete}'s system, in our setting, not every monotype
+$[[t]]$ works---those that do not respect the disjointness constraints should
+not be considered, for the sake of coherence. \Rref{IS-allR} says that $[[A]]$
+is a subtype of $[[\X ** B1. B2]]$ if we can show that $[[A]]$ is a subtype of
+$[[B2]]$ in a context extended with $[[X ** B1]]$. It is not immediately obvious
+that these two rules subsume \rref{S-forall}, and in particular what happens to ``a universal quantifier is contravariant in its
+disjointness constraints'', which is very important in the original subtyping.
+It can be shown that they do subsume \rref{S-forall}, as is evident by the
+following derivation:
+\[
+\inferrule*[right=\rref*{IS-allR}]{  \inferrule*[right=\rref*{IS-allL}]{ \inferrule*[right=\rref*{FD-tvarL}]{ [[  A2 <: A1  ]]    }{[[  X ** A2 |- X ** A1  ]]}  \\ [[  X ** A2 |- B1 <: B2  ]]   }{[[X ** A2 |- \X ** A1. B1 <: B2]]}    }{ [[  empty |- \X ** A1. B1 <: \X ** A2 . B2  ]] }
+\]
+
+
+\paragraph{Typing Rules.}
+
+Now we consider the typing rules. Most of the rules stay the same. We remove
+\rref{FT-tabs,FT-tapp}, since the syntax now does not include type abstractions and
+type applications. We add one rule:
+\[
+  \drule{FT-gen}
+\]
+\Rref{FT-gen} says that $[[ee]]$ has type $[[\X ** A . B]]$ if $[[ee]]$ has type $[[B]]$ in a context extended with $[[ X ** A  ]]$.
+Application becomes a little more complex:
+\[
+  \drule{FT-appI}
+\]
+The problem is that the inferred type $[[A]]$ for $[[ee1]]$ could be a
+polymorphic quantifier.
+We need to eliminate universals until we
+reach an arrow type. To achieve this, we use a matching judgment $[[DD |- A tri A1 -> A2]]$,
+which says that we can synthesize an arrow type $[[A1 -> A2]]$ from $[[A]]$.
+Once we get an arrow type $[[A1 -> A2]]$, we use $[[A1]]$ to check against $[[ee2]]$.
+The matching judgment~\citep{siek2015refined, xie2018consistent}, first used in gradual type systems, is inductively defined as follows:
+\begin{mathpar}
+\drule{m-forall} \and \drule{m-arr}
+\end{mathpar}
+\Rref{M-forall}, as with \rref{IS-allL},
+works by guessing instantiations of polymorphic quantifiers with the requirement
+that the monotype $[[t]]$ must meet the disjointness constraints. \Rref{M-arr}
+is trivial, returning $[[A1 -> A2]]$ as it is.
+
+The above is only a sketch; we have not studied its meth-theory, nor proved
+anything. One problem is that now subtyping and disjointness are mutually
+recursive (e.g., \rref{IS-allL} uses disjointness and \rref{FD-tvarL} uses
+subtyping), which might pose difficulty in terms of formalization. For
+coherence, we estimate that the proof method described in this thesis should
+still work.
+
+\paragraph{Algorithmic System.}
+
+Having a declarative system is only a start. The major challenge is the
+corresponding algorithmic system. It is known that full type inference is
+undecidable for intersection types. Some restrictions are obviously in order,
+leading to different points in the design space in terms of how much can be
+inferred. We are interested to see some research into the algorithmic system.
+
 
 \subsection{Disjoint Polymorphism vs. Row Polymorphism}
 
 
 
-\subsection{Extensions}
+\subsection{Other Extensions}
 
 \paragraph{Recusive Types}
 

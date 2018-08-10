@@ -172,6 +172,7 @@ DD {{ tex \Delta }} :: 'stctx'  ::=
   | DD , X ** A :: :: cons
   | | SD |   :: :: trans
   | [ A / X ] DD :: :: subst
+  | X ** A :: :: con1
 
 
 %% Expression contexts
@@ -390,6 +391,7 @@ terminals :: 'terminals_' ::=
     | __      :: :: hole    {{ tex [\cdot] }}
     | ~=      :: :: ctxeq  {{ tex \backsimeq_{ctx} }}
     | <|:     :: :: sub {{ tex <: }}
+    | tri  :: :: match {{ tex \triangleright }}
 
 
 formula :: 'formula_' ::=
@@ -412,7 +414,6 @@ formula :: 'formula_' ::=
   | l1 <> l2 :: :: label {{ tex [[l1]] \neq [[l2]] }}
   | A <: B  :: :: sub
   | A <|: B  :: :: sub2
-  | DD |- A <: B :: :: sub3
   | GG  |- ee dir A :: :: inferChk
   | DD ; GG  |- ee dir A :: :: inferChk2
   | SD ; SG  |- E dir AA :: :: sedel
@@ -448,8 +449,6 @@ formula :: 'formula_' ::=
   | A ord   :: :: ord {{ tex [[A]] \ \mathsf{ordinary} }}
   | A rigid :: :: Rigid {{ tex  [[A]] \ \mathsf{rigid} }}
   | A == B :: :: eqq {{ tex [[A]] \approx [[B]] }}
-
-
 
 
 parsing
@@ -668,6 +667,31 @@ A <: B ~~> c
 --------------------------------------------------- :: distRcd
 { l : A } & { l : B } <: { l : A & B } ~~> id
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fi+ implicit subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+ISubtyping :: '' ::=
+
+defn
+DD |- A <: B  :: :: isub :: IS_ by
+
+
+DD |- t
+DD |- t ** A1
+DD |- [t / X]A2 <: B
+------------------------------- :: allL
+DD |- \X ** A1. A2 <: B
+
+
+
+DD, X ** B1 |- A <: B2
+-------------------------------- :: allR
+DD |- A <: \X ** B1 . B2
 
 
 
@@ -1686,6 +1710,17 @@ DD ; GG |- ee2 <= A1 ~~> e2
 DD ; GG |- ee1 ee2 => A2 ~~> e1 e2
 
 
+DD ; GG |- ee1 => A ~~> e1
+DD |- A tri A1 -> A2
+DD ; GG |- ee2 <= A1 ~~> e2
+------------------------------- :: appI
+DD ; GG |- ee1 ee2 => A2 ~~> e1 e2
+
+
+DD , X ** A; GG |- ee <= B ~~> e
+------------------------------------------- :: gen
+DD ; GG |- ee <= \X ** A . B ~~> \X . e
+
 
 DD ; GG |- ee1 => A1 ~~> e1
 DD ; GG |- ee2 => A2 ~~> e2
@@ -1739,10 +1774,27 @@ DD ; GG |- ee <= A ~~> c e
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Matching
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+defns
+DMatching :: '' ::=
+
+defn
+
+DD |- A tri B ::  :: dmatching :: m_ by
+
+DD |- t
+DD |- t ** A1
+DD |- [t / X] A1 tri B1 -> B2
+-------------------------------- :: forall
+DD |- \X ** A1 . A2 tri B1 -> B2
 
 
+-------------------------- :: arr
+DD |- A1 -> A2 tri A1 -> A2
 
 
 
