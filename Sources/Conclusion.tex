@@ -127,11 +127,11 @@ Following Reynolds, a subtyping derivation is interpreted as a morphism $ \bra{[
   (Here ``;'' denotes composition in diagrammatic order.)
 \end{enumerate}
 These requirements actually make $ \bra{\cdot} $ a functor from the
-preordered set of types (viewed as a category) to the semantics category of
+preordered set of types (viewed as a category) to the semantic category of
 choice.
 
 \begin{remark}
-By definition, whenever $[[ A == B ]]$ we have $\bra{[[  A  ]]}$ and $\bra{[[ B ]]}$ are isomorphic to  written $\bra{[[ A ]]} \cong \bra{[[B]]}  $.
+By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is isomorphic to $\bra{[[ B ]]}$, written $\bra{[[ A ]]} \cong \bra{[[B]]}$.
 \end{remark}
 
 Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
@@ -194,9 +194,12 @@ disjoint intersection types is given by the following theorem:
 \begin{theorem}
   If $[[A1 ** A2]]$ then $\bra{[[A1 & A2]]} \cong \bra{[[A1]]} \times \bra{[[A2]]} $.
 \end{theorem}
-\noindent It is reassuring to see that this theorem justifies our translation of
+\begin{remark}
+It is reassuring to see that this theorem justifies our translation of
 disjoint intersection types into product types, from the categorical
 perspective.
+\end{remark}
+
 
 
 \paragraph{Coherence, from the categorical perspective?}
