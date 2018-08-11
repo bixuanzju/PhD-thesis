@@ -254,7 +254,7 @@ following derivation:
 \]
 
 
-\paragraph{Typing Rules.}
+\paragraph{Declarative Typing.}
 
 Now we consider the typing rules. Most of the rules stay the same. We remove
 \rref{FT-tabs,FT-tapp}, since the syntax now does not include type abstractions and
@@ -344,7 +344,7 @@ follows:
 \end{align*}
 However, the merge operator in \fnamee is more general than its counterpart in
 $\lambda^{\|}$---i.e., it works on any expressions, not just records. Another
-important difference is that their compatibility judgment $r_1 \# r_2$ actually
+important difference is that their compatibility judgment $r_1 \# r_2$ effectively
 implies that their records must have distinct fields, whereas \fnamee accepts duplicate
 fields as long as their types are disjoint.
 
