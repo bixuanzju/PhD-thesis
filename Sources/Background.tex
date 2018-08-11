@@ -22,7 +22,7 @@ traits, their drawbacks and strengths.
 \label{bg:sec:intersection}
 
 
-Intersection types in the pure $\lambda$-calculus were developed in the late
+Intersection types in the pure lambda calculus were developed in the late
 1970s by \citet{coppoInter}, and independently by \citet{pottinger1980type}. The
 original motivation to introduce intersection types was to devise a
 type-assignment system \`a la Curry~\citep{CurryFeys} that satisfies the
@@ -162,7 +162,7 @@ then the type $[[ (nat -> nat) & nat ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
 
 \citeauthor{dunfield2014elaborating} then showed how to give a semantics to a
 calculus with unrestricted intersection types by a type-directed elaboration to
-a simply-typed $\lambda$-calculus extended with tuples. For example, the
+a simply-typed lambda calculus extended with tuples. For example, the
 expression $[[ (\x . x) ,, 1 ]]$ elaborates to a tuple $[[ <\x. x , 1> ]]$. As
 usual, his system does not have explicit source-level intersection eliminations;
 elaboration puts all needed projections into the target program. For example,

@@ -28,14 +28,14 @@ disjoint intersection types. The main reason for doing so is that, as
 \end{quote}
 Using category theory as the basis for the type structure of a programming
 language has a long history. \citet{lambek1985cartesian} discovered that
-simply-typed $\lambda$-calculus can be interpreted in any Cartesian closed
+simply-typed lambda calculus can be interpreted in any Cartesian closed
 category. \citet{Reynolds_1991} gives a category-theoretic presentation of a
-simply-typed $\lambda$-calculus extended to include records, fixed points and
+lambda calculus extended to include records, fixed points and
 intersection types, much similar to our \namee. Of particular interest to us is
 his method for proving coherence. Let $[[D]]$ denote derivations of typing, then
 the interpretation of a derivation $[[ D ; GG |- ee : A ]]$ is a morphism
 $\bra{[[ D ; GG |- ee : A ]]} : \bra{[[GG]]} \rightarrow \bra{[[A]]} $ in a
-suitable ``semantic ''category (i.e., being Cartesian closed and processing
+suitable ``semantic'' category (i.e., being Cartesian closed and possessing
 certain limits). Proving coherence in this presentation then amounts to
 establishing the commutativity of all diagrams of the following
 form\footnote{The proof actually needs a stronger inductive hypothesis.}:
@@ -119,19 +119,15 @@ given in \cref{fig:disjoint}, can be compactly formulated using $\approx$ and $\
 
 Following Reynolds, a subtyping derivation is interpreted as a morphism $ \bra{[[ A <: B ]]} : \bra{[[A]]} \rightarrow \bra{[[B]]} $ with two requirements:
 \begin{enumerate}
-\item For all types $[[A]]$ the conversion from $ \bra{[[A]]}$ to $\bra{[[A]]}$ must be an identity arrow.
-\item Whenever $[[A <: B]]$ and $[[ B <: C  ]]$, the composition of $\bra{[[ A <: B ]]}$ and $\bra{[[  B <: C   ]]}$ must be equal to $\bra{[[  A <: C  ]]}$, i.e.,
-  \[
-    \bra{[[ A <: B ]]} ; \bra{[[  B <: C  ]]} = \bra{[[A <: C]]}
-  \]
-  (Here ``;'' denotes composition in diagrammatic order.)
+\item For all types $[[A]]$ the morphism from $ \bra{[[A]]}$ to $\bra{[[A]]}$ must be an identity arrow.
+\item Whenever $[[A <: B]]$ and $[[ B <: C  ]]$, the composition of $\bra{[[ A <: B ]]}$ and $\bra{[[  B <: C   ]]}$ must be equal to $\bra{[[  A <: C  ]]}$, i.e., $ \bra{[[ A <: B ]]} ; \bra{[[  B <: C  ]]} = \bra{[[A <: C]]}$. (Here ``;'' denotes composition in diagrammatic order.)
 \end{enumerate}
 These requirements actually make $ \bra{\cdot} $ a functor from the
 preordered set of types (viewed as a category) to the semantic category of
 choice.
 
 \begin{remark}
-By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is isomorphic to $\bra{[[ B ]]}$, written $\bra{[[ A ]]} \cong \bra{[[B]]}$.
+By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is \textit{isomorphic} to $\bra{[[ B ]]}$, written $\bra{[[ A ]]} \cong \bra{[[B]]}$.
 \end{remark}
 
 Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
@@ -167,7 +163,7 @@ Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
 \item Furthermore, in the above diagram, we replace $\bra{[[A]]}$ by an
   arbitrary object $s$ and $\bra{[[A <: A1]]}$ and $\bra{[[A <: A1]]}$ by any
   morphisms $f_1$ and $f_2$ that make the outer diamond commutes, and we require
-  the ``mediating morphism'' $\mu_0$ from $s$ to $[[A1 & A2]]$ to be unique. Specifically,
+  the ``mediating morphism'' $\mu_0$ from $s$ to $\bra{[[A1 & A2]]}$ to be unique. Specifically,
   we define $\bra{[[A1 & A2]]}$ by requiring the following diagram must commute:
   \[
 \begin{tikzcd}
@@ -218,16 +214,18 @@ mathematical foundation for type systems with disjoint intersection types.
 \label{sec:implicit}
 
 Another interesting and practically useful extension is to study (predicative)
-implicit polymorphism. Our \fnamee calculus features explicit polymorphism in the sense that
-we need to provide types during type applications. A classic example of implicit
-polymorphism is the identity function $[[\x . x]]$ of type $[[\X . X -> X]]$.
-When applied to $3$, for example, the type variable $[[X]]$ will be implicitly
-instantiated to $[[nat]]$. There are several approaches in the
-literature~\citep{odersky1996putting, dunfield2013complete, jones2007practical}.
-Since our declarative type system is already based on bidirectional
-type-checking, the work by \citet{dunfield2013complete} is particularly relevant
-for us. It should not be difficult to adapt their approach to our declarative
-system.
+implicit polymorphism, in the spirit of Haskell. Our \fnamee calculus features
+explicit polymorphism in the sense that we need to provide types during type
+applications. A classic example of implicit polymorphism is the identity
+function $[[\x . x]]$ of type $[[\X . X -> X]]$. When applied to $1$, for
+example, the type variable $[[X]]$ will be implicitly instantiated to $[[nat]]$.
+Moreover, we are interested in \textit{higher-rank polymorphism}, allowing
+polymorphic quantifiers to appear anywhere in a type. There are several
+approaches in the literature~\citep{odersky1996putting, dunfield2013complete,
+  jones2007practical}. Since our declarative type system is already based on
+bidirectional type-checking, the work by \citet{dunfield2013complete} is
+particularly relevant for us. It should not be difficult to adapt their approach
+to our declarative system. Below we sketch out several typing rules for the initial design.
 
 \paragraph{Declarative Subtyping.}
 
@@ -240,7 +238,10 @@ We replace it with the following two rules:
 some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
 \citeauthor{dunfield2013complete}'s system, in our setting, not every monotype
 $[[t]]$ works---those that do not respect the disjointness constraints should
-not be considered, for the sake of coherence. \Rref{IS-allR} says that $[[A]]$
+not be considered, for the sake of coherence.
+Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** nat . X -> X) 1 ]]$ to type check,
+which would be a disaster.
+\Rref{IS-allR} says that $[[A]]$
 is a subtype of $[[\X ** B1. B2]]$ if we can show that $[[A]]$ is a subtype of
 $[[B2]]$ in a context extended with $[[X ** B1]]$. It is not immediately obvious
 that these two rules subsume \rref{S-forall}, and in particular what happens to ``a universal quantifier is contravariant in its
@@ -280,12 +281,12 @@ works by guessing instantiations of polymorphic quantifiers with the requirement
 that the monotype $[[t]]$ must meet the disjointness constraints. \Rref{M-arr}
 is trivial, returning $[[A1 -> A2]]$ as it is.
 
-The above is only a sketch; we have not studied its meth-theory, nor proved
-anything. One problem is that now subtyping and disjointness are mutually
-recursive (e.g., \rref{IS-allL} uses disjointness and \rref{FD-tvarL} uses
-subtyping), which might pose difficulty in terms of formalization. For
-coherence, we estimate that the proof method described in this thesis should
-still work.
+The above is only a sketch; we have not studied the declarative system in full,
+nor its metatheory. One potential problem is that now subtyping and
+disjointness are mutually recursive (e.g., \rref{IS-allL} uses disjointness and
+\rref{FD-tvarL} uses subtyping), which might pose difficulty in terms of
+formalization. For coherence, we estimate that the proof method described in
+this thesis should still work.
 
 \paragraph{Algorithmic System.}
 
