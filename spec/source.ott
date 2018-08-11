@@ -2,8 +2,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% METAVARIABLES
 
+metavar rvar, XX {{ tex X }}, YY {{ tex Y }} ::=
 
-metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }}, Z ::=
+metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }} ::=
 
 metavar var, x, y, f, D , R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
 
@@ -110,12 +111,14 @@ sty, A, B, C, t :: 'sty_' ::=
   | bool          :: :: bool
   | Top          :: :: top
   | X            :: :: tvar
+  | XX            :: :: rvar
   | A -> B       :: :: arrow
   | A & B        :: :: and
   | A * B  :: :: prod
   | A1 & ... & An               :: :: and2
   | \ X ** A . B :: :: all {{ tex \forall ( [[X]] [[**]] [[A]] ) .\,[[B]] }}
   | \ X . A        :: :: forall   {{ tex \forall [[X]].\,[[A]] }}
+  | mu XX . A     :: :: recur   {{ tex \mu [[XX]] .\ [[A]] }}
   | { l : A }    :: :: rcd
   | { l1 : A1 , ... , ln : An } :: :: rcd2
   | ( A )        :: :: paren
@@ -173,6 +176,12 @@ DD {{ tex \Delta }} :: 'stctx'  ::=
   | | SD |   :: :: trans
   | [ A / X ] DD :: :: subst
   | X ** A :: :: con1
+
+
+SS {{ tex \Sigma }} :: 'rtctx'  ::=
+  | empty       :: ::  empty
+  | SS , XX <: YY :: :: cons
+
 
 
 %% Expression contexts
@@ -408,6 +417,7 @@ formula :: 'formula_' ::=
   | X ** A  in DD    ::   :: sbinds2 {{ tex ( [[X]] [[**]] [[A]] ) \in [[DD]] }}
   | X in dd          ::   :: sbind4 {{ tex  [[X]]  \in [[dd]] }}
   | X ** AA  in SD    ::   :: sbinds3 {{ tex ( [[X]] [[**]] [[AA]] ) \in [[SD]] }}
+  | XX <: YY  in SS    ::   :: sbinds4 {{ tex ( [[XX]] <: [[YY]] ) \in [[SS]] }}
   | x notin dom G            ::   :: notInGx {{ tex [[x]] \notin [[G]] }}
   | x notin dom GG            ::   :: notInGGx {{ tex [[x]] \notin [[GG]] }}
   | e -->> e'       :: :: multi_step
@@ -696,6 +706,30 @@ DD |- A <: \X ** B1 . B2
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% recursive type subtyping
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+defns
+RSubtyping :: '' ::=
+
+defn
+SS |- A <: B  :: :: rsub :: RS_ by
+
+
+
+SS , XX <: YY |- A <: B
+----------------------------- :: amber
+SS |- mu XX  . A <: mu YY . B
+
+
+
+XX <: YY in SS
+----------------------- :: var
+SS |- XX <: YY
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fi+ algorithmic subtyping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -866,6 +900,11 @@ l1 <> l2
 A **a B
 -------------------- :: ax
 A ** B
+
+
+A ** B
+------------------------ :: rec
+mu XX . A ** mu YY . B
 
 
 
@@ -1671,6 +1710,33 @@ A1 -> A2 **a {l : B}
 
 ------------------------------------ :: allRcd
 \ X ** A1 . A2 **a {l : B}
+
+
+--------------------------------- :: intRVar
+pri **a XX
+
+
+
+--------------------------------- :: rcdRVar
+{l : A} **a XX
+
+
+--------------------------------- :: arrRVar
+A1 -> A2 **a XX
+
+
+--------------------------------- :: intRec
+pri **a mu XX . B
+
+
+
+--------------------------------- :: rcdRec
+{l : A} **a mu XX . B
+
+
+--------------------------------- :: arrRec
+A1 -> A2 **a mu XX . B
+
 
 
 

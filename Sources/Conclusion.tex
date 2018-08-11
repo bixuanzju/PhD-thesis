@@ -232,7 +232,8 @@ to our declarative system. Below we sketch out several typing rules for the init
 First we consider the subtyping rules. Obviously \rref{S-forall} needs to be modified.
 We replace it with the following two rules:
 \begin{mathpar}
-  \drule{IS-allL} \and \drule{IS-allR}
+  \drule{IS-allL}
+  \drule{IS-allR}
 \end{mathpar}
 \Rref{IS-allL} says that a type $[[\X ** A1 . A2]]$ is a subtype of $[[B]]$ if
 some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
@@ -274,7 +275,8 @@ which says that we can synthesize an arrow type $[[A1 -> A2]]$ from $[[A]]$.
 Once we get an arrow type $[[A1 -> A2]]$, we use $[[A1]]$ to check against $[[ee2]]$.
 The matching judgment~\citep{siek2015refined, xie2018consistent}, first used in gradual type systems, is inductively defined as follows:
 \begin{mathpar}
-\drule{m-forall} \and \drule{m-arr}
+  \drule{m-forall}
+  \drule{m-arr}
 \end{mathpar}
 \Rref{M-forall}, as with \rref{IS-allL},
 works by guessing instantiations of polymorphic quantifiers with the requirement
@@ -355,17 +357,110 @@ claim, a straightforward approach is to translate their type system into
 \end{inparaenum}
 
 
+\subsection{Recursive Types}
+
+One extension of particular importance for modeling object-oriented languages is
+\textit{recursive types}. A great deal of lessons have been learned about
+calculi with recursive types and subtyping (see \citet[chap.
+20]{DBLP:books/daglib/0005958}). But previous work has been focused on type
+systems with substantially simpler subtyping relations. For simplicity, we are
+interested in adding \textit{iso-recursive types}, where a recursive type $[[mu XX . A]]$\footnote{We use $[[XX]]$ to distinguish from type variables introduced by universal quantifiers.} and its one-step unfolding are transformed back and forth by a pair
+of functions $\mathsf{fold}$ and $\mathsf{unfold}$. The most common definition
+of iso-recursive subtyping is the \textit{Amber rule}, popularized by
+\citeauthor{DBLP:conf/litp/Cardelli85}'s Amber language~\citep{DBLP:conf/litp/Cardelli85}.
+\begin{mathpar}
+  \drule{RS-amber}
+  \drule{RS-var}
+\end{mathpar}
+\Rref{RS-amber} says that to show $[[mu XX . A]] $ is a subtype of $ [[mu YY . B]]$
+under some set of assumptions $[[SS]]$, it suffices to show $[[A <: B]]$ under
+the additional assumption $[[XX]] <: [[YY]]$. \Rref{RS-var} allows us to
+conclude $[[XX]] <: [[YY]]$ if the assumptions assume it.
+
+While adding the above two rules to our subtyping relation in
+\cref{fig:subtype_decl} (and extending the other rules so that they pass
+$[[SS]]$ through from premises to conclusion) effectively yields a declarative
+subtyping relation with recursive types, it is not entirely straightforward as
+to how they affect disjointness, and in particular, under what conditions are
+two recursive types disjoint. An initial attempt shows that the amber rule and
+the disjointness rule for functions are in conflict.
+
+\paragraph{The Problem.}
+
+For the ease of discussion, we do not consider top types, polymorphic types, or
+BCD subtyping; then a guiding principle of designing disjointness rules is the
+simple disjointness specification (\cref{def:disjoint_spec}): two types are
+disjoint if and only if they share no common supertypes. Now consider two
+recursive types $[[ mu XX . XX -> nat ]]$ and $[[ mu YY . YY -> nat]]$. It is
+not hard to see that they have no common supertypes (because of contravariance of function argument subtyping). According to
+\cref{def:disjoint_spec}, they are disjoint. On the other hand, since the
+disjointness relation is structural, we should inspect the disjointness relation
+between $[[ XX -> nat ]]$ and $[[YY -> nat ]]$ under certain relation over
+$[[XX]]$ and $[[YY]]$ we do not know yet. However, according to \rref{D-arr}, two functions are
+disjoint if their range types are disjoint; thus $[[ XX -> nat ]]$ and $[[YY ->
+nat ]]$ are not disjoint. So we have $[[ mu XX . XX -> nat]]$ and $[[ mu YY . YY -> nat]]$
+are \textit{not} disjoint: a contradiction!
+
+
+\paragraph{Positivity to the Rescue.}
+
+It is not obvious how to change either \rref{RS-amber} or \rref{D-arr} without
+disrupting the whole system. A possible solution is to restrict where type variables
+can occur. Instead of
+having a \textit{general} recursive type $[[mu XX . A]]$ where $[[XX]]$ may occur
+anywhere in $[[A]]$, we require that $[[XX]]$ occurs \textit{positively} in
+$[[A]]$. Specifically, $[[XX]]$ occurs positively in $[[A1 -> A2]]$, if
+\begin{inparaenum}[(1)]
+\item $[[XX]]$ \textit{does not occur} in $[[A1]]$,
+\item and $[[XX]]$ occurs positively in $[[A2]]$.
+\end{inparaenum}
+In general, any occurrences of $[[XX]]$ within the domain of a function type are
+\textit{negative occurrences}, whereas any occurrences of $[[XX]]$ within the
+range of a function type are \textit{positive occurrences}. For example, the two
+recursive types in the last paragraph are not positive. While positivity does
+limit expressiveness of types, most useful datatypes (e.g., natural numbers,
+lists) are positive. Also the positivity restriction agrees with the
+disjointness rule for function types.
+
+With positive recursive types, here is the disjointness rule for recursive types:
+\[
+  \drule{D-rec}
+\]
+We also need a few disjointness axioms:
+\begin{mathpar}
+  \drule{Dax-intRec}
+  \drule{Dax-rcdRec}
+  \drule{Dax-arrRec}
+  \drule{Dax-intRVar}
+  \drule{Dax-rcdRVar}
+  \drule{Dax-arrRVar}
+\end{mathpar}
+An important observation is that any two type variables are \textit{not}
+disjoint. A few examples: $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> YY]]$
+are not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . bool -> YY & nat]]$ are
+not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> nat -> YY]]$ are
+disjoint. Note that the above is only a sketch; it remains to see whether the disjointness
+rules are equivalent to the specification.
+
+
+Another gnarly issue is coherence. To model recursive types, we need to turn to
+step-indexed logical relations~\citep{ahmed2006step}. We foresee it would be a
+major technical challenge to adjust our coherence proof and its Coq
+mechanization.
+
 \subsection{Other Extensions}
 
-\paragraph{Recusive Types}
+There are several important extensions that should also be considered.
 
 
-\paragraph{Union Types}
+\paragraph{Union Types.}
 
-\paragraph{Nominal Typing}
+\paragraph{Nominal Typing.}
+
+\paragraph{Mutable State.}
 
 
-\paragraph{Mutable State}
+
 
 
 
