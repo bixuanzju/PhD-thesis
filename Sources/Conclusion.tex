@@ -299,6 +299,60 @@ inferred. We are interested to see some research into the algorithmic system.
 
 \subsection{Disjoint Polymorphism vs. Row Polymorphism}
 
+Row polymorphism, first proposed by \citet{wand1987complete}, was intended as a
+mechanism to enable type inference for a simple object-oriented language based
+on recursive records. These ideas were later adopted into type systems for
+extensible records~\citep{Harper:1991:RCB:99583.99603, gaster1996polymorphic}.
+As we have alluded to in \cref{sec:merge}, row polymorphism alone cannot express
+the \lstinline{merge} function. It would be interesting to study the
+relationship between disjoint polymorphism and row polymorphism, and in
+particular, whether the former subsumes the latter. As noted by
+\citet{alpuimdisjoint}, disjoint polymorphism can already encode polymorphic
+extensible records. For the sake of comparison, we pick the record calculus
+$\lambda^{\|}$ of \citet{Harper:1991:RCB:99583.99603}---an explicitly-typed,
+second-order calculus that features single-field records and a symmetric merge
+operator. In $\lambda^{\|}$, \textit{compatibility constraints} are used to
+capture negative information about fields. For example, $r_1 \# r_2 $ denotes the
+assertion that the record types $r_1$ and $r_2$ have disjoint sets of labels. To
+illustrate polymorphic extensible records in $\lambda^{\|}$,
+\citeauthor{Harper:1991:RCB:99583.99603} show a function that takes two
+``disjoint'' records $x_1$ and $x_2$, where $x_1$ has at least a field $l_1$ of
+type $[[nat]]$ and $x_2$ has at least a field $l_2$ of type $[[nat]]$, and
+returns the result of merging $x_1$ and $x_2$ (altering their syntax slightly):
+\begin{align*}
+  \Lambda \alpha_1 \# (\{ l_1 : [[nat]] \}, \{ l_2 : [[nat]] \}) .\  \Lambda \alpha_2 \# (\alpha_1 , \{l_1 : [[nat]]\} , \{ l_2 : [[nat]]   \}) . \\
+  \qquad \lambda x_1 : (\alpha_1 \| \{ l_1 : [[nat]] \}) .\  \lambda x_2 : (\alpha_2 \| \{ l_2 : [[nat]] \}) .\ x_1 \| x_2
+\end{align*}
+where $r_1 \| r_2$ is the record type obtained by merging $r_1$ and $r_2$, and
+is only defined if $r_1 \# r_2$. The same operator is overloaded to merge two
+records on the term level. Central to their system is the \textit{constrained
+  quantification} $\forall \alpha \# R .\ t $, where each record type variable is
+associated with a list of \textit{compatibility assumptions} $R$, whose elements
+are record types (including record type variables). The \textit{constrained type abstraction} $\Lambda \alpha \# R.\ e$
+is used to create values of constrained quantification.
+
+
+In \fnamee, we can use disjoint quantification to express their constrained
+qualification, intersection types to merge record types, and the merge operator
+to merge records. The function mentioned above can be written in \fnamee as
+follows:
+\begin{align*}
+  \Lambda (\alpha_1 * [[ {l1 : nat} & {l2 : nat} ]]) .\  \Lambda (\alpha_2 * [[  X1 & {l1 : nat} & {l2 : nat} ]]) . \\
+  \qquad \lambda x_1 : [[X1 & {l1 : nat}]] .\  \lambda x_2 : [[X2 & {l2 : nat}]] .\ x_1 ,, x_2
+\end{align*}
+However, the merge operator in \fnamee is more general than its counterpart in
+$\lambda^{\|}$---i.e., it works on any expressions, not just records. Another
+important difference is that their compatibility judgment $r_1 \# r_2$ actually
+implies that their records must have distinct fields, whereas \fnamee accepts duplicate
+fields as long as their types are disjoint.
+
+Thus we believe \fnamee completely subsumes $\lambda^{\|}$. To support this
+claim, a straightforward approach is to translate their type system into
+\fnamee, and argue that
+\begin{inparaenum}[(1)]
+\item the translation is type-safe (i.e., it type check in \fnamee);
+\item whatever is ill-typed in $\lambda^{\|}$, so is its translation in \fnamee.
+\end{inparaenum}
 
 
 \subsection{Other Extensions}
