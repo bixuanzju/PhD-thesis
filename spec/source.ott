@@ -140,6 +140,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | Top            :: :: top
   | ii              :: :: lit
   | \ x . ee       :: :: abs  {{ tex [[\]][[x]].\,[[ee]] }}
+  | \ x : A . ee       :: :: abs3  {{ tex [[\]][[x]] : [[A]] .\,[[ee]] }}
   | lam x . ee       :: :: abs2  {{ tex \\ \lambda  [[x]].\,[[ee]] }}
   | ee1 ee2        :: :: app
   | ee1 ,, ee2     :: :: merge
@@ -1710,6 +1711,11 @@ A1 -> A2 **a {l : B}
 
 ------------------------------------ :: allRcd
 \ X ** A1 . A2 **a {l : B}
+
+
+
+--------------------------------- :: recRVar
+mu YY . A **a XX
 
 
 --------------------------------- :: intRVar

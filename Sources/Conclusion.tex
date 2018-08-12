@@ -51,11 +51,28 @@ form\footnote{The proof actually needs a stronger inductive hypothesis.}:
 The key component of Reynolds' method is the interpretation of intersection
 types. For the sake of precision in what follows, we pause to give some basic
 properties of intersection types that are first proved by \citet{Reynolds_1991}.
-We say two types $[[A]]$ and $[[B]]$ are equivalent, written $[[ A == B ]]$,
-when $[[ A <: B ]]$ and $[[B <: A]]$. From the subtyping rules in
-\cref{fig:subtype_decl}, we can derive the following equalities:
+First we give two definitions that are important for the discussion.
 
-\begin{proposition}[$[[A == B]]$]\label{prop:1}
+\begin{definition}[Type Equivalence]
+  Two types $[[A]]$ and $[[B]]$ are equivalent, written $[[ A == B ]]$, when $[[ A <: B ]]$ and $[[B <: A]]$.
+\end{definition}
+
+\begin{definition}[Least Upper Bounds]
+  A \textit{least upper bound} of $[[A]]$ and $[[B]]$, written $[[A =/ B]]$\footnote{Note
+    that the meta-function $\sqcup$, unlike $\&$, is not a type constructor.},
+  is a supertype of both $[[A]]$ and $[[B]]$ and a subtype of every common
+  supertype of $[[A]]$ and $[[B]]$---i.e., a type $[[C]]$ such that:
+  \begin{itemize}
+  \item $[[A <: C]]$
+  \item $[[B <: C]]$
+  \item For any $[[C']]$, $[[A <: C']]$ and $[[B <: C']]$ implies $[[C <: C']]$
+  \end{itemize}
+\end{definition}
+
+According to the subtyping rules in \cref{fig:subtype_decl}, we can derive the
+following type equalities:
+
+\begin{proposition} \label{prop:1}%
 \begin{align*}
   [[A1 & (A2 & A3) ]]  &\approx  [[(A1 & A2) & A3]] \\
   [[ Top & A ]] &\approx [[A]] \\
@@ -69,11 +86,11 @@ when $[[ A <: B ]]$ and $[[B <: A]]$. From the subtyping rules in
 \end{align*}
 \end{proposition}
 
-It can be shown that every pair of types has a \textit{least upper bound} (unique up to $\approx$-equivalence). The following suffices to compute a least
-upper bound, $[[A =/ B]]$\footnote{Note that the meta-function $\sqcup$, unlike $\&$, is not a type constructor.},
-of any types $[[A]]$ and $[[B]]$:
+It can be shown that every pair of types has a least upper bound (unique up to
+$\approx$-equivalence). The following suffices to compute a least upper bound of
+any types $[[A]]$ and $[[B]]$:
 
-\begin{proposition}[$[[ A =/ B   ]]$] \label{prop:2}
+\begin{proposition} \label{prop:2}%
 \begin{align*}
   [[  A =/ B   ]] &\approx [[B =/ A]] \\
   [[  A =/ Top   ]] &\approx [[Top]] \\
@@ -283,7 +300,7 @@ works by guessing instantiations of polymorphic quantifiers with the requirement
 that the monotype $[[t]]$ must meet the disjointness constraints. \Rref{M-arr}
 is trivial, returning $[[A1 -> A2]]$ as it is.
 
-The above is only a sketch; we have not studied the declarative system in full,
+Of course the above is only a sketch; we have not studied the declarative system in full,
 nor its metatheory. One potential problem is that now subtyping and
 disjointness are mutually recursive (e.g., \rref{IS-allL} uses disjointness and
 \rref{FD-tvarL} uses subtyping), which might pose difficulty in terms of
@@ -340,20 +357,30 @@ to merge records. The function mentioned above can be written in \fnamee as
 follows:
 \begin{align*}
   \Lambda (\alpha_1 * [[ {l1 : nat} & {l2 : nat} ]]) .\  \Lambda (\alpha_2 * [[  X1 & {l1 : nat} & {l2 : nat} ]]) . \\
-  \qquad \lambda x_1 : [[X1 & {l1 : nat}]] .\  \lambda x_2 : [[X2 & {l2 : nat}]] .\ x_1 ,, x_2
+  \qquad [[\x1 : X1 & {l1 : nat} . \x2 : X2 & {l2 : nat} . x1 ,, x2]]
 \end{align*}
 However, the merge operator in \fnamee is more general than its counterpart in
 $\lambda^{\|}$---i.e., it works on any expressions, not just records. Another
-important difference is that their compatibility judgment $r_1 \# r_2$ effectively
-implies that their records must have distinct fields, whereas \fnamee accepts duplicate
-fields as long as their types are disjoint.
+important difference is that their compatibility judgment $r_1 \# r_2$
+effectively implies that their records must have distinct fields, whereas
+\fnamee accepts duplicate fields as long as their types are disjoint. On a
+related note, $\lambda^{\|}$ is powerful enough to express a polymorphic,
+conflict-free function that merges two records of statically-unknown fields:
+\[
+  \mathsf{mergeRcd} = \Lambda \alpha_1 \# \mathsf{Empty} .\ \Lambda \alpha_2 \# \alpha_1 .\ \lambda x_1 : \alpha_1 .\ \lambda x_2 : \alpha_2 .\ x_1 \| x_2
+\]
+where $\mathsf{Empty}$ is the empty record type. Compare it to our ``more expressive'' $\mathsf{mergeAny}$ function:
+\[
+  \mathsf{mergeAny} = [[\ X1 ** Top . \ X2 ** X1 . \x1 : X1 . \x2 : X2 . x1 ,, x2 ]]
+\]
+that merges \textit{any} two expressions of statically-unknown types.
 
-Thus we believe \fnamee completely subsumes $\lambda^{\|}$. To support this
-claim, a straightforward approach is to translate their type system into
-\fnamee, and argue that
+We believe \fnamee completely subsumes $\lambda^{\|}$. To support this claim, we
+need to show a bisimulation property between $\lambda^{\|}$ and (a subset of)
+\fnamee:
 \begin{inparaenum}[(1)]
-\item the translation is type-safe (i.e., it type check in \fnamee);
-\item whatever is ill-typed in $\lambda^{\|}$, so is its translation in \fnamee.
+\item the translation from $\lambda^{\|}$ to \fnamee is type-safe (i.e., it type check in \fnamee),
+\item and the translation from a subset of \fnamee to $\lambda^{\|}$ is type-safe (i.e., it type check in $\lambda^{\|}$).
 \end{inparaenum}
 
 
@@ -418,15 +445,15 @@ In general, any occurrences of $[[XX]]$ within the domain of a function type are
 \textit{negative occurrences}, whereas any occurrences of $[[XX]]$ within the
 range of a function type are \textit{positive occurrences}. For example, the two
 recursive types in the last paragraph are not positive. While positivity does
-limit expressiveness of types, most useful datatypes (e.g., natural numbers,
-lists) are positive. Also the positivity restriction agrees with the
+limit the expressiveness of types, most useful datatypes (e.g., natural numbers,
+lists, streams) are positive. For us, the positivity restriction for recursive types does work with the
 disjointness rule for function types.
 
 With positive recursive types, here is the disjointness rule for recursive types:
 \[
   \drule{D-rec}
 \]
-We also need a few disjointness axioms:
+We also need a few more disjointness axioms:
 \begin{mathpar}
   \drule{Dax-intRec}
   \drule{Dax-rcdRec}
@@ -434,6 +461,7 @@ We also need a few disjointness axioms:
   \drule{Dax-intRVar}
   \drule{Dax-rcdRVar}
   \drule{Dax-arrRVar}
+  \drule{Dax-recRVar}
 \end{mathpar}
 An important observation is that any two type variables are \textit{not}
 disjoint. A few examples: $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> YY]]$
