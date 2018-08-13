@@ -159,6 +159,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | let x = ee1 in ee2  :: :: let
   | 1 ::  :: one   {{ tex 1  }}
   | 2 ::  :: two   {{ tex 2  }}
+  | true ::  :: true   {{ tex \mathsf{true}  }}
   | ( ee ) :: :: parens
 
 
@@ -451,7 +452,6 @@ formula :: 'formula_' ::=
   | ( e1 , e2 ) in E ( A  ) with pq :: :: termmm {{ tex ( [[e1]] , [[e2]] ) \in \eeRR{[[A]]}_{[[pq]]}   }}
   | fs |- A <: B :: :: algo {{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] }}
   | e : T :: :: typet
-  | ee : A :: :: types
   | D ; GG |- ee : A :: :: types2 {{ tex [[D]] :: [[GG]] \vdash [[ee]] : [[A]] }}
   | ( g1 , g2 ) in GG  :: :: grel  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]} }}
   | ( g1 , g2 ) in GG with p  :: :: grel2  {{ tex ([[g1]], [[g2]]) \in \ggR{[[GG]]}_{[[p]]}  }}
@@ -907,6 +907,31 @@ A ** B
 A ** B
 ------------------------ :: rec
 mu XX . A ** mu YY . B
+
+
+
+
+
+defns
+DTyping :: '' ::=
+
+defn ee : A  ::  :: he :: '' by
+
+
+ee : A1
+ee : A2
+-------------- :: interI
+ee : A1 & A2
+
+
+ee1 : A
+------------------- :: mergeL
+ee1 ,, ee2 : A
+
+
+ee2 : A
+------------------- :: mergeR
+ee1 ,, ee2 : A
 
 
 

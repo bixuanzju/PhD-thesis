@@ -4,16 +4,18 @@
 \label{chap:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The chapter sets the stage for the three typed calculi that we are going to
+The chapter sets the stage for the three typed calculi we are going to
 present in later chapters by reviewing some relevant topics in this thesis. In
 \cref{bg:sec:intersection} we start with the traditional formulation of
 intersection types, followed by an introduction of the merge operator and the
 issue of coherence. We then review the \oname calculus, the first calculus
 featuring disjoint intersection types, and briefly discuss how disjointness
 achieves coherence. In \cref{sec:ernst} we introduce family polymorphism by
-means of presenting \citeauthor{ernst2004expression}'s elegant solution to the expression problem.
-Finally in \cref{sec:bg:mixin:trait} we review the concepts of mixins and
-traits, their drawbacks and strengths.
+means of presenting \citeauthor{ernst2004expression}'s elegant solution to the
+expression problem. In \cref{sec:bg:mixin:trait} we review the concepts of
+mixins and traits, their drawbacks and strengths. \Cref{sec:bg:object} reviews
+the denotational model of inheritance. Finally in \cref{sec:bg:lr} we give a
+simple introduction to program equivalence and logical relations.
 
 
 
@@ -43,15 +45,32 @@ view, $[[A & B]]$ is a subtype of $[[A]]$, as well as of $[[B]]$; from the
 order-theoretic point of view, $[[A & B]]$ is a greatest lower bound of $[[A]]$
 and $[[B]]$~\footnote{Note that we say ``a'' rather than ``the'' because
   greatest lower bounds are not unique, but they are all ``equal'' to $[[A & B]]$
-  in a sense that will be made more precise later.}. What may seem
-surprising to OO programmers is that $[[A & B]]$ can also be viewed as a natural
-analog of \textit{multiple inheritance}. If we read the subtyping $[[A <: B]]$
-as ``$[[A]]$ is a subclass of $[[B]]$'', then $[[A & B]]$ is a name of a class
-with all the common properties of $[[A]]$ and $[[B]]$. Of course, this analog is
-not exact, in the same sense that inheritance is not
+  in a sense that will be made precise in \cref{sec:category}.}. In the literature of OOP,
+intersection types are long known to model \textit{multiple
+  inheritance}~\citep{compagnoni1996higher}. The intuition is that if we read the
+subtyping $[[A <: B]]$ as ``$[[A]]$ is a subclass of $[[B]]$'', then $[[A & B]]$
+is a name of a class with all the common properties of $[[A]]$ and $[[B]]$. Of
+course, this analog is not exact, in the same sense that inheritance is not
 subtyping~\citep{cook1989inheritance}. But it is intuitively appealing, and as
 we will see, can be made more precise in a sufficiently enriched calculus based
-on intersection types.
+on intersection types. More pragmatically, many programming languages, such as
+Scala, TypeScript, Flow and Ceylon adopt some form of intersection types. For example, in Scala
+we can express a class \lstinline{A} implements \textit{both} \lstinline{B} and \lstinline{C} by the following declaration
+\begin{lstlisting}[language=Scala]
+  class A extends B with C
+\end{lstlisting}
+where \lstinline[language=Scala]{B with C} denotes an intersection type between
+\lstinline{B} and \lstinline{C}.
+
+% What may seem surprising to OO programmers is that $[[A & B]]$ can also be viewed as a natural analog of \textit{multiple inheritance}. If
+% we read the subtyping $[[A <: B]]$ as ``$[[A]]$ is a subclass of $[[B]]$'', then
+% $[[A & B]]$ is a name of a class with all the common properties of $[[A]]$ and
+% $[[B]]$.
+
+\paragraph{Intersection Subtyping.}
+
+
+\newcommand{\rulehl}[1]{}
 
 Three subtyping rules capture the order-theoretic properties of intersection types:
 \begin{mathpar}
@@ -74,36 +93,39 @@ Two nice consequences follow:
     [[ { l1 : A1} & ... & {ln : An} ]]
   \]
   Note that the width and depth subtyping rules of records become a
-  consequence of the above subtyping rules of intersections.
+  consequence of intersection subtyping.
 \end{enumerate}
+
+
+\paragraph{Distributivity Rules.}
 
 Two additional subtyping rules are usually found in the literature of
 intersection types (e.g., see \citet{reynolds1988preliminary, Barendregt_1983}).
 The first one captures the relation between intersections and function spaces,
 allowing intersections to distribute over the right-hand side of $[[->]]$'s:
 \[
-    \inferrule*[lab=S-distArr]{ }{ [[(A1 -> A2) & (A1 -> A3) <: A1 -> A2 & A3]] }
+    \drule{S-distArr}
 \]
 Note that the other direction is also derivable (cf. \cref{sec:typesystem}).
 The second rule captures the relation between intersections and (singleton)
 records, allowing intersections to distribute over record labels:
 \[
-    \inferrule*[lab=S-distRcd]{ }{ [[  { l : A } & { l : B } <: { l : A & B }   ]] }
+    \drule{S-distRcd}
 \]
-
 These two rules, though intuitively reasonable, will have a strong effect on both
 syntactic and semantics properties of the language. For example, \rref{S-distArr} implies that
 $[[ Top <: A -> Top ]]$ for any $[[A]]$; and \rref{S-distRcd} implies that $[[  Top <: {l : Top} ]]$.
 
-The introduction form of intersection types says that a term $[[ee]]$ can be
-given type $[[A & B]]$ if it inhabits both $[[A]]$ and
-$[[B]]$:
+\paragraph{Intersection Typing.}
+
+The introduction rule of intersection types says that a term $[[ee]]$ can be
+given type $[[A & B]]$ if it inhabits both $[[A]]$ and $[[B]]$:
 \[
-    \inferrule*[lab=T-interI]{ [[ee : A1]] \\  [[ee : A2]]   }{   [[ee : A1 & A2]]   }
+    \drule{interI}
 \]
-The corresponding elimination form allows us to derive, given a derivation of
+The corresponding elimination rule allows us to derive, given a derivation of
 $[[ ee : A1 & A2 ]]$, that $[[ee : A1]]$ and $ [[ee : A2]]$. But this already
-follows from \rref{S-interL,S-interR} and the subsumption rule; so we need not
+follows from intersection subtyping and the subsumption rules; so we need not
 to add the elimination rule explicitly to the calculus.
 
 
@@ -111,12 +133,12 @@ to add the elimination rule explicitly to the calculus.
 
 
 Intersection types were first incorporated into a practical programming language
-named Forsythe by \cite{reynolds1988preliminary, reynolds1997design}. who used
+named Forsythe by \cite{reynolds1988preliminary, reynolds1997design}, who used
 them to encode features such as operator overloading by means of a
 ``merge'' operator $p_1 ,, p_2$---``a construction for intersecting or
 `merging' meanings''~\citep[p. 24]{reynolds1997design}.
 (\citeauthor{reynolds1997design} actually used single comma $p_1 , p_2$,
-but here we use double commas for consistency.) \citeauthor{reynolds1997design}
+but here we follow \citeauthor{dunfield2014elaborating} by using double commas for consistency.) \citeauthor{reynolds1997design}
 demonstrated the power of the merge operator by developing an encoding of
 records by using intersection types; similar ideas also appear in
 \citet{Castagna_1992}. The idea is to have only single-field records with the introduction form $[[ { l = e } ]]$ of type $[[ {l : A} ]]$ and
@@ -131,29 +153,29 @@ we can write
 which plays nicely with the syntactic sugar of multiple-field record types as
 an intersection of single-field record types.
 
-More recently, \citet{dunfield2014elaborating} developed a method for
+Recently, \citet{dunfield2014elaborating} developed a method for
 elaborating intersections and unions into products and sums. Central to his
-approach is a source-level \textit{merge operator} $[[ee1 ,, ee2]]$, reminiscent
+system is a source-level \textit{merge operator} $[[ee1 ,, ee2]]$, reminiscent
 of Forsythe~\citep{reynolds1997design}, which embodies several computationally
 distinct terms, and can be checked against various parts of an intersection
 type. In his system, the introduction form of intersection types is still
-\rref{T-interI}, and two additional rules for the merge operator are added:
+\rref{interI}, and two additional rules for the merge operator are added:
 \begin{mathpar}
-    \inferrule*[lab=T-mergeL]{ [[  ee1 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] } \and
-    \inferrule*[lab=T-mergeR]{ [[  ee2 : A  ]]   }{ [[  ee1 ,, ee2 : A   ]] }
+  \drule{mergeL}
+  \drule{mergeR}
 \end{mathpar}
 In other words, a merge expression can choose to type one subterm and ignore the
-other. In combination of \rref{T-interI}, they allow to type check
+other. In combination of \rref{interI}, they allow to type check
 two distinct implementations $[[ee1]]$ and $[[ee2]]$ with completely different
 types $[[A1]]$ and $[[A2]]$ of the intersection. For example, let $[[ee1]] = [[\x . x]]$ and $[[ee2]] = 1$,
 then the type $[[ (nat -> nat) & nat ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
 \[
-  \inferrule*[right=T-interI]
-  { \inferrule*[right=T-mergeL]
+  \inferrule*[right=\rref*{interI}]
+  { \inferrule*[right=\rref*{mergeL}]
     { [[ ee1 : nat -> nat  ]] }
     {[[ee1 ,, ee2 : nat -> nat]]}
     \\
-    \inferrule*[right=T-mergeR]
+    \inferrule*[right=\rref*{mergeR}]
     { [[ ee2 : nat  ]] }
     {[[ee1 ,, ee2 : nat]]}
   }
@@ -162,8 +184,8 @@ then the type $[[ (nat -> nat) & nat ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
 
 \citeauthor{dunfield2014elaborating} then showed how to give a semantics to a
 calculus with unrestricted intersection types by a type-directed elaboration to
-a simply-typed lambda calculus extended with tuples. For example, the
-expression $[[ (\x . x) ,, 1 ]]$ elaborates to a tuple $[[ <\x. x , 1> ]]$. As
+a simply-typed lambda calculus extended with products. For example, the
+expression $[[ (\x . x) ,, 1 ]]$ elaborates to a pair $[[ <\x. x , 1> ]]$. As
 usual, his system does not have explicit source-level intersection eliminations;
 elaboration puts all needed projections into the target program. For example,
 the same expression $[[ (\x . x) ,, 1 ]]$, when checked against $[[nat]]$, elaborates to $[[ pp2 <\x. x , 1> ]]$. The
@@ -173,7 +195,7 @@ foundation for type systems with disjoint intersection types.
 
 \subsection{Coherence}
 
-While \citeauthor{dunfield2014elaborating}'s approach is simple and powerful, it
+While \citeauthor{dunfield2014elaborating}'s system is simple and powerful, it
 has serious usability issues. More specifically, it lacks the theoretically and
 practically important property of \textit{coherence}~\citep{Reynolds_1991}: the
 meaning of a target program depends on the choice of elaboration typing
@@ -190,9 +212,11 @@ is not robust as the type system is extended''. The issue of coherence is later
 addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 \textit{disjoint intersection types}.
 
-\newcommand{\rulehl}[1]{#1}
 
 \subsection{Disjoint Intersection Types}
+
+\renewcommand{\rulehl}[1]{#1}
+
 
 \begin{figure}
   \centering
@@ -207,8 +231,13 @@ addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
 Disjoint intersection types, first introduced in the \oname
 calculus~\citep{oliveira2016disjoint} provide a remedy for the coherence
 problem, by imposing restrictions on the uses of merges and on the formation of
-intersection types. Its full type system is shown in \cref{fig:lambdai}. Central
-to their approach is the notion of \textit{disjointness}. As a first
+intersection types. The syntax of \oname is shown below:
+\begin{align*}
+  \text{Type} \quad [[A]] &\Coloneqq [[nat]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
+  \text{Terms} \quad [[ee]] &\Coloneqq [[ii]] \mid [[x]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]]
+\end{align*}
+Its full (bidirectional) type system is shown in \cref{fig:lambdai}. Central
+to their system is the notion of \textit{disjointness}. As a first
 approximation, for two types $[[A]]$ and $[[B]]$ to be disjoint (written $[[A ** B]]$),
 they must not have any sub-components sharing the same type. In a type
 system without $[[Top]]$, this can be ensured by the following specification:
@@ -217,37 +246,53 @@ system without $[[Top]]$, this can be ensured by the following specification:
   $[[A ** B]] \defeq  \nexists C.\ [[A <: C]] \land [[B <: C]]$
 \end{definition}
 
-Disjointness judgment is used in the typing rule of merges (\rref{T-merge}) and
-the well-formedness of intersection types (\rref{wf-and}). Now the expression
-$[[1 ,, 2]]$ is not typable because $[[nat]]$ and $[[nat]]$ are not disjoint
-(they have a common supertype $[[nat]]$). To ensure that subtyping produces
-unique coercions, they also employ the notion of \textit{ordinary types}~\citep{Davies_2000}---those that are not intersection types---and
-use the judgment ``$[[ A ord ]]$'' in \rref{Si-andL,Si-andR}. Ordinary types and
-disjointness are sufficient to ensure a coherent semantics of a type system
-without $[[Top]]$.
+The disjointness judgment appears in the well-formedness of intersection types
+(\rref{wf-and}) and the typing rule of merges (\rref{Ti-merge}).
+\Rref{wf-and}---the well-formedness of intersections---enforces that only
+disjoint types can form an intersection types: so $[[nat & bool]]$ is
+well-formed but $[[nat & nat]]$ is not. \Rref{Ti-merge}---the typing rule for
+merges---prevents problematic merges such as $[[1 ,, 2]]$ (because $[[nat]]$ and
+$[[nat]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, true]]$.
+\begin{remark}
+  Note that the introduction form for disjoint intersection types
+  (\rref{Ti-merge}) is not as expressive as \rref{interI}. For instance, \rref{interI} entails
+  a form of \textit{finitary overloading}:
+  \[
+    \inferrule*{ [[  \x .x : nat -> nat  ]] \\ [[ \x . x : char -> char   ]]    }{  [[\x . x : (nat -> nat) & (char -> char)]]  }
+  \]
+  which is impossible to express in \oname.
+\end{remark}
+
+To ensure that subtyping produces unique coercions, they also employ the notion
+of \textit{ordinary types}~\citep{Davies_2000}---those that are not intersection
+types---and use the judgment ``$[[ A ord ]]$'' in \rref{Si-andL,Si-andR}.
+Ordinary types and disjointness are sufficient to ensure a coherent semantics of
+a type system without $[[Top]]$.
 
 $[[Top]]$ brings extra complication, because \cref{def:disjoint_spec} does not
 hold anymore ($[[Top]]$ is trivially a supertype of every type). To address this
 problem, the notion of \textit{top-like types} were introduced, which are those
-types that behave as $[[Top]]$ (such as $[[Top & Top]]$, $[[A -> Top]]$), and
+types that behave like $[[Top]]$ (such as $[[Top & Top]], [[Top & Top & Top]], \dots$), and
 captured by a predicate $ \rceil \cdot \lceil $. With top-types,
 \cref{def:disjoint_spec} is refined to account for $[[Top]]$, as shown in
-\cref{def:disjoint_spec2}. However, a careful analysis of
-\cref{def:disjoint_spec2} shows that intersection types such as $[[ Top & Top
-]]$ and $[[Top & nat]]$ are not well-formed because their constitute types are
-not disjoint. This is one of the limitations in \oname, since ``a merge of two
-$[[Top]]$-types will always return the same value regardless of which component
-of the merge is chosen''~\citep{alpuimdisjoint}. In other words, $[[Top]]$ is
-always disjoint to every other type. This restriction was later lifted by
-\citet{alpuimdisjoint} in the \fname calculus by a set of inference rules, but
-whether a corresponding specification of disjointness exists or not was not
-known at that time. We will present a suitable specification in
-\cref{sec:category}.
+\cref{def:disjoint_spec2}.
 
 \begin{definition}[$[[Top]]$-Disjointness] \label{def:disjoint_spec2}
   $[[A ** B]] \defeq \neg \rceil [[A]] \lceil \ \land \ \neg \rceil [[B]] \lceil \ \land \
   (\forall C.\ [[A <: C]] \land [[B <: C]] \Longrightarrow \rceil [[C]] \lceil)$
 \end{definition}
+
+However, a careful analysis of \cref{def:disjoint_spec2} shows that intersection
+types such as $[[ Top & Top ]]$ and $[[Top & nat]]$ are not well-formed because
+their constitute types are not disjoint. This is one of the limitations in
+\oname, since ``a merge of two $[[Top]]$-types will always return the same value
+regardless of which component of the merge is chosen''~\citep{alpuimdisjoint}.
+In other words, $[[Top]]$ is always disjoint to every other type. This
+restriction was later lifted in the \fname calculus of \citet{alpuimdisjoint} by
+a set of inference rules, but whether a corresponding specification of
+disjointness exists or not was not known at that time. We will present a
+suitable specification in \cref{sec:category}.
+
 
 Combined with bidirectional type-checking, \citet{oliveira2016disjoint}
 formalized the \oname calculus in Coq and prove that there is at most one
@@ -256,12 +301,15 @@ one possible target program and thus coherence follows trivially. We refer the
 reader to their paper for a detailed account of \oname.
 
 In essence disjoint intersection types retain most of the expressive power of
-the merge operator. For example, they can be used to model powerful forms of
-extensible records~\citep{alpuimdisjoint}. However, forcing every intersection
-types to be disjoint is unnecessarily restrictive. For instance,
-$[[1 : nat & nat]]$ is undoubtedly unambiguous, but is rejected by \oname and \fname. Our
-starting point in this thesis is to lift this restriction and makes room for
-more expressiveness for calculi with disjoint intersection types.
+the merge operator. For example, as noted by \citet{alpuimdisjoint}, they can be
+used to model powerful forms of extensible records. However, forcing every
+intersection types to be disjoint is unnecessarily restrictive. For instance,
+$[[1 : nat & nat]]$ is undoubtedly unambiguous, but is rejected by \oname and
+\fname. Another issue is that because of the restriction, \fname lacks a general
+substitution lemma: only a restricted form applies, which greatly complicates
+the metatheory. Our starting point in this thesis is to lift this restriction
+and makes room for more expressiveness for calculi with disjoint intersection
+types.
 
 
 
@@ -422,10 +470,11 @@ declared to be a subclass of \lstinline{Exp}, which means that the extension to
 
 \paragraph{Combining Both Extensions.}
 
-Finally, the two extensions are naturally combined by means of
-multiple inheritance, closing the diamond.
+Finally, the two extensions are naturally combined by means of multiple
+inheritance, closing the diamond. (\citeauthor{ernst2004expression} uses the
+symbol $\oplus$ to play the role of ``intersecting'' two classes.)
 \begin{lstlisting}[language=gbeta]
-class LangNegEval extends LangEval & LangNeg {
+class LangNegEval extends LangEval o+o LangNeg {
   refine class Neg {
     int eval() { return -exp.eval(); }
   }
@@ -527,6 +576,20 @@ improved by traits. We refer to their paper for a detailed account of traits.
   \end{subfigure}
   \caption{Traits and conflicts}
 \end{figure}
+
+
+
+\section{Functional Object Encodings}
+
+\label{sec:bg:object}
+
+
+\section{Logical Relations}
+
+\label{sec:bg:lr}
+
+
+
 
 %%% Local Variables:
 %%% mode: latex
