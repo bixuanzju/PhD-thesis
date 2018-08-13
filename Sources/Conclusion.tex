@@ -520,14 +520,63 @@ There are several important extensions that should also be considered.
 
 \paragraph{Union Types.}
 
-Union types are dual to intersection types.
-
-
+Union types---as intersections' dual---are also widely used in languages such as
+Ceylon and Flow. Union types introduce an interesting subtyping relation: a
+union type $[[A | B]] $ is a common supertype of $[[A]]$ and $[[B]]$;
+or more precisely, it is a \textit{least upper bound} of $[[A]]$ and $[[B]]$, as
+exhibited by the following subtyping rules.
+\begin{mathpar}
+  \inferrule*[lab=union]{  [[A <: C]] \\ [[B <: C]]   }{[[ A | B <: C]]} \and
+  \inferrule*[lab=unionL]{   }{[[A <: A | B]]} \and
+  \inferrule*[lab=unionR]{   }{[[B <: A | B]]}
+\end{mathpar}
+\citet{dunfield2014elaborating} has shown that unions can be elaborated into
+sums, and the merge operator also supports union elimination with two
+computationally distinct branches. We think that adapting his approach to our
+setting should not be difficult. One immediate issue is disjointness of union
+types; obviously \cref{thm:disjoint_spec} cannot serve as a specification any more.
+More thoughts are needed to come up with a coherent system with union types.
 
 \paragraph{Nominal Typing.}
 
+Many widely-used OO languages feature nominal type systems where type names play
+a crucial role. In previous chapters, we often define short names for long or
+complex compound types to improve readability, e.g., in
+\cref{sec:trait:overview}, we have seen:
+\lstinputlisting[linerange=10-17]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
+Such definitions are purely cosmetic: the name \lstinline{Editor} is just an
+abbreviation for the record on the right-hand side, and the two are
+interchangeable in every context. By contract, in OO languages such as Java,
+every compound type (class declaration or interface definition) has a name, and
+subtyping is explicitly declared between type \textit{names}.
+
+To blend in with our powerful structural subtyping relation, we need to clearly
+decide which types are based on nominal subtyping, which are based on structural
+subtyping and how they interact. A rough idea, following the \textsf{Moby} type
+system~\citep{fisher2000extending}, is to separate \textit{class types} from
+\textit{object types}, as we did for trait types. Subtyping on class types is
+nominal, while objects are compared structurally. This is just a high-level
+intuition; of course there are other details (e.g., disjointness) that need to
+be worked out. A pleasant property of nominal systems, and also related to our
+extension of recursive types, is that they offer a natural account of recursive
+types: if we look at the amber rule \rref*{RS-amber}, an explicit subtyping
+relation $[[XX <: YY]]$ is added to the context when two recursive types are
+compared.
+
+
+
 \paragraph{Mutable State.}
 
+Another direction for future work is to add mutable state, which would affect
+two aspects of our metatheory: type safety and coherence. For type safety, we
+expect that lessons learned from previous work on family polymorphism and
+mutability on OO languages apply to our work. For example, it is well-known that
+subtyping in the presence of mutable state often needs restrictions. Given such
+suitable restrictions we expect that type-safety in the presence of mutability
+still holds. For coherence, it would be a major technical challenge to adjust
+our coherence proof and its Coq mechanization: logical relations that account
+for mutable state introduce significant complexity (e.g., see
+\citet{ahmed2004semantics}).
 
 
 
