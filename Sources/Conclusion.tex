@@ -7,7 +7,31 @@
 
 \section{Conclusion}
 
+In this thesis we have argued that the combination of disjoint intersection
+types, a powerful subtyping relation and parametric polymorphism greatly improve
+the state-of-art technique for modularity and code reuse. In the course of our
+investigation, we have gradually introduced three new typed calculi, each
+building on top of the previous one:
+\begin{itemize}
+\item The \namee calculus is the basic calculus with disjoint intersection types
+  and a powerful subtyping relation. We have shown that it captures the essence
+  of nested composition, enabling a simple solution to the expression problem.
+  In order to prove coherence, we have introduced a powerful proof method based
+  on logical relations.
+\item The \fnamee calculus, building on \namee, supports parametric
+  polymorphism. We have shown that it can express a very dynamic form of
+  composition and polymorphic extensible records. We have also adapted the proof
+  method to establish its coherence property.
+\item \sedel, building on \fnamee, supports, among others, typed first traits.
+  We have shown its usefulness in building highly reusable software components
+  using a improved form of Object Algebras.
+\end{itemize}
 
+We hope that the concepts and the methods described in this thesis may serve as
+a helpful guide to researches and programmers alike in their attempts to
+understand and build better software. In a near future, we are more than
+thrilled to see some of the ideas in this thesis can be woven into existing languages
+of today.
 
 
 \section{Future Work}
