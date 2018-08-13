@@ -19,16 +19,16 @@ building on top of the previous one:
   In order to prove coherence, we have introduced a powerful proof method based
   on logical relations.
 \item The \fnamee calculus, building on \namee, supports parametric
-  polymorphism. We have shown that it can express a very dynamic form of
-  composition and polymorphic extensible records. We have also adapted the proof
-  method to establish its coherence property.
+  polymorphism. We have shown that it can express a very dynamic (and
+  conflict-free) form of composition. We have also adapted the proof method to
+  establish its coherence property.
 \item \sedel, building on \fnamee, supports, among others, typed first traits.
   We have shown its usefulness in building highly reusable software components
   using a improved form of Object Algebras.
 \end{itemize}
 
 We hope that the concepts and the methods described in this thesis may serve as
-a helpful guide to researches and programmers alike in their attempts to
+a helpful guide to researchers and programmers alike in their attempts to
 understand and build better software. In a near future, we are more than
 thrilled to see some of the ideas in this thesis can be woven into existing languages
 of today.
@@ -110,7 +110,7 @@ following type equalities:
 \end{align*}
 \end{proposition}
 
-It can be shown that every pair of types has a least upper bound (unique up to
+Furthermore, it can be shown that every pair of \namee types has a least upper bound (unique up to
 $\approx$-equivalence). The following suffices to compute a least upper bound of
 any types $[[A]]$ and $[[B]]$:
 
@@ -131,7 +131,7 @@ any types $[[A]]$ and $[[B]]$:
 
 \paragraph{Connecting with Disjointness.}
 
-With these properties stated, it turns out that our disjointness rules, as
+With the above propositions stated, it turns out that our disjointness rules, as
 given in \cref{fig:disjoint}, can be compactly formulated using $\approx$ and $\sqcup$:
 
 \begin{theorem} \label{thm:disjoint_spec}
@@ -173,16 +173,18 @@ By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is \textit{isomo
 
 Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
 \begin{enumerate}
-\item By \rref{S-andL,S-andR}, there must be two morphisms, $\bra{[[ pp1 ]]} : \bra{[[A1 & A2]]} \rightarrow \bra{[[A1]]}  $ and $\bra{[[pp2]]} : \bra{[[A1 & A2]]} \rightarrow \bra{[[A2]]}  $
+\item By \rref{S-andL,S-andR}, there must be two morphisms, $[[ pp1 ]] : \bra{[[A1 & A2]]} \rightarrow \bra{[[A1]]}  $ and $[[pp2]] : \bra{[[A1 & A2]]} \rightarrow \bra{[[A2]]}  $
   \[
 \begin{tikzcd}
   \bra{[[A1]]} &  & \bra{[[A2]]} \\
   & \bra{[[A1 & A2]]} \arrow[lu, "\pi_1"'] \arrow[ru, "\pi_2"] &
 \end{tikzcd}
   \]
-\item For any types $[[A1]]$ and $[[A2]]$, there exists a least upper bound $[[
-  A1 =/ A2 ]]$ (\cref{prop:2}), and two morphisms $\bra{[[A1 <: A1 =/ A2]]} : \bra{[[A1]]} \rightarrow \bra{[[A1 =/ A2]]}$
-  and $\bra{[[A2 <: A1 =/ A2]]} : \bra{[[A2]]} \rightarrow \bra{[[A1 =/ A2]]}$, and the following diagram should commute:
+\item For any types $[[A1]]$ and $[[A2]]$, there exists a least upper bound
+  $[[A1 =/ A2 ]]$ (\cref{prop:2}), and two morphisms $\bra{[[A1 <: A1 =/ A2]]} :
+  \bra{[[A1]]} \rightarrow \bra{[[A1 =/ A2]]}$ and $\bra{[[A2 <: A1 =/ A2]]} :
+  \bra{[[A2]]} \rightarrow \bra{[[A1 =/ A2]]}$, and the following diagram should
+  commute:
   \[
 \begin{tikzcd}
   & \bra{[[  A1 =/ A2 ]]} &  \\
@@ -279,8 +281,8 @@ We replace it with the following two rules:
 \end{mathpar}
 \Rref{IS-allL} says that a type $[[\X ** A1 . A2]]$ is a subtype of $[[B]]$ if
 some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
-\citeauthor{dunfield2013complete}'s system, in our setting, not every monotype
-$[[t]]$ works---those that do not respect the disjointness constraints should
+\citeauthor{dunfield2013complete}'s system, in our setting, not all monotypes
+$[[t]]$ that make the subtyping go through are equally fine---those that do not respect the disjointness constraints should
 not be considered, for the sake of coherence.
 Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** nat . X -> X & nat) 1 ]]$ to type check,
 which would be a disaster.
@@ -289,7 +291,7 @@ is a subtype of $[[\X ** B1. B2]]$ if we can show that $[[A]]$ is a subtype of
 $[[B2]]$ in a context extended with $[[X ** B1]]$. It is not immediately obvious
 that these two rules subsume \rref{S-forall}, and in particular what happens to ``a universal quantifier is contravariant in its
 disjointness constraints'', which is very important in the original subtyping.
-It can be shown that they do subsume \rref{S-forall}, as is evident by the
+It can be shown that they do subsume \rref{S-forall}, as exhibited by the
 following derivation:
 \[
 \inferrule*[right=\rref*{IS-allR}]{  \inferrule*[right=\rref*{IS-allL}]{ \inferrule*[right=\rref*{FD-tvarL}]{ [[  A2 <: A1  ]]    }{[[  X ** A2 |- X ** A1  ]]}  \\ [[  X ** A2 |- B1 <: B2  ]]   }{[[X ** A2 |- \X ** A1. B1 <: B2]]}    }{ [[  empty |- \X ** A1. B1 <: \X ** A2 . B2  ]] }
@@ -323,7 +325,7 @@ immediately obtain the knowledge that all suitable instantiations of the former
 are disjoint with the latter. However, the universal rule is very hard to use as
 an introduction rule: it requires us to inspect every possible instantiation;
 it is getting even worse when we consider two polymorphic types. We do not
-yet fully know all the consequences of this rule. Another idea is perhaps we
+yet fully understand all the consequences of this rule. Another idea is perhaps we
 should focus on the opposite side---i.e., what constitutes a non-disjointness
 relation. But this idea seems more radical.
 

@@ -1860,7 +1860,6 @@ defn
 
 DD |- A tri B ::  :: dmatching :: m_ by
 
-DD |- t
 DD |- t ** A1
 DD |- [t / X] A1 tri B1 -> B2
 -------------------------------- :: forall
