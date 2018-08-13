@@ -241,8 +241,9 @@ polymorphic quantifiers to appear anywhere in a type. There are several
 approaches in the literature~\citep{odersky1996putting, dunfield2013complete,
   jones2007practical}. Since our declarative type system is already based on
 bidirectional type-checking, the work by \citet{dunfield2013complete} is
-particularly relevant for us. It should not be difficult to adapt their approach
-to our declarative system. Below we sketch out several typing rules for the initial design.
+particularly relevant for us. It turns out that coming up with a coherent
+declarative system is already very challenging, especially the disjointness
+relation. Below we sketch out some ideas for the initial design.
 
 \paragraph{Declarative Subtyping.}
 
@@ -257,7 +258,7 @@ some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
 \citeauthor{dunfield2013complete}'s system, in our setting, not every monotype
 $[[t]]$ works---those that do not respect the disjointness constraints should
 not be considered, for the sake of coherence.
-Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** nat . X -> X) 1 ]]$ to type check,
+Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** nat . X -> X & nat) 1 ]]$ to type check,
 which would be a disaster.
 \Rref{IS-allR} says that $[[A]]$
 is a subtype of $[[\X ** B1. B2]]$ if we can show that $[[A]]$ is a subtype of
@@ -271,11 +272,43 @@ following derivation:
 \]
 
 
+\paragraph{Disjointness.}
+
+The disjointness relation needs a major overhaul. For instance, subtyping allows
+$[[ \X ** char . X -> X <: nat -> nat ]]$, and as such, $[[ \X ** char . X -> X]]$
+is no longer disjoint with $[[nat -> nat]]$, whereas $[[ \X ** nat . X -> X]]$
+is disjoint with $[[nat -> nat]]$. A seemingly intuitive rule is as follows:
+\begin{mathpar}
+  \inferrule*[lab=FD-implicit]{[[DD |- t1 ** A1]] \\  [[DD |- [t1 / X] A2 ** B2]]  }{  [[DD |- \ X ** A1 . A2 ** B2]]  }
+\end{mathpar}
+In the above rule, the monotype $[[t1]]$ is existentially quantified: it
+suffices to exhibit a disjointness derivation of $[[  [t1 / X]  A2  ]]$ and $[[B2]]$
+for one monotype in order to build a disjointness derivation of $[[\X ** A1 . A2]]$ and $[[B2]]$.
+Unfortunately, this rule is incorrect as we could guess a
+``wrong'' $[[t1]]$. Take $[[ \X ** char . X -> X ]]$ for example: one
+instantiation is $[[bool -> bool]]$, which is disjoint with $[[nat -> nat]]$.
+But as we saw, this does not mean $[[ \X ** char . X -> X ]]$ is disjoint with
+$[[nat -> nat]]$. Instead we should require \textit{all possible}
+instantiations are disjoint with $[[B2]]$:
+\begin{mathpar}
+  \inferrule*[lab=FD-implicit]{ \forall [[t1]] .\ [[DD |- t1 ** A1]] \Longrightarrow [[DD |- [t1 / X] A2 ** B2]]  }{  [[DD |- \ X ** A1 . A2 ** B2]]  }
+\end{mathpar}
+The universal rule is very convenient as an elimination form: if we have a
+evidence of the disjointness between a polymorphic type and another type, we can
+immediately obtain the knowledge that all suitable instantiations of the former
+are disjoint with the latter. However, the universal rule is very hard to use as
+an introduction rule: it requires us to inspect every possible instantiation;
+it is getting even worse when we consider two polymorphic types. We do not
+yet fully know all the consequences of this rule. Another idea is perhaps we
+should focus on the opposite side---i.e., what constitutes a non-disjointness
+relation. But this idea seems more radical.
+
+
 \paragraph{Declarative Typing.}
 
-Now we consider the typing rules. Most of the rules stay the same. We remove
-\rref{FT-tabs,FT-tapp}, since the syntax now does not include type abstractions and
-type applications. We add one rule:
+Putting disjointness aside, now we consider the typing rules. Most of the rules
+stay the same. We remove \rref{FT-tabs,FT-tapp}, since the syntax now does not
+include type abstractions and type applications. We add one rule:
 \[
   \drule{FT-gen}
 \]
@@ -300,12 +333,16 @@ works by guessing instantiations of polymorphic quantifiers with the requirement
 that the monotype $[[t]]$ must meet the disjointness constraints. \Rref{M-arr}
 is trivial, returning $[[A1 -> A2]]$ as it is.
 
+
+
 Of course the above is only a sketch; we have not studied the declarative system in full,
 nor its metatheory. One potential problem is that now subtyping and
 disjointness are mutually recursive (e.g., \rref{IS-allL} uses disjointness and
 \rref{FD-tvarL} uses subtyping), which might pose difficulty in terms of
 formalization. For coherence, we estimate that the proof method described in
 this thesis should still work.
+
+
 
 \paragraph{Algorithmic System.}
 
@@ -482,6 +519,10 @@ There are several important extensions that should also be considered.
 
 
 \paragraph{Union Types.}
+
+Union types are dual to intersection types.
+
+
 
 \paragraph{Nominal Typing.}
 
