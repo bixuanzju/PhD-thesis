@@ -583,6 +583,96 @@ improved by traits. We refer to their paper for a detailed account of traits.
 
 \label{sec:bg:object}
 
+\citet{cook1989denotational} developed a method to model inheritance in the
+presence of self-reference, based on the fixed-point semantics of recursive
+definitions. In their model, the interpretation of inheritance is taken as a
+mechanism of \textit{incremental programming}, where new programs are developed
+by specifying the \textit{modification}---i.e., how they differ from existing
+ones; self-reference in the original definition must be changed to refer to the
+modified definition.
+
+We use an example to illustrate the encodings of classes and objects. First we
+define a class of points. Points have two components \lstinline{x} and
+\lstinline{y} to specify their locations. The \lstinline{dist} method computes
+their (Euclidean) distance from the origin. The following is a Scala class
+\lstinline{Point}:
+\begin{lstlisting}[language=Scala]
+class Point(x : Int, y : Int) {
+  def dist() = sqrt(square(this.x) + square(this.y))
+}
+\end{lstlisting}
+
+In a purely functional setting, objects are modeled as records whose fields
+represent methods. The class \lstinline{Point} is then modeled as a
+\textit{generator} \lstinline{PointGen(a, b)}, defined as follows:
+\begin{lstlisting}[language=simple]
+PointGen(a, b) = lamthis.
+  { x = a
+  , y = b
+  , dist() = sqrt(square(this.x) + square(this.y))
+  }
+\end{lstlisting}
+Notice that the keyword \lstinline{this} is modeled as a formal parameter of the
+function. % When applied to the coordinates of a new point, \lstinline{PointGen}
+% returns a generator whose fixed point is a point object.
+Formally speaking, a function intended to specify a fixed point whose formal
+parameter represents self-reference is called a generator.
+
+A point $(3, 4)$ is created by taking a fixed point of \lstinline{PointGen(3, 4)} using a
+\textit{lazy recursive} let binding:
+\begin{lstlisting}[language=simple]
+p = letrec this = PointGen(3, 4, this) in this
+\end{lstlisting}
+and method invocation on objects is simply field accessing on records:
+\lstinline{p.dist()} evaluates to $5$ as expected.
+
+\paragraph{Modeling Inheritance.}
+
+Inheritance allows a new class to be defined by adding or replacing methods in
+an existing class. We illustrate this by defining another class \lstinline{Circle}:
+\begin{lstlisting}[language=Scala]
+class Circle(x : Int, y : Int, radius : Int) extends Point(x, y) {
+  override def dist() = abs(super.dist() - this.radius)
+}
+\end{lstlisting}
+The class \lstinline{Circle} inherits from \lstinline{Point} and redefines the
+method \lstinline{dist} to mean the closest distance from the circle to the
+origin. It reuses the original \lstinline{dist} method in the body.
+To correctly model inheritance, there are three aspects to note:
+\begin{inparaenum}[(1)]
+\item the addition or replacement of methods,
+\item the redirection of \lstinline{this} in the original generator to the modified methods,
+\item and the binding of \lstinline{super} to refer to the original methods.
+\end{inparaenum}
+
+Inheritance is modeled as a function that takes a generator and returns a new
+generator. Such functions are called \textit{wrappers}. Below we give a wrapper
+for the subclass \lstinline{Circle}:
+\begin{lstlisting}[language=simple]
+CircleWrapper(a, b, r) = lamthis. lamsuper.
+  { radius = r
+  , dist() = abs(super.dist() - this.radius)
+  }
+\end{lstlisting}
+\lstinline{CircleWrapper(a, b, r)} is defined as a function of two arguments,
+one representing \lstinline{this} and the other representing \lstinline{super}.
+
+The generator for the class \lstinline{Circle} can now be defined by
+applying \lstinline{CircleWrapper} to \lstinline{PointGen} as follows:
+\begin{lstlisting}[language=simple]
+CircleGen(a, b, r) = lamthis.
+  let super = PointGen(a, b, this)
+  in (CircleWrapper(a, b, r, this) super) o+o super
+\end{lstlisting}
+That is, a wrapper works by first distributing \lstinline{this} to both the
+wrapper and the original generator. Then the modification is applied to the
+original record definition to produce a modification record. Note that at this
+stage, the binding of \lstinline{this} correctly refer to the modification,
+while the binding of \lstinline{super} refers to the original record. Finally
+the modification record is combined with the original record using $\oplus$.
+(\lstinline{M o+o N} is defined in a way such that any method defined in \lstinline{M}
+replaces the corresponding method defined in \lstinline{N}.)
+
 
 \section{Logical Relations}
 
