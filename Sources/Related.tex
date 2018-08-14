@@ -70,20 +70,51 @@ relation's non-trivial treatment of pairs.
 
 \section{Intersection Types and the Merge Operator}
 
-Much has been said in \cref{chap:background}. Here we give a short summary of
-the work that inspired ours. Forsythe~\citep{reynolds1988preliminary} has
-intersection types and a merge-like operator. However to ensure coherence,
-various restrictions were added to limit the use of merges. For example, in
-Forsythe merges cannot contain more than one function. \citet{Castagna_1992}
-proposed a coherent calculus with a special merge operator that works on
-functions only. More recently, \citet{dunfield2014elaborating} shows significant
-expressiveness of type systems with (unrestricted) intersection types and a
-merge operator. However his calculus lacks coherence. The limitation was
-addressed by \citet{oliveira2016disjoint}, who introduced disjointness to ensure
-coherence. The combination of intersection types, a merge operator and
-parametric polymorphism, while achieving coherence was first studied in the
-\fname calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in
-this thesis simplifies type systems with disjoint intersection types by removing
+Forsythe~\citep{reynolds1988preliminary} has intersection types and a merge-like
+operator. However to ensure coherence, various restrictions were added to limit
+the use of merges. Forsythe only permits $p_1 ,, p_2$ when $p_2$ is either an
+lambda abstraction or a record, whose meaning ``overrides'' the corresponding
+type of meaning of $p_1$. For instance, there is a rule regarding lambda
+abstraction that says (adapted to our syntax):
+\[
+  \inferrule*{ \Gamma \vdash \lam{x}{p_2} : \theta_1 \rightarrow \theta_2  }{ \Gamma \vdash (p_1 ,, \lam{x}{p_2}) : \theta_1 \rightarrow \theta_2  }
+\]
+which means that in a merge of two functions, the second one always takes
+precedence to the first one. In contrast, our typing rule for merges is more
+fine-grained in the sense that both functions are retained as long as they are
+disjoint. \citet{Castagna_1992} proposed a coherent calculus with a special
+merge operator that works on functions only. Recently,
+\citet{castagna2014polymorphic} studied a coherent calculus that has
+polymorphism and set-theoretic type connectives (intersections, unions,
+negations). Compared to \fnamee, their intersections are used between function
+types, allowing overloading of types, e.g.,
+\begin{lstlisting}[language=Haskell]
+even :: (Int -> Bool) and ((a \ Int) -> (a \ Int))
+even x = case x of
+           | Int -> x `mod` 2 == 0
+           | _   -> x
+\end{lstlisting}
+The weird-looking function operates differently according to
+the type of the argument: it checks whether an argument is an integer; if it is
+so it returns whether the integer is even or not, otherwise it returns the
+argument as it received. Note that type difference (i.e., \lstinline{a \ Int}) is crucial to
+ensure no ambiguity in the domain types of two functions. In \fnamee, we cannot
+express this kind of intersections. However, \fnamee allows some other
+intersections (e.g., $\inter{(\mathsf{Int} \rightarrow
+  \mathsf{Bool})}{(\mathsf{Int} \rightarrow \mathsf{Int})}$) that are not
+allowed in their system. Nevertheless, both systems need to express negative
+information about type variables: in their system type difference (e.g.,
+\lstinline{a \ Int}) achieves this, whereas in \fnamee we use disjointness
+constraints (e.g., \lstinline{a * Int}).
+
+\citet{dunfield2014elaborating} shows significant expressiveness
+of type systems with (unrestricted) intersection types and a merge operator.
+However his calculus lacks coherence. The limitation was addressed by
+\citet{oliveira2016disjoint}, who introduced disjointness to ensure coherence.
+The combination of intersection types, a merge operator and parametric
+polymorphism, while achieving coherence was first studied in the \fname
+calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in this
+thesis simplifies type systems with disjoint intersection types by removing
 several restrictions. Furthermore, our calculi adopt a more powerful subtyping
 relation based on BCD subtyping, which in turn requires the use of a more
 powerful logical relations based method for proving coherence. On a pragmatic
@@ -91,8 +122,6 @@ note, dynamic inheritance, self-references and abstract methods are all missing
 from prior work, but, as shown in this thesis, they can be encoded using an
 elaboration that employs ideas from the denotational model of
 inheritance~\citep{cook1989denotational}.
-
-
 
 
 % The combination of intersection types, a merge
@@ -105,6 +134,33 @@ inheritance~\citep{cook1989denotational}.
 %   work: you describe existing work, but do not say how it
 %   relates/differs from the work presented in the paper.}
 
+
+\section{Intersection Types and Multiple Inheritance}
+
+\citet{compagnoni1996higher} added intersection types to
+$\mathsf{F}_{<:}^{\omega}$, an extension of System $\mathsf{F}^{\omega}$ with
+bounded quantification, and proposed a new calculus
+$\mathsf{F}_{\land}^{\omega}$ to model multiple inheritance. In their system,
+two types of the same kind $K$ can form an intersection. Recently, some form of
+intersection types have been adopted in object-oriented languages such as Scala,
+TypeScript, Flow, Ceylon, and Grace. The DOT
+calculus~\citep{amin2012dependent,Rompf_2016}, a new type-theoretic foundation
+for Scala, also incorporate intersection types. The most significant difference
+between our calculi and those languages/calculi is that they do not have an
+explicit introduction form of intersection types, like our merge operator. The
+lack of a native merge operator leads to some awkward and type-unsafe solutions
+for defining a merge operator in those languages. As noted by
+\citet{alpuimdisjoint}, TypeScript's use of intersection types is the following
+function:
+\begin{lstlisting}[language=JavaScript]
+function extend<T, U>(first: T, second : U) : T & U {...}
+\end{lstlisting}
+which is analogous to our merge operator that takes two objects and produces
+an object with the intersection of the types of the argument objects. The
+implementation of \lstinline{extend} relies on low-level (and type-unsafe)
+features of JavaScript. Similar encodings have also been proposed for Scala to
+enable applications where the merge operator plays a fundamental
+role~\citep{oliveira2013feature, rendel14attributes}.
 
 \section {BCD Type System and Decidability}
 
@@ -151,7 +207,7 @@ families. However, the virtual class mechanism in \textsc{Beta} is unsound.
 Path-dependent types are used to ensure type safety for virtual types and
 virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinct
 difference from our calculi is that \textit{vc} follows the mixin-style by
-allowing the rightmost class to take precedence. whereas in \namee conflicts are
+allowing the rightmost class to take precedence, whereas in \namee conflicts are
 detected statically and resolved explicitly.
 
 \paragraph{Class Families.}
@@ -379,17 +435,17 @@ embraces traits as the sole mechanism for code reuse. The deviation from
 traditional class-based inheritance is not only because of its simplicity, but
 also because we need a very \emph{dynamic} form of inheritance. In comparison to
 the traditional trait mode, traits in \sedel have the following differences:
-\begin{inparaenum}[(1)]
+\begin{enumerate}
 \item traditional traits cannot be instantiated but only composed with a class,
   whereas traits in \sedel can be instantiated directly;
 \item traditional traits cannot take constructor parameters whereas ours can;
 \item the trait system in \sedel lacks a proper notion of inheritance
-  relationship. For example in the traditional trait model, if the \textit{same}
+  relationship, e.g., in the traditional trait model, if the \textit{same}
   method is obtained more than once via different paths, there is no conflict.
   This is not the case in \sedel;
 \item and finally traits in \sedel are first-class and support dynamic
   inheritance.
-\end{inparaenum}
+\end{enumerate}
 
 
 

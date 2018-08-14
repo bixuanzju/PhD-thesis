@@ -306,7 +306,7 @@ used to model powerful forms of extensible records. However, forcing every
 intersection types to be disjoint is unnecessarily restrictive. For instance,
 $[[1 : nat & nat]]$ is undoubtedly unambiguous, but is rejected by \oname and
 \fname. Another issue is that because of the restriction, \fname lacks a general
-substitution lemma: only a restricted form applies, which greatly complicates
+substitution lemma; only a restricted form applies, which greatly complicates
 the metatheory. Our starting point in this thesis is to lift this restriction
 and makes room for more expressiveness for calculi with disjoint intersection
 types.
@@ -667,7 +667,7 @@ CircleGen(a, b, r) = lamthis.
 That is, a wrapper works by first distributing \lstinline{this} to both the
 wrapper and the original generator. Then the modification is applied to the
 original record definition to produce a modification record. Note that at this
-stage, the binding of \lstinline{this} correctly refer to the modification,
+stage, the binding of \lstinline{this} correctly refers to the modification,
 while the binding of \lstinline{super} refers to the original record. Finally
 the modification record is combined with the original record using $\oplus$.
 (\lstinline{M o+o N} is defined in a way such that any method defined in \lstinline{M}
