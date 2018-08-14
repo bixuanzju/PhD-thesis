@@ -97,24 +97,15 @@ that these three \tname terms are ``equal'' in the sense that all reduce to the 
 
 \subsection{Expression Contexts and Contextual Equivalence.}
 
-To formalize the intuition, we introduce the notion of \textit{expression
-  contexts}. An expression context $[[cc]]$ is a term with a single hole
-$[[__]]$ (possibly under some binders) in it. The syntax of \tname expression
-contexts can be found in \cref{fig:contexts}. The only operation of expression
-contexts is \textit{replacement}, which is the process of filling a hole in an
-expression context $[[cc]]$ with an expression $[[e]]$, written $[[ cc{e} ]]$.
-An important point is that replacement \textit{is not} substitution, that
-is, the free variables of $[[e]]$ that are exposed by $[[cc]]$ are captured by
-replacement. The static semantics of \tname is extended to expression contexts
-by defining the typing judgment
+To formalize the intuition, we turn to \textit{expression contexts}, as
+introduced in \cref{sec:bg:lr}. The syntax of \tname contexts $[[cc]]$ can be found in
+\cref{fig:contexts}. The static semantics of \tname is extended to expression
+contexts by defining the typing judgment
 \[
   [[cc : (gg |- T) ~> (gg' |- T')]]
 \]
 where $([[gg |- T]])$ indicates the type of the hole. This judgment is
 inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
-We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
-The following two definitions capture
-the notion of \textit{contextual equivalence}.
 
 \begin{figure}[t]
   \centering
@@ -127,23 +118,16 @@ the notion of \textit{contextual equivalence}.
   \label{fig:contexts}
 \end{figure}
 
-\begin{definition}[Kleene Equality]
-  Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
-  $\kleq{[[e]]}{[[e']]}$, if there exists $i$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
-\end{definition}
+We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
+Recall the definition of contextual equivalence in \cref{sec:bg:lr}.
+For ease of reference, we restate them below:
 
-\begin{definition}[\tname Contextual Equivalence] \label{def:cxtx}
-  \begin{align*}
-    [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
-                                 & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
-  \end{align*}
-\end{definition}
+\kleene*
 
-In other words, for all possible experiments ($[[ cc ]]$), the outcome of an
-experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
-($\kleq{[[cc{e1}]]}{[[cc{e2}]]}$), which is an equivalence relation. Regarding
-\cref{eg:1}, it seems adequate to say that $3$ and $\app{[[id]]}{3}$ are
-contextually equivalent. Does this imply that coherence can be based on
+\kleenee*
+
+Regarding \cref{eg:1}, it seems adequate to say that $3$ and $\app{[[id]]}{3}$
+are contextually equivalent. Does this imply that coherence can be based on
 \cref{def:cxtx}? Unfortunately it cannot, as demonstrated by the following
 example.
 

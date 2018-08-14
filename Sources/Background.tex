@@ -715,17 +715,18 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
 The following two definitions capture the notion of \textit{contextual equivalence}.
 
-\begin{definition}[Kleene Equality]
+\begin{restatable}[Kleene Equality]{definition}{kleene}
   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
-  $\kleq{[[e]]}{[[e']]}$, if there exists $i$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
-\end{definition}
+  $\kleq{[[e]]}{[[e']]}$, if there exists $[[ii]]$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
+\end{restatable}
 
-\begin{definition}[Contextual Equivalence]
+
+\begin{restatable}[Contextual Equivalence]{definition}{kleenee}  \label{def:cxtx}%
   \begin{align*}
     [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
                                  & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
-\end{definition}
+\end{restatable}
 
 In other words, for all possible experiments $[[ cc ]]$, the outcome of an
 experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
