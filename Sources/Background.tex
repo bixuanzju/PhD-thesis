@@ -674,10 +674,104 @@ the modification record is combined with the original record using $\oplus$.
 replaces the corresponding method defined in \lstinline{N}.)
 
 
-\section{Logical Relations}
+\section{Program Equivalence and Logical Relations}
 
 \label{sec:bg:lr}
 
+
+Proving equivalence of programs is important for a variety of settings, e.g.,
+verifying the correctness of compiler optimization and other program
+transformations, establishing the property that program behavior is independent
+of the representation of an abstract type. The latter---so-called the property of
+\textit{representation independence}---is particularly relevant for programmers
+and clients in the sense that a client will not be able to tell a difference if
+one implementation is swapped by another, as long as they all adhere to the same
+interface.
+
+Program equivalence is generally defined in terms of \textit{contextual
+  equivalence}. The intuition is that two program are equivalent if we
+\textit{cannot} tell them apart in any context. More formally, we introduce the
+notion of \textit{expression contexts}. An expression context $[[cc]]$ is a term
+with a single hole $[[__]]$ (possibly under some binders) in it. Take the
+simply-typed lambda calculus (STLC) for example, the syntax of expression context is as
+follows:
+\[
+\text{Contexts} \quad [[cc]] \Coloneqq [[__]] \mid [[\x . cc]] \mid [[cc e]] \mid [[e cc]]
+\]
+The only operation of expression contexts is \textit{replacement}, which is the
+process of filling a hole in an expression context $[[cc]]$ with an expression
+$[[e]]$, written $[[ cc{e} ]]$. An important point is that replacement
+\textit{is not} substitution, that is, the free variables of $[[e]]$ that are
+exposed by $[[cc]]$ are captured by replacement. The static semantics of STLC
+is extended to expression contexts by defining the typing judgment
+\[
+  [[cc : (gg |- T) ~> (gg' |- T')]]
+\]
+where $([[gg |- T]])$ indicates the type of the hole. This judgment is
+inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
+
+\paragraph{Contextual Equivalence.}
+
+We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
+The following two definitions capture the notion of \textit{contextual equivalence}.
+
+\begin{definition}[Kleene Equality]
+  Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
+  $\kleq{[[e]]}{[[e']]}$, if there exists $i$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
+\end{definition}
+
+\begin{definition}[Contextual Equivalence]
+  \begin{align*}
+    [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
+                                 & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
+  \end{align*}
+\end{definition}
+
+In other words, for all possible experiments $[[ cc ]]$, the outcome of an
+experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
+(i.e., $\kleq{[[cc{e1}]]}{[[cc{e2}]]}$), which is an equivalence relation.
+
+
+\paragraph{Logical Relations.}
+
+Unfortunately, proving contextual equivalence is difficult in general, since it
+involves quantification over \textit{all} possible contexts. There has been much
+work on finding tractable techniques for proving contextual equivalence. Many
+of these are based on the proof method called \emph{logical
+  relations}~\citep{tait, plotkin1973lambda, statman1985logical}.
+
+In a nutshell, logical relations specify relations over well-typed terms via a
+structural induction on the syntax of types. For instance, logically related
+functions, when taken logically related arguments, return logically related
+results. For STLC, the logical relation is a family of relations $[[ (v1, v2) in V(T)  ]]$
+between closed values of type $[[T]]$. It is inductively defined on $[[T]]$ as follows:
+\begin{align*}
+  [[(v1 , v2) in V ( nat ) with pq ]]  &\defeq  \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
+  [[(v1 , v2) in V ( T1 -> T2 ) with pq ]]  & \defeq  \forall [[(v'1, v'2) in V (T1)  ]].\, [[  (v1 v1' , v2 v2') in E (T2)  ]] \\
+  [[(e1, e2) in E (T)  ]] & \defeq \exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (T) ]]
+\end{align*}
+That is, two integers are related if they are the same integer. Two functions
+$[[v1]]$ and $[[v2]]$ are related at the type $[[T1 -> T2]]$ if given two
+arguments $[[v1']]$ and $[[v2']]$ related at the domain type $[[T1]]$, the
+functions applied to the arguments are related expressions at the range type
+$[[T2]]$.
+
+
+\paragraph{Logical and Contextual Equivalence Coincide.}
+
+The usefulness of the logical relation lies in the fact that it characterize
+\textit{exactly} contextual equivalence---i.e., logical and contextual equivalence
+coincide for STLC.
+
+\begin{theorem}
+  For closed expression $[[e : T]]$ and $[[e' : T]]$, $[[ (e, e') in E(T)  ]]$ if and only if $[[  empty |- e ~= e' : T  ]]$.
+\end{theorem}
+
+The proofs proceeds by generalizing to open terms, which will be explained in
+more details in \cref{chap:coherence:simple}. The above theorem licenses a
+common approach of proving properties involving contextual equivalence: we first
+prove a related property using logical relations, and then transfer it back to
+the one involving contextual equivalence.
 
 
 
