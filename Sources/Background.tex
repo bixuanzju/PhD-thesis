@@ -233,8 +233,8 @@ calculus~\citep{oliveira2016disjoint} provide a remedy for the coherence
 problem, by imposing restrictions on the uses of merges and on the formation of
 intersection types. The syntax of \oname is shown below:
 \begin{align*}
-  \text{Type} \quad [[A]] &\Coloneqq [[nat]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
-  \text{Terms} \quad [[ee]] &\Coloneqq [[ii]] \mid [[x]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]]
+  \text{Types} \quad [[A]] &\Coloneqq [[nat]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
+  \text{Terms} \quad [[ee]] &\Coloneqq [[ii]] \mid [[x]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]
 \end{align*}
 Its full (bidirectional) type system is shown in \cref{fig:lambdai}. Central
 to their system is the notion of \textit{disjointness}. As a first
@@ -333,11 +333,11 @@ inherits (and can override) all the class members, as well as the relationships
 within the family between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
 
-\paragraph{The Expression Problem}
+\paragraph{The expression problem}
 
 \citet{ernst2004expression} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
-\emph{Expression Problem}~\citep{wadler1998expression}. The expression problem,
+\emph{expression problem}~\citep{wadler1998expression}. The expression problem,
 as surveyed by \citet{togersen:2004}, is to answer the question:
 \begin{quote}
   ``To which degree can your application be structured in such a way that both
@@ -362,7 +362,7 @@ In either case, it is much harder to perform both extensions in the
 \textit{same} language.
 
 
-\paragraph{The Expression Problem, Scandinavian Style.}
+\paragraph{The expression problem, Scandinavian Style.}
 
 Nowadays we know many solutions to the expression problem (for example, see
 \citet{oliveira2012extensibility, wang2016expression, oliveira09modular,
@@ -440,7 +440,7 @@ class LangNeg extends Lang {
 \end{lstlisting}
 \subcaption{Extending in two dimensions} \label{fig:extend}
     \end{subfigure}
-    \caption{The Expression Problem, Scandinavian Style}
+    \caption{The expression problem, Scandinavian Style}
 \end{figure}
 
 \paragraph{Adding a New Operation.}
