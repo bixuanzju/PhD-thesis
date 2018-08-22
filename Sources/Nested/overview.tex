@@ -65,10 +65,11 @@ We can test \lstinline{implLangNegEval} by creating an object \lstinline{e} of e
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\paragraph{Multi-Field Records.} One relevant remark is that
-\namee does not have multi-field record types built in. They are merely syntactic
-sugar for intersections of single-field record types. Hence, the following is an
-equivalent definition of \lstinline{Lang}:
+\paragraph{Multi-Field Records.}
+Recall that in \cref{bg:sec:intersection}, we show how to model multi-field records by
+single-field records. Thus \namee does not have multi-field record types built in.
+They are merely syntactic sugar for intersections of single-field record types.
+Hence, the following is an equivalent definition of \lstinline{Lang}:
 \lstinputlisting[linerange=13-13]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
 Similarly, the multi-field record expression in the definition of
 \lstinline{implLang} is syntactic sugar for the explicit merge of two

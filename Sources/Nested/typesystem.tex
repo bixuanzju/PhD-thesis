@@ -2,7 +2,7 @@
 \renewcommand{\rulehl}[2][gray!40]{%
   \colorbox{#1}{$\displaystyle#2$}}
 
-\section{Syntax and Semantics of the Source}
+\section{Syntax and Semantics of \namee}
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \namee. Compared
@@ -162,8 +162,8 @@ expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee <
 checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The set of
 inference rules of disjointness $[[A ** B]]$ is shown in \cref{fig:disjoint}.
 Note that our set of disjointness rules is different from that in
-\oname~\citep[Figure 10]{oliveira2016disjoint}; the latter does not have
-\rref{D-topL,D-topR}.
+\oname~\citep[Figure 10]{oliveira2016disjoint}: \oname does not have
+\rref{D-topL,D-topR}, which first appeared in \fname~\citep[Figure 3]{alpuimdisjoint}.
 % The intuition of two types being disjoint is
 % that their least upper bound is (isomorphic to) $[[Top]]$.
 The disjointness judgment is
@@ -175,7 +175,7 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
 
 
 
-\section{Syntax and Semantics of the Target}
+\section{Syntax and Semantics of \tname}
 \label{sec:elaboration}
 
 \begin{figure}[t]
@@ -194,14 +194,15 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
 \end{figure}
 
 We elaborate well-typed source expression $[[ee]]$ into target terms $[[e]]$.
-Our target language \tname is the standard simply-typed call-by-value
-lambda calculus extended with products and coercions. The syntax of \tname is
-shown in \cref{fig:target}. The meta-function $| \cdot |$ shown in
+Our target language \tname is the standard simply-typed call-by-value lambda
+calculus extended with products and coercions. The syntax of \tname is shown in
+\cref{fig:target}. The meta-function $| \cdot |$ shown in
 \cref{def:type:translate} transforms \namee types to \tname types. It is worth
 pointing out that we use the erasure semantics to model record labels, i.e.,
-labels are erased during elaboration. (This is different from the original
-publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in the
-target.)
+labels are erased during elaboration. Note that this is different from the
+original publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in
+the target. Both work fine in \namee, but discarding records would make the
+target calculus a bit simpler.
 % It is equally fine to % keep labels in the target.
 The notation $| \cdot |$ is also overloaded for
 translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
@@ -220,7 +221,7 @@ translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 
 \subsection{Explicit Coercions and Coercive Subtyping}
 
-The separate syntactic category for \textit{explicit coercions} is a distinct difference
+The separate syntactic category for \textit{explicit coercions} is a distinctive difference
 from the prior works (in which they are regular terms). Our coercions are based
 on those of \citet{Henglein_1994}, and we add more forms due to our extra
 subtyping rules.
@@ -243,7 +244,7 @@ specific form of coercion.
   \centering
 \begin{tabular}{|l|l||l|l|}
 \hline
-Coercion & Term & Coercion & Term \\ \hline
+\textbf{Coercion} & \textbf{Term} & \textbf{Coercion} & \textbf{Term} \\ \hline
 $[[id]]$         & $[[ \x . x]]$  & $[[ c1 o c2  ]]$    &  $[[  \x . c1 (c2 x) ]]$     \\ \hline
 $[[top]]$         & $[[ \x . unit ]]$  & $[[ c1 -> c2  ]]$    &  $[[  \f . \x . c2 (f (c1 x))  ]]$     \\ \hline
 $[[  pp1   ]]$         & $[[ \x . pp1 x    ]]$  & $[[ pp2  ]]$    &  $[[  \x . pp2 x  ]]$     \\ \hline
@@ -262,7 +263,7 @@ $[[  topArr   ]]$         & $[[ \x . \ y . unit    ]]$  &  & \\ \hline
 
 \subsection{Typing of \tname}
 
-The typing of \tname has the form $[[gg |- e : T]]$, which is entirely standard. Only the typing of coercion
+The typing of \tname has the form $[[gg |- e : T]]$, and entirely standard. Only the typing of coercion
 applications, shown below, deserves attention:
 \begin{mathpar}
 \drule{t-capp}
@@ -362,8 +363,12 @@ effect on coherence, our major topic in \cref{chap:coherence:simple}.
 Apart from the extra subtyping rules, there is an important difference from the
 \oname subtyping relation. The subtyping relation of \oname employs an auxiliary
 unary relation ``$[[A ord]]$'' (cf. \rref{Si-andL,Si-andR} in
-\cref{bg:sec:intersection}), which plays a fundamental role for ensuring
-coherence and obtaining an algorithm. The \namee calculus
+\cref{fig:lambdai}). Ordinary types are employed to ensure determinism of
+subtyping (and uniqueness of the elaboration), which plays a fundamental role
+for ensuring coherence and obtaining an algorithm. In \namee, we show that
+determinism is too strong of a requirement. As we shall see in
+\cref{chap:coherence:simple}, it suffices to base the notion of coherence on
+contextual equivalence. Therefore, the \namee calculus
 discards the notion of ordinary types completely; this yields a clean and
 elegant formulation of the subtyping relation. Another minor difference is that
 due to the addition of the transitivity axiom (\rref{S-trans}),
@@ -380,10 +385,13 @@ subtype of both $[[A1]]$ and $[[A2]]$, instead of the more general form $[[ A1 &
 
 Another notable difference from the coercive subtyping of \oname is that,
 because of their syntactic proof method, they have special treatment for
-coercions of \textit{top-like types} in order to retain coherence (see the
-coercion parts in \rref{Si-andL,Si-andR}). For \namee, as with ordinary types, we
-do not need this kind of ad-hoc treatment; top-like types are handled like all
-other types.
+coercions of \textit{top-like types} (see the coercion parts in
+\rref{Si-andL,Si-andR} in \cref{fig:lambdai}). Top types will introduce
+non-determinism during subtyping, thus would potentially endanger coherence.
+However, as \citet{oliveira2016disjoint} observed, any coercions for top-like
+types are unique, even if multiple derivations exist. For \namee, as with
+ordinary types, we do not need this kind of ad-hoc treatment; top-like types are
+handled like all other types.
 % thanks to the adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
 

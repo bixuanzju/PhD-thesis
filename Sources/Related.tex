@@ -83,8 +83,31 @@ which means that in a merge of two functions, the second one always takes
 precedence to the first one. In contrast, our typing rule for merges is more
 fine-grained in the sense that both functions are retained as long as they are
 disjoint. \citet{Castagna_1992} proposed a coherent calculus with a special
-merge operator that works on functions only. Recently,
-\citet{castagna2014polymorphic} studied a coherent calculus that has
+merge operator that works on functions only.
+\citet{dunfield2014elaborating} shows significant expressiveness
+of type systems with (unrestricted) intersection types and a merge operator.
+However his calculus lacks coherence. The limitation was addressed by
+\citet{oliveira2016disjoint}, who introduced disjointness to ensure coherence.
+The combination of intersection types, a merge operator and parametric
+polymorphism, while achieving coherence was first studied in the \fname
+calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in this
+thesis simplifies type systems with disjoint intersection types by removing
+several restrictions. Furthermore, our calculi adopt a more powerful subtyping
+relation based on BCD subtyping, which in turn requires the use of a more
+powerful logical relations based method for proving coherence. On a pragmatic
+note, dynamic inheritance, self-references and abstract methods are all missing
+from prior work, but, as shown in this thesis, they can be encoded using an
+elaboration that employs ideas from the denotational model of
+inheritance~\citep{cook1989denotational}.
+
+
+\section{Intersection Types and Polymorphism}
+
+
+\citet{pierce1991programming} studies $\mathsf{F}_{\land}$.
+
+
+Recently, \citet{castagna2014polymorphic} studied a coherent calculus that has
 polymorphism and set-theoretic type connectives (intersections, unions,
 negations). Compared to \fnamee, their intersections are used between function
 types, allowing overloading of types, e.g.,
@@ -107,21 +130,10 @@ information about type variables: in their system type difference (e.g.,
 \lstinline{a \ Int}) achieves this, whereas in \fnamee we use disjointness
 constraints (e.g., \lstinline{a * Int}).
 
-\citet{dunfield2014elaborating} shows significant expressiveness
-of type systems with (unrestricted) intersection types and a merge operator.
-However his calculus lacks coherence. The limitation was addressed by
-\citet{oliveira2016disjoint}, who introduced disjointness to ensure coherence.
-The combination of intersection types, a merge operator and parametric
-polymorphism, while achieving coherence was first studied in the \fname
-calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in this
-thesis simplifies type systems with disjoint intersection types by removing
-several restrictions. Furthermore, our calculi adopt a more powerful subtyping
-relation based on BCD subtyping, which in turn requires the use of a more
-powerful logical relations based method for proving coherence. On a pragmatic
-note, dynamic inheritance, self-references and abstract methods are all missing
-from prior work, but, as shown in this thesis, they can be encoded using an
-elaboration that employs ideas from the denotational model of
-inheritance~\citep{cook1989denotational}.
+
+\citet{alpuimdisjoint} studied \fname.
+
+
 
 
 % The combination of intersection types, a merge
@@ -168,14 +180,17 @@ The BCD type system was first introduced by \citet{Barendregt_1983}. It is
 derived from a filter lambda model in order to characterize exactly the strongly
 normalizing terms. The BCD type system features a powerful subtyping relation,
 which serves as a base for our subtyping relation.
-\citet{DBLP:journals/corr/BessaiDDCd15} show how to type classes and mixins in
-a BCD-style record calculus with a merge-like operator~\citep{bracha1990mixin}
+\citet{DBLP:journals/corr/BessaiDDCd15} show how to type classes and mixins in a
+BCD-style record calculus with a merge-like operator~\citep{bracha1990mixin}
 that only operates on records, and they only study a type assignment system. The
 decidability of BCD subtyping has been shown in several
 works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
 \citet{laurent2012intersection} formalized the relation in Coq in order to
 eliminate transitivity cuts from it, but his formalization does not deliver an
-algorithm. Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
+algorithm. Only recently, \citet{Laurent18b} presents two sequent-calculus
+systems that are algorithmic and equivalent to BCD subtyping.
+\todo{show the rules?}
+Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
 \citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
 Our Coq formalization follows a different idea based on Pierce's decision
 procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
@@ -205,7 +220,7 @@ Virtual classes~\citep{Madsen_1989} as introduced in
 \textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
 families. However, the virtual class mechanism in \textsc{Beta} is unsound.
 Path-dependent types are used to ensure type safety for virtual types and
-virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinct
+virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinctive
 difference from our calculi is that \textit{vc} follows the mixin-style by
 allowing the rightmost class to take precedence, whereas in \namee conflicts are
 detected statically and resolved explicitly.

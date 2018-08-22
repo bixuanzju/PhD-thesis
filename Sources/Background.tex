@@ -272,8 +272,12 @@ a type system without $[[Top]]$.
 $[[Top]]$ brings extra complication, because \cref{def:disjoint_spec} does not
 hold anymore ($[[Top]]$ is trivially a supertype of every type). To address this
 problem, the notion of \textit{top-like types} were introduced, which are those
-types that behave like $[[Top]]$ (such as $[[Top & Top]], [[Top & Top & Top]], \dots$), and
-captured by a predicate $ \rceil \cdot \lceil $. With top-types,
+types that behave like $[[Top]]$ (such as $[[Top & Top]], [[Top & Top & Top]],
+\dots$), and captured by a predicate $ \rceil \cdot \lceil $. An important
+observation is that any coercions for top-like types are unique, \textit{even if
+  multiple derivations exist}. The meta-function $\llbracket [[A]] \rrbracket $
+used in \rref{Si-andL,Si-andR} define coercions for top-like types.
+With top-types,
 \cref{def:disjoint_spec} is refined to account for $[[Top]]$, as shown in
 \cref{def:disjoint_spec2}.
 

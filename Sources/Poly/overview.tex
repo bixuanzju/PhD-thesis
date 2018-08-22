@@ -1,15 +1,42 @@
 
-\section{Overview}
+\section{Motivation}
 
-In this section we give an overview of
-disjoint polymorphism~\citep{alpuimdisjoint}, a variant of parametric polymorphism. The main novelty
-is \textit{disjoint (universal) quantification} of the form
-$[[ \ X ** A . B ]]$. Inspired by bounded quantification~\citep{cardelli1994extension} where a
-type variable is constrained by a type bound, disjoint quantification allows
-type variables to be associated with \textit{disjointness constraints}. Correspondingly, a
-term construct of the form $[[ \ X ** A. ee ]]$ is used to create values of
-disjoint quantification.
+Parametric polymorphism~\citep{reynolds1983types} is a well-beloved (and
+well-studied) programming feature. It enables a single piece of code to be
+reused on data of different types. So it is quite natural and theoretically
+interesting to study combining parametric polymorphism with disjoint
+intersection types, especially how it affects disjointness and coherence. On a more
+pragmatic note, the combination of parametric polymorphism also reveals new
+insights into practical applications. Dynamic languages (such as JavaScript)
+usually embrace quite flexible programming patterns, e.g., mixin composition
+where objects can be composed at run time, and their types are not necessarily
+statically known. The use of intersection types in TypeScript is inspired by
+such flexible programming patterns. For example, an important use of
+intersection types in TypeScript is the following function for mixin
+composition:
+\begin{lstlisting}[language=JavaScript]
+function extend<T, U>(first: T, second : U) : T & U {...}
+\end{lstlisting}
+which is analogous to our merge operator in that it takes two objects and
+produces an object with the intersection of the types of the argument objects.
+However, the types of the two objects are not known, i.e., they are generic. An
+important point is that, while it is possible to define such function in
+TypeScript (albeit using some low-level (and type-unsafe) features of
+JavaScript), it can also cause, as pointed out by \citet{alpuimdisjoint},
+run-time type error! Clearly a well-defined meaning for intersection types with
+type variables is needed.
 
+
+\paragraph{Disjoint Polymorphism.}
+
+Motivated by the above two points, \citet{alpuimdisjoint} proposed disjoint
+polymorphism, a variant of parametric polymorphism. The
+main novelty is \textit{disjoint (universal) quantification} of the form $[[ \ X ** A . B ]]$.
+Inspired by bounded quantification~\citep{cardelli1994extension}
+where a type variable is constrained by a type bound, disjoint quantification
+allows type variables to be associated with \textit{disjointness constraints}.
+Correspondingly, a term construct of the form $[[ \ X ** A. ee ]]$ is used to
+create values of disjoint quantification.
 To understand the purpose of disjointness constraints, consider the following program (adapted from \citet{alpuimdisjoint}):
 \begin{lstlisting}
 mergeBad X (x : X) : X & Int = x ,, 2;
@@ -26,7 +53,7 @@ avoid this problematic expression. However, with parametric polymorphism, a
 variable could have any types,
 including those that are already in the intersection. So a question to ask is to
 decide under what conditions a type variable is disjoint with, say,
-\lstinline{Int}. This is where disjointness constraints come onto stage. The key
+\lstinline{Int}. This is where disjointness constraints come into stage. The key
 idea is that since we do not know \textit{a priori} what is the type with which
 a type variable can be instantiated, we can restrict the set of types it can be
 instantiated to. Let us rewrite the above program as follows:
@@ -48,11 +75,43 @@ mergeThree [X * Int & Bool] (x : X) : X & Int & Bool = x ,, 2 ,, True;
 Here the type variable \lstinline{X} can only be instantiated to types disjoint with both
 \lstinline{Int} and \lstinline{Bool}.
 
-In what follows, we first present the syntax and semantics (subtyping and typing) of \fnamee. We
-then discuss the disjointness judgment in detail, in particular, the
-disjointness relation between type variables and arbitrary types. Finally we
-talk about the elaboration semantics of \fnamee and its target calculus \tnamee,
-a variant of System F with explicit coercions.
+
+With disjointness constraints and a built-in merge operator, a type-safe and
+conflict-free \lstinline{extend} function can be naturally defined as follows:
+\begin{lstlisting}
+extend T [U * T] (first : T) (second : U) : T & U = first ,, second;
+\end{lstlisting}
+The disjointness constraint on the type variable \lstinline{U} ensures that no
+conflicts can occur when composing two objects, which is quite similar to
+trait-based approach~\citep{scharli2003traits} in object-orientated programming.
+We shall devote a whole chapter (\cref{chap:traits}) to further this point.
+
+
+\paragraph{Adding BCD Subtyping.}
+
+While \citet{alpuimdisjoint} studied the combination of disjoint intersection
+types and parametric polymorphism, they follow the then-standard approach
+of \citet{oliveira2016disjoint} to ensure coherence, thus excluding the
+possibility of adding BCD subtyping. The combination of BCD subtyping and
+disjointness polymorphism opens room for more expressiveness. For example, we can
+define the following function
+\begin{lstlisting}
+combine A [B * A] (f : {foo : Int -> A})
+                  (g : {foo : Int -> B}) : {foo : Int -> A & B} = f ,, g;
+\end{lstlisting}
+which ``combines'' two singleton records with parts of types unknown and returns
+another singleton record containing an intersection type. A variant of this
+function plays a fundamental role in defining Object Algebra combinators (cf.
+\cref{chap:case_study}).
+
+
+
+
+In what follows, we first present the syntax and semantics (subtyping and
+typing) of \fnamee. We then discuss the disjointness judgment in detail, in
+particular, the disjointness relation between type variables and arbitrary
+types. Finally we talk about the elaboration semantics of \fnamee and its target
+calculus \tnamee, a variant of System F with explicit coercions.
 
 
 

@@ -38,6 +38,7 @@ is not expressible $[[ 1 : nat & nat]]$ creates the equivalent value implicitly.
 In short, duplication is harmless and subtyping only generates duplicated values
 for non-disjoint types.
 
+
 % Coherence is easy to establish for \oname as its rigid rules mean that there is
 % at most one possible subtyping derivation between any two types.  As a
 % consequence there is only one possible elaboration and thus one
@@ -55,14 +56,27 @@ reasoning. For instance, we can see that coherence holds because at run time any
 value of type $[[nat & nat]]$ has identical components, and
 thus both projections yield the same result.
 
+
+
+
 For \namee in general, we show coherence by capturing the non-ambiguity
-invariant in a logical relation and showing that it is preserved by the
-operational semantics. A complicating factor is that not one, but two languages
-are involved: the source language and the target language. In order to
+invariant in a \emph{logical relation}~\citep{tait, plotkin1973lambda,
+  statman1985logical} and showing that it is preserved by the operational
+semantics. In doing so, we remove the brittleness of the previous syntactic
+method to prove coherence. This new proof method has several advantages.
+Firstly, with the new proof method, several restrictions that were enforced by
+\oname to enable the syntactic proof are removed. For example, the
+aforementioned \emph{top-like types} are not necessary; top-like types are
+handled like all other types. Secondly, the new proof method is more powerful
+because it is based on observational equivalence rather than syntactic equality;
+it is more robust as the type system is extended. Finally, the removal of the
+ad-hoc side-conditions makes adding new extensions, such as support for
+BCD-style subtyping, easier. A complicating factor is that not one, but two
+languages are involved: the source language and the target language. In order to
 deal with the complexity of the elaboration semantics of \namee, we employ
 binary logical relations that are heterogeneous, parameterized by two types; the
 fundamental property is also reformulated to account for bidirectional
-type-checking. The logical relation does not hold for target programs and
+type-checking. A caveat is that our logical relation does not hold for target programs and
 program contexts in general, but only for those that are the image of a
 corresponding source program or program context. Thus we must view everything
 through the lens of elaboration.

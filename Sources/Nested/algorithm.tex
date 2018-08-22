@@ -3,18 +3,22 @@
 \label{sec:alg}
 
 This section considers the algorithmic aspects of \namee. The bidirectional type
-system is obviously syntax directed, so the only source of non-determinism comes
-from the subtyping relation. In this section, we present an algorithm that
-implements the subtyping relation. While BCD subtyping is well-known, the
-presence of a transitivity axiom in the rules means that the system is not
-algorithmic. This raises an obvious question: how to obtain an algorithm for
-this subtyping relation? \citet{Laurent12note} has shown that simply dropping
-the transitivity rule from the BCD system is not possible without losing
-expressivity. Hence, this avenue for obtaining an algorithm is not available.
+system is syntax directed, so the only source of non-determinism comes from the
+subtyping relation. In this section, we present an algorithm that implements the
+subtyping relation. While BCD subtyping is well-known, the presence of a
+transitivity axiom in the rules means that the system is not algorithmic. This
+raises an obvious question: how to obtain an algorithm for this subtyping
+relation? \citet{Laurent12note} has shown that simply dropping the transitivity
+rule from the BCD system is not possible without losing expressivity. Hence,
+this avenue for obtaining an algorithm is not available. In a 2012
+article~\citep{laurent2012intersection}, \citeauthor{laurent2012intersection} defined
+BCD subtyping without transitivity, but the system still does not deliver an
+algorithm. Only recently, \citet{Laurent18b} presents two
+sequent-calculus systems that are algorithmic and equivalent to BCD subtyping.
 %Moreover, even if transitivity elimination
 %would be possible, the remaining rules are still highly overlapping, and pose
 %difficulties for an implementation.  
-Instead, we adapt \citeauthor{pierce1989decision}'s decision
+We adapt \citeauthor{pierce1989decision}'s decision
 procedure~\citep{pierce1989decision} for a subtyping system (closely
 related to BCD) to obtain a sound and complete algorithm for our
 BCD extension. Our algorithm extends \citeauthor{pierce1989decision}'s decision

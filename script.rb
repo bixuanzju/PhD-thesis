@@ -77,6 +77,17 @@ Dir['Sources/Nested/*.tex'].each do |file|
   FileUtils.cp(tempname, file)
 end
 
+
+Dir['Sources/Poly/*.tex'].each do |file|
+  #temp = Tempfile.new('compute_positions')
+  tempname = "footempfile.txt"
+  temp = File.new(tempname, "w")
+  process(File.new(file, "r"), temp, beginpos, endpos, fileloc)
+  FileUtils.cp(file, "#{file}-old")
+  FileUtils.cp(tempname, file)
+end
+
+
 Dir['Sources/Traits/*.tex'].each do |file|
   #temp = Tempfile.new('compute_positions')
   tempname = "footempfile.txt"
