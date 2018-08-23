@@ -160,6 +160,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | 1 ::  :: one   {{ tex 1  }}
   | 2 ::  :: two   {{ tex 2  }}
   | true ::  :: true   {{ tex \mathsf{true}  }}
+  | ss :: :: ss        {{ tex ``c" }}
   | ( ee ) :: :: parens
 
 

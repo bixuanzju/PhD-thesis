@@ -8,10 +8,10 @@ The chapter sets the stage for the three typed calculi we are going to present
 in later chapters by expanding upon some relevant topics from the introduction.
 In \cref{bg:sec:intersection} we start with the traditional formulation of
 intersection types, followed by an introduction of the merge operator and the
-issue of coherence. We then review the \oname calculus, the first calculus
+issue of coherence. We then review the \oname calculus~\citep{oliveira2016disjoint}, the first calculus
 featuring disjoint intersection types, and briefly discuss how disjointness
 achieves coherence. In \cref{sec:ernst} we introduce family polymorphism by
-means of presenting \citeauthor{ernst2004expression}'s elegant solution to the
+means of presenting \citeauthor{ernst2004expression}'s elegant solution~\citep{ernst2004expression} to the
 expression problem. In \cref{sec:bg:mixin:trait} we review the concepts of
 mixins and traits, their drawbacks and strengths. \Cref{sec:bg:object} reviews
 the denotational model of inheritance. Finally in \cref{sec:bg:lr} we give a
@@ -43,13 +43,13 @@ types $[[A]]$ and $[[B]]$ is thought of as containing all the elements of
 $[[A]]$ that are also elements of $[[B]]$; from the type-theoretic point of
 view, $[[A & B]]$ is a subtype of $[[A]]$, as well as of $[[B]]$; from the
 order-theoretic point of view, $[[A & B]]$ is a greatest lower bound of $[[A]]$
-and $[[B]]$~\footnote{Note that we say ``a'' rather than ``the'' because
+and $[[B]]$.\footnote{Note that we say ``a'' rather than ``the'' because
   greatest lower bounds are not unique, but they are all ``equal'' to $[[A & B]]$
-  in a sense that will be made precise in \cref{sec:category}.}. In the literature of OOP,
+  in a sense that will be made precise in \cref{sec:category}.} In the literature of OOP,
 intersection types are long known to model \textit{multiple
   inheritance}~\citep{compagnoni1996higher}. The intuition is that if we read the
 subtyping $[[A <: B]]$ as ``$[[A]]$ is a subclass of $[[B]]$'', then $[[A & B]]$
-is a name of a class with all the common properties of $[[A]]$ and $[[B]]$. Of
+is a ``name'' of a class with all the common properties of $[[A]]$ and $[[B]]$. Of
 course, this analog is not exact, in the same sense that inheritance is not
 subtyping~\citep{cook1989inheritance}. But it is intuitively appealing, and as
 we will see, can be made more precise in a sufficiently enriched calculus based
@@ -193,24 +193,60 @@ type-directed elaboration is elegant, type-safe, and serves as the original
 foundation for type systems with disjoint intersection types.
 
 
-\subsection{Coherence}
+\subsection{(In)Coherence}
 
 While \citeauthor{dunfield2014elaborating}'s system is simple and powerful, it
 has serious usability issues. More specifically, it lacks the theoretically and
 practically important property of \textit{coherence}~\citep{Reynolds_1991}: the
 meaning of a target program depends on the choice of elaboration typing
-derivation. For example, according to the elaboration rules, the expression $[[1
-,, 2]]$ (when checked against $[[nat]]$) could elaborate to either $1$ or $2$,
-depending on the particular choice in the implementation. The lack of coherence
-is an important disadvantage for adopting his calculus in implementations of
-programming languages. \citeauthor{dunfield2014elaborating} left it as an open
-problem. To recover a coherent semantics, we could limit the merges according to
-their surface syntax, as \citeauthor{reynolds1988preliminary} did in Forsythe.
-But as \citet{dunfield2014elaborating} pointed out, ``crafting an
-appropriate syntactic restriction depends on details of the type system, which
-is not robust as the type system is extended''. The issue of coherence is later
-addressed in an elegant way by \citet{oliveira2016disjoint} with the notion of
-\textit{disjoint intersection types}.
+derivation. For example, the expression $[[1 ,, true]]$ has type $[[nat & bool]]$.
+It can be used either as an integer or a Boolean, the result is always
+clear ($[[1]]$ or $[[true]]$). However, when two types have overlapping
+components, it is not always clear which value to pick. For example, the
+expression $[[1 ,, 2]]$ (when checked against $[[nat]]$) could elaborate to
+either $1$ or $2$, depending on the particular choice in the implementation.
+\citet{dunfield2014elaborating} had a workaround by trying the left part
+$[[1]]$ first. It is equally acceptable that one can opt to choose the right part $[[2]]$. But neither is
+satisfying from a theoretical point of view.
+
+To recover a coherent semantics, one could limit the merges according to their
+surface syntax, as \citeauthor{reynolds1988preliminary} did in Forsythe. But as
+\citet{dunfield2014elaborating} pointed out, ``crafting an appropriate syntactic
+restriction depends on details of the type system, which is not robust as the
+type system is extended''. Another simple idea would be to require all types in
+an intersection be \textit{distinct}. This works fine for simple types such as
+$[[nat]]$ and $[[bool]]$: $[[nat & bool]]$ is clearly a good intersection. But
+it is less clear as to what constituents a ``good'' (read unambiguous) intersection type in
+general. A few moments of thoughts lead to the following principle: good
+intersection types are defined in terms of the subtyping relation. After all, it
+is the subtyping relation that defines the behavior of intersection types. A
+first attempt would be to require that two types $[[A]]$ and $[[B]]$ can form an
+intersection if both types are \textit{not} subtype of each other. At first glance, this
+seems to be a reasonable definition because it rules out the problematic merge $[[1 ,, 2]]$. However,
+it is still not enough. Consider the following expression (taken from \citet{oliveira2016disjoint}):
+\[
+[[(1 ,, ss) ,, (2 ,, true)]]
+\]
+The first component $[[(1 ,, ss)]]$ has type $[[ nat & string ]]$ and the
+second component $[[(2 ,, true)]]$ has type $[[ nat & bool ]]$. It is clear that neither of the two is a
+subtype of the other. However, extracting an integer from the above expression is
+ambiguous ($[[1]]$ or $[[2]]$).
+
+When moving to richer types, it is even less clear how to deal with for example,
+intersections of higher-order functions. Consider the following intersection
+types (again take from \citet{oliveira2016disjoint}):
+\begin{enumerate}
+\item $[[ (nat -> nat) & (string -> string)   ]]$
+\item $[[ (string -> nat) & (string -> string)   ]]$
+\item $[[ (nat -> string) & (string -> string)   ]]$
+\end{enumerate}
+We can ask which of those intersection types are qualified as good. It seems
+reasonable to expect the first one is good, since both the domain and range
+types are different. But the other two are not that obvious to see.
+Clearly a formal notion of well-behaved intersection types are called for!
+
+The issue of coherence is addressed in an elegant way by
+\citet{oliveira2016disjoint} with the notion of \textit{disjoint intersection types}, as we will discuss next.
 
 
 \subsection{Disjoint Intersection Types}
@@ -256,7 +292,7 @@ $[[nat]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, 
 \begin{remark}
   Note that the introduction form for disjoint intersection types
   (\rref{Ti-merge}) is not as expressive as \rref{interI}. For instance, \rref{interI} entails
-  a form of \textit{finitary overloading}:
+  the following derivation:
   \[
     \inferrule*{ [[  \x .x : nat -> nat  ]] \\ [[ \x . x : char -> char   ]]    }{  [[\x . x : (nat -> nat) & (char -> char)]]  }
   \]
@@ -269,9 +305,9 @@ types---and use the judgment ``$[[ A ord ]]$'' in \rref{Si-andL,Si-andR}.
 Ordinary types and disjointness are sufficient to ensure a coherent semantics of
 a type system without $[[Top]]$.
 
-$[[Top]]$ brings extra complication, because \cref{def:disjoint_spec} does not
+$[[Top]]$ brings extra complications, because \cref{def:disjoint_spec} does not
 hold anymore ($[[Top]]$ is trivially a supertype of every type). To address this
-problem, the notion of \textit{top-like types} were introduced, which are those
+problem, the notion of \textit{top-like types} was introduced, which are those
 types that behave like $[[Top]]$ (such as $[[Top & Top]], [[Top & Top & Top]],
 \dots$), and captured by a predicate $ \rceil \cdot \lceil $. An important
 observation is that any coercions for top-like types are unique, \textit{even if
@@ -304,7 +340,55 @@ elaboration derivation for any expression, and as a consequence, there is only
 one possible target program and thus coherence follows trivially. We refer the
 reader to their paper for a detailed account of \oname.
 
-In essence disjoint intersection types retain most of the expressive power of
+\subsection{Disjoint Polymorphism}
+\label{bg:sec:disjoint_poly}
+
+
+Disjoint polymorphism, first proposed by \citet{alpuimdisjoint} in the \fname
+calculus, is a more advanced mechanism to combine disjointness intersection
+types with parametric polymorphism. The combination allows objects with
+statically unknown types to be composed without conflicts. To understand the
+usefulness of disjointness polymorphism, consider the following program (adapted
+from \citet{alpuimdisjoint}):
+\begin{lstlisting}
+mergeBad X (x : X) : X & Int = x ,, 2;
+\end{lstlisting}
+\lstinline{mergeBad} takes an argument \lstinline{x} of type \lstinline{X} (which is itself a type variable), and merges it with \lstinline{2}.
+However, if we were to allow such definition, we could easily create an example where incoherence occurs again:
+\begin{lstlisting}
+(mergeBad Int 1) : Int -- 1 or 2
+\end{lstlisting}
+This is essentially the same problem of allowing $\mer{1}{2}$, which as we
+discussed will cause ambiguity. For \oname, we
+know the concrete type for each variable and thus disjointness checking can help
+avoid this problematic expression. However, with parametric polymorphism, a
+variable could have any types,
+including those that are already in the intersection. So a question to ask is to
+decide under what conditions a type variable is disjoint with, say,
+\lstinline{Int}. This is where \textit{disjointness constraints} come into stage. The key
+idea is that since we do not know \textit{a priori} what is the type with which
+a type variable can be instantiated, we can restrict the set of types it can be
+instantiated to. Let us rewrite the above program as follows:
+\begin{lstlisting}
+mergeGood [X * Int] (x : X) : X & Int = x ,, 2;
+\end{lstlisting}
+The only change is the notation \lstinline{[X * Int]}, where the left-side of
+\lstinline{*} denotes the type variable being declared, and the right-side
+denotes the disjointness constraint(s). Here the disjointness constraint
+(\lstinline{Int}) effectively states that the type variable \lstinline{X} can be
+instantiated to any types disjoint with \lstinline{Int}. For instance, the expression \lstinline{mergeGood Bool True}
+type checks but the expression \lstinline{mergeGood Int 1}
+is rejected because \lstinline{Int} (the type argument) is not disjoint with
+\lstinline{Int} (the disjointness constraint). Moreover, we can express multiple
+constraints using intersection types, for example,
+\begin{lstlisting}
+mergeThree [X * Int & Bool] (x : X) : X & Int & Bool = x ,, 2 ,, True;
+\end{lstlisting}
+Here the type variable \lstinline{X} can only be instantiated to types disjoint with both
+\lstinline{Int} and \lstinline{Bool}.
+
+
+In essence disjoint intersection types and disjoint polymorphism retain most of the expressive power of
 the merge operator. For example, as noted by \citet{alpuimdisjoint}, they can be
 used to model powerful forms of extensible records. However, forcing every
 intersection types to be disjoint is unnecessarily restrictive. For instance,
@@ -315,6 +399,98 @@ the metatheory. Our starting point in this thesis is to lift this restriction
 and makes room for more expressiveness for calculi with disjoint intersection
 types.
 
+\section{Mixins and Traits}
+\label{sec:bg:mixin:trait}
+
+
+Programmers have long realized that single inheritance is not flexible enough
+when it comes to structuring a class hierarchy. For example, consider two
+classes in different branches of the inheritance hierarchy, and assume that they
+share features not inherited from their (unique) common parent. Attempting to
+share the implementation of the common features may lead to putting the common
+methods \textit{too high} in the hierarchy (i.e., they are forced into their
+common parent), and these methods will be inherited by other classes in the same
+hierarchy, which may not be desirable. On the other hand, putting those methods
+in a \textit{lower} position results in code duplication. To overcome this
+limitation, \textit{multiple inheritance} was proposed as a generalization of
+single inheritance. However, as \citet{cook:multi} put it:
+\begin{quote}
+  ``Multiple inheritance is good, but there is no good way to do it.''
+\end{quote}
+One of the problems in multiple inheritance is the ambiguity issue that arises
+when conflicting features are inherited along different paths. A classic
+situation is the \emph{diamond problem}~\citep{bracha1990mixin} where a class
+inherits from two parent classes that have a common superclass, as depicted by
+\cref{fig:diamond}.
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/diamond.eps}
+    \subcaption{The diamond problem} \label{fig:diamond}
+  \end{subfigure} ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/mixin.eps}
+    \subcaption{Mixin composition} \label{fig:mixin}
+  \end{subfigure}
+  \caption{Multiple inheritance and mixins}
+\end{figure}
+
+
+Mixins and traits are two well-studied mechanisms to provide some form of
+multiple inheritance. Mixins~\citep{bracha1990mixin} provide a simple mechanism
+for multiple inheritance without the ambiguity issue. A mixin is a subclass
+declaration parameterized over a superclass. Or simply put, a mixin can be
+treated as a function from classes to classes. Thus the same mixin can be used to
+extend a variety of parent classes with the same set of features.
+\Cref{fig:mixin} shows a typical class hierarchy when using mixins. In the mixin
+model, a class can inherit from another class by means of single inheritance as
+usual. Apart from that, it can also have several mixins applied \textit{one at a
+  time}. Let us take a close look at \cref{fig:mixin}. Both mixins
+\lstinline{M1} and \lstinline{M2} contain a method \lstinline{m}, a question
+arises as to which one is inherited in the class \lstinline{C}. The answer is
+\lstinline{m} from the mixin \lstinline{M2}. This is because mixin composition
+is \textit{linear}: methods defined in mixins appearing later override all the
+identically named methods of earlier mixins. While this simple mechanism does
+avoid conflicts, it also lead to other problems. For example, though we can
+obtain the method \lstinline{m} from the mixin \lstinline{M1} by switching the
+order of \lstinline{M1} and \lstinline{M2}, no suitable order of composition
+exists to obtain \lstinline{m} from the superclass \lstinline{A}.
+
+In respondence to the problems in the then compositional models,
+\citet{scharli2003traits} proposed a mechanism called \textit{traits} as a
+better way to foster code reuse in object-oriented programs. A trait is
+essentially \textit{a set of pure methods}, divorced from any class hierarchy. A
+trait \textit{provides} a set of methods to implement the behavior, and it may
+also specify a set of \textit{required methods} that parameterize the provided
+behavior. \Cref{fig:trait} shows a simple trait \lstinline{TCircle}, which
+provides two methods \lstinline{hash} and \lstinline{area}, and requires a
+method \lstinline{radius}. A class is then constructed by inheriting from a
+superclass and incorporating a collection of traits, as shown in
+\cref{fig:trait:conflict}. Also notice that there is a conflicting method
+\lstinline{hash} that is provided by both \lstinline{TCircle} and
+\lstinline{TDraw}. This is where the trait model is very different from the
+mixin model. Unlike mixins that force a linear order in their composition,
+traits can be composed in arbitrary order, and as a consequence, conflicting
+methods must be resolved \textit{explicitly}, either by overriding the
+conflicting methods, or by excluding a method from all but one trait.
+\citet{scharli2003traits} discuss several other issues with mixins, which can be
+improved by traits. We refer to their paper for a detailed account of traits.
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[scale=0.85]{figures/trait1.eps}
+    \subcaption{A simple trait} \label{fig:trait}
+  \end{subfigure} ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics{figures/trait3.eps}
+    \subcaption{Trait composition with conflicts} \label{fig:trait:conflict}
+  \end{subfigure}
+  \caption{Traits and conflicts}
+\end{figure}
 
 
 \section{Family Polymorphism and Nested Composition}
@@ -487,99 +663,6 @@ class LangNegEval extends LangEval o+o LangNeg {
 The only effort required is to implement the one missing operation
 case, evaluation of negated expressions.
 
-
-\section{Mixins and Traits}
-\label{sec:bg:mixin:trait}
-
-
-Programmers have long realized that single inheritance is not flexible enough
-when it comes to structuring a class hierarchy. For example, consider two
-classes in different branches of the inheritance hierarchy, and assume that they
-share features not inherited from their (unique) common parent. Attempting to
-share the implementation of the common features may lead to putting the common
-methods \textit{too high} in the hierarchy (i.e., they are forced into their
-common parent), and these methods will be inherited by other classes in the same
-hierarchy, which may not be desirable. On the other hand, putting those methods
-in a \textit{lower} position results in code duplication. To overcome this
-limitation, \textit{multiple inheritance} was proposed as a generalization of
-single inheritance. However, as \citet{cook:multi} put it:
-\begin{quote}
-  ``Multiple inheritance is good, but there is no good way to do it.''
-\end{quote}
-One of the problems in multiple inheritance is the ambiguity issue that arises
-when conflicting features are inherited along different paths. A classic
-situation is the \emph{diamond problem}~\citep{bracha1990mixin} where a class
-inherits from two parent classes that have a common superclass, as depicted by
-\cref{fig:diamond}.
-
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics{figures/diamond.eps}
-    \subcaption{The diamond problem} \label{fig:diamond}
-  \end{subfigure} ~
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics{figures/mixin.eps}
-    \subcaption{Mixin composition} \label{fig:mixin}
-  \end{subfigure}
-  \caption{Multiple inheritance and mixins}
-\end{figure}
-
-
-Mixins and traits are two well-studied mechanisms to provide some form of
-multiple inheritance. Mixins~\citep{bracha1990mixin} provide a simple mechanism
-for multiple inheritance without the ambiguity issue. A mixin is a subclass
-declaration parameterized over a superclass. Or simply put, a mixin can be
-treated as a function from classes to classes. Thus the same mixin can be used to
-extend a variety of parent classes with the same set of features.
-\Cref{fig:mixin} shows a typical class hierarchy when using mixins. In the mixin
-model, a class can inherit from another class by means of single inheritance as
-usual. Apart from that, it can also have several mixins applied \textit{one at a
-  time}. Let us take a close look at \cref{fig:mixin}. Both mixins
-\lstinline{M1} and \lstinline{M2} contain a method \lstinline{m}, a question
-arises as to which one is inherited in the class \lstinline{C}. The answer is
-\lstinline{m} from the mixin \lstinline{M2}. This is because mixin composition
-is \textit{linear}: methods defined in mixins appearing later override all the
-identically named methods of earlier mixins. While this simple mechanism does
-avoid conflicts, it also lead to other problems. For example, though we can
-obtain the method \lstinline{m} from the mixin \lstinline{M1} by switching the
-order of \lstinline{M1} and \lstinline{M2}, no suitable order of composition
-exists to obtain \lstinline{m} from the superclass \lstinline{A}.
-
-In respondence to the problems in the then compositional models,
-\citet{scharli2003traits} proposed a mechanism called \textit{traits} as a
-better way to foster code reuse in object-oriented programs. A trait is
-essentially \textit{a set of pure methods}, divorced from any class hierarchy. A
-trait \textit{provides} a set of methods to implement the behavior, and it may
-also specify a set of \textit{required methods} that parameterize the provided
-behavior. \Cref{fig:trait} shows a simple trait \lstinline{TCircle}, which
-provides two methods \lstinline{hash} and \lstinline{area}, and requires a
-method \lstinline{radius}. A class is then constructed by inheriting from a
-superclass and incorporating a collection of traits, as shown in
-\cref{fig:trait:conflict}. Also notice that there is a conflicting method
-\lstinline{hash} that is provided by both \lstinline{TCircle} and
-\lstinline{TDraw}. This is where the trait model is very different from the
-mixin model. Unlike mixins that force a linear order in their composition,
-traits can be composed in arbitrary order, and as a consequence, conflicting
-methods must be resolved \textit{explicitly}, either by overriding the
-conflicting methods, or by excluding a method from all but one trait.
-\citet{scharli2003traits} discuss several other issues with mixins, which can be
-improved by traits. We refer to their paper for a detailed account of traits.
-
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[scale=0.85]{figures/trait1.eps}
-    \subcaption{A simple trait} \label{fig:trait}
-  \end{subfigure} ~
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics{figures/trait3.eps}
-    \subcaption{Trait composition with conflicts} \label{fig:trait:conflict}
-  \end{subfigure}
-  \caption{Traits and conflicts}
-\end{figure}
 
 
 

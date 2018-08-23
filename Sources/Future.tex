@@ -28,7 +28,7 @@ $\bra{[[ D ; GG |- ee : A ]]} : \bra{[[GG]]} \rightarrow \bra{[[A]]} $ in a
 suitable ``semantic'' category (i.e., being Cartesian closed and possessing
 certain limits). Proving coherence in this presentation then amounts to
 establishing the commutativity of all diagrams of the following
-form\footnote{The proof actually needs a stronger inductive hypothesis.}:
+form~\footnote{The proof actually needs a stronger inductive hypothesis.}:
 \[
 \begin{tikzcd}
 \bra{[[  GG   ]]} \arrow[rrr, "\bra{[[ D1 ; GG |- ee : A  ]]}", bend left] \arrow[rrr, "\bra{[[ D2 ; GG |- ee : A  ]]} "', bend right] &  &  & \bra{[[ A ]]}
@@ -436,7 +436,7 @@ One extension of particular importance for modeling object-oriented languages is
 calculi with recursive types and subtyping (see \citet[chap.
 20]{DBLP:books/daglib/0005958}). But previous work has been focused on type
 systems with substantially simpler subtyping relations. For simplicity, we are
-interested in adding \textit{iso-recursive types}, where a recursive type $[[mu XX . A]]$\footnote{We use $[[XX]]$ to distinguish from type variables introduced by universal quantifiers.} and its one-step unfolding are transformed back and forth by a pair
+interested in adding \textit{iso-recursive types}, where a recursive type $[[mu XX . A]]$ and its one-step unfolding are transformed back and forth by a pair
 of functions $\mathsf{fold}$ and $\mathsf{unfold}$. The most common definition
 of iso-recursive subtyping is the \textit{Amber rule}, popularized by
 \citeauthor{DBLP:conf/litp/Cardelli85}'s Amber language~\citep{DBLP:conf/litp/Cardelli85}.
