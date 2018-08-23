@@ -303,10 +303,11 @@ proposes a solution to coherence, the solution imposes several ad-hoc
 restrictions to guarantee the uniqueness of the elaboration and thus allow for a
 simple syntactic proof of coherence. However such restrictions makes it hard or
 impossible to adapt the proof to extensions of the calculus with distributivity
-rules. To deal with coherence, we employ a more semantic proof method based on
+rules. To deal with coherence, we employ a more semantic proof method called
+\textit{canonicity} based on
 \emph{logical relations}~\citep{tait, plotkin1973lambda, statman1985logical}.
-Using the new proof method, we removed those restrictions and successfully
-mechanized the coherence proof for \namee.
+Using canonicity, we removed
+those restrictions and successfully mechanized the coherence proof for \namee.
 
 \paragraph{The \fnamee Calculus.}
 
@@ -376,7 +377,7 @@ In summary the contributions of this thesis are:
   disjointness for all well-formed types, making type systems with disjoint
   intersections more easily extensible.
 
-\item A more powerful proof strategy for coherence of type systems with disjoint
+\item Canonicity: a more powerful proof strategy for coherence of type systems with disjoint
   intersection types based on logical relations.
 
 

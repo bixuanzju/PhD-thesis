@@ -69,7 +69,7 @@ Firstly, with the new proof method, several restrictions that were enforced by
 aforementioned \emph{top-like types} are not necessary; top-like types are
 handled like all other types. Secondly, the new proof method is more powerful
 because it is based on observational equivalence rather than syntactic equality;
-it is more robust as the type system is extended. Finally, the removal of the
+it is more robust with respect to extensions. Finally, the removal of the
 ad-hoc side-conditions makes adding new extensions, such as support for
 BCD-style subtyping, easier. A complicating factor is that not one, but two
 languages are involved: the source language and the target language. In order to
@@ -86,7 +86,7 @@ through the lens of elaboration.
 \section{In Search of Coherence}
 
 In \oname the definition of coherence is based on
-$\alpha$-equivalence. More specifically, their coherence property states that
+$\alpha$-equivalence. More specifically, the coherence property in \oname states that
 any two target terms that a source expression elaborates into must be exactly the same (up to
 $\alpha$-equivalence). Unfortunately this syntactic notion of coherence is
 very fragile with respect to extensions.
@@ -133,7 +133,7 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 \end{figure}
 
 We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
-Recall the definition of contextual equivalence in \cref{sec:bg:lr}.
+Recall the definitions of Kleene equality and contextual equivalence in \cref{sec:bg:lr}.
 For ease of reference, we restate them below:
 
 \kleene*
@@ -230,15 +230,15 @@ in the following sense:
 \end{restatable}
 
 That is, coherence is just a special case of \cref{def:cxtx2} where we set
-$[[ee1]]$ and $[[ee2]]$ to be the same source expression. At first glance this
-is underwhelming: of course $[[ee]]$ behave the same as itself! The tricky part is
+$[[ee1]]$ and $[[ee2]]$ to be the same source expression. At first glance, this
+appears underwhelming: of course $[[ee]]$ behaves the same as itself! The tricky part is
 that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
 itself but all its translations $[[e]]$ that should behave the same!
 The rest of the chapter is devoted to proving the validity of \cref{thm:coherence}.
 
-\section{Logical Relation, Formally Defined}
+\section{The Canonicity Logical Relation, Formally Defined}
 
-Intuitive as \cref{def:cxtx2} may seem, it is generally very hard to prove
+As intuitive as \cref{def:cxtx2} may seem, it is generally very hard to prove
 contextual equivalence directly, since it involves quantification over
 \textit{all} possible contexts. Worse still, two kinds of contexts are involved
 in \cref{thm:coherence}, which makes reasoning even more tedious. The key to
@@ -260,7 +260,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
-  \caption{Canonicity for \namee}
+  \caption{The canonicity logical relation for \namee}
   \label{fig:logical}
 \end{figure}
 
@@ -297,7 +297,7 @@ contexts. A moment of thought leads us to the following observations:
 \paragraph{Canonicity.}
 
 In order to deal with the complexity of the elaboration semantics, we introduce
-in \cref{fig:logical} what we call \textit{canonicity} to capture ``canonical''
+in \cref{fig:logical} what we call the \textit{canonicity} logical relation to capture ``canonical''
 values based on the above observations. Canonicity is a family of binary
 relations over \tname values that are \textit{heterogeneous}, i.e., indexed by
 two \namee types. Heterogeneity allows us to relate values of different types,
