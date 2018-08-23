@@ -116,11 +116,14 @@ given in \cref{fig:disjoint}, can be compactly formulated using $\approx$ and $\
   \end{longtable}
 \end{proof}
 
-We can view \cref{thm:disjoint_spec} as a specification of disjointness. It also
+\begin{remark}
+We can view \cref{thm:disjoint_spec} as a specification of disjointness. Moreover, it
 provides an alternative approach to deriving algorithmic disjointness whenever
 $[[A =/ B]]$ is computable. However, this is not always the case for richer type
 structures. For instance, in the $\mathsf{F}_{\land}$ calculus~\citep{pierce1991programming}, least
 upper bounds are not existent.
+\end{remark}
+
 
 
 
@@ -218,7 +221,7 @@ perspective.
 What we have developed so far is the (categorical) interpretation of disjoint intersection
 types. We are still half way through the ultimate goal of (re-)establishing
 coherence, now from the categorical perspective. The main difficulty is that we
-do not know yet how to interpret bidirectional typing judgment---i.e., what are
+do not know yet how to interpret bidirectional typing judgments---i.e., what are
 $\bra{[[GG |- ee => A]]}$ and $\bra{[[GG |- ee <= A]]}$, and in particular the
 interpretation of the merge operator. As we mentioned, bidirectional type checking
 (besides disjointness) is essential to coherence. It would be exciting to see
@@ -329,8 +332,9 @@ The matching judgment~\citep{siek2015refined, xie2018consistent}, first used in 
 \Rref{M-forall}, as with \rref{IS-allL}, works by guessing instantiations of
 polymorphic quantifiers with the requirement that the monotype $[[t]]$ must meet
 the disjointness constraints. \Rref{M-arr} is trivial, returning $[[A1 -> A2]]$
-as it is. An alternative is to use the \textit{application judgment} $\Delta \vdash A \bullet e \Rightarrow C$~\citep{dunfield2013complete},
-which says that if we apply a term of type $A$ to an argument $e$, we get something of type $C$.
+as it is. An alternative to the matching judgment is the \textit{application judgment}
+$\Delta \vdash A \bullet e \Rightarrow C$~\citep{dunfield2013complete}, which says that if we apply a term of type $A$
+to an argument $e$, we get something of type $C$.
 
 
 
@@ -415,7 +419,7 @@ that merges \textit{any} two expressions of statically-unknown types.
 
 We believe \fnamee completely subsumes $\lambda^{\|}$. To support this claim, we
 may show a type directed translation from $\lambda^{\|}$ to \fnamee. However,
-there could be many feasible translations, with some may even discard typing
+there could be many feasible translations, some of which may even discard important
 information. For example, we could easily translate $\lambda^{\|}$ to System F,
 ignoring all compatibility conditions. Thus we need a stronger argument: a
 bisimulation property between $\lambda^{\|}$ and (a subset of) \fnamee:
@@ -457,7 +461,7 @@ to how they affect disjointness, and in particular, under what conditions are
 two recursive types disjoint. An initial attempt shows that the amber rule and
 the disjointness rule for functions are in conflict.
 
-\subsection{The Problem.}
+\paragraph{The Problem.}
 
 For the ease of discussion, we do not consider top types, polymorphic types, or
 BCD subtyping; then a guiding principle of designing disjointness rules is the
@@ -474,7 +478,7 @@ nat ]]$ are not disjoint. So we have $[[ mu XX . XX -> nat]]$ and $[[ mu YY . YY
 are \textit{not} disjoint: a contradiction!
 
 
-\subsection{Positivity to the Rescue.}
+\paragraph{Positivity to the Rescue.}
 
 It is not obvious how to change either \rref{RS-amber} or \rref{D-arr} without
 disrupting the whole system. A possible solution is to restrict where type variables
@@ -508,7 +512,7 @@ We also need a few more disjointness axioms:
   \drule{Dax-arrRVar}
   \drule{Dax-recRVar}
 \end{mathpar}
-An important observation is that any two type variables are \textit{not}
+An important observation is that any two distinct type variables are \textit{not}
 disjoint. A few examples: $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> YY]]$
 are not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . bool -> YY & nat]]$ are
 not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> nat -> YY]]$ are

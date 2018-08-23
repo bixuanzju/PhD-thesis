@@ -6,7 +6,7 @@ well-studied) programming feature. It enables a single piece of code to be
 reused on data of different types. So it is quite natural and theoretically
 interesting to study combining parametric polymorphism with disjoint
 intersection types, especially how it affects disjointness and coherence. On a more
-pragmatic note, the combination of parametric polymorphism also reveals new
+pragmatic note, the combination of parametric polymorphism and disjoint intersection types also reveals new
 insights into practical applications. Dynamic languages (such as JavaScript)
 usually embrace quite flexible programming patterns, e.g., mixin composition
 where objects can be composed at run time, and their types are not necessarily
@@ -23,7 +23,7 @@ However, the types of the two objects are not known, i.e., they are generic. An
 important point is that, while it is possible to define such function in
 TypeScript (albeit using some low-level (and type-unsafe) features of
 JavaScript), it can also cause, as pointed out by \citet{alpuimdisjoint},
-run-time type error! Clearly a well-defined meaning for intersection types with
+run-time type errors! Clearly a well-defined meaning for intersection types with
 type variables is needed.
 
 
@@ -93,7 +93,7 @@ While \citet{alpuimdisjoint} studied the combination of disjoint intersection
 types and parametric polymorphism, they follow the then-standard approach
 of \citet{oliveira2016disjoint} to ensure coherence, thus excluding the
 possibility of adding BCD subtyping. The combination of BCD subtyping and
-disjointness polymorphism opens doors for more expressiveness. For example, we can
+disjoint polymorphism opens doors for more expressiveness. For example, we can
 define the following function
 \begin{lstlisting}
 combine A [B * A] (f : {foo : Int -> A})
