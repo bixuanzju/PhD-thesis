@@ -203,7 +203,7 @@ case, \lstinline{onKey} in \lstinline{modalMixin} gets picked. If we
 change the order of application to \lstinline{spellMixin(modalMixin(Editor))},
 then \lstinline{onKey} in \lstinline{spellMixin} is inherited.
 
-\paragraph{Problem of Mixin Composition.}
+\paragraph{The Problem of Mixin Composition.}
 From the above discussion, we can see that mixin are composed linearly: all the
 mixins used by a class must be applied one at a time. However, when we wish to
 resolve conflicts by selecting features from different mixins, we may not be
@@ -266,7 +266,7 @@ we will see next.
 
 \subsection{A Glance at Typed First-Class Traits in \sedel}
 
-We now rewrite the above code in \sedel, but this time with types. The resulting code has the same functionality as the dynamic version, but is
+We now rewrite the above code in \sedel, but this time with types. The resulting code has the same functionality as the dynamic version, but it is
 statically typed. All code snippets in this and later sections are runnable in
 our prototype. Before proceeding, we ask the reader to bear in mind that in this section we are not using traits
 in the most canonical way, i.e., we use traits as if they are classes (but with
@@ -286,12 +286,12 @@ self type annotations~\citep{odersky2004overview}) where we can give a type anno
 \lstinputlisting[linerange=10-17]{./examples/overview2.sl}% APPLY:linerange=OVERVIEW_EDITOR_TYPES
 For the sake of conciseness, \sedel uses \lstinline{type} aliases to abbreviate types.
 
-\paragraph{Type of \lstinline{self} Encodes Abstract Methods.}
+\paragraph{The type of \lstinline{self} Encodes Abstract Methods.}
 Recall that in the JavaScript class \lstinline{Editor}, the \lstinline{version}
 method is undefined, but is used inside \lstinline{showHelp}. How can we express
 this in the typed setting, if not with an abstract method? In \sedel, the type of \lstinline{self}
 plays the role of trait requirements. As the first approximation, we
-can justify the use of \lstinline{self.version} by noticing that (part of) the
+can justify the invocation of \lstinline{version} on \lstinline{self} by noticing that (part of) the
 type of \lstinline{self} (i.e., \lstinline{Version}) contains the declaration of
 \lstinline{version}. An interesting aspect of \sedel's trait model is that there
 is no need for abstract methods. Instead, abstract methods can be simulated as
