@@ -63,10 +63,37 @@ any two coercions between given types are behaviorally equivalent in the target
 language, their coherence reasoning can all take place in the target language.
 This is not true in our setting, where coercions can be distinguished by
 arbitrary target programs, but not those that are elaborations of source
-programs. (Recall that $ \lambda \ottmv{x} .\, \pi_1 \, \ottmv{x} $ and $ \lambda \ottmv{x} .\, \pi_2 \, \ottmv{x} $ should be equated in our setting.)
+programs. (Recall that $ [[\x . pp1 x]]    $ and $ [[ \x . pp2 x]]    $ should be equated in our setting.)
 Hence, we have to restrict our reasoning to the latter class, which is reflected
 in a more complicated notion of contextual equivalence and our logical
-relation's non-trivial treatment of pairs.
+relation's non-trivial treatment of pairs. They also did not study parametric
+polymorphism, which requires extra effort in the proof.
+
+
+\section {BCD Subtyping and Decidability}
+
+The BCD type system was first introduced by \citet{Barendregt_1983}. It is
+derived from a filter lambda model in order to characterize exactly the strongly
+normalizing terms. The BCD type system features a powerful subtyping relation,
+which serves as a base for our subtyping relation.
+\citet{DBLP:journals/corr/BessaiDDCd15} show how to type classes and mixins in a
+BCD-style record calculus with a merge-like operator~\citep{bracha1990mixin}
+that only operates on records, and they only study a type assignment system. The
+decidability of BCD subtyping has been shown in several
+works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
+\citet{laurent2012intersection} formalized the relation in Coq in order to
+eliminate transitivity cuts from it, but his formalization does not deliver an
+algorithm. Only recently, \citet{Laurent18b} presents two sequent-calculus
+systems that are algorithmic and equivalent to BCD subtyping.
+% \todo{show the rules?}
+Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
+\citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
+Our Coq formalization follows a different idea based on Pierce's decision
+procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
+coercions and records. In the course of our mechanization we identified several
+mistakes in Pierce's proofs, as well as some important missing lemmas.
+
+
 
 \section{Intersection Types and the Merge Operator}
 
@@ -82,57 +109,93 @@ abstraction that says (adapted to our syntax):
 which means that in a merge of two functions, the second one always takes
 precedence to the first one. In contrast, our typing rule for merges is more
 fine-grained in the sense that both functions are retained as long as they are
-disjoint. \citet{Castagna_1992} proposed a coherent calculus with a special
-merge operator that works on functions only.
-\citet{dunfield2014elaborating} shows significant expressiveness
-of type systems with (unrestricted) intersection types and a merge operator.
-However his calculus lacks coherence. The limitation was addressed by
-\citet{oliveira2016disjoint}, who introduced disjointness to ensure coherence.
-The combination of intersection types, a merge operator and parametric
-polymorphism, while achieving coherence was first studied in the \fname
-calculus~\citep{alpuimdisjoint}. Compared to prior work, the approach in this
-thesis simplifies type systems with disjoint intersection types by removing
-several restrictions. Furthermore, our calculi adopt a more powerful subtyping
-relation based on BCD subtyping, which in turn requires the use of a more
-powerful logical relations based method for proving coherence. On a pragmatic
-note, dynamic inheritance, self-references and abstract methods are all missing
-from prior work, but, as shown in this thesis, they can be encoded using an
-elaboration that employs ideas from the denotational model of
-inheritance~\citep{cook1989denotational}.
+disjoint. \citet{Castagna_1992} proposed a coherent calculus $\lambda \&$ to
+study overloading functions. Interestingly, $\lambda \&$ has a special merge
+operator that works on functions only. Like ours, they also impose
+well-formedness conditions on the formation of a (functional) merge. However,
+those conditions operate on function types only, and it is not clear how to
+generalize them to arbitrary types. \citet{dunfield2014elaborating} shows
+significant expressiveness of type systems with (unrestricted) intersection
+types and a merge operator. However, his calculus lacks coherence. The limitation
+was addressed by \citet{oliveira2016disjoint}, who introduced disjointness to
+ensure coherence.
+
+Compared to prior work on disjoint intersection types, the approach in this thesis simplifies type systems with
+disjoint intersection types by removing several restrictions. Furthermore, our
+calculi adopt a more powerful subtyping relation based on BCD subtyping, which
+in turn requires the use of a more sophisticated proof method for proving
+coherence. On a pragmatic note, dynamic inheritance, self-references and
+abstract methods are all missing from prior work, but, as shown in this thesis,
+they can be encoded using an elaboration that employs ideas from the
+denotational model of inheritance~\citep{cook1989denotational}.
+
 
 
 \section{Intersection Types and Polymorphism}
 
 
-\citet{pierce1991programming} studies $\mathsf{F}_{\land}$.
+\citet{pierce1991programming} proposed $\mathsf{F}_{\land}$, a calculus
+combining intersection types and bounded quantification. $\mathsf{F}_{\land}$
+also adopts a BCD-like subtyping relation. Moreover, since the
+$\forall$-quantifier behaves somewhat like a function space constructor,
+\citeauthor{pierce1991programming} added a new rule which allows intersections
+to be distributed over quantifiers on the right-hand side.
+\[
+\inferrule*{  }{  \inter{ (\forall (\alpha <: [[A]]) .\ [[B1]]) }{ (\forall (\alpha <: [[A]]) .\ [[B2]]) }  <: \forall (\alpha <: [[A]]) .\ \inter{[[B1]]}{[[B2]]}  }
+\]
+In \fnamee, we do not have this distributivity rule, but are thinking to add
+a similar rule, as shown below:
+\[
+\inferrule*[lab=distPoly]{  }{  [[  (\X ** A . B1) &  (\X ** A . B2)  <: \X ** A . B1 & B2 ]]       }
+\]
+This rule will add extra expressiveness to \fnamee, e.g., we can compose
+algebras with polymorphic components:
+\[
+[[ {l : \ X . X -> A} & {l : \X . X -> B} <: {l : \ X . X -> A & B} ]]
+\]
+We expect this rule would not pose any difficulties in terms of the coherence
+proof.
+Like the elaboration semantics of \fnamee, \citeauthor{pierce1991programming}
+translates $\mathsf{F}_{\land}$ to System F extended with products, but he left
+coherence as a conjecture.
 
-
-Recently, \citet{castagna2014polymorphic} studied a coherent calculus that has
-polymorphism and set-theoretic type connectives (intersections, unions,
-negations). Compared to \fnamee, their intersections are used between function
-types, allowing overloading of types, e.g.,
+More recently, \citet{castagna2014polymorphic} proposed a polymorphic calculus
+with set-theoretic type connectives (intersections, unions, negations). But
+their calculus does not include a merge operator. Compared to \fnamee, their
+intersections are used between function types, allowing overloading of types, as shown below
+(altering their syntax slightly):
 \begin{lstlisting}[language=Haskell]
-even :: (Int -> Bool) and ((a \ Int) -> (a \ Int))
+even :: (Int -> Bool) & ((a \ Int) -> (a \ Int))
 even x = case x of
            | Int -> x `mod` 2 == 0
            | _   -> x
 \end{lstlisting}
-The weird-looking function operates differently according to
-the type of the argument: it checks whether an argument is an integer; if it is
-so it returns whether the integer is even or not, otherwise it returns the
-argument as it received. Note that type difference (i.e., \lstinline{a \ Int}) is crucial to
-ensure no ambiguity in the domain types of two functions. In \fnamee, we cannot
-express this kind of intersections. However, \fnamee allows some other
-intersections (e.g., $\inter{(\mathsf{Int} \rightarrow
-  \mathsf{Bool})}{(\mathsf{Int} \rightarrow \mathsf{Int})}$) that are not
-allowed in their system. Nevertheless, both systems need to express negative
-information about type variables: in their system type difference (e.g.,
-\lstinline{a \ Int}) achieves this, whereas in \fnamee we use disjointness
-constraints (e.g., \lstinline{a * Int}).
+The above function operates differently according to the type of the argument:
+it checks whether an argument is an integer; if it is so it returns whether the
+integer is even or not, otherwise it returns the argument as it received. Note
+that type difference (i.e., \lstinline{a \ Int}) is crucial to ensure no
+ambiguity in the domain types of two functions. In \fnamee, we cannot express
+this kind of intersections. However, \fnamee allows some other intersections
+(e.g., $[[(nat -> bool) & (nat -> nat)]]$) that are not allowed in their system.
+Nevertheless, both systems need to express negative information about type
+variables: in their system type difference (e.g., \lstinline{a \ Int}) achieves
+this, whereas in \fnamee we use disjointness constraints (e.g., \lstinline{a * Int}).
+On a more theoretical note, \citet{castagna2014polymorphic} adopt the
+\textit{semantic} approach for defining the subtyping relation, where one first
+chooses a model, and an interpretation of types as subsets of the model, then
+the subtyping relation can be defined as the inclusion of denoted sets. The
+benefit of this approach, compared with the more used \textit{syntactic}
+approach, is that the subtyping relation is by definition \textit{complete}. In
+that regard, their subtyping relation thus completely subsumes BCD subtyping.
 
 
-\citet{alpuimdisjoint} studied \fname.
-
+The combination of intersection types, a merge operator and parametric
+polymorphism, while achieving coherence was first studied in the \fname
+calculus~\citep{alpuimdisjoint}, which servers as a foundation for our \fnamee
+calculus. Compared to \fname, the essential novelty is a BCD subtyping, and a
+more powerful proof method for proving coherence. As far as we know, we are the
+first to study the metatheory of the combination of BCD subtyping, parametric
+polymorphism and the merge operator.
 
 
 
@@ -162,8 +225,8 @@ between our calculi and those languages/calculi is that they do not have an
 explicit introduction form of intersection types, like our merge operator. The
 lack of a native merge operator leads to some awkward and type-unsafe solutions
 for defining a merge operator in those languages. As noted by
-\citet{alpuimdisjoint}, TypeScript's use of intersection types is the following
-function:
+\citet{alpuimdisjoint}, one important use of intersection types in TypeScript
+the following function:
 \begin{lstlisting}[language=JavaScript]
 function extend<T, U>(first: T, second : U) : T & U {...}
 \end{lstlisting}
@@ -174,86 +237,17 @@ features of JavaScript. Similar encodings have also been proposed for Scala to
 enable applications where the merge operator plays a fundamental
 role~\citep{oliveira2013feature, rendel14attributes}.
 
-\section {BCD Type System and Decidability}
 
-The BCD type system was first introduced by \citet{Barendregt_1983}. It is
-derived from a filter lambda model in order to characterize exactly the strongly
-normalizing terms. The BCD type system features a powerful subtyping relation,
-which serves as a base for our subtyping relation.
-\citet{DBLP:journals/corr/BessaiDDCd15} show how to type classes and mixins in a
-BCD-style record calculus with a merge-like operator~\citep{bracha1990mixin}
-that only operates on records, and they only study a type assignment system. The
-decidability of BCD subtyping has been shown in several
-works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
-\citet{laurent2012intersection} formalized the relation in Coq in order to
-eliminate transitivity cuts from it, but his formalization does not deliver an
-algorithm. Only recently, \citet{Laurent18b} presents two sequent-calculus
-systems that are algorithmic and equivalent to BCD subtyping.
-\todo{show the rules?}
-Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
-\citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
-Our Coq formalization follows a different idea based on Pierce's decision
-procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
-coercions and records. In the course of our mechanization we identified several
-mistakes in Pierce's proofs, as well as some important missing lemmas.
 
-\section{Family Polymorphism}
+\section{Extensible Records and Row Polymorphism}
 
-There has been much work on family polymorphism since \citeauthor{Ernst_2001}'s
-original proposal~\citep{Ernst_2001}. Family polymorphism provides an elegant
-solution to the expression problem. Although a simple Scala solution does exist
-without requiring family polymorphism (e.g., see \citet{wang2016expression}), Scala does not support nested composition:
-programmers need to manually compose all the classes from multiple extensions.
-Generally speaking, systems that support family polymorphism can be divided into
-two categories: those that support \textit{object families} and those that
-support \textit{class families}. The original object family approach of
-\textsc{Beta }(e.g., virtual classes~\citep{Madsen_1989}) treats nested classes as
-attributes of objects of the family classes, whereas in class families,
-classes are nested in other classes. The former choice is considered more
-expressive~\citep{ErnstVirtual}, but requires a complex type system usually
-involving dependent types. The object and class family approaches have even been
-combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
+Also as we pointed out in \cref{sec:merge},
+row polymorphism alone cannot express the \lstinline{merge} function that is
+able to compose objects of statically unknown types. In this sense, we argue
+disjoint polymorphism is more powerful than row polymorphism in terms of
+expressiveness. It would be interesting to investigate the relationship between
+disjoint polymorphism and row polymorphism. We leave it as future work.
 
-\paragraph{Object Families.}
-
-Virtual classes~\citep{Madsen_1989} as introduced in
-\textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
-families. However, the virtual class mechanism in \textsc{Beta} is unsound.
-Path-dependent types are used to ensure type safety for virtual types and
-virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinctive
-difference from our calculi is that \textit{vc} follows the mixin-style by
-allowing the rightmost class to take precedence, whereas in \namee conflicts are
-detected statically and resolved explicitly.
-
-\paragraph{Class Families.}
-
-Concord~\citep{jolly2004simple}, Jx~\citep{Nystrom_2004} and
-J\&~\citep{Nystrom:2006} follow the class family approach, where nested classes
-and types are attributes of the family classes directly.
-% Unlike virtual classes, subclass and subtype relationships are preserved by inheritance: the
-% overriding class is also a subtype of the class it overrides.
-%Nested inheritance
-%does not support generic types. As we discussed in \cref{sec:diss}, \namee can be
-%easily extended to incorporate parametric polymorphism.
-Jx supports \textit{nested inheritance}, a class family mechanism that allows
-nesting of arbitrary depth. J\& is a language that supports \textit{nested
-  intersection}, building on top of Jx. Similar to our calculi, intersection
-types play an important role in J\&, which are used to compose packages/classes.
-However, J\& does not have a merge-like operator. When conflicts arise, prefix
-types can be exploited to resolve the ambiguity. J\&$_s$~\citep{Qi:2009} is an
-extension of the Java language that adds class sharing to J\&.
-\citet{SAITO_2007} identified a minimal, lightweight set of language features to
-enable family polymorphism,
-
-Compared with those systems, which usually focus on getting a relatively complex
-Java-like language with family polymorphism, our work on \namee focuses on a
-minimal calculus that supports nested composition. We have shown that a calculus
-with the merge operator and a variant of BCD subtyping captures the essence of nested
-composition. Moreover \namee enables new insights on the subtyping relations of
-families. Our goal in this thesis is not to support full family polymorphism
-which, besides nested composition, also requires dealing with other features
-such as self types~\citep{bruce95thistype,saito09matching} and mutable state.
-But we expect to investigate those features in the future.
 
 
 \section{Typed First-Class Classes/Mixins/Traits}
@@ -284,12 +278,7 @@ where \lstinline{foo} drops \lstinline{bar} from its argument trait
 consequence, Typed Racket ends up with two subtyping mechanisms: one for
 first-class classes (via row polymorphism) and the other for objects (via normal
 width subtyping). In contrast, \sedel uses only one mechanism---i.e., disjoint
-polymorphism---to deal with both. Also as we pointed out in \cref{sec:merge},
-row polymorphism alone cannot express the \lstinline{merge} function that is
-able to compose objects of statically unknown types. In this sense, we argue
-disjoint polymorphism is more powerful than row polymorphism in terms of
-expressiveness. It would be interesting to investigate the relationship between
-disjoint polymorphism and row polymorphism. We leave it as future work.
+polymorphism---to deal with both.
 
 
 More recently, \citet{DBLP:conf/ecoop/LeeASP15} proposed a model for typed
@@ -505,6 +494,67 @@ the traditional trait mode, traits in \sedel have the following differences:
 % doing dynamic composition in a system with virtual classes. This is in contrast
 % with most other approaches that use class-based composition, but closer to the
 % dynamic composition that we use in \namee.
+
+\section{Family Polymorphism}
+
+There has been much work on family polymorphism since \citeauthor{Ernst_2001}'s
+original proposal~\citep{Ernst_2001}. Family polymorphism provides an elegant
+solution to the expression problem. Although a simple Scala solution does exist
+without requiring family polymorphism (e.g., see \citet{wang2016expression}), Scala does not support nested composition:
+programmers need to manually compose all the classes from multiple extensions.
+Generally speaking, systems that support family polymorphism can be divided into
+two categories: those that support \textit{object families} and those that
+support \textit{class families}. The original object family approach of
+\textsc{Beta }(e.g., virtual classes~\citep{Madsen_1989}) treats nested classes as
+attributes of objects of the family classes, whereas in class families,
+classes are nested in other classes. The former choice is considered more
+expressive~\citep{ErnstVirtual}, but requires a complex type system usually
+involving dependent types. The object and class family approaches have even been
+combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
+
+\paragraph{Object Families.}
+
+Virtual classes~\citep{Madsen_1989} as introduced in
+\textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
+families. However, the virtual class mechanism in \textsc{Beta} is unsound.
+Path-dependent types are used to ensure type safety for virtual types and
+virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinctive
+difference from our calculi is that \textit{vc} follows the mixin-style by
+allowing the rightmost class to take precedence, whereas in \namee conflicts are
+detected statically and resolved explicitly.
+
+\paragraph{Class Families.}
+
+Concord~\citep{jolly2004simple}, Jx~\citep{Nystrom_2004} and
+J\&~\citep{Nystrom:2006} follow the class family approach, where nested classes
+and types are attributes of the family classes directly.
+% Unlike virtual classes, subclass and subtype relationships are preserved by inheritance: the
+% overriding class is also a subtype of the class it overrides.
+%Nested inheritance
+%does not support generic types. As we discussed in \cref{sec:diss}, \namee can be
+%easily extended to incorporate parametric polymorphism.
+Jx supports \textit{nested inheritance}, a class family mechanism that allows
+nesting of arbitrary depth. J\& is a language that supports \textit{nested
+  intersection}, building on top of Jx. Similar to our calculi, intersection
+types play an important role in J\&, which are used to compose packages/classes.
+However, J\& does not have a merge-like operator. When conflicts arise, prefix
+types can be exploited to resolve the ambiguity. J\&$_s$~\citep{Qi:2009} is an
+extension of the Java language that adds class sharing to J\&.
+\citet{SAITO_2007} identified a minimal, lightweight set of language features to
+enable family polymorphism,
+
+Compared with those systems, which usually focus on getting a relatively complex
+Java-like language with family polymorphism, our work on \namee focuses on a
+minimal calculus that supports nested composition. We have shown that a calculus
+with the merge operator and a variant of BCD subtyping captures the essence of nested
+composition. Moreover \namee enables new insights on the subtyping relations of
+families. Our goal in this thesis is not to support full family polymorphism
+which, besides nested composition, also requires dealing with other features
+such as self types~\citep{bruce95thistype,saito09matching} and mutable state.
+But we expect to investigate those features in the future.
+
+
+
 
 \section{Languages with More Advanced Forms of Inheritance}
 
