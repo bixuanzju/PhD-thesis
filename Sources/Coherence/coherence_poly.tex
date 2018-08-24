@@ -4,7 +4,7 @@
 \label{chap:coherence:poly}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we extend the canonicity logical relation introduced in
+In this chapter, we extend the canonicity relation introduced in
 \cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly in
 \cref{sec:para:intuition} we discuss why adding BCD subtyping to disjoint
 polymorphism makes establishing coherence even challenging. We then review the
@@ -240,13 +240,13 @@ as briefly discussed in \cref{sec:implicit}.
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{The canonicity logical relation for \fnamee}
+  \caption{The canonicity relation for \fnamee}
   \label{fig:logical:fi}
 \end{figure}
 
 Substitution with predicative instantiations does not prevent well-foundedness.
 \Cref{fig:logical:fi} presents the logical relation for \fnamee. We extend the
-canonicity logical relation in \cref{fig:logical} with a new clause (highlighted) for
+canonicity relation in \cref{fig:logical} with a new clause (highlighted) for
 disjoint quantification. Notice that it does not quantify over arbitrary
 relations, which means that our logical relation \textit{does not} imply
 parametricity, and in particular, \cref{thm:free} is impossible to prove using

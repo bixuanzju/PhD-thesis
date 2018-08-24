@@ -236,7 +236,7 @@ that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
 itself but all its translations $[[e]]$ that should behave the same!
 The rest of the chapter is devoted to proving the validity of \cref{thm:coherence}.
 
-\section{The Canonicity Logical Relation, Formally Defined}
+\section{The Canonicity Relation, Formally Defined}
 
 As intuitive as \cref{def:cxtx2} may seem, it is generally very hard to prove
 contextual equivalence directly, since it involves quantification over
@@ -260,7 +260,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
-  \caption{The canonicity logical relation for \namee}
+  \caption{The canonicity relation for \namee}
   \label{fig:logical}
 \end{figure}
 
@@ -294,14 +294,14 @@ contexts. A moment of thought leads us to the following observations:
   and are also unambiguous.
 \end{observation}
 
-\paragraph{Canonicity.}
+\paragraph{The canonicity relation.}
 
 In order to deal with the complexity of the elaboration semantics, we introduce
-in \cref{fig:logical} what we call the \textit{canonicity} logical relation to capture ``canonical''
-values based on the above observations. Canonicity is a family of binary
+in \cref{fig:logical} what we call the \textit{canonicity} relation to capture ``canonical''
+values based on the above observations. The canonicity relation is a family of binary
 relations over \tname values that are \textit{heterogeneous}, i.e., indexed by
 two \namee types. Heterogeneity allows us to relate values of different types,
-and in particular values of disjoint types. Canonicity seeks to combine equality
+and in particular values of disjoint types. The canonicity relation seeks to combine equality
 checking from traditional (homogeneous) logical relations (\cref{ob:2}) with
 disjointness checking (\cref{ob:1}). It consists of two relations. The
 value relation $\valR{[[A]]}{[[B]]}$ relates \textit{closed} values, i.e.,
