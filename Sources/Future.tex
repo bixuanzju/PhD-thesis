@@ -1,6 +1,6 @@
 
 \chapter{Future Work}
-\label{chap:Future}
+\label{chap:future}
 
 In this section we discuss some areas where future research might extend and/or
 complement the work described in this thesis.
@@ -223,7 +223,7 @@ types. We are still half way through the ultimate goal of (re-)establishing
 coherence, now from the categorical perspective. The main difficulty is that we
 do not know yet how to interpret bidirectional typing judgments---i.e., what are
 $\bra{[[GG |- ee => A]]}$ and $\bra{[[GG |- ee <= A]]}$, and in particular the
-interpretation of the merge operator. As we mentioned, bidirectional type checking
+interpretation of the merge operator. As remarked earlier, bidirectional type checking
 (besides disjointness) is essential to coherence. It would be exciting to see
 some research along the lines of the above, so that we may have a solid
 mathematical foundation for type systems with disjoint intersection types.
@@ -351,20 +351,17 @@ this thesis should still work.
 \subsection{Algorithmic System.}
 
 Having a declarative system is only a start. The major challenge is the
-corresponding algorithmic system. It is known that full type inference is
-undecidable for intersection types. Some restrictions are obviously in order,
+corresponding algorithmic system. It is well-known that complete type inference is
+undecidable for intersection types~\citep{coppo1981functional, Barendregt_1983}. Some restrictions are obviously in order,
 leading to different points in the design space with varying degrees of
 expressiveness and technical difficulties. We are interested to see some
 research into the algorithmic system.
 
 
 \section{Disjoint Polymorphism vs. Row Polymorphism}
+\label{sec:future:row}
 
-Row polymorphism, first proposed by \citet{wand1987complete}, was intended as a
-mechanism to enable type inference for a simple object-oriented language based
-on recursive records. These ideas were later adopted into type systems for
-extensible records~\citep{Harper:1991:RCB:99583.99603, gaster1996polymorphic}.
-As we have alluded to in \cref{sec:merge}, row polymorphism alone cannot express
+As we have alluded to in \cref{sec:related:row}, row polymorphism alone cannot express
 the merge operator. It would be interesting to study the
 relationship between disjoint polymorphism and row polymorphism, and in
 particular, whether the former subsumes the latter. As noted by

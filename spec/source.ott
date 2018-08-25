@@ -126,7 +126,7 @@ sty, A, B, C, t :: 'sty_' ::=
   | [ B / X ] A  :: :: subst
   | p ( A )      :: :: pa
   | pq ( A )      :: :: pa2
-  | fs -> A ::  :: lst
+  | fs => A ::  :: lst {{ tex [[fs]] \Rightarrow [[A]] }}
   | N ::  :: n  {{ tex \mathsf{I} }}
   | S ::  :: s  {{ tex \mathsf{S} }}
   | string ::  :: ss   {{ tex \mathsf{String} }}

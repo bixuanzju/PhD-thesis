@@ -368,9 +368,7 @@ such composition cannot always work if \lstinline{A} and
 constraint \lstinline{B * A} that ensures that whatever types are used
 to instantiate \lstinline{A} and \lstinline{B} they must be disjoint.
 Thus, under the assumption that \lstinline{A} and \lstinline{B} are
-disjoint the code type-checks. We want to emphasize that row polymorphism is unable to express
-this kind of disjointness of two polymorphic types, thus systems using row polymorphism is unable to define
-the \lstinline{merge} function, which plays an essential role in \cref{chap:case_study}.
+disjoint the code type-checks.
 
 \begin{comment}
 Notice the disjoint constraint on the type variable \lstinline{B} (\lstinline{B * A}), which is crucial

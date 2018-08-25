@@ -11,10 +11,11 @@ raises an obvious question: how to obtain an algorithm for this subtyping
 relation? \citet{Laurent12note} has shown that simply dropping the transitivity
 rule from the BCD system is not possible without losing expressivity. Hence,
 this avenue for obtaining an algorithm is not available. In a 2012
-article~\citep{laurent2012intersection}, \citeauthor{laurent2012intersection} defined
-BCD subtyping without transitivity, but the system still does not deliver an
-algorithm. Only recently, \citet{Laurent18b} presents two
-sequent-calculus systems that are algorithmic and equivalent to BCD subtyping.
+article~\citep{laurent2012intersection}, \citeauthor{laurent2012intersection}
+defined BCD subtyping without transitivity, but the system still does not
+deliver an algorithm. Only quite recently, \citet{Laurent18b} presents a general
+approach to defining a BCD-like subtyping relation that enjoys the
+``sub-formula property'' (read decidability).
 %Moreover, even if transitivity elimination
 %would be possible, the remaining rules are still highly overlapping, and pose
 %difficulties for an implementation.  
@@ -51,15 +52,15 @@ find some errors and missing lemmas in \citeauthor{pierce1989decision}'s origina
 
 \Cref{fig:algorithm} shows the algorithmic subtyping judgment $[[fs |- A <: B ~~> c]]$.
 This judgment is the algorithmic counterpart of the declarative
-judgment $[[A <: fs -> B ~~> c]]$, where the symbol $[[fs]]$ stands for a
-queue tracking types and labels. Definition~\ref{def:fs} converts a queue to a type.
-For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs -> C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
+judgment $[[A <: fs => B ~~> c]]$, where the symbol $[[fs]]$ stands for a
+sequence of types and labels. Definition~\ref{def:fs} converts $[[ fs => A ]]$ to a valid type.
+For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs => C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
-\begin{definition} $[[fs -> A]]$ is inductively defined as follows: \label{def:fs}
+\begin{definition} $[[fs => A]]$ is inductively defined as follows: \label{def:fs}
   \begin{mathpar}
-    [[ [] -> A]] = [[A]] \and
-    [[ (fs , B) -> A]] = [[fs -> (B -> A)]] \and
-    [[ (fs , {l}) -> A]] = [[fs -> {l : A}]]
+    [[ [] => A]] = [[A]] \and
+    [[ (fs , B) => A]] = [[fs => (B -> A)]] \and
+    [[ (fs , {l}) => A]] = [[fs => {l : A}]]
   \end{mathpar}
 \end{definition}
 
@@ -78,7 +79,7 @@ by the predicate ``$ [[A rigid]] $'' over types, and defined as follows:
 \end{definition}
 
 For now, the only rigid type is the primitive type $[[pri]]$, but will be
-extended when we have more rich types. If the base case is a rigid type, the
+extended when we have richer types. If the base case is a rigid type, the
 algorithm performs a structural analysis of $[[A]]$, in which $[[fs]]$ plays an
 important role. The left sides of $[[->]]$'s are pushed onto $[[fs]]$ as they
 are encountered in $[[B]]$ and popped off again later, left to right, as
@@ -92,6 +93,13 @@ $[[string]]$ respectively, which are both rigid types), which is essentially the
 one used by the \lstinline{add} field in \cref{nested:sec:overview}. The readers
 can try to give a corresponding derivation using the declarative subtyping and
 see how \rref{S-trans} plays an essential role there.
+
+\begin{remark}
+  Our algorithmic rules are still not deterministic (\rref{A-andR1,A-andR2} are overlapping). In other words,
+  to check whether $[[ A1 & A2 ]] \prec : [[B]] $, we need to check if $[[A1]] \prec : [[B]]$ or $[[A2]] \prec : [[B]]$.
+  In our prototype, this is implemented using backtracking.
+\end{remark}
+
 
 
 \begin{figure}[t]
@@ -201,14 +209,14 @@ transitive.
 The following two lemmas connect the declarative subtyping with the meta-functions.
 
 \begin{lemma} \label{lemma:top}
-  $[[ Top <: fs -> Top ~~> < fs >1]]$
+  $[[ Top <: fs => Top ~~> < fs >1]]$
 \end{lemma}
 \begin{proof}
   By induction on the length of $[[fs]]$.
 \end{proof}
 
 \begin{lemma} \label{lemma:and}
-  $[[(fs -> A) & (fs -> B) <: fs -> (A & B) ~~> < fs >2]]$
+  $[[(fs => A) & (fs => B) <: fs => (A & B) ~~> < fs >2]]$
 \end{lemma}
 \begin{proof}
   By induction on the length of $[[fs]]$.
@@ -216,7 +224,7 @@ The following two lemmas connect the declarative subtyping with the meta-functio
 
 The proof of soundness is straightforward.
 \begin{theorem}[Soundness] \label{thm:soundness}
-  If $[[ fs |- A <: B ~~> c]]$ then $ [[   A <: fs -> B ~~> c  ]]   $.
+  If $[[ fs |- A <: B ~~> c]]$ then $ [[   A <: fs => B ~~> c  ]]   $.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of the algorithmic subtyping and applying \cref{lemma:top,lemma:and} where appropriate.
@@ -263,7 +271,7 @@ We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 % Next we show the following lemma from which reflexivity (\cref{lemma:refl})
 
 \begin{lemma} \label{lemma:refl0}
-  If $[[fs -> B]] \in \UU{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
+  If $[[fs => B]] \in \UU{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
 \end{lemma}
 \begin{proof}
   By induction on $\mathsf{size}([[A]]) + \mathsf{size}([[B]]) + \mathsf{size}([[fs]])$.

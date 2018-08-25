@@ -83,15 +83,44 @@ decidability of BCD subtyping has been shown in several
 works~\citep{pierce1989decision, Kurata_1995, Rehof_2011, Statman_2015}.
 \citet{laurent2012intersection} formalized the relation in Coq in order to
 eliminate transitivity cuts from it, but his formalization does not deliver an
-algorithm. Only recently, \citet{Laurent18b} presents two sequent-calculus
-systems that are algorithmic and equivalent to BCD subtyping.
-% \todo{show the rules?}
-Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
-\citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
+algorithm. Only recently, \citet{Laurent18b} presents a general way of defining
+a BCD-like subtyping relation extended with generic contravariant/covariant type
+constructors that enjoys the ``sub-formula property'' (read decidability). The
+key idea is to generalize the form of subtyping from $[[A <: B]]$ to $[[A1]],
+\dots, [[An]] \vdash [[B]]$, which is interpreted as meaning $[[ A1 & ... & An <: B]]$.
+Here is his subtyping system instantiated with singleton records, adapted to our setting:
+\begin{mathpar}
+  \inferrule*{ }{ [[pri]] \vdash [[pri]]  } \and
+  \inferrule*{ }{ \vdash [[Top]]  } \and
+  \inferrule*{ \vdash [[B]]  }{ \vdash [[A -> B]]  } \and
+  \inferrule*{ \vdash [[A]]  }{ \vdash [[ {l : A}   ]]  } \and
+  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, \rho, \Delta \vdash [[C]] } \and
+  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[Top]], \Delta \vdash [[C]] } \and
+  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[A -> B]], \Delta \vdash [[C]] } \and
+  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[ {l : B}  ]], \Delta \vdash [[C]] } \and
+  \inferrule*{ \Gamma \vdash [[A]] \\ \Gamma \vdash [[B]]  }{ \Gamma \vdash [[A & B]] } \and
+  \inferrule*{ \Gamma, [[A]], [[B]], \Delta \vdash [[C]]  }{ \Gamma, [[A & B]], \Delta \vdash [[C]] } \and
+  \inferrule*{ [[A]] \vdash [[A1]] \\ \dots \\ [[A]] \vdash [[An]] \\  [[B1]], \dots, [[Bn]] \vdash [[B]]  } { [[A1 -> B1]], \dots, [[An -> Bn]] \vdash [[A -> B]]  } \and
+  \inferrule*{ [[A1]], \dots , [[An]] \vdash [[B]]  } {  [[ {l : A1} ]], \dots, [[{l : An}]] \vdash [[ {l : B} ]]  }
+\end{mathpar}
+The first two rules are the base cases. The third and forth rules deal with
+cases where $[[B]]$ is a ``top-like'' type. The next four rules are the
+weakening rules for integers, top types, function types and singleton records.
+The next two rules are the introduction and elimination rules for intersections.
+The last two rules combine the function distributivity rule with usual function
+subtyping, and record distributivity rule with usual record subtyping,
+respectively. \citeauthor{Laurent18b} proved in Coq that $[[ A ]] \vdash [[B]]$
+if and only if $[[ A <: B ]]$. % Based on \citeauthor{Statman_2015}'s work~\citep{Statman_2015},
+% \citet{bessaiextracting} present a formally verified subtyping algorithm in Coq.
 Our Coq formalization follows a different idea based on Pierce's decision
 procedure~\citep{pierce1989decision}, which is shown to be easily extensible to
 coercions and records. In the course of our mechanization we identified several
-mistakes in Pierce's proofs, as well as some important missing lemmas.
+mistakes in Pierce's proofs, as well as some important missing lemmas. Finally,
+it would be interesting to study an efficient subtyping algorithm in normal
+practice. As noted by \citet{reynolds1997design}, however, the worst-case
+inefficiency is inevitable. In fact, any typechecker for languages using
+intersection types is PSPACE-hard.
+
 
 
 
@@ -137,7 +166,7 @@ denotational model of inheritance~\citep{cook1989denotational}.
 \citet{pierce1991programming} proposed $\mathsf{F}_{\land}$, a calculus
 combining intersection types and bounded quantification. $\mathsf{F}_{\land}$
 also adopts a BCD-like subtyping relation. Moreover, since the
-$\forall$-quantifier behaves somewhat like a function space constructor,
+$\forall$-quantifier behaves somewhat like an arrow constructor,
 \citeauthor{pierce1991programming} added a new rule which allows intersections
 to be distributed over quantifiers on the right-hand side.
 \[
@@ -199,54 +228,71 @@ polymorphism and the merge operator.
 
 
 
-% The combination of intersection types, a merge
-% construct and parametric polymorphism, while achieving coherence was first
-% studied in the \fname calculus~\citep{alpuimdisjoint}.
-% % where they proposed the notion of disjoint polymorphism.
-% \fname serves as the target language
-% of \namee.
-% \bruno{This is an example of a typical mistake when writting related
-%   work: you describe existing work, but do not say how it
-%   relates/differs from the work presented in the paper.}
-
-
 \section{Intersection Types and Multiple Inheritance}
 
-\citet{compagnoni1996higher} added intersection types to
-$\mathsf{F}_{<:}^{\omega}$, an extension of System $\mathsf{F}^{\omega}$ with
-bounded quantification, and proposed a new calculus
-$\mathsf{F}_{\land}^{\omega}$ to model multiple inheritance. In their system,
-two types of the same kind $K$ can form an intersection. Recently, some form of
-intersection types have been adopted in object-oriented languages such as Scala,
-TypeScript, Flow, Ceylon, and Grace. The DOT
-calculus~\citep{amin2012dependent,Rompf_2016}, a new type-theoretic foundation
-for Scala, also incorporate intersection types. The most significant difference
-between our calculi and those languages/calculi is that they do not have an
-explicit introduction form of intersection types, like our merge operator. The
-lack of a native merge operator leads to some awkward and type-unsafe solutions
-for defining a merge operator in those languages. As noted by
-\citet{alpuimdisjoint}, one important use of intersection types in TypeScript
-the following function:
+\citet{compagnoni1996higher} proposed a $\lambda$-calculus
+$\mathsf{F}_{\land}^{\omega}$, an extension of System $\mathsf{F}^{\omega}$ with
+intersection types to model multiple inheritance. $\mathsf{F}_{\land}^{\omega}$
+allows arbitrary finite intersections, where all the type members must have the
+same kind. On the language side, modern object-oriented languages such as Scala, TypeScript,
+Flow, Ceylon, and Grace have adopted some form of intersection types. Notably,
+the DOT calculus~\citep{amin2012dependent,Rompf_2016}---a new type-theoretic
+foundation for Scala---has a native support for intersection types. Generally
+speaking, the most significant difference between our calculi and those
+languages/calculi is that they do not have an explicit introduction form of
+intersection types, like our merge operator. The lack of a native merge operator
+leads to some awkward and type-unsafe solutions for defining a merge operator in
+those languages. As noted by \citet{alpuimdisjoint}, one important use of
+intersection types in TypeScript is the following function:
 \begin{lstlisting}[language=JavaScript]
 function extend<T, U>(first: T, second : U) : T & U {...}
 \end{lstlisting}
-which is analogous to our merge operator that takes two objects and produces
-an object with the intersection of the types of the argument objects. The
-implementation of \lstinline{extend} relies on low-level (and type-unsafe)
+which is analogous to our merge operator in that it takes two objects and
+produces an object with the intersection of the types of the argument objects.
+The implementation of \lstinline{extend} relies on low-level (and type-unsafe)
 features of JavaScript. Similar encodings have also been proposed for Scala to
 enable applications where the merge operator plays a fundamental
-role~\citep{oliveira2013feature, rendel14attributes}.
+role~\citep{oliveira2013feature, rendel14attributes}. As we have shown in
+\cref{sec:poly:motivation}, with disjointness constraints and a built-in merge
+operator, a type-safe and conflict-free \lstinline{extend} function can be
+naturally defined.
 
 
 
-\section{Extensible Records and Row Polymorphism}
+\section{Row Polymorphism and Extensible Records}
+\label{sec:related:row}
 
-Also as we pointed out in \cref{sec:merge},
-row polymorphism alone cannot express the \lstinline{merge} function that is
-able to compose objects of statically unknown types. In this sense, we argue
-disjoint polymorphism is more powerful than row polymorphism in terms of
-expressiveness. It would be interesting to investigate the relationship between
-disjoint polymorphism and row polymorphism. We leave it as future work.
+Row polymorphism, first proposed by \citet{wand1987complete}, was intended as a
+mechanism to enable type inference for a simple object-oriented language based
+on recursive records. These ideas were later adopted into type systems for
+extensible records~\citep{Harper:1991:RCB:99583.99603, leijen2005extensible,
+  gaster1996polymorphic}. \citet{cardelli1989operations} define three primitive
+operations on records: \textit{selection}, \textit{restriction} and
+\textit{extension}. In our calculi, the merge operator can be regarded as a
+generalization of record extension/concatenation, and selection is also
+supported natively. In contrast to most record systems, restriction is not a
+primitive operation in our calculi, but can be simulated via subtyping.
+According to \citet{leijen2005extensible}, when it comes to extension, record
+calculi can be divided into those that support \textit{free} extension, and
+those that support \textit{strict} extension. The former allows duplicate labels
+to coexist, whereas the latter does not. As pointed out by
+\citet{alpuimdisjoint}, our calculi can be thought as a hybrid of these two
+approaches: we allow duplicate labels as long as their types are disjoint. This
+is more flexible then strict extension, but less expressive than
+\citeauthor{leijen2005extensible}'s system where it also accepts duplicate
+fields even when their types are overlapping. We refer to \citet{alpuimdisjoint}
+for a detailed account of encodings of polymorphic extensible records using
+disjoint polymorphism.
+
+
+Row polymorphism alone cannot express the merge operator, as it only operates on
+records (possibly with statically unknown fields). This essentially limits its
+applications to extensible designs (such as defining Object Algebra combinators
+in \cref{chap:case_study}). In this sense, we believe disjoint polymorphism is
+more expressive than row polymorphism. It would be interesting to rigorously
+study the relationship between disjoint polymorphism and row polymorphism,
+whether the former subsumes the latter. We have some further discussion about
+this point in \cref{sec:future:row}.
 
 
 
@@ -259,9 +305,8 @@ layered combinations of mixins to implement text editing features. The topic of
 first-class classes with static typing has been explored by
 \citet{DBLP:conf/oopsla/TakikawaSDTF12} in Typed Racket. They designed a gradual
 type system that supports first-class classes. Of particular interest is their
-use of row polymorphism~\citep{wand1994type} to type mixins. For example,
-\lstinline{modal_mixin} from \cref{sec:trait:overview} implemented in Typed
-Racket has type:
+use of row polymorphism to type mixins. For example, \lstinline{modal_mixin}
+from \cref{sec:trait:overview} implemented in Typed Racket has type:
 \begin{lstlisting}
 (All (r / on-key toggle-mode)
      (Class ([on-key : (String -> Void)] | r)) ->
