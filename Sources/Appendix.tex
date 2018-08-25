@@ -3,15 +3,258 @@
 \label{appendix:proofs}
 
 
+\sedelwf*
+\begin{proof}
+ By simple induction on the derivation of the judgment.
+\end{proof}
+
+
+\sedelsub*
+\begin{proof}
+Most of them are straightforward. We only show \rref{TS-trait}.
+\begin{itemize}
+\item \[    \drule{TS-trait} \]
+  \begin{longtable}[l]{ll}
+    $[[|BB1| <: |AA1|]]$ & By i.h. \\
+    $[[|AA2| <: |BB2|]]$ & By i.h. \\
+    $[[|AA1| -> |AA2| <: |BB1| -> |BB2|]]$ & By \rref{S-arr}
+  \end{longtable}
+\end{itemize}
+\end{proof}
+
+\begin{lemma} \label{lemma:disa}
+  If $[[AA **a BB]]$ then $[[|AA| **a |BB|]]$.
+\end{lemma}
+\begin{proof}
+  Note that $|[[ Trait[AA,BB] ]]| = [[|AA| -> |BB|]]$, the rest are immediate.
+\end{proof}
+
+\sedeldis*
+\begin{proof}
+  By induction on the derivation of the judgment.
+  \begin{itemize}
+  \item \Rref{SD-topL,SD-topR,SD-rcdNeq} are immediate.
+  \item \[ \drule{SD-tvarL} \]
+    \begin{longtable}[l]{ll}
+      $[[|AA| <: |BB|]]$ & By \cref{lemma:sub} \\
+      $[[X ** AA in SD]]$ & Given \\
+      $[[X ** |AA| in |SD|]]$ & Above \\
+      $[[|SD| |- X ** |BB|]]$ & By \rref{FD-tvarL}
+    \end{longtable}
+  \item \[ \drule{SD-tvarR} \]
+    \begin{longtable}[l]{ll}
+      $[[|AA| <: |BB|]]$ & By \cref{lemma:sub} \\
+      $[[X ** AA in SD]]$ & Given \\
+      $[[X ** |AA| in |SD|]]$ & Above \\
+      $[[|SD| |- |BB| ** X]]$ & By \rref{FD-tvarR}
+    \end{longtable}
+  \item \[ \drule{SD-forall}  \]
+    \begin{longtable}[l]{ll}
+      $ [[   |SD| , X ** |AA1| & |AA2| |- |BB1| ** |BB2|      ]]   $ & By i.h. \\
+      $[[  |SD| |- \ X ** |AA1| . |BB1| ** \ X ** |AA2| . |BB2| ]]$ & By \rref{FD-forall}
+    \end{longtable}
+  \item \[ \drule{SD-rcdEq}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA| ** |BB| ]] $ & By i.h. \\
+      $[[ |SD| |- {l : |AA|} ** {l : |BB|}       ]]$ & By \rref{FD-rcdEq}
+    \end{longtable}
+  \item \[ \drule{SD-arr}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA2| ** |BB2| ]] $ & By i.h. \\
+      $[[  |SD| |- |AA1| -> |AA2| ** |BB1| -> |BB2|     ]]$ & By \rref{FD-arr}
+    \end{longtable}
+  \item \[  \drule{SD-andL}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA1| ** |BB| ]]$ & By i.h. \\
+      $[[ |SD| |- |AA2| ** |BB| ]]$ & By i.h. \\
+      $[[  |SD| |- |AA1| & |AA2| ** |BB|    ]]$ & By \rref{FD-andL}
+    \end{longtable}
+  \item \[ \drule{SD-andR}   \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA| ** |BB1| ]]$ & By i.h. \\
+      $[[ |SD| |- |AA| ** |BB2| ]]$ & By i.h. \\
+      $[[  |SD| |- |AA|  ** |BB1| & |BB2|   ]]$ & By \rref{FD-andR}
+    \end{longtable}
+  \item \[ \drule{SD-trait}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA2| ** |BB2| ]]$ & By i.h. \\
+      $[[ |SD| |- |AA1| -> |AA2| ** |BB1| -> |BB2|  ]]      $ & By \rref{FD-arr}
+    \end{longtable}
+  \item \[ \drule{SD-traitArrOne}   \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA2| ** |BB2|  ]]$ & By i.h. \\
+      $[[ |SD| |- |AA1| -> |AA2| ** |BB1| -> |BB2|  ]]      $ & By \rref{FD-arr}
+    \end{longtable}
+  \item \[ \drule{SD-traitArrTwo}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| |- |AA2| ** |BB2|  ]]$ & By i.h. \\
+      $[[ |SD| |- |AA1| -> |AA2| ** |BB1| -> |BB2|  ]]      $ & By \rref{FD-arr}
+    \end{longtable}
+  \item \[  \drule{SD-ax}  \]
+    \begin{longtable}[l]{ll}
+      $[[   |AA| **a |BB|  ]]$ & By \cref{lemma:disa} \\
+      $[[   |SD| |- |AA| ** |BB|   ]]$ & By \rref{FD-ax}
+    \end{longtable}
+  \end{itemize}
+\end{proof}
+
+\sedelsafe*
+\begin{proof}
+  By induction on the typing judgment.
+  \begin{itemize}
+  \item \Rref{ST-top,ST-int,ST-var} are immediate.
+  \item \[ \drule{ST-anno} \]
+    \begin{longtable}[l]{ll}
+      $[[   |SD| ; |SG| |- ee <= |AA| ]]$ & By i.h. \\
+      $[[   |SD| ; |SG| |- ee : |AA| => |AA|     ]]$ & By \rref{FT-anno}
+    \end{longtable}
+  \item \[  \drule{ST-app}  \]
+    \begin{longtable}[l]{ll}
+      $[[   |SD| ; |SG| |- ee1 => |AA1| -> |AA2|   ]]$ & By i.h. \\
+      $[[     |SD| ; |SG| |- ee2 <=  |AA1|        ]]$ & By i.h. \\
+      $[[       |SD| ; |SG| |- ee1 ee2 =>  |AA2|          ]]$  & By \rref{FT-app}
+    \end{longtable}
+  \item \[  \drule{ST-tapp}  \]
+    \begin{longtable}[l]{ll}
+      $[[    |SD| ; |SG| |- ee => \ X ** |BB1| . |BB2|      ]]$ & By i.h. \\
+      $[[  |SD| |- |AA|      ]]$ & By \cref{lemma:wf} \\
+      $[[ |SD| |- |AA| ** |BB1|  ]]$ & By \cref{lemma:dis} \\
+      $[[  |SD|; |SG| |- ee |AA| => [|AA| / X] |BB2|       ]]$ & By \rref{FT-tapp}
+    \end{longtable}
+  \item \[  \drule{ST-merge}   \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| ; |SG| |- ee1 => |AA| ]]$ & By i.h. \\
+      $[[   |SD| ; |SG| |- ee2 => |BB|  ]]$ & By i.h. \\
+      $[[  |SD| |- |AA| ** |BB|   ]]$ & By \cref{lemma:dis} \\
+      $[[   |SD| ; |SG| |- ee1 ,, ee2 => |AA| & |BB| ]]$ & By \rref{FT-merge}
+    \end{longtable}
+  \item \[   \drule{ST-rcd}  \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| ; |SG| |- ee => |AA| ]]$ & By i.h. \\
+      $[[ |SD| ; |SG| |- {l = ee} => {l : |AA|}  ]]$ & By \rref{FT-rcd}
+    \end{longtable}
+  \item \[  \drule{ST-proj}  \]
+    \begin{longtable}[l]{ll}
+      $[[   |SD| ; |SG| |- ee => {l : |AA|}   ]]$ & By i.h. \\
+      $[[ |SD| ; |SG| |- ee.l => |AA|   ]]$ & By \rref{FT-proj}
+    \end{longtable}
+  \item \[  \drule{ST-tabs}  \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| |- |AA|    ]]$ & By \cref{lemma:wf} \\
+      $[[   |SD| , X ** |AA| ; |SG| |- ee => |BB|   ]]$ & By i.h. \\
+      $[[  |SD|; |SG| |- \ X ** |AA| . ee  => \ X ** |AA| . |BB|   ]]$ & By \rref{FT-tabs}
+    \end{longtable}
+  \item \[  \drule{ST-letrec}  \]
+    \begin{longtable}[l]{ll}
+      $[[   |SD| ; |SG|, x : |AA| |- ee1 <= |AA|     ]]$ & By i.h. \\
+      $[[   |SD| ; |SG|, x : |AA| |- ee2 => |BB|    ]]$ & By i.h. \\
+      $[[   |SD| ; |SG| |- letrec x : |AA| = ee1 in ee2 => |BB| ]]$
+    \end{longtable}
+  \item \[  \drule{ST-new}  \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| ; |SG| |- eei => |AAi| -> |BBi|      ]]$ & By i.h. \\
+      $[[ |AA| <: |AAi|  ]]$ & By \cref{lemma:sub} \\
+      $[[   |SD| |- |BB1| ** .. ** |BBn|  ]]$ & By \cref{lemma:dis} \\
+      $[[  |BB1| & .. & |BBn| <: |AA| ]]$ & By \cref{lemma:sub} \\
+      $[[ |SD| ; |SG|, self : |AA| |- self => |AA|    ]]$ & By \rref{FT-var} \\
+      $[[ |SD| ; |SG|, self : |AA| |- self <= |AAi|   ]]$ & By \rref{FT-sub} \\
+      $[[  |SD| ; |SG| , self : |AA| |- eei self => |BBi| ]]$ & By \rref{FT-app} \\
+      $[[  |SD| ; |SG| , self : |AA| |- (ee1 self) ,, .. ,, (een self) => |BB1| & .. & |BBn| ]]$ & By \rref{FT-merge} \\
+      $[[    |SD| ; |SG| , self : |AA| |- (ee1 self) ,, .. ,, (een self) <= |AA| ]]$ & By \rref{FT-sub} \\
+      $[[  |SD| ; |SG| |- letrec self : |AA| = (ee1 self) ,, .. ,, (een self)  in self => |AA|   ]]$
+    \end{longtable}
+  \item \[  \drule{ST-trait}   \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| ; |SG|, self : |BB| |- eei => |BBi| -> |CTi|   ]]$ & By i.h. \\
+      $[[  |SD| ; |SG|, self : |BB| |- ee => |CT|     ]]$ & By i.h. \\
+      $[[  |BB| <: |BBi|   ]]$ & By \cref{lemma:sub} \\
+      $[[  |SD| |- |CT1| ** .. ** |CTn| ** |CT|  ]]$ & By \cref{lemma:wf} \\
+      $[[  |CT1| & .. & |CTn| & |CT| <: |AA|   ]]$ & By \cref{lemma:sub} \\
+      $[[ |SD| ; |SG| , self : |BB| |- self => |BB|  ]]$ & By \rref{FT-var} \\
+      $[[ |SD| ; |SG| , self : |BB| |- self <= |BBi| ]]$ & By \rref{FT-sub} \\
+      $[[ |SD| ; |SG| , self : |BB| |- eei self => |CTi|  ]]$ & By \rref{TI-app} \\
+      $ [[ |SD| ; |SG| , self : |BB| |-  (ee1 self) ,, .. ,, (een self) ,, ee  => |CT1| & .. & |CTn| & |CT|     ]]    $ & By \rref{FT-merge} \\
+      $ [[ |SD| ; |SG| , self : |BB| |-  (ee1 self) ,, .. ,, (een self) ,, ee  => |AA|  ]]    $ & By \rref{FT-sub} \\
+      $[[  |SD| ; |SG| |- \ self : |BB| . (ee1 self) ,, .. ,, (een self) ,, ee => |BB| -> |AA|  ]]$ &
+    \end{longtable}
+  \item \[ \drule{ST-forward}    \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD|;  |SG| |- ee1 => |AA| -> |BB|  ]]$ & By i.h. \\
+      $[[ |SD|;  |SG| |- ee2 <= |AA|  ]]$ & By i.h. \\
+      $[[ |SD|;  |SG| |- ee1 ee2 => |BB|  ]]$ & By \rref{FT-app}
+    \end{longtable}
+  \item \[ \drule{ST-abs}  \]
+    \begin{longtable}[l]{ll}
+      $[[  |SD| |- |AA|    ]]$ & By \cref{lemma:wf} \\
+      $[[  |SD| ; |SG| , x : |AA| |- ee <= |BB|       ]]$ & By i.h. \\
+      $[[  |SD| ; |SG| |- \ x . ee <= |AA| -> |BB|   ]]$ & By \rref{FT-abs}
+    \end{longtable}
+  \item \[  \drule{ST-sub}  \]
+    \begin{longtable}[l]{ll}
+      $[[ |SD| ; |SG| |- ee => |AA|   ]]$ & By i.h. \\
+      $[[  |AA| <: |BB|  ]]$ & By \cref{lemma:sub} \\
+      $[[ |SD| |- |BB|   ]]$ & By \cref{lemma:wf} \\
+      $[[  |SD| ; |SG| |- ee <= |BB|   ]]$ & By \rref{FT-sub}
+    \end{longtable}
+  \end{itemize}
+\end{proof}
 
 \chapter{\namee Typing Rules, in Full}
 \label{appendix:lambdai}
 
+\renewcommand{\rulehl}[1]{#1}
 
+
+\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distRcd,distArr}
+\drules[D]{$[[A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq,ax}
+\drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,arrRcd}
+\drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
+\drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{prim, and, arr, rcd, top, arrR, rcdR, andROne, andRTwo}
+\drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne}
+\drules[CTyp]{$[[CC : ( GG <= A ) ~> ( GG' <= B ) ~~> cc]]$}{Context typing II}{emptyTwo, absTwo}
+\drules[CTyp]{$[[CC : ( GG <= A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing III}{appLTwo, appRTwo, mergeLTwo, mergeRTwo, rcdTwo, projTwo, annoTwo}
+\drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' <= B ) ~~> cc]]$}{Context typing IV}{absOne}
+
+\section{\tname}
+
+\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, distArr}
+\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, app, ctxt}
 
 \chapter{\fnamee Typing Rules, in Full}
 \label{appendix:fi}
 
 
+\drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
+\drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
+\drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
+\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd,forall}
+\drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
+\drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
+\drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
+\drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{prim, and, arr, rcd, top, forall, var, arrR, rcdR, andROne, andRTwo}
+\drules[FCTyp]{$[[ CC : ( DD ; GG => A ) ~> ( DD' ; GG' => B ) ~~> cc ]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne, tabsOne, tappOne}
+\drules[FCTyp]{$[[ CC : ( DD ; GG <= A ) ~> ( DD' ; GG' <= B ) ~~> cc ]]$}{Context typing II}{emptyTwo, absTwo}
+\drules[FCTyp]{$[[ CC : ( DD ; GG <= A ) ~> ( DD' ; GG' => B ) ~~> cc ]]$}{Context typing III}{appLTwo,appRTwo, mergeLTwo,mergeRTwo,rcdTwo,projTwo,annoTwo,tabsTwo,tappTwo}
+\drules[FCTyp]{$[[ CC : ( DD ; GG => A ) ~> ( DD' ; GG' <= B ) ~~> cc ]]$}{Context typing IV}{absOne}
+
+
+\section{\tnamee}
+
+\drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value context}{empty, var}
+\drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
+\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, forall, distArr}
+\drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Static semantics}{unit, int, var, abs, app, tabs, tapp, pair, capp}
+\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, tapp, app, ctxt}
+
 \chapter{\sedel Typing Rules, in Full}
 \label{appendix:sedel}
+
+
+\drules[WF]{$[[ SD |- AA   ]]$}{Well-formedness of types}{top,int,arr,rcd,var,and,forall,trait}
+\drules[TS]{$[[  AA <: BB  ]]$}{Subtyping}{refl, trans, top, rcd, arr, andL, andR, and, distArr, topArr, distRcd, topRcd, trait}
+\drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall, trait, traitArrOne, traitArrTwo, ax}
+\drules[SDax]{$[[ AA **a BB ]]$}{Disjointness axiom}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd, intTrait, traitAll, traitRcd}
+\drules[ST]{$[[ SD ; SG  |- E => AA ~~> ee]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj, trait,new,forward}
+\drules[ST]{$[[ SD ; SG  |- E <= AA ~~> ee]]$}{Checking}{abs,sub}

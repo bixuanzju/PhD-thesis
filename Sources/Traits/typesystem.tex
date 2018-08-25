@@ -287,42 +287,43 @@ That is, trait types are translated to
 function types. $| \cdot |$ extends naturally to typing contexts.
 Now we show several lemmas that are useful in the type-safety proof.
 
-\begin{lemma}
-  If $[[SD |- AA]]$ then $[[|SG| |- |AA|]]$.
-\end{lemma}
-\begin{proof}
-  By structural induction on the well-formedness judgment.
-\end{proof}
 
-\begin{lemma}
+\begin{restatable}{lemma}{sedelwf} \label{lemma:wf}
+  If $[[SD |- AA]]$ then $[[|SD| |- |AA|]]$.
+\end{restatable}
+% \begin{proof}
+%   By structural induction on the well-formedness judgment.
+% \end{proof}
+
+\begin{restatable}{lemma}{sedelsub} \label{lemma:sub}
   If $[[AA <: BB]]$ then $[[|AA| <: |BB|]]$.
-\end{lemma}
-\begin{proof}
-  By structural induction on the subtyping judgment.
-\end{proof}
+\end{restatable}
+% \begin{proof}
+%   By structural induction on the subtyping judgment.
+% \end{proof}
 
-\begin{lemma}
+\begin{restatable}{lemma}{sedeldis} \label{lemma:dis}
   If $[[SD |- AA ** BB]]$ then $[[ |SD| |- |AA| ** |BB| ]]$.
-\end{lemma}
-\begin{proof}
-  By structural induction on the disjointness judgment.
-\end{proof}
+\end{restatable}
+% \begin{proof}
+%   By structural induction on the disjointness judgment.
+% \end{proof}
 % \begin{remark}
 %  Due to the elaboration semantics, \rref{D-traitArr1,D-traitArr2} are needed to make this lemma hold.
 % \end{remark}
 
 
 Finally we are in a position to establish the type safety property:
-\begin{theorem}[Type-safe translation]
+\begin{restatable}[Type-safe translation]{theorem}{sedelsafe}
   We have that:
   \begin{itemize}
   \item If $[[SD ; SG  |- E => AA ~~> ee]]$ then $ [[ |SD| ;  |SG|  |- ee => |AA| ]] $.
   \item If $[[SD ; SG  |- E <= AA ~~> ee]]$ then $ [[ |SD| ;  |SG|  |- ee <= |AA| ]] $.
   \end{itemize}
-\end{theorem}
-\begin{proof}
-    By structural induction on the typing judgment.
-\end{proof}
+\end{restatable}
+% \begin{proof}
+%     By structural induction on the typing judgment.
+% \end{proof}
 
 \begin{theorem}[Coherence] Each well-typed \sedel expression has a unique elaboration.
 \end{theorem}

@@ -142,7 +142,7 @@ sexp, ee {{ tex E }}, vv {{ tex v }} :: 'sexp_' ::=
   | ii              :: :: lit
   | \ x . ee       :: :: abs  {{ tex [[\]][[x]].\,[[ee]] }}
   | \ x : A . ee       :: :: abs3  {{ tex [[\]][[x]] : [[A]] .\,[[ee]] }}
-  | lam x . ee       :: :: abs2  {{ tex \\ \lambda  [[x]].\,[[ee]] }}
+  | lam x : A . ee       :: :: abs2  {{ tex \\ \lambda  [[x]] : [[A]] .\,[[ee]] }}
   | ee1 ee2        :: :: app
   | ee1 ,, ee2     :: :: merge
   | ee1 ,, ... ,, een ::  :: merge2
@@ -411,6 +411,7 @@ formula :: 'formula_' ::=
   | judgement                ::   :: judgement
   | | formula | :: :: multi       {{ tex \overline{[[formula]]}^{i \in 1 .. n}   }}
   | SD |- AA1 ** ... ** AAn               :: :: dis
+  | DD |- A1 ** ... ** An               :: :: dis2
   | x : T in gg               ::   :: inG {{ tex ( [[x]] : [[T]] ) \in [[gg]] }}
   | x : A in GG               ::   :: inGG {{ tex ( [[x]] : [[A]] ) \in [[GG]] }}
   | x : AA in SD               ::   :: inGG2 {{ tex ( [[x]] : [[AA]] ) \in [[SD]] }}
@@ -2421,7 +2422,7 @@ SD ; SG, self : BB |- { </ lj = Ej' // j IN 1..m /> } => CT ~~> ee
 SD |- CT1 ** .. ** CTn ** CT
 CT1 & .. & CTn & CT <: AA
 --------------------------------------------------------------------------------------------------------------- :: trait
-SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self  . ((</ (eei self) // i IN 1..n />)  ,, ee)
+SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self : |BB|  . ((</ (eei self) // i IN 1..n />)  ,, ee)
 
 
 
@@ -2438,7 +2439,7 @@ SD ; SG, self : BB, super : CT1 & .. & CTn |- { </ lj = Ej' // j IN 1..m /> } =>
 SD |- CT1 ** .. ** CTn ** CT
 CT1 & .. & CTn & CT <: AA
 --------------------------------------------------------------------------------------------------------------- :: traitSuper
-SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self . (let super = </ (eei self) // i IN 1..n /> in super ,, ee)
+SD ; SG |- trait [ self : BB ] inherits </ Ei // i IN 1..n /> { </ lj = Ej' // j IN 1..m /> } : AA => Trait[BB, AA] ~~> lam self : |BB| . (let super = </ (eei self) // i IN 1..n /> in super ,, ee)
 
 
 

@@ -79,13 +79,14 @@ cannot be defined recursively, that is, mutually recursive functions and
 datatypes must be written in the same module, even though they may belong
 conceptually to different modules. Another limitation is that modules form a
 separate, higher-order functional language on top of the core and therefore ML
-is actually two languages in one. Datatype-genetic programming is another
-approach to modularity, where programs can be parameterized over
-datatypes. By abstracting from the differences in what would otherwise be
-separate but similar programs, one can write a single unified piece of program
-and instantiate it in various ways to retrieve specific programs. However, this
-approach usually requires quite advanced type system features, e.g., type classes, type
-families, or even dependent types!
+is actually two languages in one.
+% Datatype-genetic programming is another
+% approach to modularity, where programs can be parameterized over
+% datatypes. By abstracting from the differences in what would otherwise be
+% separate but similar programs, one can write a single unified piece of program
+% and instantiate it in various ways to retrieve specific programs. However, this
+% approach usually requires quite advanced type system features, e.g., type classes, type
+% families, or even dependent types!
 
 
 Object-oriented programming, on the other hand, uses classes and inheritance
@@ -100,34 +101,6 @@ for providing greater extensibility in object-oriented languages. Of particular
 relevance to the subject of this thesis is three powerful linguistic mechanisms:
 family polymorphism, first-class classes and multiple inheritance, as we will briefly
 discuss below.
-
-\subsection{Family Polymorphism}
-
-One powerful and long-standing idea in OOP is \emph{family
-  polymorphism}~\citep{Ernst_2001}. In family polymorphism inheritance is
-extended to work on a \emph{whole family of classes}, rather than just a single
-class. This enables high degrees of modularity and code reuse, enabling simple
-solutions to hard programming language problems, like the expression
-problem~\citep{wadler1998expression}. An essential feature of family
-polymorphism is \emph{nested composition}~\citep{Corradi_2012, ErnstVirtual,
-  Nystrom_2004}, which allows the automatic inheritance/composition of nested
-(or inner) classes when the enclosing classes are composed. Designing a sound
-type system that fully supports family polymorphism and nested composition is
-notoriously hard; there are only a few, quite sophisticated, research languages that
-manage this~\citep{ErnstVirtual, Nystrom_2004, pubsdoc:tribe-virtual-calculus,SAITO_2007}.
-
-Not many mechanisms that support family polymorphism are available in existing
-mainstream languages. The \textsc{Cake} pattern~\citep{odersky2005scalable,
-  Zenger-Odersky2005} in Scala provides some form of family polymorphism. In
-order to model this modest form of family polymorphism, this pattern uses
-\textit{virtual types}, \textit{self types}, \textit{path-dependent types} and
-\textit{static mixin composition}. Even with so many sophisticated features,
-composition of families is still quite heavyweight and manual. The problem is
-due to the lack of \textit{deep} mixin composition. Though solutions do
-exist~\citep{oliveira2013feature}, they usually require low-level type-unsafe
-programming features such as dynamic proxies, reflection or other
-meta-programming techniques
-
 
 
 \subsection{First-Class Classes, Mixins and Traits}
@@ -184,6 +157,36 @@ Racket's first-class classes and mixins, there is no type system supporting the
 use of first-class traits. A key difficulty is \emph{statically} detecting
 conflicts, even in the presence of polymorphism. Type system limitations prevent
 most statically-typed languages from having typed first-class traits.
+
+
+\subsection{Family Polymorphism}
+
+One powerful and long-standing idea in OOP is \emph{family
+  polymorphism}~\citep{Ernst_2001}. In family polymorphism inheritance is
+extended to work on a \emph{whole family of classes}, rather than just a single
+class. This enables high degrees of modularity and code reuse, enabling simple
+solutions to hard programming language problems, like the expression
+problem~\citep{wadler1998expression}. An essential feature of family
+polymorphism is \emph{nested composition}~\citep{Corradi_2012, ErnstVirtual,
+  Nystrom_2004}, which allows the automatic inheritance/composition of nested
+(or inner) classes when the enclosing classes are composed. Designing a sound
+type system that fully supports family polymorphism and nested composition is
+notoriously hard; there are only a few, quite sophisticated, research languages that
+manage this~\citep{ErnstVirtual, Nystrom_2004, pubsdoc:tribe-virtual-calculus,SAITO_2007}.
+
+Not many mechanisms that support family polymorphism are available in existing
+mainstream languages. The \textsc{Cake} pattern~\citep{odersky2005scalable,
+  Zenger-Odersky2005} in Scala provides some form of family polymorphism. In
+order to model this modest form of family polymorphism, this pattern uses
+\textit{virtual types}, \textit{self types}, \textit{path-dependent types} and
+\textit{static mixin composition}. Even with so many sophisticated features,
+composition of families is still quite heavyweight and manual. The problem is
+due to the lack of \textit{deep} mixin composition. Though solutions do
+exist~\citep{oliveira2013feature}, they usually require low-level type-unsafe
+programming features such as dynamic proxies, reflection or other
+meta-programming techniques
+
+
 
 
 \section{Our Proposed Solution}
