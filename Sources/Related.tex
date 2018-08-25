@@ -690,15 +690,31 @@ parametric polymorphism and family polymorphism.
 
 In parallel to OOP, the ML module system originally proposed by
 \citet{MacQueen_1984} also offers powerful support for flexible program
-construction, data abstraction and code reuse. Mixin modules in the Jigsaw
-framework~\citep{Bracha92modularitymeets} provides a suite of operators for
-adapting and combining modules. The MixML~\citep{Rossberg_2013} module system
-incorporates mixin module composition, while retaining the full expressive
-powerful of ML modules. Module systems usually put more emphasis on supporting
-type abstraction. Support for type abstraction adds considerable complexity,
-which is not needed in \sedel. \sedel is focused on OOP and supports, among
-others, method overriding, self references and dynamic dispatching, which
-(generally speaking) are all missing features in module systems.
+construction. There is a large body of work on ML modules. Supporting
+\textit{data abstraction} is the primary focus of the module mechanism in ML. It
+ensures \textit{implementor-side} data abstraction by allowing the implementor
+of a module to ``hide'' specific implementation behind an abstract interface. It
+also supports a form of \textit{client-side} data abstraction where a client can
+develop and compile a module independently from the modules on which it depends,
+via the ``functor'' mechanism. One major limitation of the traditional ML module
+systems is the lack of support for mutually recursive modules. There are several
+proposals of extending ML with recursive
+modules~\citep{Crary_1999,Rossberg_2013, Russo_2001}. Mixin modules in the
+Jigsaw framework~\citep{Bracha92modularitymeets} provides a suite of operators
+for adapting and combining modules. The MixML module
+system~\citep{Rossberg_2013} incorporates mixin module composition, while
+retaining the full expressive powerful of ML modules. There are also work on
+elaborating the semantics of module systems into a smaller, well-established
+internal language. \citet{ROSSBERG_2014} showed that plain System F is
+sufficient as an internal language for conventional ML modules.
+Furthermore, \citet{Rossberg_2015} proposed a redesign of ML in which modules are truly
+first-class values, thus unifying the core and module layers into one language.
+
+Module systems usually put more emphasis on supporting type abstraction. Support
+for type abstraction adds considerable complexity, which is not needed in
+\sedel. \sedel is focused on OOP and supports, among others, method overriding,
+self references and dynamic dispatching, which (generally speaking) are all
+missing features in module systems.
 % One similarity between MixML and SEDEL is that
 % both use an elaboration approach into a System F-like calculus.
 
