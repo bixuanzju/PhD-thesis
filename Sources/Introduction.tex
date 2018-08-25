@@ -22,34 +22,35 @@ first two being core calculi and the last one a source calculus, combining the
 power of parametric polymorphism, a rich subtyping relation with the
 fine-grained expressiveness of disjoint intersection types. The key contribution
 of the thesis is that it unifies concepts that are seemingly unrelated but
-powerful on their own in object-oriented programming---family polymorphism, dynamic
-inheritance, multiple inheritance, extensible design patterns---by a single
-lightweight mechanism, thus providing new insights into software modularity and
-extensibility.
+powerful on their own in object-oriented programming---dynamic inheritance,
+multiple inheritance, family polymorphism, extensible design patterns---by a
+single lightweight mechanism, thus providing new insights into software
+modularity and extensibility.
 
 \section{Motivation}
 
-Programs are hard to write. It was so 50 years ago at the time of the
-so-called \textit{software crisis}~\citep{Naur:1969:SER:1102020}; it still
-remains so nowadays, as the software we use daily is getting more and more
-complex and hard to maintain. Over the years, we have learned---the hard way---that software should be constructed in a \textit{modular} way, i.e.,
-as a network of smaller modules; and that the weaker the dependencies between
-program modules, the more robust the program structure will be. To help
-programmers write modular code, researchers and software practitioners have
-developed new methodologies; new programming language paradigms; stronger type
-systems; as well as better tooling support. Still, this is not enough to cope
-with today's needs. We will mention some limitations of current mainstream
-languages shortly. But before that, let us identify the following requirements
-for construction of modular software:
+Programs are hard to write. It was so 50 years ago at the time of the so-called
+\textit{software crisis}~\citep{Naur:1969:SER:1102020}; it still remains so
+nowadays, as the software we use daily is getting more and more complex and hard
+to maintain. Over the years, we have learned---the hard way---that software
+should be constructed in a \textit{modular} way, i.e., as a network of smaller
+modules; and that the weaker the dependencies between program modules, the more
+robust the program structure will be. To help programmers write modular code,
+researchers and software practitioners have developed new methodologies; new
+programming paradigms; stronger type systems; as well as better tooling
+support. Still, this is not enough to cope with today's needs. We will mention
+some limitations of current mainstream languages shortly. But before that, let
+us identify the following well-established requirements for construction of
+modular software:
 \begin{enumerate}
-\item \textbf{Extensibility in both dimensions:} Extensions may require both new
-  datatypes and new operations.
+\item \textbf{Extensibility in both dimensions:} Extensions may require new
+  variants to the datatype and new operations on the datatype.
 \item \textbf{Strong static type safety:} Extensions cannot cause run-time type errors.
 \item \textbf{No modification or duplication:} Existing code must not be
   modified nor duplicated.
 \item \textbf{Separate compilation and type-checking:} Safety checks or
   compilation steps must not be deferred until linking or at run time.
-\item \textbf{Independent extensibility:} It should be possible combine
+\item \textbf{Independent extensibility:} It should be possible to combine
   independently developed extensions so that they can be used jointly.
 \item \textbf{Scalability:} Extension should be scalable. The amount of code
   needed should be proportional to the functionality added.
@@ -62,24 +63,33 @@ problem~\citep{wadler1998expression}. \citet{Zenger-Odersky2005} added the fifth
 requirement. The last two requirements were proposed by \citet{Nystrom:2006}.
 Scalability (6) is often but not necessarily satisfied by separate compilation;
 it is important for extending large software. Non-destructive extension (7) is
-an important requirement for backward compatibility: it enables existing clients
-of the base system and also the extended system itself to interoperate with code
-and data of the base system. This thesis proposes a language design that
-addresses all of these requirements.
+an important requirement for legacy and performance reasons: it enables clients
+of the extended system to reuse code and data of the base system, allowing some
+interoperability between new functionality and legacy code. To address the
+requirements, many solutions have been proposed over the years (for example, see
+\citet{oliveira2012extensibility, wang2016expression, oliveira09modular,
+  swierstra_2008, Zenger-Odersky2005}, to cite a few). They differ considerably
+in the language context with varying degrees of extensibility they offer, as
+well as the limitations they impose. Building on the prior solutions, this
+thesis proposes a lightweight language design that addresses all of these
+requirements.
 
-Different programming paradigms achieve (partial) modularity differently with
-varying degrees of limitations. In functional programming, the ML module system
-is one approach to modular programming. In particular, the ``functor''
-mechanism---which are functions at the level of modules---allows one to develop
-and compile a module independently from the modules on which it depends. One
-functor can then be instantiated with multiple different modules during the
-execution of the program, enabling a powerful form of core reuse. One prominent
-weakness of ML modules (at least in current module implementations) is that they
-cannot be defined recursively, that is, mutually recursive functions and
-datatypes must be written in the same module, even though they may belong
+Various programming language features support modular programming, with varying
+degrees of limitations. Functional languages, notably ML and OCaml, use module
+systems~\citep{MacQueen_1984} for flexible program construction. In particular,
+``functor''---which are functions at the level of modules---allows
+one to develop and compile a module independently from the modules on which it
+depends. One functor can then be instantiated with multiple different modules
+during the execution of the program, enabling a powerful form of code reuse. One
+prominent weakness of ML modules (at least in current module implementations) is
+that they cannot be defined recursively, that is, mutually recursive functions
+and datatypes must be written in the same module, even though they may belong
 conceptually to different modules. Another limitation is that modules form a
 separate, higher-order functional language on top of the core and therefore ML
-is actually two languages in one.
+is actually two languages in one. Moreover, module systems usually put more
+emphasis on supporting data abstraction, which adds considerable complexity to
+languages adopting module systems as the primary way to construct modular
+programs.
 % Datatype-genetic programming is another
 % approach to modularity, where programs can be parameterized over
 % datatypes. By abstracting from the differences in what would otherwise be
@@ -88,91 +98,125 @@ is actually two languages in one.
 % approach usually requires quite advanced type system features, e.g., type classes, type
 % families, or even dependent types!
 
-
-Object-oriented programming, on the other hand, uses classes and inheritance
+Object-oriented languages, on the other hand, use classes and inheritance
 mechanism to support code extensibility and reuse. Single inheritance found in
-most mainstream object-oriented languages (such as Java, Scala) is perhaps the
-most well-known and well-studied mechanism. However, programmers have long
-realized that single inheritance is not flexible enough when it comes to
-structuring a class hierarchy: it works for small and simple extensions, but
-does not work well for larger codebase such as writing compilers and operating
-systems. There has been great interest in the past several years in mechanisms
-for providing greater extensibility in object-oriented languages. Of particular
-relevance to the subject of this thesis is three powerful linguistic mechanisms:
-family polymorphism, first-class classes and multiple inheritance, as we will briefly
-discuss below.
+mainstream object-oriented languages (such as Java and C++) is perhaps the most
+well-known and well-studied mechanism. However, programmers have long realized
+that single inheritance is not flexible enough when it comes to structuring a
+class hierarchy: it works for small and simple extensions, but does not work
+well for larger codebase such as compilers and operating systems. There
+has been great interest in the past several years in mechanisms for providing
+greater extensibility in object-oriented languages. Of particular relevance to
+the subject of this thesis is three powerful linguistic mechanisms to foster software
+extensibility, providing increasing order of flexibility, as well as complexity:
+first-class classes~\citep{DBLP:conf/oopsla/TakikawaSDTF12}, (first-class)
+mixins/traits~\citep{bracha1990mixin, scharli2003traits}, and family
+polymorphism~\citep{Ernst_2001}, as we will briefly discuss below.
 
 
-\subsection{First-Class Classes, Mixins and Traits}
+\subsection{First-Class Classes}
 
 Many dynamically-typed languages (including JavaScript, Ruby, Python or Racket)
 support \emph{first-class classes}. In those languages classes are first-class
 values and, like any other values, they can be passed as an argument, or
-returned from a function. Furthermore first-class classes support \emph{dynamic
-  inheritance}: i.e., they can inherit from other classes at \emph{run time},
-enabling programmers to abstract over the inheritance hierarchy. For example,
-mixins~\citep{bracha1990mixin} become programmer-defined constructs---a mixin is
-simply a function that takes a class as an argument and returns a subclass. In
-contrast, type system limitations prevent most statically-typed languages from
-having first-class classes and dynamic inheritance.
+returned from a function. Furthermore, first-class classes support \emph{dynamic inheritance}:
+i.e., they can inherit from other classes at \emph{run time},
+enabling programmers to abstract over the inheritance hierarchy. % For example,
+% mixins~\citep{bracha1990mixin} become programmer-defined constructs---a mixin is
+% simply a function that takes a class as an argument and returns a subclass.
+In contrast, most statically-typed languages do not have first-class classes and
+dynamic inheritance. While all statically-typed object-oriented languages allow first-class
+\emph{objects} (i.e., objects can be passed as arguments and returned as
+results), the same is not true for classes. Classes in languages such as Scala,
+Java or C++ are typically a second-class construct, and the inheritance
+hierarchy is \emph{statically determined}.
 
+Despite the popularity and expressive power of first-class classes in
+dynamically-typed languages, there is surprisingly little work on typing of
+first-class classes. First-class classes and dynamic inheritance pose well-known
+difficulties in terms of typing. For example, in his thesis,
+\citet{bracha1992programming} comments several times on the difficulties of
+typing dynamic inheritance and first-class mixins, and proposes the restriction
+to static inheritance that is also common in statically-typed languages. One of
+the motivations in this thesis is to present a type discipline that can encode
+first-class classes. Moreover, we push this one-step further: for the first
+rime, this thesis shows how to encode \textit{first-class mixins/traits}. But
+first thing first, let us briefly explain what are mixins and traits.
 
-Multiple inheritance was proposed as a generalization of single inheritance.
-However, multiple inheritance is renowned for being tricky to get right, largely
-because of the possible ambiguity issues that arise when conflicting features
-are inherited along different paths. Mixins and traits are two well-studied
-mechanisms to provide some form of multiple inheritance.
+% Racket~\citep{DBLP:conf/aplas/FlattFF06} supports typed first-class classes, as
+% well as a \emph{dynamically-typed model} of first-class traits. However, unlike
+% Racket's first-class classes and mixins, there is no type system supporting the
+% use of first-class traits. A key difficulty is \emph{statically} detecting
+% conflicts, even in the presence of polymorphism. Type system limitations prevent
+% most statically-typed languages from having typed first-class traits.
+
+\subsection{(First-Class) Mixins and Traits}
+
+As remarked earlier, single inheritance is inadequate and inflexible to write
+large software. To overcome this limitation, multiple
+inheritance~\citep{cardelli1984semantics} was proposed as a generalization of
+single inheritance. However, multiple inheritance is renowned for being tricky
+to get right, largely because of the possible ambiguity issues that arise when
+conflicting features are inherited along different paths.
 Mixins~\citep{bracha1990mixin} provide a simple mechanism for multiple
-inheritance without the ambiguity issue. The way mixins deal with conflicts is
-that methods defined in mixins appearing later override all the identically
-named methods of earlier mixins. Traits~\citep{scharli2003traits, Ducasse_2006}
-are an alternative to mixins, and other models of multiple inheritance. The key
-difference between traits and mixins lies on the treatment of conflicts when
-composing multiple traits/mixins. Mixins adopt an \emph{implicit} resolution
-strategy for conflicts, where the compiler automatically picks one
-implementation in case of conflicts. Traits, on the other hand, employ an
-\emph{explicit} resolution strategy, where the compositions with conflicts are
-rejected, and the conflicts are explicitly resolved by programmers.
-\citet{scharli2003traits} make a good case for the advantages of the trait
-model. In particular, traits avoid bugs that could arise from accidental
-conflicts that were not noticed by programmers. With the mixin model, such
-conflicts would be silently resolved, possibly resulting in unexpected run-time
-behavior due to a wrong method implementation choice. In a setting with dynamic
-inheritance and first-class classes this problem is exacerbated by not knowing
-all components being composed statically, greatly increasing the possibility of
-accidental conflicts. From a modularity point-of-view, the trait model also
-ensures that composition is \emph{commutative}, thus the order of composition is
-irrelevant and does not affect the semantics. \citet{bracha1992programming}
-claims that ``\emph{The only modular solution is to treat the name collisions as
-  errors...}'', strengthening the case for the use of a trait model of
-composition. Otherwise, if the semantics is affected by the order of
-composition, global knowledge about the full inheritance graph is required to
-determine which implementations are chosen.
+inheritance without the ambiguity issue. A mixin is a class declaration
+parameterized over a superclass, able to provide uniform extensions, such as
+adding new fields or methods, to a large number of classes. Mixins are composed
+linearly, and that methods defined in mixins appearing later override all the
+identically named methods of earlier mixins. Because of the linear ordering of
+composition, a class may not be able to access a member of a given super-mixin
+because the member is overridden by another mixin.
 
-Not many languages support statically-typed first-class classes, or related
-concepts such as first-class mixins and/or traits.
-Racket~\citep{DBLP:conf/aplas/FlattFF06} supports typed first-class classes, as
-well as a \emph{dynamically-typed model} of first-class traits. However, unlike
-Racket's first-class classes and mixins, there is no type system supporting the
-use of first-class traits. A key difficulty is \emph{statically} detecting
-conflicts, even in the presence of polymorphism. Type system limitations prevent
-most statically-typed languages from having typed first-class traits.
+Traits~\citep{scharli2003traits, Ducasse_2006} are an alternative to mixins, and
+other models of multiple inheritance. The key difference between traits and
+mixins lies on the treatment of conflicts when composing multiple traits/mixins.
+Mixins adopt an \emph{implicit} resolution strategy for conflicts, where the
+compiler automatically picks one implementation in case of conflicts. Traits, on
+the other hand, employ an \emph{explicit} resolution strategy, where the
+compositions with conflicts are rejected, and the conflicts are explicitly
+resolved by programmers. \citet{scharli2003traits} make a good case for the
+advantages of the trait model. In particular, traits avoid bugs that could arise
+from accidental conflicts that were not noticed by programmers. With the mixin
+model, such conflicts would be silently resolved, possibly resulting in
+unexpected run-time behavior due to a wrong method implementation choice. From a
+modularity point-of-view, the trait model also ensures that composition is
+\emph{commutative}, thus the order of composition is irrelevant and does not
+affect the semantics. \citet{bracha1992programming} claims that ``\emph{The only
+  modular solution is to treat the name collisions as errors...}'',
+strengthening the case for the use of a trait model of composition. Otherwise,
+if the semantics is affected by the order of composition (like in the mixin model), global knowledge about
+the full inheritance graph is required to determine which implementations are
+chosen.
+
+Mixins and traits as found in most statically-typed languages/calculi are
+typically a second-class construct. Promoting mixins/traits to first-class
+citizens adds considerable expressiveness and flexibility in terms of software
+extensibility, as will be illustrated throughout this thesis. Only recently some
+progress has been made in statically typing first-class classes and dynamic
+inheritance~\citep{DBLP:conf/oopsla/TakikawaSDTF12,DBLP:conf/ecoop/LeeASP15}.
+However, prior to this thesis, we did not know how to model \textit{typed
+  first-class traits}. A key challenge, compared to models with first-class
+classes or mixins, is how to detect conflicts at compile time even when \textit{not}
+knowing all components being composed statically. This is important because in
+the setting with dynamic inheritance and polymorphism, the possibility of
+accidental conflicts caused by programmers is extremely high.
+
 
 
 \subsection{Family Polymorphism}
 
-One powerful and long-standing idea in OOP is \emph{family
-  polymorphism}~\citep{Ernst_2001}. In family polymorphism inheritance is
+The last mechanism---also the most powerful and complex one---is \emph{family
+  polymorphism}. In family polymorphism~\citep{Ernst_2001}, inheritance is
 extended to work on a \emph{whole family of classes}, rather than just a single
 class. This enables high degrees of modularity and code reuse, enabling simple
 solutions to hard programming language problems, like the expression
 problem~\citep{wadler1998expression}. An essential feature of family
-polymorphism is \emph{nested composition}~\citep{Corradi_2012, ErnstVirtual,
-  Nystrom_2004}, which allows the automatic inheritance/composition of nested
-(or inner) classes when the enclosing classes are composed. Designing a sound
-type system that fully supports family polymorphism and nested composition is
-notoriously hard; there are only a few, quite sophisticated, research languages that
-manage this~\citep{ErnstVirtual, Nystrom_2004, pubsdoc:tribe-virtual-calculus,SAITO_2007}.
+polymorphism is \emph{nested composition}~\citep{Corradi_2012,
+  ErnstVirtual,Nystrom_2004}, which allows the automatic inheritance/composition
+of nested (or inner) classes when the enclosing classes are composed.
+\citet{Nystrom_2004} call this \emph{scalable extensibility}: ``the ability to
+extend a body of code while writing new code proportional to the differences in
+functionality''.
 
 Not many mechanisms that support family polymorphism are available in existing
 mainstream languages. The \textsc{Cake} pattern~\citep{odersky2005scalable,
@@ -184,25 +228,35 @@ composition of families is still quite heavyweight and manual. The problem is
 due to the lack of \textit{deep} mixin composition. Though solutions do
 exist~\citep{oliveira2013feature}, they usually require low-level type-unsafe
 programming features such as dynamic proxies, reflection or other
-meta-programming techniques
-
+meta-programming techniques. It is known that designing a sound type system that
+fully supports family polymorphism and nested composition is notoriously hard;
+there are only a few, quite sophisticated, research languages that manage
+this~\citep{ErnstVirtual, Nystrom_2004,
+  pubsdoc:tribe-virtual-calculus,SAITO_2007}. But these mechanisms usually focus
+on getting a relatively complex Java-like language with family polymorphism. One
+of the motivations in this thesis is to come up with a minimal calculus that
+supports nested composition.
 
 
 
 \section{Our Proposed Solution}
 
-In light of the problems we have elaborated, obviously better language support
-is needed. This thesis sets out to explore an alternative object-oriented language design that makes
-extending and composing existing code more easily and safely on the language
-level. As we hopefully believe, \textit{disjoint intersection types} is the
-right semantic tool to facilitate code reuse and modularity. In particular, for
-family polymorphism, we show that the combination of the \textit{merge operator}
-and a rich subtyping relation captures the essence of nested composition; for
-traits, we show that with the merge operator and disjoint intersection types, we
-are able to express \textit{typed first-class traits}. Combined with the power
-of parametric polymorphism, we can further express a very dynamic form of
-mixin-style compositions, enabling writing highly modular and reusable software
-components.
+This thesis sets out to explore an alternative object-oriented language design
+that makes extending and composing existing code more easily and safely on the
+language level. More specifically, we seek to rein in ideas that are seemingly
+unrelated but powerful in object-oriented programming---dynamic inheritance,
+first-class traits, family polymorphism---under a simple unifying mechanism:
+they are but different manifestations of a single underlying type discipline:
+\textit{disjoint intersection types}. Through many examples and rigorous
+analysis in this thesis, we hope to convince readers that disjoint intersection
+types is a feasible semantic tool to facilitate code reuse and modularity. In
+particular, for family polymorphism, we show that the combination of the
+\textit{merge operator} and a rich subtyping relation captures the essence of
+nested composition; for traits, we show that with the merge operator and
+disjoint intersection types, we are able to express \textit{typed first-class
+  traits}. Combined with the power of parametric polymorphism, we can further
+express a very dynamic form of mixin-style compositions, enabling writing highly
+modular and reusable software components.
 
 So what are disjoint intersecting types? Here only highlights are given---more
 details are to be delivered in later chapters.
@@ -215,23 +269,40 @@ long history in programming languages. They were originally introduced to
 characterize exactly all strongly normalizing lambda terms. Since then, starting
 with \citeauthor{reynolds1988preliminary}'s work on
 Forsythe~\citep{reynolds1988preliminary}, they have also been employed to
-express useful programming language constructs, such as key aspects of
-\emph{multiple inheritance}~\citep{compagnoni1996higher} in object-oriented
-programming. One notable example is the Scala
-language~\citep{odersky2004overview} and its DOT
+express useful programming language constructs, such as key aspects of multiple
+inheritance~\citep{compagnoni1996higher} in object-oriented programming. One
+notable example is the Scala language~\citep{odersky2004overview} and its DOT
 calculus~\citep{amin2012dependent}, which make fundamental use of intersection
 types to express a class/trait that extends multiple other traits. Other modern
-languages, such as TypeScript~\citep{typescript}, Flow~\citep{flow} and
-Ceylon~\citep{ceylon}, also adopt some form of intersection types.
+programming languages, such as TypeScript~\citep{typescript}, Flow~\citep{flow}
+and Ceylon~\citep{ceylon}, also adopt some form of intersection types.
 
-Intersection types come in different varieties in the literature. Some calculi
-provide an \emph{explicit} introduction form for intersections, called the
-\emph{merge operator}. This operator was introduced by
-\citeauthor{reynolds1988preliminary} in Forsythe~\citep{reynolds1988preliminary}
-and adopted by a few other calculi~\citep{Castagna_1992,
-  dunfield2014elaborating, oliveira2016disjoint, alpuimdisjoint}. Unfortunately,
-while the merge operator is powerful, it also makes it hard to get a
-\emph{coherent} (or unambiguous) semantics.
+Intersection types come in different varieties in the literature. A far more
+common form of intersection types are the so-called \emph{refinement
+  types}~\citep{Freeman_1991, Davies_2000, dunfield2003type}. Refinement types
+restrict the formation of intersection types so that the two types in an
+intersection are refinements of the same simple (unrefined) type.
+% For example,
+% we can refine a type $\mathsf{Int}$ of integers with a subtype $\mathsf{Odd}$ of
+% odd numbers, then an integer $1$ can be typed as follows:
+% \[
+%   1 : \inter{\mathsf{Int}}{\mathsf{Odd}}
+% \]
+% which satisfies the restriction: both $\mathsf{Int}$ and $\mathsf{Odd}$ refine a
+% single simple type $\mathsf{Int}$.
+Refinement intersection increases only the expressiveness of types (more precise
+properties can be checked) and not of terms. For this reason,
+\citet{dunfield2014elaborating} argues that refinement intersection is unsuited
+for encoding various useful language features that require the \textit{merge operator}
+(or an equivalent term-level operator).
+
+Unrestrained intersection types with a merge operator as an \emph{explicit}
+introduction form for intersections increase the expressiveness of the term
+language. This operator was introduced by \citeauthor{reynolds1988preliminary}
+in Forsythe~\citep{reynolds1988preliminary} and adopted by a few other
+calculi~\citep{Castagna_1992, dunfield2014elaborating, oliveira2016disjoint,
+  alpuimdisjoint}. Unfortunately, while the merge operator is powerful, it also
+makes it hard to get a \emph{coherent} (or unambiguous) semantics.
 %A semantics is said to be coherent if all valid programs have the
 %same meaning.\tom{The previous sentence is easily misunderstood.}
 Unrestricted uses of the merge operator can be ambiguous, leading to an incoherent semantics
@@ -241,48 +312,34 @@ where the same program can evaluate to different values.
 We shall come back to this form of intersection types in more details in
 \cref{bg:sec:intersection}.
 
-A far more common form of intersection types are the so-called \emph{refinement
-  types}~\citep{Freeman_1991, Davies_2000, dunfield2003type}. Refinement types
-restrict the formation of intersection types so that the two types in an
-intersection are refinements of the same simple (unrefined) type. For example,
-we can refine a type $\mathsf{Int}$ of integers with a subtype $\mathsf{Odd}$ of
-odd numbers, then an integer $1$ can be typed as follows:
-\[
-  1 : \inter{\mathsf{Int}}{\mathsf{Odd}}
-\]
-which satisfies the restriction: both $\mathsf{Int}$ and $\mathsf{Odd}$ refine a
-single simple type $\mathsf{Int}$. Refinement intersection increases only the
-expressiveness of types (more precise properties can be checked) and not of
-terms. For this reason, \citet{dunfield2014elaborating} argues that refinement
-intersection is unsuited for encoding various useful language features that
-require the merge operator (or an equivalent term-level operator).
-
-
 Recently, \citet{oliveira2016disjoint} proposed \oname: a calculus with a
 variant of intersection types called \emph{disjoint intersection types}. Calculi
-with disjoint intersection types feature the merge operator, with restrictions
+with disjoint intersection types also feature the merge operator, with restrictions
 that all expressions in a merge operator must have disjoint types and all
 well-formed intersections are also disjoint. A bidirectional type system and the
 disjointness restrictions ensure that the semantics of the resulting calculi
-remains coherent.
+remains coherent. As shown by \citet{alpuimdisjoint}, calculi with disjoint
+intersection types are very expressive and can be used to statically type-check
+JavaScript-style programs using mixins. Yet they retain both type safety and
+coherence. While coherence may seem at first of mostly theoretical relevance, it
+turns out to be very relevant for object-oriented programming. As remarked
+earlier, a key issue for multiple inheritance is \emph{ambiguity} caused by the
+same field/method names inherited from different parents. Disjoint intersection
+types enforce that the types of parents are disjoint and thus that no conflicts
+exist. Any violations are statically detected and can be manually resolved by
+the programmer (for example by dropping one of the conflicting field/methods
+from one of the parents). This is very similar to existing trait
+models~\citep{scharli2003traits, Ducasse_2006}. Therefore in an object-oriented language
+modeled on top of disjoint intersection types, coherence implies that no
+ambiguity arises from multiple inheritance. This makes reasoning a lot simpler.
 
-Disjoint intersection types have great potential to serve as a foundation for
-powerful, flexible and yet type-safe OO languages that are easy to reason about.
-As shown by \citet{alpuimdisjoint}, calculi with disjoint intersection types are
-very expressive and can be used to statically type-check JavaScript-style
-programs using mixins. Yet they retain both type safety and coherence. While
-coherence may seem at first of mostly theoretical relevance, it turns out to be
-very relevant for OOP. Multiple inheritance is renowned for being tricky to get
-right, largely because of the possible \emph{ambiguity} issues caused by the
-same field/method names inherited from different parents~\citep{bracha1990mixin,
-  scharli2003traits}. Disjoint intersection types enforce that the types of
-parents are disjoint and thus that no conflicts exist. Any violations are
-statically detected and can be manually resolved by the programmer (for example
-by dropping one of the conflicting field/methods from one of the parents). This
-is very similar to existing trait models~\citep{scharli2003traits,
-  Ducasse_2006}. Therefore in an OO language modelled on top of disjoint
-intersection types, coherence implies that no ambiguity arises from multiple
-inheritance. This makes reasoning a lot simpler.
+The main goal of this thesis is to significantly increase the expressiveness of
+disjoint intersection types by extending the simple forms of multiple
+inheritance/composition supported by prior work~\citep{alpuimdisjoint, oliveira2016disjoint} into a more powerful form
+supporting nested composition. On the pragmatic side, the outcome is a language
+with support for first-class traits and nested composition. On the theoretical
+side, we put disjoint intersection types on a solid footing by exploring their
+meta-theoretical properties using logical relations.
 
 
 \section{Contributions}
@@ -290,51 +347,50 @@ inheritance. This makes reasoning a lot simpler.
 In this thesis, we present three new typed calculi, starting from a simple
 calculus with disjoint intersection types, then adding parametric polymorphism
 and finally ending up with a relatively sophisticated object-oriented language
-with support for first-class traits.
+with support for first-class traits and nested composition.
 
 \paragraph{The \namee Calculus.}
 
-The first one named \namee is a simple calculus with records and disjoint
+The first one, named \namee, is a simple calculus with records and disjoint
 intersection types that supports \emph{nested composition}. The essential
-novelty of \namee are distributivity rules between function/record types and
-intersection types. These rules are the delta that enable extending the simple
-forms of multiple inheritance/composition supported by \oname into a more
-powerful form supporting nested composition. The key difficulty of adding
-distributivity rules to a type system with disjoint intersection types is how to
-preserve coherence. Although previous work on disjoint intersection types
-proposes a solution to coherence, the solution imposes several ad-hoc
-restrictions to guarantee the uniqueness of the elaboration and thus allow for a
-simple syntactic proof of coherence. However such restrictions makes it hard or
+novelty of \namee is adoption of BCD subtyping, which includes distributivity
+rules between function/record types and intersection types. These rules are the
+delta that enable extending the simple forms of multiple inheritance/composition
+supported by prior work~\citep{oliveira2016disjoint} into a more powerful form
+supporting nested composition. The incorporation of BCD subtyping is highly
+challenging for two different reasons. The first difficulty is how to preserve
+coherence. Although previous work on disjoint intersection types proposes a
+solution to coherence, the solution imposes several ad-hoc restrictions to
+guarantee the uniqueness of the elaboration and thus allow for a simple
+syntactic proof of coherence. However such restrictions makes it hard or
 impossible to adapt the proof to extensions of the calculus with distributivity
-rules. To deal with coherence, we employ a more semantic proof method called
-the \textit{canonicity} relation based on
-\emph{logical relations}~\citep{tait, plotkin1973lambda, statman1985logical}.
-Using the canonicity relation, we removed
-those restrictions and successfully mechanized the coherence proof for \namee.
+rules. To deal with coherence, we employ a more semantic proof method called the
+\textit{canonicity} relation inspired by \emph{logical relations}~\citep{tait,
+  plotkin1973lambda, statman1985logical}. The second difficulty is that BCD
+subtyping is non-algorithmic. We adapted Pierce's decision procedure and propose
+an equivalent algorithmic version.
 
 \paragraph{The \fnamee Calculus.}
 
-The second one named \fnamee is a polymorphic calculus with disjoint
+The second one, named \fnamee, is a polymorphic calculus with disjoint
 intersection types. \fnamee is essentially \namee enriched with a variant of
 parametric polymorphic called disjoint polymorphism~\citep{alpuimdisjoint}. The
-addition of parametric polymorphic greatly increases the expressiveness power of \namee: \fnamee is able to encode a very dynamic form of mixin-style
-compositions. The first difficulty of adding parametric polymorphism is that
-when a type variable occurs in an intersection type, it is not statically known
-whether the instantiated type will be disjoint to other components of the
-intersection (which may as well be type variables). The second difficulty is how
-to prove coherence in the polymorphic setting. To address the first, \citet{alpuimdisjoint}
-proposed \textit{disjointness constraint}, inspired by bounded
-quantification~\citep{cardelli1994extension}, where type variables are constrained so that they are disjoint
-to some given types. To address the second, we adapt the parametric logical
-relation of System F to deal with disjoint polymorphism.
-
+addition of parametric polymorphic greatly increases the expressiveness power of
+\namee: \fnamee is able to express \textit{deep} conflict-free mixin composition
+in the presence of parametric polymorphism, which is extremely useful in the
+encodings of extensible designs. The key contribution is the extension of BCD
+subtyping with disjointness polymorphism. The extension is non-trivial in that
+we need to carefully retain coherence. The technical difficulty is
+\textit{well-foundedness}, stemming from the interaction between impredicativity
+and disjointness. To address this, we extend the canonicity relation with the
+restriction of predicativity.
 
 
 \paragraph{Typed First-Class Traits.}
 
 Lastly we present the design of \sedel: a polymorphic language with
 \emph{first-class traits}, supporting \emph{parametric polymorphism}, \emph{dynamic inheritance} as well as
-conventional OO features such as \emph{dynamic dispatching} and \emph{abstract
+conventional object-oriented features such as \emph{dynamic dispatching} and \emph{abstract
   methods}. Traits pose additional challenges when compared to models with
 first-class classes or mixins, because method conflicts should be detected
 \emph{statically}, even in the presence of features such as dynamic inheritance and
@@ -344,7 +400,7 @@ well-established approach of elaborating high-level language constructs to a
 low-level core calculus. The main contribution of \sedel is to show how to model
 source language constructs for first-class traits and dynamic inheritance. The
 work on \namee and \fnamee aimed at core record calculi, and omits important
-features for practical OO languages, including (dynamic) inheritance, dynamic
+features for practical object-oriented languages, including (dynamic) inheritance, dynamic
 dispatching and abstract methods. Based on \citeauthor{cook1989denotational}'s
 work on the denotational semantics for inheritance~\citep{cook1989denotational},
 we show how to design a source language that is elaborated into \fnamee.
@@ -353,9 +409,9 @@ Coherence ensures that the semantics of \sedel is unambiguous. In particular
 this property is useful to ensure that programs using traits are free of
 conflicts/ambiguities (even when the types of the object parts being composed
 are not fully statically know). We illustrate the applicability of \sedel with
-several example uses for first-class traits. Furthermore we conduct a case study
+several example uses for first-class traits. Furthermore, we conduct a case study
 that modularizes programming language interpreters using a highly modular form
-of \visitor.
+of \visitor~\citep{oliveira09modular, togersen:2004}.
 
 In summary the contributions of this thesis are:
 
@@ -366,26 +422,26 @@ In summary the contributions of this thesis are:
   calculus is both type-safe and coherent, and supports \emph{nested composition}.
 
 \item We present \fnamee, a polymorphic calculus with disjoint intersection
-  types. We show how \fnamee is able to provide basic support for dynamic mixins
-  and basic operations of extensible records. \fnamee is both type-safe and
-  coherent.
+  types. \fnamee is incorporated with a BCD-like subtyping relation extended
+  with disjoint polymorphism. \fnamee is both type-safe and coherent and
+  supports nested composition.
 
 \item We present \sedel, a statically-typed language design that supports
-  first-class traits, dynamic inheritance, as well as standard OO features such
-  as dynamic dispatching and abstract methods. We show how the semantics of
-  \sedel can be defined by elaboration into \fnamee.
+  first-class traits, dynamic inheritance, as well as standard object-oriented
+  features such as dynamic dispatching and abstract methods. We show how the
+  semantics of \sedel can be defined by elaboration into \fnamee.
 
 \item A more flexible notion of disjoint intersection types where only merges
   need to be checked for disjointness. This removes the need for enforcing
   disjointness for all well-formed types, making type systems with disjoint
   intersections more easily extensible.
 
-\item The canonicity relation: a more powerful proof strategy for coherence of type systems with disjoint
-  intersection types based on logical relations.
+\item The canonicity relation: a powerful proof method for establishing
+  coherence of calculi with disjoint intersection types and BCD-like subtyping.
 
-
-\item A comprehensive Coq mechanization of all metatheory. This has notably
-  revealed several missing lemmas and oversights in Pierce's manual
+\item A comprehensive Coq mechanization of all metatheory, including type
+  safety, coherence, algorithmic soundness and completeness, etc. This has
+  notably revealed several missing lemmas and oversights in Pierce's manual
   proof of BCD's algorithmic subtyping~\citep{pierce1989decision}. As a
   by-product, we obtain the first mechanically verified BCD-style subtyping
   algorithm with coercions.
@@ -435,11 +491,12 @@ structure of the technical content in the thesis is divided into three parts:
   the elaboration, soundness and completeness of the algorithmic subtyping, etc.
 \item[Part II:] \Cref{chap:coherence:simple,chap:coherence:poly} explore the
   issue of coherence. In \cref{chap:coherence:simple} we first propose a
-  semantically-founded definition of coherence. We then use a proof method based
-  on logical relations to establish coherence of \namee. In
+  semantically-founded definition of coherence. We then use a proof method
+  called the canonicity relation to establish coherence of \namee. In
   \cref{chap:coherence:poly} we follow the same technique in
-  \cref{chap:coherence:simple} but encounter a severe issue of impredicativity. We impose a predicativity restriction and
-  then adapt the parametric logical relation to establish coherence of \fnamee.
+  \cref{chap:coherence:simple} but encounter a severe issue of impredicativity.
+  We impose a predicativity restriction and adapt the canonicity relation to
+  establish coherence of \fnamee.
 \item[Part III:] In \cref{chap:traits} we present the syntax and semantics of
   \sedel. In particular we show how to elaborate source-level constructs for
   first-class traits into expressions of \fnamee. In \cref{chap:case_study} we
