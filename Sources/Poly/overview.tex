@@ -6,15 +6,15 @@ Parametric polymorphism~\citep{reynolds1983types} is a well-beloved (and
 well-studied) programming feature. It enables a single piece of code to be
 reused on data of different types. So it is quite natural and theoretically
 interesting to study combining parametric polymorphism with disjoint
-intersection types, especially how it affects disjointness and coherence. On a more
-pragmatic note, the combination of parametric polymorphism and disjoint intersection types also reveals new
-insights into practical applications. Dynamic languages (such as JavaScript)
-usually embrace quite flexible programming patterns, e.g., mixin composition
-where objects can be composed at run time, and their types are not necessarily
-statically known. The use of intersection types in TypeScript is inspired by
-such flexible programming patterns. For example, an important use of
-intersection types in TypeScript is the following function for mixin
-composition:
+intersection types, especially how it affects disjointness and coherence. On a
+more pragmatic note, the combination of parametric polymorphism and disjoint
+intersection types also reveals new insights into practical applications.
+Dynamically-typed languages (such as JavaScript) usually embrace quite flexible
+mechanisms for class/object composition, e.g., mixin composition where objects
+can be composed at run time, and their structures are not necessarily statically
+known. The use of intersection types in TypeScript is inspired by such flexible
+programming patterns. For example, an important use of intersection types in
+TypeScript is the following function for mixin composition:
 \begin{lstlisting}[language=JavaScript]
 function extend<T, U>(first: T, second : U) : T & U {...}
 \end{lstlisting}

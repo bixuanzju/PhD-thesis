@@ -141,8 +141,8 @@ them to encode features such as operator overloading by means of a
 but here we follow \citeauthor{dunfield2014elaborating} by using double commas for consistency.) \citeauthor{reynolds1997design}
 demonstrated the power of the merge operator by developing an encoding of
 records by using intersection types; similar ideas also appear in
-\citet{Castagna_1992}. The idea is to have only single-field records with the introduction form $[[ { l = e } ]]$ of type $[[ {l : A} ]]$ and
-the usual eliminations (projection and pattern matching). Thus instead of
+\citet{Castagna_1992}. The idea is to have only single-field records with the introduction form $[[ { l = ee } ]]$ of type $[[ {l : A} ]]$ and
+the elimination form $[[ee.l]]$ (record projection). Thus instead of
 \[
   [[ {  l1 = ee1, ... , ln = een   }       ]]
 \]
@@ -822,11 +822,11 @@ experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
 
 \paragraph{Logical Relations.}
 
-Unfortunately, proving contextual equivalence is difficult in general, since it
-involves quantification over \textit{all} possible contexts. There has been much
-work on finding tractable techniques for proving contextual equivalence. Many
-of these are based on the proof method called \emph{logical
-  relations}~\citep{tait, plotkin1973lambda, statman1985logical}.
+Unfortunately, directly proving contextual equivalence is very difficult in
+general (if not possible at all), since it involves quantification over
+\textit{all} possible contexts. There has been much work on finding tractable
+techniques for proving contextual equivalence, many of which are based on the
+proof method called \emph{logical relations}~\citep{tait, plotkin1973lambda, statman1985logical}.
 
 In a nutshell, logical relations specify relations over well-typed terms via a
 structural induction on the syntax of types. For instance, logically related

@@ -37,7 +37,7 @@ should be constructed in a \textit{modular} way, i.e., as a network of smaller
 modules; and that the weaker the dependencies between program modules, the more
 robust the program structure will be. To help programmers write modular code,
 researchers and software practitioners have developed new methodologies; new
-programming paradigms; stronger type systems; as well as better tooling
+programming paradigms; more expressive type systems; as well as better tooling
 support. Still, this is not enough to cope with today's needs. We will mention
 some limitations of current mainstream languages shortly. But before that, let
 us identify the following well-established requirements for construction of
@@ -50,8 +50,8 @@ modular software:
   modified nor duplicated.
 \item \textbf{Separate compilation and type-checking:} Safety checks or
   compilation steps must not be deferred until linking or at run time.
-\item \textbf{Independent extensibility:} It should be possible to combine
-  independently developed extensions so that they can be used jointly.
+\item \textbf{Independent extensibility:} Independently developed extensions
+  should be composable so that they can be used jointly.
 \item \textbf{Scalability:} Extension should be scalable. The amount of code
   needed should be proportional to the functionality added.
 \item \textbf{Non-destructive extension:} The base system should still be
@@ -77,7 +77,7 @@ requirements.
 Various programming language features support modular programming, with varying
 degrees of limitations. Functional languages, notably ML and OCaml, use module
 systems~\citep{MacQueen_1984} for flexible program construction. In particular,
-``functor''---which are functions at the level of modules---allows
+``functor''---which are functions over modules---allows
 one to develop and compile a module independently from the modules on which it
 depends. One functor can then be instantiated with multiple different modules
 during the execution of the program, enabling a powerful form of code reuse. One
@@ -160,12 +160,12 @@ to get right, largely because of the possible ambiguity issues that arise when
 conflicting features are inherited along different paths.
 Mixins~\citep{bracha1990mixin} provide a simple mechanism for multiple
 inheritance without the ambiguity issue. A mixin is a class declaration
-parameterized over a superclass, able to provide uniform extensions, such as
-adding new fields or methods, to a large number of classes. Mixins are composed
-linearly, and that methods defined in mixins appearing later override all the
-identically named methods of earlier mixins. Because of the linear ordering of
-composition, a class may not be able to access a member of a given super-mixin
-because the member is overridden by another mixin.
+parameterized over a superclass, able to extend a variety of parent classes with
+the same set of features. Mixins are composed linearly, and that methods defined
+in mixins appearing later override all the identically named methods of earlier
+mixins. Because of the linear ordering of composition, a class may not be able
+to access a member of a given super-mixin because the member is overridden by
+another mixin.
 
 Traits~\citep{scharli2003traits, Ducasse_2006} are an alternative to mixins, and
 other models of multiple inheritance. The key difference between traits and
