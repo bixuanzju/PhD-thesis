@@ -21,9 +21,9 @@ of object-oriented programming. The results are three new typed calculi, the
 first two being core calculi and the last one a source calculus, combining the
 power of parametric polymorphism, a rich subtyping relation with the
 fine-grained expressiveness of disjoint intersection types. The key contribution
-of the thesis is that it unifies concepts that are seemingly unrelated but
+of the thesis is that it unifies ideas that are seemingly unrelated but
 powerful on their own in object-oriented programming---dynamic inheritance,
-multiple inheritance, family polymorphism, extensible design patterns---by a
+first-class traits, family polymorphism, extensible design patterns---by a
 single lightweight mechanism, thus providing new insights into software
 modularity and extensibility.
 
@@ -254,7 +254,7 @@ particular, for family polymorphism, we show that the combination of the
 nested composition; for traits, we show that with the merge operator and
 disjoint intersection types, we are able to express \textit{typed first-class
   traits}. Combined with the power of parametric polymorphism, we can further
-express a very dynamic form of mixin-style compositions, enabling writing highly
+express a very dynamic form of mixin-style compositions, enabling to write highly
 modular and reusable software components.
 
 So what are disjoint intersecting types? Here only highlights are given---more
@@ -335,11 +335,12 @@ ambiguity arises from multiple inheritance. This makes reasoning a lot simpler.
 The main goal of this thesis is to significantly increase the expressiveness of
 disjoint intersection types by extending the simple forms of multiple
 inheritance/composition supported by prior work~\citep{alpuimdisjoint, oliveira2016disjoint}
-into a more powerful form supporting nested composition.
-On the pragmatic side, the outcome is a programming language with support for
-first-class traits, dynamic inheritance and nested composition. On the
-theoretical side, we put disjoint intersection types on a solid footing by
-exploring their meta-theoretical properties using logical relations.
+into a more powerful form supporting nested composition
+and parametric polymorphism. On the pragmatic side, the outcome is a programming
+language with support for first-class traits, dynamic inheritance and nested
+composition. On the theoretical side, we put disjoint intersection types on a
+solid footing by exploring their meta-theoretical properties using logical
+relations.
 
 
 \section{Contributions}
