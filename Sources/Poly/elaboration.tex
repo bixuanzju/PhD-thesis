@@ -127,11 +127,11 @@ $[[(\f . \ X . c (f X)) v T ]]$ reduces to $[[ c (v T) ]]$. Also we add the
 reduction rule \rref*{r-tapp} for type applications. Now we can show that
 \tnamee is type-safe in the usual sense:
 
-\begin{theorem}[Preservation of \tnamee]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L60}{\leftpointright} Preservation of \tnamee]
   If $[[empty; empty |- e : T]]$ and $[[e --> e']]$, then $[[empty; empty |- e' : T]]$.
 \end{theorem}
 
-\begin{theorem}[Progress of \tnamee]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress of \tnamee]
   If $[[empty; empty |- e : T]]$, then either $[[e]]$ is a value, or there exists $[[e']]$ such
   that $[[e --> e']]$.
 \end{theorem}
@@ -154,7 +154,7 @@ rules are ported from \namee. To conclude, we show an example translation:
 
 As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 
-\begin{lemma}[Coercions preserve types]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L7}{\leftpointright} Coercions preserve types]
   If $[[A <: B ~~> c]]$, then $[[c |-  |A| tri |B|]]$.
   \label{lemma:sub-correct:fi}
 \end{lemma}
@@ -163,7 +163,7 @@ As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 \end{proof}
 
 
-\begin{lemma}[Elaboration soundness] We have that:
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L23}{\leftpointright} Elaboration soundness] We have that:
   \begin{itemize}
   \item If $[[DD ; GG |- ee => A ~~> e]]$, then $[[ |DD| ; |GG| |- e : |A | ]]$.
   \item If $[[DD ; GG |- ee <= A ~~> e]]$, then $[[ |DD| ; |GG| |- e : |A | ]]$.

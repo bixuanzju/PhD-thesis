@@ -190,16 +190,6 @@ and \lstinline{T2}. Unsurprisingly, \lstinline{IDEEditor} is a subtype of
 %intersection type.
 %For example the type of \lstinline{2 ,, true} is
 %\lstinline{Int & Bool}.
-\begin{comment}
-\paragraph{Mutually dependent traits} When two traits are composed, any two
-methods in those two traits can refer to each other via the self-reference. We
-say these two traits are \emph{mutually dependent}. The next example, though a
-bit contrived, illustrates this point.
-\lstinputlisting[linerange=-]{}% APPLY:linerange=EVEN_ODD
-
-\noindent By utilizing trait requirements, the \lstinline{isEven} and
-\lstinline{isOdd} methods can refer to each other in two different traits.
-\end{comment}
 
 
 \subsection{Traits with Parameters and First-Class Traits}\label{subsec:cons}

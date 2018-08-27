@@ -13,7 +13,6 @@ contrast to traditional formulations of BCD); and it is extended with records.
 We also have a new target language with explicit coercions inspired by the coercion calculus of
 \citet{Henglein_1994}. A full technical comparison between \namee and \oname can be found in \cref{sec:comparision}.
 
-
 \subsection{Syntax}
 
 \Cref{fig:source} shows the syntax of \namee.
@@ -52,7 +51,7 @@ $[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record selections $[[ee.l]]
 \begin{figure}[t]
   \centering
   \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd}
-  \caption{Declarative specification of subtyping}
+  \caption{Declarative subtyping of \fname}
   \label{fig:subtype_decl}
 \end{figure}
 
@@ -102,46 +101,19 @@ The subtyping relation is vacuously \textit{reflexive} and \textit{transitive}.
 
 \subsection{Typing of \namee}
 
+The bidirectional type system for \namee is shown in \cref{fig:type_system}.
+Again we ignore the \hll{highlighted} parts for now.
 
 \begin{figure}[t]
   \centering
-\drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
-\drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
-  \caption{Bidirectional type system of \namee}
+  \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
+  \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
   \label{fig:type_system}
+  \caption{Bidirectional type system of \namee}
 \end{figure}
 
 % no gray anymore after this point
 \renewcommand{\rulehl}[1]{#1}
-
-
-
-The bidirectional type system for \namee is shown in \cref{fig:type_system}.
-Again we ignore the \hll{highlighted} parts for now.
-
-% The main difference to \oname is the absence of a well-formedness
-% judgment. Unlike \oname, which requires a well-formedness judgment to ensure
-% that all intersection types are disjoint, \namee only requires a disjointness
-% check at the merge operator. Non-disjoint types such as $[[nat & nat]]$ are
-% allowed in other parts of the program.
-
-\begin{comment}
-Unlike the development of \oname, which first presents a type assignment
-specification, \Cref{fig:type_system} directly present the bidirectional type
-system of \namee.
-Unfortunately, we found that their declarative type
-system is incoherent in nature (even with all the syntactic restrictions).
-\jeremy{perhaps add a counter example somewhere?} Again, the reader is advised
-to continue ignoring the gray-shaded parts until \cref{sec:elaboration}.
-\tom{The above story is a bit confusing to me. Is it the case that the
-     \oname paper already was aware of the coherence problem with its
-     declarative type system and for that reason (and inference) presented
-     a bidirection type system as well? If so, that's not clear.} \jeremy{I
-     remember at one point Bruno and I believed the declarative system is
-     coherent, it's just hard to prove. Then I found a counterexample. That was
-     after \tname paper.  }
-\end{comment}
-
 
 \begin{figure}[t]
   \centering
@@ -301,11 +273,11 @@ computation, and \rref{r-ctxt} handles reduction under an evaluation context. As
 standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
 Now we can show that \tname is type safe:
 
-\begin{theorem}[Preservation] \label{thm:target_preserve}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L60}{\leftpointright} Preservation] \label{thm:target_preserve}
   If $[[empty |- e : T]]$ and $[[e --> e']]$, then $[[empty |- e' : T]]$.
 \end{theorem}
 
-\begin{theorem}[Progress] \label{thm:target_progress}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress] \label{thm:target_progress}
   If $[[empty |- e : T]]$, then either $[[e]]$ is a value, or there exists $[[e']]$ such
   that $[[e --> e']]$.
 \end{theorem}
@@ -327,7 +299,7 @@ To conclude, we show two lemmas that relate source expressions to target terms.
 % proof sketches for each lemma and theorem. We refer the interested reader
 % to our Coq development for the full proofs.)
 
-\begin{lemma}[Coercions preserve types]   \label{lemma:sub-correct}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L7}{\leftpointright} Coercions preserve types]   \label{lemma:sub-correct}
   If $[[A <: B ~~> c]]$, then $[[c |-  |A| tri |B|]]$.
 \end{lemma}
 \begin{proof}
@@ -335,7 +307,7 @@ To conclude, we show two lemmas that relate source expressions to target terms.
 \end{proof}
 
 
-\begin{lemma}[Elaboration soundness] \label{thm:elab_safe}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L23}{\leftpointright} Elaboration soundness] \label{thm:elab_safe}
   We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$, then $|\Gamma| \vdash e : |A| $.

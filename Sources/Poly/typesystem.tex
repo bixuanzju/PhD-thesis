@@ -46,29 +46,31 @@ relations in \cref{chap:coherence:poly}.
   \label{fig:well-formedness:fi}
 \end{figure}
 
-\paragraph{Well-formedness of types and contexts.}
+\paragraph{Well-formedness.}
 
-Our well-formedness judgments for types and contexts in
+The well-formedness judgments for types and contexts in
 \cref{fig:well-formedness:fi}, though quite standard in System F, is the key
-difference from \fname. The \fname calculus follows \oname where they add a
-disjointness condition $[[ A ** B ]]$ in \rref{swft-and}. This is crucial for
-them to ensure coherence due to their syntactic proof method, it also
-complicates the metatheory a lot with extra effort required to show that all
-types in \fname are well-formed. In particular, they only have a weaker version
-of the substitution lemma, shown in \cref{lemma:weaker_lemma}: the general
-substitution lemma as shown in \cref{lemma:general_lemma} does not hold in
-\fname, but holds in \fnamee.
+difference from \fname. The \fname calculus follows \oname where it has a
+disjointness condition $[[ A ** B ]]$ in \rref{swft-and}. This is crucial to
+ensure coherence due to the syntactic proof method, but it also complicates the
+metatheory a lot with extra effort required to show that all types in \fname are
+well-formed. In particular, they only have a weaker version of the substitution
+lemma, shown in \cref{lemma:weaker_lemma}: the general substitution lemma as
+shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
+\fnamee.
 
-\begin{lemma}[Types are stable under substitution in \fname] \label{lemma:weaker_lemma}
+\begin{proposition}[Types are stable under substitution in \fname] \label{lemma:weaker_lemma}
   If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$ and $\hlmath{[[ DD |- B ** C ]]}$
   and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
-\end{lemma}
+\end{proposition}
 
-\begin{lemma}[Types are stable under substitution in \fnamee] \label{lemma:general_lemma}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L505}{\leftpointright} Types are stable under substitution in \fnamee] \label{lemma:general_lemma}
   If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$
   and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
 \end{lemma}
-
+\begin{proof}
+  By induction on the derivation of $[[ DD |- A  ]]$.
+\end{proof}
 
 
 \begin{figure}[t]

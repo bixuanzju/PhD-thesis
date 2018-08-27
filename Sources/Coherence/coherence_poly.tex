@@ -90,11 +90,11 @@ Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 function of the same type---i.e., all expressions with this type have to be constant
 functions.
 
-\begin{theorem}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
+\begin{proposition}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
   Suppose $[[e]]$ is any expression of type $[[\X . X -> nat]]$. Let $[[T1]]$
   and $[[T2]]$ be arbitrary types. For any $[[v1]]$ of type $[[T1]]$ and
   $[[v2]]$ of type $[[T2]]$, if $[[e T1 v1 -->> v3]]$ and $[[e T2 v2 -->> v4]]$ then $[[v3]] = [[v4]]$.
-\end{theorem}
+\end{proposition}
 
 
 \Cref{fig:logical:f} defines the logical relation for call-by-value System F.
@@ -240,21 +240,24 @@ as briefly discussed in \cref{sec:implicit}.
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{The canonicity relation for \fnamee}
+  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \fnamee}
   \label{fig:logical:fi}
 \end{figure}
 
 Substitution with predicative instantiations does not prevent well-foundedness.
-\Cref{fig:logical:fi} presents the logical relation for \fnamee. We extend the
-canonicity relation in \cref{fig:logical} with a new clause (highlighted) for
-disjoint quantification. Notice that it does not quantify over arbitrary
-relations, which means that our logical relation \textit{does not} imply
-parametricity, and in particular, \cref{thm:free} is impossible to prove using
-our logical relation. However, it suffices for our purposes to prove coherence.
-Also notice that we directly substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$
-and $[[B2]]$. It can be shown that the relation is well-founded.
+\Cref{fig:logical:fi} presents the logical relation for \fnamee.\footnote{In the
+  Coq formalization, due to some technical difficulties, it contains one
+  ``Admit'' about well-foundedness, for which we provide a manual proof
+  (\cref{lemma:well-founded}).} We extend the canonicity relation in
+\cref{fig:logical} with a new clause (highlighted) for disjoint quantification.
+Notice that it does not quantify over arbitrary relations, which means that our
+logical relation \textit{does not} imply parametricity, and in particular,
+\cref{thm:free} is impossible to prove using our logical relation. However, it
+suffices for our purposes to prove coherence. Also notice that we directly
+substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$ and $[[B2]]$. It can be shown
+that the relation is well-founded.
 
-\begin{lemma}[Well-foundedness]
+\begin{lemma}[Well-foundedness] \label{lemma:well-founded}
   The logical relation as defined in \cref{fig:logical:fi} is well-founded.
 \end{lemma}
 \begin{proof}
@@ -279,7 +282,7 @@ logical relation, which simplifies the proof a lot. We show that the logical
 relation is symmetric.
 
 
-\begin{lemma}[Symmetry of logical relation]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L817}{\leftpointright} Symmetry of logical relation]
   If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
 \end{lemma}
 \begin{proof}
@@ -295,7 +298,7 @@ basically follows that in \cref{chap:coherence:simple}. We first give the
 interpretations of type and value contexts ($[[p]]$ is a mapping from type
 variables to monotypes).
 
-\begin{definition}[Interpretation of type contexts]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2022}{\leftpointright} Interpretation of type contexts]
   \begin{mathpar}
     \ottaltinferrule{}{}{  }{ [[emp in empty]] } \and
     \ottaltinferrule{}{}{ [[p in DD]] \\ [[empty |- t ** p(B)]] \\  }{ [[p [ X -> t ] in DD , X ** B]]  }
@@ -303,7 +306,7 @@ variables to monotypes).
 \end{definition}
 
 
-\begin{definition}[Interpretation of value contexts]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L166}{\leftpointright} Interpretation of value contexts]
   \begin{mathpar}
     \ottaltinferrule{}{}{  }{ [[(emp, emp) in empty with p ]]  } \and
     \ottaltinferrule{}{}{ [[(g1, g2) in GG with p ]] \\ [[(v1, v2) in V (p(A)) ]] }{ [[(g1 [ x -> v1 ] , g2 [ x -> v2 ]  )  in GG , x : A with p ]] }
@@ -316,7 +319,7 @@ variables to monotypes).
 Logical equivalence is defined in terms of logical relation by considering all possible interpretations of
 free type and term variables.
 
-\begin{definition}[Logical equivalence]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L180}{\leftpointright} Logical equivalence]
   \begin{align*}
     [[DD ; GG |- e1 == e2 : A ; B]]  & \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
                                        & \qquad (\forall [[p]], [[g1]], [[g2]]. \ ([[p in DD]] \land [[(g1, g2) in GG with p ]]) \\
@@ -361,7 +364,7 @@ the differences from \namee contexts). The typing judgment of
 \Cref{fig:fctyp} shows one form of rules. The full typing rules appear in \cref{appendix:fi}.
 Now we may give the definition of contextual equivalence for \fname as follows:
 
-\begin{definition}[\fnamee Contextual Equivalence]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \fnamee Contextual Equivalence]
   \begin{align*}
     [[DD ; GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
                                      & \qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]   \\
@@ -375,7 +378,7 @@ complicated due to the addition of type variables. We first prove that disjoint
 values of monotypes are related.
 
 
-\begin{lemma}[Disjoint values of monotypes are related] \label{lemma:disjoint:mono}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L843}{\leftpointright} Disjoint values of monotypes are related] \label{lemma:disjoint:mono}
   If $[[empty |- t1 ** t2]]$,
   $[[  empty ; empty |-  v1 : |t1|  ]]$ and
   $[[  empty ; empty |-  v2 : |t2|  ]]$
@@ -387,7 +390,7 @@ values of monotypes are related.
 
 Then we can prove a more general lemma.
 
-\begin{lemma}[Disjoint values are related]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1120}{\leftpointright} Disjoint values are related]
   If $[[DD |- A ** B]]$, $[[ p in DD  ]]$, $[[  empty ; empty |-  v1 : |p (A)|  ]]$ and $[[  empty ; empty |-  v2 : |p (B)|  ]]$
   then $[[   (v1, v2) in V ( p(A) ; p(B)  )    ]]$.
 \end{lemma}
@@ -411,21 +414,21 @@ theorems without giving proofs. The proofs have mostly the same structures as in
 simply-typed case, but with more cases. The interested reader can refer to our
 Coq formalization.
 
-\begin{theorem}[Fundamental Property] We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental Property] We have that:
   \begin{itemize}
   \item If $[[DD; GG |- ee => A ~~> e]]$ and $[[DD; GG |- ee => A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
   \item If $[[DD ; GG |- ee <= A ~~> e]]$ and $[[DD ; GG |- ee <= A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
   \end{itemize}
 \end{theorem}
 
-\begin{theorem}[Congruence]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L357}{\leftpointright} Congruence]
  If $[[CC : (DD ; GG dir A) ~> (DD' ; GG' dir' A') ~~> cc]]$, $[[DD ; GG |- ee1 dir A ~~> e1]]$, $[[DD ; GG |- ee2 dir A ~~> e2]]$
  and $[[DD ; GG |- e1 == e2 : A ]]$, then $[[DD' ; GG' |- cc{e1} == cc{e2} : A']]$.
 \end{theorem}
 
 Finally \fnamee is coherent.
 
-\begin{theorem}[Coherence of \fnamee] \label{thm:coherence:fi}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L493}{\leftpointright} Coherence of \fnamee] \label{thm:coherence:fi}
   We have that
   \begin{itemize}
   \item If $[[DD ; GG |- ee => A ]]$ then $[[DD ; GG |- ee ~= ee : A]]$.

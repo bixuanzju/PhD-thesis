@@ -802,7 +802,7 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
 The following two definitions capture the notion of \textit{contextual equivalence}.
 
-\begin{restatable}[Kleene Equality]{definition}{kleene}
+\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L467}{\leftpointright} Kleene Equality]{definition}{kleene}
   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
   $\kleq{[[e]]}{[[e']]}$, if there exists $[[ii]]$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
 \end{restatable}
@@ -849,14 +849,14 @@ $[[T2]]$.
 
 The usefulness of the logical relation lies in the fact that it characterize
 \textit{exactly} contextual equivalence---i.e., logical and contextual equivalence
-coincide for STLC.
+coincide for STLC:
 
-\begin{theorem}
+\begin{proposition}
   For closed expression $[[e : T]]$ and $[[e' : T]]$, $[[ (e, e') in E(T)  ]]$ if and only if $[[  empty |- e ~= e' : T  ]]$.
-\end{theorem}
+\end{proposition}
 
 The proofs proceeds by generalizing to open terms, which will be explained in
-more details in \cref{chap:coherence:simple}. The above theorem licenses a
+more details in \cref{chap:coherence:simple}. The above proposition licenses a
 common approach of proving properties involving contextual equivalence: we first
 prove a related property using logical relations, and then transfer it back to
 the one involving contextual equivalence.

@@ -200,7 +200,7 @@ consideration both \namee and \tname contexts.
 
 
 
-\begin{definition}[\namee Contextual Equivalence] \label{def:cxtx2}
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \namee Contextual Equivalence] \label{def:cxtx2}
   \begin{align*}
     [[GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[GG |- ee1 => A ~~> e1]] \land [[GG |- ee2 => A ~~> e2]] \ \land \\
                                 & \qquad (\forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => nat) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
@@ -221,7 +221,7 @@ use the symbol $\backsimeq_{ctx}$ to refer to contextual equivalence in
 \cref{def:cxtx2}. With \cref{def:cxtx2} we can formally state that \namee is coherent
 in the following sense:
 
-\begin{restatable}[Coherence]{theorem}{coherence} \label{thm:coherence}
+\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L493}{\leftpointright} Coherence]{theorem}{coherence} \label{thm:coherence}
   We have that
   \begin{itemize}
   \item If $[[GG |- ee => A ]]$ then $[[GG |- ee ~= ee : A]]$.
@@ -245,7 +245,6 @@ in \cref{thm:coherence}, which makes reasoning even more tedious. The key to
 simplifying the reasoning is to exploit types using logical
 relations~\citep{tait, statman1985logical, plotkin1973lambda}.
 
-
 \paragraph{In Search of a Logical Relation.}
 
 \begin{figure}
@@ -260,7 +259,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
-  \caption{The canonicity relation for \namee}
+  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \namee}
   \label{fig:logical}
 \end{figure}
 
@@ -297,8 +296,15 @@ contexts. A moment of thought leads us to the following observations:
 \paragraph{The canonicity relation.}
 
 In order to deal with the complexity of the elaboration semantics, we introduce
-in \cref{fig:logical} what we call the \textit{canonicity} relation to capture ``canonical''
-values based on the above observations. The canonicity relation is a family of binary
+in \cref{fig:logical} what we call the \textit{canonicity} relation to capture
+``canonical'' values based on the above observations.\footnote{The logical
+  relation is slightly different form that in the original
+  publication~\citep{bi_et_al:LIPIcs:2018:9227} in that it is indexed by
+  ``source'' types whereas in the publication it is indexed by ``target'' types.
+  For \namee, both formulations work equally fine. The choice here is mainly for
+  consistency reasons as the logical relation for \fnamee must be indexed by
+  source types.}
+The canonicity relation is a family of binary
 relations over \tname values that are \textit{heterogeneous}, i.e., indexed by
 two \namee types. Heterogeneity allows us to relate values of different types,
 and in particular values of disjoint types. The canonicity relation seeks to combine equality
@@ -365,7 +371,7 @@ clauses for intersection types and the disjointness rules for intersection types
 This is not a coincidence---we can show that disjointness and the value relation
 are connected by the following lemma:
 
-\begin{lemma}[Disjoint values are related] \label{lemma:disjoint}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1120}{\leftpointright} Disjoint values are related] \label{lemma:disjoint}
   If $[[A ** B]]$ and $[[  v1 : |A|  ]]$ and
   $[[  v2 : |B|  ]]$,
   then $[[   (v1, v2) in V ( A ; B  )    ]]$.
@@ -390,7 +396,7 @@ $[[ v1 ]] : [[ |A1|]], \dots , [[vn]] : [[ |An| ]]$ to $[[ x1 ]] , \dots , [[xn]
 We write $[[ g(e) ]]$ for the substitution $[  [[v1]], \dots, [[vn]]  / [[x1]], \dots, [[xn]]   ] [[e]]  $.
 The interruption of typing contexts, written $[[  (g1, g2) in GG ]]$ is inductively defined as follows:
 
-\begin{definition}[Interpretation of value contexts]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L166}{\leftpointright} Interpretation of value contexts]
   \begin{mathpar}
     \ottaltinferrule{}{}{  }{ [[(emp, emp) in empty ]]  } \and
     \ottaltinferrule{}{}{ [[(g1, g2) in GG  ]] \\ [[(v1, v2) in V (A) ]] }{ [[(g1 [ x -> v1 ] , g2 [ x -> v2 ]  )  in GG , x : A  ]] }
@@ -399,7 +405,7 @@ The interruption of typing contexts, written $[[  (g1, g2) in GG ]]$ is inductiv
 
 Two open terms are related if every pair of related closing substitutions
 makes them related:
-\begin{definition}[Logical equivalence]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L180}{\leftpointright} Logical equivalence]
   \begin{align*}
     [[GG |- e1 == e2 : A ; B]] & \defeq [[|GG| |- e1 : |A|]] \land [[|GG| |- e2 : | B | ]] \ \land \\
                                  & \qquad (\forall [[g1]], [[g2]] .\, [[(g1, g2) in GG ]] \Longrightarrow [[(g1 (e1), g2 (e2))  in E (A ; B) ]])
@@ -417,7 +423,7 @@ Firstly we need the compatibility lemmas, which state that logical equivalence i
 preserved by language constructs. Most of them are standard and are thus omitted.
 We show only two compatibility lemmas that are specific to our logical relation:
 
-\begin{lemma}[Coercion Compatibility]   \label{lemma:co-compa}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L30}{\leftpointright} Coercion Compatibility]   \label{lemma:co-compa}
   Suppose that $[[A1 <: A2 ~~> c]]$,
   \begin{itemize}
   \item If $[[GG |- e1 == e2 : A1 ; A0]]$ then $[[GG |- c e1 == e2 : A2 ; A0]]$.
@@ -428,7 +434,7 @@ We show only two compatibility lemmas that are specific to our logical relation:
   By induction on the subtyping derivation.
 \end{proof}
 
-\begin{lemma}[Merge compatibility]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L104}{\leftpointright} Merge compatibility]
   If $[[   GG |- e1 == e1' : A ]]$, $[[  GG |- e2 == e2' : B ]]$ and $[[ A ** B ]]$,
   then $[[   GG |- < e1, e2 > == <e1', e2'> : A & B ]]$.
 \end{lemma}
@@ -443,11 +449,11 @@ itself by the logical relation. In our elaboration setting, we rephrase it so
 that any two \tname terms elaborated from the \textit{same} \namee expression are related
 by the logical relation. To prove it, we require \cref{thm:uniq}.
 
-\begin{theorem}[Inference Uniqueness] \label{thm:uniq}
-  If $[[GG |- ee => A1]]$ and $[[GG |- ee => A2]]$, then $[[A1]] \equiv [[A2]]$.
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L50}{\leftpointright} Inference Uniqueness] \label{thm:uniq}
+  If $[[GG |- ee => A1]]$ and $[[GG |- ee => A2]]$, then $[[A1]] \equiv_\alpha [[A2]]$.
 \end{theorem}
 
-\begin{theorem}[Fundamental Property]  \label{thm:co-log} We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental Property]  \label{thm:co-log} We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$ and $[[GG |- ee => A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
   \item If $[[GG |- ee <= A ~~> e]]$ and $[[GG |- ee <= A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
@@ -468,7 +474,7 @@ by the logical relation. To prove it, we require \cref{thm:uniq}.
 
 We show that logical equivalence is preserved by \namee contexts:
 
-\begin{lemma}[Congruence] \label{lemma:cong}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L357}{\leftpointright} Congruence] \label{lemma:cong}
  If $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$, $[[GG |- ee1 dir A ~~> e1]]$, $[[GG |- ee2 dir A ~~> e2]]$
  and $[[GG |- e1 == e2 : A]]$, then $[[GG' |- cc{e1} == cc{e2} : A']]$.
 \end{lemma}
@@ -478,7 +484,7 @@ We show that logical equivalence is preserved by \namee contexts:
 \end{proof}
 
 
-\begin{lemma}[Adequacy] \label{lemma:ade}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L478}{\leftpointright} Adequacy] \label{lemma:ade}
   If $[[  empty |- e1 == e2 : nat ]]$ then $\kleq{[[e1]]}{[[e2]]}$.
 \end{lemma}
 \begin{proof}
