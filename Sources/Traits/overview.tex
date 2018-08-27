@@ -290,7 +290,7 @@ For the sake of conciseness, \sedel uses \lstinline{type} aliases to abbreviate 
 Recall that in the JavaScript class \lstinline{Editor}, the \lstinline{version}
 method is undefined, but is used inside \lstinline{showHelp}. How can we express
 this in the typed setting, if not with an abstract method? In \sedel, the type of \lstinline{self}
-plays the role of trait requirements. As the first approximation, we
+plays the role of trait requirements. As a first approximation, we
 can justify the invocation of \lstinline{version} on \lstinline{self} by noticing that (part of) the
 type of \lstinline{self} (i.e., \lstinline{Version}) contains the declaration of
 \lstinline{version}. An interesting aspect of \sedel's trait model is that there

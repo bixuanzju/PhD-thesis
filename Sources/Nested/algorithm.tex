@@ -20,13 +20,13 @@ approach to defining a BCD-like subtyping relation that enjoys the
 %would be possible, the remaining rules are still highly overlapping, and pose
 %difficulties for an implementation.  
 We adapt \citeauthor{pierce1989decision}'s decision
-procedure~\citep{pierce1989decision} for a subtyping system (closely
-related to BCD) to obtain a sound and complete algorithm for our
-BCD extension. Our algorithm extends \citeauthor{pierce1989decision}'s decision
-procedure with subtyping of singleton records and
-coercion generation. We prove in Coq that the algorithm is sound and complete with
-respect to the declarative version. At the same time we
-find some errors and missing lemmas in \citeauthor{pierce1989decision}'s original manual proofs.
+procedure~\citep{pierce1989decision} for a subtyping system (closely related to
+BCD) to obtain a sound and complete algorithm for our BCD extension. Our
+algorithm extends \citeauthor{pierce1989decision}'s decision procedure with
+subtyping of singleton records and coercions. We prove in Coq that the algorithm
+is sound and complete with respect to the declarative version. At the same time
+we find some errors and missing lemmas in \citeauthor{pierce1989decision}'s
+original manual proofs.
 
 %The algorithm is implemented in our
 %prototype implementation. \jeremy{should i say more about implementation?}
