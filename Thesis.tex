@@ -108,7 +108,7 @@
 % \makeglossaries
 
 % 12pt, please
-% \KOMAoptions{fontsize=12pt}
+\KOMAoptions{listof=totoc}
 
 
 \input{packages.tex}
@@ -125,45 +125,9 @@
 \usepackage{tikz-cd}
 \usetikzlibrary{babel}
 
-%%----------------------------------------------------------------------------%%
-%%    Environment for Declaration                                             %%
-%%----------------------------------------------------------------------------%%
-
-
-\makeatletter
-\newcommand{\makedeclaration}
-{
-\chapter*{Declaration}
-% \addcontentsline{toc}{chapter}{Declaration}
-\noindent I declare that this thesis represents my own work, except
-where due acknowledgement is made, and that it has not been
-previously included in a thesis, dissertation or report submitted
-to this University or to any other institution for a degree,
-diploma or other qualifications.
-\vspace*{1.5in}
-
-\noindent%
-\begin{tabular}{@{}l@{}}
-\dotfill \\
-\@author\hspace*{3cm}\\
-\@date\\
-\end{tabular}
-}
-
-\makeatother
-
-%%----------------------------------------------------------------------------%%
-%%    Environment for Acknowledgments                                         %%
-%%----------------------------------------------------------------------------%%
-
-\makeatletter
-\newcommand{\makeAck}
-{
-\chapter*{Acknowledgments}
-% \addcontentsline{toc}{chapter}{Acknowledgements}
-\input{acknowledgement}
-}
-\makeatother
+\title{Disjoint Intersection Types: Theory and Practice}
+\author{\textbf{Xuan Bi}}
+\date{August 2018}
 
 
 %%----------------------------------------------------------------------------%%
@@ -205,58 +169,144 @@ diploma or other qualifications.
 
 
 
+
+%%----------------------------------------------------------------------------%%
+%%    Environment for Abstract                                                %%
+%%----------------------------------------------------------------------------%%
+
+\makeatletter
+\newenvironment{abstract}%
+{
+  % \if@twocolumn
+  %   \@restonecoltrue\onecolumn
+  % \else
+  %   \@restonecolfalse\newpage
+  % \fi
+  % \pagestyle{empty}%
+  % \setcounter{page}\@ne
+  % \mbox{}
+  % \newpage
+  \pagestyle{empty}%
+  \setcounter{page}\@ne
+  \begin{center}
+  \large
+  Abstract of thesis entitled            \par
+  \textbf{``\@title''}                   \par
+                                         \vspace*{0.2in}
+  Submitted by                           \par
+  \@author                               \par
+                                         \vspace*{0.2in}
+  for the degree of Doctor of Philosophy \\
+  at The University of Hong Kong         \\
+  in \@date
+  \end{center}
+  \vspace*{0.5in}
+%Start Abstract
+ \input{Sources/Abstract}
+}%
+% {
+%   \if@restonecol\twocolumn \else \newpage \fi
+%   \if@twoside\else
+%   \setcounter{page}\@ne
+%   \fi
+% }
+\makeatother
+
+%%----------------------------------------------------------------------------%%
+%%    Environment for Declaration                                             %%
+%%----------------------------------------------------------------------------%%
+
+
+\makeatletter
+\newcommand{\makedeclaration}
+{
+\chapter*{Declaration}
+\addcontentsline{toc}{chapter}{Declaration}
+\noindent I declare that this thesis represents my own work, except
+where due acknowledgment is made, and that it has not been
+previously included in a thesis, dissertation or report submitted
+to this University or to any other institution for a degree,
+diploma or other qualifications.
+\vspace*{1.5in}
+
+\noindent%
+\begin{tabular}{@{}l@{}}
+\dotfill \\
+\@author\hspace*{3cm}\\
+\@date\\
+\end{tabular}
+}
+\makeatother
+
+%%----------------------------------------------------------------------------%%
+%%    Environment for Acknowledgments                                         %%
+%%----------------------------------------------------------------------------%%
+
+\makeatletter
+\newcommand{\makeAck}
+{
+\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\input{acknowledgement}
+}
+\makeatother
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Disjoint Intersection Types: Theory and Practice}
-\author{Xuan Bi}
 
 \begin{document}
 
-\setcounter{tocdepth}{2}
+\maketitle
 
+\begin{abstract}
+
+\end{abstract}
+
+
+%%---------------------%%
 \frontmatter
-  \maketitle
-  % \include{Sources/Title}
-  \include{Sources/Abstract}
+%%---------------------%%
+\makedeclaration
+\makeAck
+\tableofcontents
+\listoffigures
+\listoftables
 
-  \makedeclaration
-  \makeAck
-  \tableofcontents
-  \listoffigures
-  \listoftables
-
+%%---------------------%%
 \mainmatter
 
-  \include{Sources/Introduction}
-  \input{Sources/Background.mng}
+%%---------------------%%
+\include{Sources/Introduction}
+\input{Sources/Background.mng}
 
 
-  \part{Type Systems}
+\part{Type Systems}
 
-  \include{Sources/Nested}
-  \include{Sources/Polymorphism}
+\include{Sources/Nested}
+\include{Sources/Polymorphism}
 
-  \part{Coherence}
+\part{Coherence}
 
-  \include{Sources/Coherence}
-
-
-
-  \part{Applications}
-
-  \include{Sources/Traits}
-  \include{Sources/Applications}
+\include{Sources/Coherence}
 
 
-  \input{Sources/Related.mng}
-  \input{Sources/Future.mng}
-  \include{Sources/Conclusion}
+
+\part{Applications}
+
+\include{Sources/Traits}
+\include{Sources/Applications}
 
 
-  \appendix
-  \input{Sources/Appendix.mng}
+\input{Sources/Related.mng}
+\input{Sources/Future.mng}
+\include{Sources/Conclusion}
+
+
+\appendix
+\input{Sources/Appendix.mng}
 
 
 
