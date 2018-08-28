@@ -31,7 +31,7 @@ constraint $[[A]]$ associated with the type variable $[[X]]$.
 In the traditional formulation of System F, there is a single context that is
 used to keep track of both type variables and term variables. Here we use
 another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
-split into \textit{value contexts} $[[GG]]$ and \textit{type contexts} $[[DD]]$.
+split into \emph{value contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
 The former track bound term variables $[[x]]$ with their types $[[A]]$; and the
 latter track bound type variables $[[X]]$ with their disjointness constraints
 $[[A]]$. This formulation is also convenient for the presentation of logical
@@ -109,8 +109,8 @@ conversion between two polymorphic types.
 A minor comment is that since
 \fnamee features explicit polymorphism, type variables are neutral to subtyping,
 i.e., $[[X <: X]]$, which is already contained in \rref{S-refl}. As with \namee
-subtyping, the subtyping relation of \fnamee is trivially \textit{reflexive} and
-\textit{transitive}.
+subtyping, the subtyping relation of \fnamee is trivially \emph{reflexive} and
+\emph{transitive}.
 
 \begin{remark}
   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are

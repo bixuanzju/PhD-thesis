@@ -123,7 +123,7 @@ related with traits. \Rref{SD-trait} says that as long as the functionalities
 that two traits provide are disjoint, the two trait types are disjoint.
 \Rref{SD-traitArr1,SD-traitArr2} deal with situations where one of the two types
 is a function type. At first glance, these two look strange because a trait type is
-\textit{different} from a function type, and they ought to be disjoint as an axiom. The reason
+\emph{different} from a function type, and they ought to be disjoint as an axiom. The reason
 is that \sedel has an elaboration semantics, and as we will see, trait types are translated to function
 types. In order to ensure the type safety of elaboration, we have to have special treatment for trait
 and function types. In principle, if \sedel has its own dynamic semantics, then trait types are always disjoint
@@ -242,7 +242,7 @@ denotational model of inheritance.
 \paragraph{Flattening Property.}
 
 In the literature of traits~\citep{Ducasse_2006, scharli2003traits, JOT:issue_2006_05/article4},
-a distinguished feature of traits is the \textit{flattening property}, which says that a (non-overridden) method in a
+a distinguished feature of traits is the \emph{flattening property}, which says that a (non-overridden) method in a
 trait has the same semantics as if it were implemented directly in the class
 that uses the trait. It would be interesting to see if our trait model has this
 property. One problem in formulating such a property is that flattening is a

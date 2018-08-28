@@ -34,7 +34,7 @@
   colorlinks = true,
   citecolor  = black,
   linkcolor  = RoyalBlue,
-  urlcolor   = RoyalBlue,
+  urlcolor   = black,
   ]{hyperref}
 
 \usepackage{url}
@@ -70,9 +70,9 @@
     aysep={},yysep={,},%
     notesep={, }}
 
-
 % \input{bibliography-mimosis}
 \bibliographystyle{ACM-Reference-Format}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
@@ -106,10 +106,6 @@
 
 % \makeindex
 % \makeglossaries
-
-% 12pt, please
-\KOMAoptions{listof=totoc}
-
 
 \input{packages.tex}
 \input{pl-theory.tex}
@@ -177,17 +173,18 @@
 \makeatletter
 \newenvironment{abstract}%
 {
-  % \if@twocolumn
-  %   \@restonecoltrue\onecolumn
-  % \else
-  %   \@restonecolfalse\newpage
-  % \fi
-  % \pagestyle{empty}%
-  % \setcounter{page}\@ne
-  % \mbox{}
-  % \newpage
+  \if@twocolumn
+    \@restonecoltrue\onecolumn
+  \else
+    \@restonecolfalse\newpage
+  \fi
   \pagestyle{empty}%
   \setcounter{page}\@ne
+  \mbox{}
+  \newpage
+  \pagestyle{empty}%
+  \setcounter{page}\@ne
+  \cleardoublepage
   \begin{center}
   \large
   Abstract of thesis entitled            \par
@@ -201,15 +198,13 @@
   in \@date
   \end{center}
   \vspace*{0.5in}
-%Start Abstract
- \input{Sources/Abstract}
 }%
-% {
-%   \if@restonecol\twocolumn \else \newpage \fi
-%   \if@twoside\else
-%   \setcounter{page}\@ne
-%   \fi
-% }
+{
+  \if@restonecol\twocolumn \else \newpage \fi
+  \if@twoside\else
+  \setcounter{page}\@ne
+  \fi
+}
 \makeatother
 
 %%----------------------------------------------------------------------------%%
@@ -252,6 +247,9 @@ diploma or other qualifications.
 \makeatother
 
 
+\KOMAoptions{listof=totoc}
+\setkomafont{sectioning}{\normalfont\bfseries}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -262,7 +260,7 @@ diploma or other qualifications.
 \maketitle
 
 \begin{abstract}
-
+ \input{Sources/Abstract}
 \end{abstract}
 
 
@@ -277,7 +275,6 @@ diploma or other qualifications.
 
 %%---------------------%%
 \mainmatter
-
 %%---------------------%%
 \include{Sources/Introduction}
 \input{Sources/Background.mng}
@@ -314,8 +311,12 @@ diploma or other qualifications.
 % This ensures that the subsequent sections are being included as root
 % items in the bookmark structure of your PDF reader.
 \bookmarksetup{startatroot}
-\backmatter
 
+%%---------------------%%
+\backmatter
+%%---------------------%%
+
+\cleardoublepage
 \bibliography{Thesis}
 
   % \begingroup

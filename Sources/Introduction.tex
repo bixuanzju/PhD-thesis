@@ -30,10 +30,10 @@ modularity and extensibility.
 \section{Motivation}
 
 Programs are hard to write. It was so 50 years ago at the time of the so-called
-\textit{software crisis}~\citep{Naur:1969:SER:1102020}; it still remains so
+\emph{software crisis}~\citep{Naur:1969:SER:1102020}; it still remains so
 nowadays, as the software we use daily is getting more and more complex and hard
 to maintain. Over the years, we have learned---the hard way---that software
-should be constructed in a \textit{modular} way, i.e., as a network of smaller
+should be constructed in a \emph{modular} way, i.e., as a network of smaller
 and loosely connected modules. To help programmers write modular code,
 researchers and software practitioners have developed new methodologies; new
 programming paradigms; more expressive type systems; as well as better tooling
@@ -58,10 +58,10 @@ modular software:
 \end{enumerate}
 The first four of these requirements correspond to
 \citeauthor{wadler1998expression}'s expression
-problem~\citep{wadler1998expression}. \citet{Zenger-Odersky2005} added the fifth
+problem~\citep{wadler1998expression}. \citet{Zenger-Odersky2005} added the 5\th
 requirement. The last two requirements were proposed by \citet{Nystrom:2006}.
-Scalability (6) is often but not necessarily satisfied by separate compilation;
-it is important for extending large software. Non-destructive extension (7) is
+Scalability (6\th) is often but not necessarily satisfied by separate compilation;
+it is important for extending large software. Non-destructive extension (7\th) is
 an important requirement for legacy and performance reasons: it enables clients
 of the extended system to reuse code and data of the base system, allowing some
 interoperability between new functionality and legacy code. To address the
@@ -139,7 +139,7 @@ typing dynamic inheritance and first-class mixins, and proposes the restriction
 to static inheritance that is also common in statically-typed languages. One of
 the motivations in this thesis is to present a type discipline that can encode
 first-class classes. Moreover, we push this one-step further: for the first
-time, this thesis shows how to encode \textit{first-class traits} in a
+time, this thesis shows how to encode \emph{first-class traits} in a
 statically typed setting. But first thing first, let us briefly explain what are
 traits, and the related concept ``mixins''.
 
@@ -194,9 +194,9 @@ citizens adds considerable expressiveness and flexibility in terms of software
 extensibility, as will be illustrated throughout this thesis. Only recently some
 progress has been made in statically typing first-class classes and dynamic
 inheritance~\citep{DBLP:conf/oopsla/TakikawaSDTF12,DBLP:conf/ecoop/LeeASP15}.
-However, prior to this thesis, we did not know how to model \textit{typed
+However, prior to this thesis, we did not know how to model \emph{typed
   first-class traits}. A key challenge, compared to models with first-class
-classes or mixins, is how to detect conflicts at compile time even when \textit{not}
+classes or mixins, is how to detect conflicts at compile time even when \emph{not}
 knowing all components being composed statically. This is important because in
 the setting with dynamic inheritance and polymorphism, the possibility of
 accidental conflicts caused by programmers is extremely high.
@@ -222,10 +222,10 @@ Not many mechanisms that support family polymorphism are available in existing
 mainstream languages. The \textsc{Cake} pattern~\citep{odersky2005scalable,
   Zenger-Odersky2005} in Scala provides some form of family polymorphism. In
 order to model this modest form of family polymorphism, this pattern uses
-\textit{virtual types}, \textit{self types}, \textit{path-dependent types} and
-\textit{static mixin composition}. Even with so many sophisticated features,
+\emph{virtual types}, \emph{self types}, \emph{path-dependent types} and
+\emph{static mixin composition}. Even with so many sophisticated features,
 composition of families is still quite heavyweight and manual. The problem is
-due to the lack of \textit{deep} mixin composition. Though solutions do
+due to the lack of \emph{deep} mixin composition. Though solutions do
 exist~\citep{oliveira2013feature}, they usually require low-level type-unsafe
 programming features such as dynamic proxies, reflection or other
 meta-programming techniques. It is known that designing a sound type system that
@@ -247,13 +247,13 @@ language level. More specifically, we seek to rein in ideas that are seemingly
 unrelated but powerful in object-oriented programming---dynamic inheritance,
 first-class traits, family polymorphism---under a simple unifying mechanism:
 they are but different manifestations of a single underlying type discipline:
-\textit{disjoint intersection types}. Through many examples and rigorous
+\emph{disjoint intersection types}. Through many examples and rigorous
 analysis in this thesis, we hope to convince readers that disjoint intersection
 types is a feasible semantic tool to facilitate code reuse and modularity. In
 particular, for family polymorphism, we show that the combination of the
-\textit{merge operator} and a rich subtyping relation captures the essence of
+\emph{merge operator} and a rich subtyping relation captures the essence of
 nested composition; for traits, we show that with the merge operator and
-disjoint intersection types, we are able to express \textit{typed first-class
+disjoint intersection types, we are able to express \emph{typed first-class
   traits}. Combined with the power of parametric polymorphism, we can further
 express a very dynamic form of mixin-style compositions, enabling to write highly
 modular and reusable software components.
@@ -263,7 +263,7 @@ details are to be delivered in later chapters.
 
 \subsection{Disjoint Intersection Types}
 
-A central theme of this thesis are \textit{intersection types} (usually written
+A central theme of this thesis are \emph{intersection types} (usually written
 $\inter{A}{B}$). Intersection types~\citep{pottinger1980type, coppoInter} have a
 long history in programming languages. They were originally introduced to
 characterize exactly all strongly normalizing lambda terms. Since then, starting
@@ -293,7 +293,7 @@ intersection are refinements of the same simple (unrefined) type.
 Refinement intersection increases only the expressiveness of types (more precise
 properties can be checked) and not of terms. For this reason,
 \citet{dunfield2014elaborating} argues that refinement intersection is unsuited
-for encoding various useful language features that require the \textit{merge operator}
+for encoding various useful language features that require the \emph{merge operator}
 (or an equivalent term-level operator).
 
 Unrestrained intersection types with a merge operator as an \emph{explicit}
@@ -304,7 +304,7 @@ calculi~\citep{Castagna_1992, dunfield2014elaborating, oliveira2016disjoint,
   alpuimdisjoint}. Unfortunately, while the merge operator is powerful, it also
 makes it hard to get a \emph{coherent}~\citep{Reynolds_1991} (or unambiguous)
 semantics. As a first approximation, a semantics is said to be coherent if a
-valid program has exactly \textit{one} meaning (i.e., one value when run).
+valid program has exactly \emph{one} meaning (i.e., one value when run).
 Unrestricted uses of the merge operator can be ambiguous, leading to an
 incoherent semantics where the same program can evaluate to different values.
 %Perhaps because of this
@@ -368,7 +368,7 @@ syntactic proof of coherence. However such restrictions makes it hard or
 impossible to adapt the proof to extensions of the calculus with distributivity
 rules. To deal with coherence, we employ a more semantic proof based on
 \emph{logical relations}~\citep{tait, plotkin1973lambda, statman1985logical}
-that we call the \textit{canonicity} relation. The second difficulty is that
+that we call the \emph{canonicity} relation. The second difficulty is that
 BCD subtyping is non-algorithmic: the presence of a transitivity axiom in the
 rules makes it hard to get an algorithmic version. To address it, we adapt
 Pierce's decision procedure~\citep{pierce1989decision} (closely related to BCD)
@@ -381,12 +381,12 @@ The second one, named \fnamee, is a polymorphic calculus with disjoint
 intersection types. \fnamee is essentially \namee enriched with a variant of
 parametric polymorphic called disjoint polymorphism~\citep{alpuimdisjoint}. The
 addition of parametric polymorphic greatly increases the expressiveness power of
-\namee: \fnamee is able to express \textit{deep} conflict-free mixin composition
+\namee: \fnamee is able to express \emph{deep} conflict-free mixin composition
 in the presence of parametric polymorphism, which is extremely useful in the
 encodings of extensible designs. The key contribution is the extension of BCD
 subtyping with disjointness polymorphism. The extension is non-trivial in that
 we need to carefully retain coherence. The technical difficulty is
-\textit{well-foundedness}, stemming from the interaction between impredicativity
+\emph{well-foundedness}, stemming from the interaction between impredicativity
 and disjointness. To address this, we extend the canonicity relation with the
 restriction of predicativity.
 
@@ -432,7 +432,7 @@ In summary the contributions of this thesis are:
   supports nested composition.
 
 \item We present \sedel, an object-oriented language design that supports
-  \textit{typed first-class traits}, dynamic inheritance, as well as standard
+  \emph{typed first-class traits}, dynamic inheritance, as well as standard
   object-oriented features such as dynamic dispatching and abstract methods. We
   show how the semantics of \sedel can be defined by elaboration into \fnamee.
 
@@ -471,13 +471,13 @@ In summary the contributions of this thesis are:
 % relate to the topics of this thesis:
 % \begin{itemize}
 % \item Ningning Xie, Xuan Bi, Bruno C. d. S. Oliveira. 2018. ``Consistent Subtyping for All''.
-%   In \textit{European Symposium on Programming (ESOP)}.
+%   In \emph{European Symposium on Programming (ESOP)}.
 % \item Yanpeng Yang, Xuan Bi, Bruno C. d. S. Oliveira. 2016. ``Unified Syntax with
-%   Iso-Types''. In \textit{Asian Symposium on Programming Languages and
+%   Iso-Types''. In \emph{Asian Symposium on Programming Languages and
 %     Systems (APLAS)}.
 % \item Tomas Tauber, Xuan Bi, Zhiyuan Shi, Weixin Zhang, Huang Li, Zhenrui Zhang,
 %   Bruno C. d. S. Oliveira. 2015. ``Memory-efficient Tail Calls in the JVM with
-%   Imperative Functional Objects''. In \textit{Asian Symposium on
+%   Imperative Functional Objects''. In \emph{Asian Symposium on
 %     Programming Languages and Systems (APLAS)}.
 % \end{itemize}
 
@@ -524,9 +524,9 @@ and consistent treatment of disjoint intersection types.
 \begin{description}
 \item[\cref{chap:nested,chap:coherence:simple}:] Xuan Bi, Bruno C. d. S.
   Oliveira, and Tom Schrijvers. 2018. ``The Essence of Nested Composition''. In
-  \textit{European Conference on Object-Oriented Programming (ECOOP)}.
+  \emph{European Conference on Object-Oriented Programming (ECOOP)}.
 \item[\cref{chap:traits,chap:case_study}:] Xuan Bi and Bruno C. d. S. Oliveira.
-  2018. ``Typed First-Class Traits''. In \textit{European Conference on Object-Oriented Programming (ECOOP)}.
+  2018. ``Typed First-Class Traits''. In \emph{European Conference on Object-Oriented Programming (ECOOP)}.
 \end{description}
 
 \noindent\makebox[\linewidth]{\rule{0.7\textwidth}{0.4pt}}

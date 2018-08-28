@@ -36,7 +36,7 @@ form~\footnote{The proof actually needs a stronger inductive hypothesis.}:
 \]
 
 
-\subsection{Properties of Intersection Types.}
+\subsection{Properties of Intersection Types}
 
 The key component of Reynolds' method is the interpretation of intersection
 types. For the sake of precision in what follows, we pause to give some basic
@@ -48,7 +48,7 @@ First we give two definitions that are important for the discussion.
 \end{definition}
 
 \begin{definition}[Least Upper Bounds]
-  A \textit{least upper bound} of $[[A]]$ and $[[B]]$ is a supertype of both
+  A \emph{least upper bound} of $[[A]]$ and $[[B]]$ is a supertype of both
   $[[A]]$ and $[[B]]$ and a subtype of every common supertype of $[[A]]$ and
   $[[B]]$---i.e., a type $[[C]]$ such that:
   \begin{itemize}
@@ -94,7 +94,7 @@ and $[[B]]$:
 \end{align*}
 \end{proposition}
 
-\subsection{Connecting with Disjointness.}
+\subsection{Connecting with Disjointness}
 
 With the above propositions stated, it turns out that our disjointness rules, as
 given in \cref{fig:disjoint}, can be compactly formulated using $\approx$ and $\sqcup$:
@@ -131,7 +131,7 @@ upper bounds are not existent.
 
 
 
-\subsection{Interpretation of Intersection Types.}
+\subsection{Interpretation of Intersection Types}
 
 Following Reynolds, a subtyping derivation is interpreted as a morphism $ \bra{[[ A <: B ]]} : \bra{[[A]]} \rightarrow \bra{[[B]]} $ with two requirements:
 \begin{enumerate}
@@ -143,7 +143,7 @@ preordered set of types (viewed as a category) to the semantic category of
 choice.
 
 \begin{remark}
-By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is \textit{isomorphic} to $\bra{[[ B ]]}$, written $\bra{[[ A ]]} \cong \bra{[[B]]}$.
+By definition, whenever $[[ A == B ]]$ we say $\bra{[[  A  ]]}$ is \emph{isomorphic} to $\bra{[[ B ]]}$, written $\bra{[[ A ]]} \cong \bra{[[B]]}$.
 \end{remark}
 
 Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
@@ -192,17 +192,17 @@ Now we consider $\bra{[[ A1 & A2  ]]}$ in the following steps:
 \end{tikzcd}
   \]
 \end{enumerate}
-Thus we have defined $\bra{[[A1 & A2]]}$ to be the \textit{pullback} of
+Thus we have defined $\bra{[[A1 & A2]]}$ to be the \emph{pullback} of
 $\bra{[[A1]]}$, $\bra{[[A2]]}$ and $\bra{[[A1 =/ A2]]}$.
 
-\subsection{Interpretation of Disjoint Intersection Types.}
+\subsection{Interpretation of Disjoint Intersection Types}
 
 Given the interpretation of intersection types, it is fairly straightforward to
 give the interpretation of disjoint intersection types. First recall that if
 $[[A ** B]]$ then $[[ A =/ B == Top ]]$ (\cref{thm:disjoint_spec}). Also we have
 $\bra{[[Top]]} = 1$---i.e., the terminal object. By specializing $\bra{[[A1 =/ A2]]}$ to be the terminal object
 ($\bra{[[A1 <: A1 =/ A2]]}$ and $\bra{[[A2 <: A1 =/ A2]]}$ are then uniquely
-determined), then the pullback ``degenerates'' to the \textit{product} of
+determined), then the pullback ``degenerates'' to the \emph{product} of
 $\bra{[[A1]]}$ and $\bra{[[A2]]}$. In other words, the interpretation of
 disjoint intersection types is given by the following theorem:
 \begin{theorem}
@@ -216,7 +216,7 @@ perspective.
 
 
 
-\subsection{Coherence, from the categorical perspective?}
+\subsection{Coherence, from the Categorical Perspective}
 
 What we have developed so far is the (categorical) interpretation of disjoint intersection
 types. We are still half way through the ultimate goal of (re-)establishing
@@ -237,7 +237,7 @@ explicit polymorphism in the sense that we need to provide types during type
 applications. A classic example of implicit polymorphism is the identity
 function $[[\x . x]]$ of type $[[\X . X -> X]]$. When applied to $1$, for
 example, the type variable $[[X]]$ will be implicitly instantiated to $[[nat]]$.
-Moreover, we are interested in \textit{higher-rank polymorphism}, allowing
+Moreover, we are interested in \emph{higher-rank polymorphism}, allowing
 polymorphic quantifiers to appear anywhere in a type. There are several
 approaches in the literature~\citep{odersky1996putting, dunfield2013complete,
   jones2007practical}. Since our declarative type system is already based on
@@ -246,7 +246,7 @@ particularly relevant for us. It turns out that coming up with a coherent
 declarative system is already very challenging, especially the disjointness
 relation. Below we sketch out some ideas for the initial design.
 
-\subsection{Declarative Subtyping.}
+\subsection{Declarative Subtyping}
 
 First we consider the subtyping rules. Obviously \rref{S-forall} needs to be modified.
 We replace it with the following two rules:
@@ -289,7 +289,7 @@ Unfortunately, this rule is incorrect as we could guess a
 ``wrong'' $[[t1]]$. Take $[[ \X ** char . X -> X ]]$ for example: one
 instantiation is $[[bool -> bool]]$, which is disjoint with $[[nat -> nat]]$.
 But as we saw, this does not mean $[[ \X ** char . X -> X ]]$ is disjoint with
-$[[nat -> nat]]$. Instead we should require \textit{all possible}
+$[[nat -> nat]]$. Instead we should require \emph{all possible}
 instantiations are disjoint with $[[B2]]$:
 \begin{mathpar}
   \inferrule*[lab=FD-implicit]{ \forall [[t1]] .\ [[DD |- t1 ** A1]] \Longrightarrow [[DD |- [t1 / X] A2 ** B2]]  }{  [[DD |- \ X ** A1 . A2 ** B2]]  }
@@ -305,7 +305,7 @@ should focus on the opposite side---i.e., what constitutes a non-disjointness
 relation. But this idea seems more radical.
 
 
-\subsection{Declarative Typing.}
+\subsection{Declarative Typing}
 
 Putting disjointness aside, now we consider the typing rules. Most of the rules
 stay the same. We remove \rref{FT-tabs,FT-tapp}, since the syntax now does not
@@ -332,7 +332,7 @@ The matching judgment~\citep{siek2015refined, xie2018consistent}, first used in 
 \Rref{M-forall}, as with \rref{IS-allL}, works by guessing instantiations of
 polymorphic quantifiers with the requirement that the monotype $[[t]]$ must meet
 the disjointness constraints. \Rref{M-arr} is trivial, returning $[[A1 -> A2]]$
-as it is. An alternative to the matching judgment is the \textit{application judgment}
+as it is. An alternative to the matching judgment is the \emph{application judgment}
 $\Delta \vdash A \bullet e \Rightarrow C$~\citep{dunfield2013complete}, which says that if we apply a term of type $A$
 to an argument $e$, we get something of type $C$.
 
@@ -348,7 +348,7 @@ this thesis should still work.
 
 
 
-\subsection{Algorithmic System.}
+\subsection{Algorithmic System}
 
 Having a declarative system is only a start. The major challenge is the
 corresponding algorithmic system. It is well-known that complete type inference is
@@ -369,7 +369,7 @@ particular, whether the former subsumes the latter. As noted by
 extensible records. For the sake of comparison, we pick the record calculus
 $\lambda^{\|}$ of \citet{Harper:1991:RCB:99583.99603}---an explicitly-typed,
 second-order calculus that features single-field records and a symmetric merge
-operator. In $\lambda^{\|}$, \textit{compatibility constraints} are used to
+operator. In $\lambda^{\|}$, \emph{compatibility constraints} are used to
 capture negative information about fields. For example, $r_1 \# r_2 $ denotes the
 assertion that the record types $r_1$ and $r_2$ have disjoint sets of labels. To
 illustrate polymorphic extensible records in $\lambda^{\|}$,
@@ -383,10 +383,10 @@ returns the result of merging $x_1$ and $x_2$ (altering their syntax slightly):
 \end{align*}
 where $r_1 \| r_2$ is the record type obtained by merging $r_1$ and $r_2$, and
 is only defined if $r_1 \# r_2$. The same operator is overloaded to merge two
-records on the term level. Central to their system is the \textit{constrained
+records on the term level. Central to their system is the \emph{constrained
   quantification} $\forall \alpha \# R .\ t $, where each record type variable is
-associated with a list of \textit{compatibility assumptions} $R$, whose elements
-are record types (including record type variables). The \textit{constrained type abstraction} $\Lambda \alpha \# R.\ e$
+associated with a list of \emph{compatibility assumptions} $R$, whose elements
+are record types (including record type variables). The \emph{constrained type abstraction} $\Lambda \alpha \# R.\ e$
 is used to create values of constrained quantification.
 
 
@@ -412,7 +412,7 @@ where $\mathsf{Empty}$ is the empty record type. Compare it to our ``more expres
 \[
   \mathsf{mergeAny} = [[\ X1 ** Top . \ X2 ** X1 . \x1 : X1 . \x2 : X2 . x1 ,, x2 ]]
 \]
-that merges \textit{any} two expressions of statically-unknown types.
+that merges \emph{any} two expressions of statically-unknown types.
 
 We believe \fnamee completely subsumes $\lambda^{\|}$. To support this claim, we
 may show a type directed translation from $\lambda^{\|}$ to \fnamee. However,
@@ -429,13 +429,13 @@ bisimulation property between $\lambda^{\|}$ and (a subset of) \fnamee:
 \section{Recursive Types}
 
 One extension of particular importance for modeling object-oriented languages is
-\textit{recursive types}. A great deal of lessons have been learned about
+\emph{recursive types}. A great deal of lessons have been learned about
 calculi with recursive types and subtyping (see \citet[chap.
 20]{DBLP:books/daglib/0005958}). But previous work has been focused on type
 systems with substantially simpler subtyping relations. For simplicity, we are
-interested in adding \textit{iso-recursive types}, where a recursive type $[[mu XX . A]]$ and its one-step unfolding are transformed back and forth by a pair
+interested in adding \emph{iso-recursive types}, where a recursive type $[[mu XX . A]]$ and its one-step unfolding are transformed back and forth by a pair
 of functions $\mathsf{fold}$ and $\mathsf{unfold}$. The most common definition
-of iso-recursive subtyping is the \textit{Amber rule}, popularized by
+of iso-recursive subtyping is the \emph{Amber rule}, popularized by
 \citeauthor{DBLP:conf/litp/Cardelli85}'s Amber language~\citep{DBLP:conf/litp/Cardelli85}.
 \begin{mathpar}
   \drule{RS-amber}
@@ -446,7 +446,7 @@ B]]$ under some set of assumptions $[[SS]]$, it suffices to show $[[A <: B]]$
 under the additional assumption $[[XX]] <: [[YY]]$. Note that this rule, unlike
 most rules we have seen involving binding constructs on both sides, such as
 \rref{S-forall} in \cref{fig:subtype_decl:fi}, requires that the bound variables
-$[[XX]]$ and $[[YY]]$ be renamed to be \textit{distinct} before the rule is
+$[[XX]]$ and $[[YY]]$ be renamed to be \emph{distinct} before the rule is
 applied. \Rref{RS-var} allows us to conclude $[[XX]] <: [[YY]]$ if the
 assumptions assume it.
 
@@ -472,7 +472,7 @@ between $[[ XX -> nat ]]$ and $[[YY -> nat ]]$ under certain relation over
 $[[XX]]$ and $[[YY]]$ we do not know yet. However, according to \rref{D-arr}, two functions are
 disjoint if their range types are disjoint; thus $[[ XX -> nat ]]$ and $[[YY ->
 nat ]]$ are not disjoint. So we have $[[ mu XX . XX -> nat]]$ and $[[ mu YY . YY -> nat]]$
-are \textit{not} disjoint: a contradiction!
+are \emph{not} disjoint: a contradiction!
 
 
 \paragraph{Positivity to the Rescue.}
@@ -480,16 +480,16 @@ are \textit{not} disjoint: a contradiction!
 It is not obvious how to change either \rref{RS-amber} or \rref{D-arr} without
 disrupting the whole system. A possible solution is to restrict where type variables
 can occur. Instead of
-having a \textit{general} recursive type $[[mu XX . A]]$ where $[[XX]]$ may occur
-anywhere in $[[A]]$, we require that $[[XX]]$ occurs \textit{positively} in
+having a \emph{general} recursive type $[[mu XX . A]]$ where $[[XX]]$ may occur
+anywhere in $[[A]]$, we require that $[[XX]]$ occurs \emph{positively} in
 $[[A]]$. Specifically, $[[XX]]$ occurs positively in $[[A1 -> A2]]$, if
 \begin{inparaenum}[(1)]
-\item $[[XX]]$ \textit{does not occur} in $[[A1]]$,
+\item $[[XX]]$ \emph{does not occur} in $[[A1]]$,
 \item and $[[XX]]$ occurs positively in $[[A2]]$.
 \end{inparaenum}
 In general, any occurrences of $[[XX]]$ within the domain of a function type are
-\textit{negative occurrences}, whereas any occurrences of $[[XX]]$ within the
-range of a function type are \textit{positive occurrences}. For example, the two
+\emph{negative occurrences}, whereas any occurrences of $[[XX]]$ within the
+range of a function type are \emph{positive occurrences}. For example, the two
 recursive types in the last subsection are not positive. While positivity does
 limit the expressiveness of types, most useful datatypes (e.g., natural numbers,
 lists, streams) are positive. For us, the positivity restriction for recursive types does work with the
@@ -509,7 +509,7 @@ We also need a few more disjointness axioms:
   \drule{Dax-arrRVar}
   \drule{Dax-recRVar}
 \end{mathpar}
-An important observation is that any two distinct type variables are \textit{not}
+An important observation is that any two distinct type variables are \emph{not}
 disjoint. A few examples: $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> YY]]$
 are not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . bool -> YY & nat]]$ are
 not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> nat -> YY]]$ are
@@ -527,12 +527,12 @@ mechanization.
 There are several important extensions that should also be considered.
 
 
-\subsection{Union Types.}
+\subsection{Union Types}
 
 Union types---as intersections' dual---are also widely used in languages such as
 Ceylon and Flow. Union types introduce an interesting subtyping relation: a
 union type $[[A | B]] $ is a common supertype of $[[A]]$ and $[[B]]$;
-or more precisely, it is a \textit{least upper bound} of $[[A]]$ and $[[B]]$, as
+or more precisely, it is a \emph{least upper bound} of $[[A]]$ and $[[B]]$, as
 exhibited by the following subtyping rules.
 \begin{mathpar}
   \inferrule*[lab=union]{  [[A <: C]] \\ [[B <: C]]   }{[[ A | B <: C]]} \and
@@ -555,7 +555,7 @@ shown below, each leading to semantically different translations.
 \]
 More thoughts are needed to come up with a coherent system with union types.
 
-\subsection{Nominal Typing.}
+\subsection{Nominal Typing}
 
 Many widely-used OO languages feature nominal type systems where type names play
 a crucial role. In previous chapters, we often define short names for long or
@@ -566,13 +566,13 @@ Such definitions are purely cosmetic: the name \lstinline{Editor} is just an
 abbreviation for the record on the right-hand side, and the two are
 interchangeable in every context. By contrast, in OO languages such as Java,
 every compound type (class declaration or interface definition) has a name, and
-subtyping is explicitly declared between type \textit{names}.
+subtyping is explicitly declared between type \emph{names}.
 
 To blend in with our powerful structural subtyping relation, we need to clearly
 decide which types are based on nominal subtyping, which are based on structural
 subtyping and how they interact. A rough idea, following the \textsf{Moby} type
-system~\citep{fisher2000extending}, is to separate \textit{class types} from
-\textit{object types}, as we did for trait types. Subtyping on class types is
+system~\citep{fisher2000extending}, is to separate \emph{class types} from
+\emph{object types}, as we did for trait types. Subtyping on class types is
 nominal, while objects are compared structurally. This is just a high-level
 intuition; of course there are other details (e.g., disjointness) that need to
 be worked out. A pleasant property of nominal systems, and also related to our
@@ -583,7 +583,7 @@ compared.
 
 
 
-\subsection{Mutable State.}
+\subsection{Mutable State}
 
 Another direction for future work is to add mutable state, which would affect
 two aspects of our metatheory: type safety and coherence. For type safety, we

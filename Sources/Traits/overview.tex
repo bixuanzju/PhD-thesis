@@ -68,7 +68,7 @@ the \lstinline{version} method in the class body, but such method is used in the
 undefined methods is error prone---accidentally instantiating \lstinline{Editor}
 and then calling \lstinline{showHelp} will cause a run-time error!
 Statically-typed languages usually provide some means to protect us from this
-situation. For example, in Java, we would need an \textit{abstract} \lstinline{version}
+situation. For example, in Java, we would need an \emph{abstract} \lstinline{version}
 method, which effectively makes \lstinline{Editor} an abstract class and
 prevents it from being instantiated. As we will see, \sedel's treatment of
 abstract methods is quite different from mainstream languages. In fact, \sedel

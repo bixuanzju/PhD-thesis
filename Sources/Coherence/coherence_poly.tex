@@ -11,7 +11,7 @@ polymorphism makes establishing coherence even challenging. We then review the
 parametric logical relation for System F~\citep{reynolds1983types} in
 \cref{sec:para:lr}, and talk about a failed attempt on a natural extension to
 deal with disjoint polymorphism in \cref{sec:failed:lr}. The technical
-difficulty is \textit{well-foundedness}, stemming from the interaction between
+difficulty is \emph{well-foundedness}, stemming from the interaction between
 impredicativity and disjointness. Finally in \cref{sec:succeed:lr}, we present
 our (predicative) logical relation that is specially crafted to prove coherence
 for \fnamee, and allude briefly to a potential solution to lift the
@@ -24,7 +24,7 @@ predicativity restriction.
 To have a better understanding at why adding BCD subtyping to disjoint
 polymorphism poses difficulties in terms of proving coherence, let us first
 understand how \fname retains coherence. In \fname it is of great importance to
-show that type system only produces \textit{well-formed} types. Recall the
+show that type system only produces \emph{well-formed} types. Recall the
 well-formedness rule for intersection types (\rref{wf-and}) in
 \cref{fig:lambdai}, which has a deep impact on the metatheory. For example, they
 need extra effort to prove a (weaker) substitution lemma, and also that
@@ -39,7 +39,7 @@ former, consider the judgment $[[ X ** nat |- X ** nat ]]$. Obviously $[[X]]$
 cannot be instantiated with $[[nat]]$, either. Generally speaking,
 substitution-related lemmas are all weakened to account for disjointness
 conditions in \fname. All of these contribute to the single most important
-theorem: subtyping of \textit{well-formed} types produces \textit{unique} coercions.
+theorem: subtyping of \emph{well-formed} types produces \emph{unique} coercions.
 
 However for \fnamee, the well-formedness of intersection types (\rref{swft-and})
 in \cref{fig:well-formedness:fi} does not demand a disjointness premise. This
@@ -74,16 +74,16 @@ Parametricity \`a la System F might give us some intuitions, as we will discuss 
   \label{fig:logical:f}
 \end{figure}
 
-System F provides a reasoning principle called \textit{relational
+System F provides a reasoning principle called \emph{relational
   parametricity}~\citep{reynolds1983types} for establishing when two expressions
 of the same type have identical behavior. The principle is expressed in terms of
 a logical relation. It is well-known that the logical relation of System F
-induces the \textit{abstraction theorem} (also called the \textit{parametricity
+induces the \emph{abstraction theorem} (also called the \emph{parametricity
   theorem}) of \citet{reynolds1983types}, which roughly says that every
 well-typed expression behaves the same as itself according to its type. The
 stringency of parametricity ensures that a polymorphic type has very few
 inhabitants, so few that we can deduce the behavior of a program by just looking
-at its type, which \citet{wadler1989theorems} christened \textit{theorems for free}.
+at its type, which \citet{wadler1989theorems} christened \emph{theorems for free}.
 
 Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
@@ -104,8 +104,8 @@ and type variables. Intuitively, for two values $[[v1]]$ and $[[v2]]$ of type
 $[[\X . T]]$ to behave the same, their instantiations must behave the same.
 However, because $[[v1]]$ and $[[v2]]$ do not manipulate the values of type
 $[[X]]$, it is not required that they should behave the same at the
-\textit{same} instantiation. Indeed, as we saw in \cref{thm:free}, we shall be
-able to consider \textit{separately} instances of $[[v1]]$ and $[[v2]]$ by types
+\emph{same} instantiation. Indeed, as we saw in \cref{thm:free}, we shall be
+able to consider \emph{separately} instances of $[[v1]]$ and $[[v2]]$ by types
 $[[T1]]$ and $[[T2]]$, and treat the type variable $[[X]]$ as standing for any
 relation $[[R]]$ between $[[T1]]$ and $[[T2]]$. Now it is apparent that the
 relational mapping $[[pq]]$ maps each type variable $[[X]]$ to a relation
@@ -201,7 +201,7 @@ It boils down to verifying the following:
 where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. If we
 replace $[[X]]$ with $[[nat]]$ then the above holds obviously.
 Unfortunately, the seemingly innocuous definition for type variables has a serious
-issue with impredicativity---in other words, the relation in question is \textit{not well-founded}.
+issue with impredicativity---in other words, the relation in question is \emph{not well-founded}.
 We could pick a bad instantiation to make the relation ``go
 into a loop''. For example, suppose $[[pq]]$ only contains a mapping from $[[X]]$ to
 $[[\X . \Y . Y]]$, we then have the following infinite chain of equational reasoning:
@@ -217,7 +217,7 @@ substitution is deliberately avoided for type abstractions.
 
 In light of the fact that substitution in the logical relation seems unavoidable
 in our setting, and that impredicativity conflicts with substitution, we turn
-to, for the lack of a better logical relation, \textit{predicativity}. The
+to, for the lack of a better logical relation, \emph{predicativity}. The
 restriction to predicativity, though reducing the expressiveness in theory, does
 not cost much in practice. Languages based on the Hindley–Milner type
 system~\citep{milner1978theory, hindley1969principal}, such as Haskell and ML,
@@ -251,7 +251,7 @@ Substitution with predicative instantiations does not prevent well-foundedness.
   (\cref{lemma:well-founded}).} We extend the canonicity relation in
 \cref{fig:logical} with a new clause (highlighted) for disjoint quantification.
 Notice that it does not quantify over arbitrary relations, which means that our
-logical relation \textit{does not} imply parametricity, and in particular,
+logical relation \emph{does not} imply parametricity, and in particular,
 \cref{thm:free} is impossible to prove using our logical relation. However, it
 suffices for our purposes to prove coherence. Also notice that we directly
 substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$ and $[[B2]]$. It can be shown

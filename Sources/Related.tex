@@ -19,7 +19,7 @@ rest of this chapter.
 In calculi that feature coercive subtyping, a semantics that interprets the
 subtyping judgment by introducing explicit coercions is typically defined on
 typing derivations rather than on typing judgments. A natural question that
-arises for such systems is whether the semantics is \textit{coherent}, i.e.,
+arises for such systems is whether the semantics is \emph{coherent}, i.e.,
 distinct typing derivations of the same typing judgment possess the same
 meaning. Since \citet{Reynolds_1991} proved the coherence of a calculus with
 intersection types, based on the denotational semantics for intersection types,
@@ -50,7 +50,7 @@ calculi, i.e., where the lambda abstractions are not type annotated. Also this
 line of reasoning cannot be used when the calculus has general recursion.
 \citet{biernacki2015logical} considered the coherence problem of coercion
 semantics. Their criterion for coherence of the translation is
-\textit{contextual equivalence} in the target calculus. They presented a
+\emph{contextual equivalence} in the target calculus. They presented a
 construction of logical relations for establishing so constructed coherence for
 coercion semantics, showing that this approach is applicable in a variety of
 calculi, including delimited continuations and control-effect subtyping.
@@ -210,11 +210,11 @@ Nevertheless, both systems need to express negative information about type
 variables: in their system type difference (e.g., \lstinline{a \ Int}) achieves
 this, whereas in \fnamee we use disjointness constraints (e.g., \lstinline{a * Int}).
 On a more theoretical note, \citet{castagna2014polymorphic} adopt the
-\textit{semantic} approach for defining the subtyping relation, where one first
+\emph{semantic} approach for defining the subtyping relation, where one first
 chooses a model, and an interpretation of types as subsets of the model, then
 the subtyping relation can be defined as the inclusion of denoted sets. The
-benefit of this approach, compared with the more used \textit{syntactic}
-approach, is that the subtyping relation is by definition \textit{complete}. In
+benefit of this approach, compared with the more used \emph{syntactic}
+approach, is that the subtyping relation is by definition \emph{complete}. In
 that regard, their subtyping relation thus completely subsumes BCD subtyping.
 
 
@@ -267,14 +267,14 @@ mechanism to enable type inference for a simple object-oriented language based
 on recursive records. These ideas were later adopted into type systems for
 extensible records~\citep{Harper:1991:RCB:99583.99603, leijen2005extensible,
   gaster1996polymorphic}. \citet{cardelli1989operations} define three primitive
-operations on records: \textit{selection}, \textit{restriction} and
-\textit{extension}. In our calculi, the merge operator can be regarded as a
+operations on records: \emph{selection}, \emph{restriction} and
+\emph{extension}. In our calculi, the merge operator can be regarded as a
 generalization of record extension/concatenation, and selection is also
 supported natively. In contrast to most record systems, restriction is not a
 primitive operation in our calculi, but can be simulated via subtyping.
 According to \citet{leijen2005extensible}, when it comes to extension, record
-calculi can be divided into those that support \textit{free} extension, and
-those that support \textit{strict} extension. The former allows duplicate labels
+calculi can be divided into those that support \emph{free} extension, and
+those that support \emph{strict} extension. The former allows duplicate labels
 to coexist, whereas the latter does not. As pointed out by
 \citet{alpuimdisjoint}, our calculi can be thought as a hybrid of these two
 approaches: we allow duplicate labels as long as their types are disjoint. This
@@ -479,7 +479,7 @@ dynamically-typed class-based language \textsc{Squeak/Smalltalk}. Since then
 various formalizations of traits in a Java-like (statically-typed) setting have
 been proposed~\citep{fisher2004typed,scharli2003traitsformal,chai_trait,
   JOT:issue_2006_05/article4}. In most of the above proposals, trait composition
-complements class-based inheritance. \sedel, in the spirit of \textit{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419},
+complements class-based inheritance. \sedel, in the spirit of \emph{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419},
 embraces traits as the sole mechanism for code reuse. The deviation from
 traditional class-based inheritance is not only because of its simplicity, but
 also because we need a very \emph{dynamic} form of inheritance. In comparison to
@@ -489,7 +489,7 @@ the traditional trait mode, traits in \sedel have the following differences:
   whereas traits in \sedel can be instantiated directly;
 \item traditional traits cannot take constructor parameters whereas ours can;
 \item the trait system in \sedel lacks a proper notion of inheritance
-  relationship, e.g., in the traditional trait model, if the \textit{same}
+  relationship, e.g., in the traditional trait model, if the \emph{same}
   method is obtained more than once via different paths, there is no conflict.
   This is not the case in \sedel;
 \item and finally traits in \sedel are first-class and support dynamic
@@ -548,8 +548,8 @@ solution to the expression problem. Although a simple Scala solution does exist
 without requiring family polymorphism (e.g., see \citet{wang2016expression}), Scala does not support nested composition:
 programmers need to manually compose all the classes from multiple extensions.
 Generally speaking, systems that support family polymorphism can be divided into
-two categories: those that support \textit{object families} and those that
-support \textit{class families}. The original object family approach of
+two categories: those that support \emph{object families} and those that
+support \emph{class families}. The original object family approach of
 \textsc{Beta }(e.g., virtual classes~\citep{Madsen_1989}) treats nested classes as
 attributes of objects of the family classes, whereas in class families,
 classes are nested in other classes. The former choice is considered more
@@ -563,8 +563,8 @@ Virtual classes~\citep{Madsen_1989} as introduced in
 \textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
 families. However, the virtual class mechanism in \textsc{Beta} is unsound.
 Path-dependent types are used to ensure type safety for virtual types and
-virtual classes in the calculus \textit{vc}~\citep{ErnstVirtual}. One distinctive
-difference from our calculi is that \textit{vc} follows the mixin-style by
+virtual classes in the calculus \emph{vc}~\citep{ErnstVirtual}. One distinctive
+difference from our calculi is that \emph{vc} follows the mixin-style by
 allowing the rightmost class to take precedence, whereas in \namee conflicts are
 detected statically and resolved explicitly.
 
@@ -578,8 +578,8 @@ and types are attributes of the family classes directly.
 %Nested inheritance
 %does not support generic types. As we discussed in \cref{sec:diss}, \namee can be
 %easily extended to incorporate parametric polymorphism.
-Jx supports \textit{nested inheritance}, a class family mechanism that allows
-nesting of arbitrary depth. J\& is a language that supports \textit{nested
+Jx supports \emph{nested inheritance}, a class family mechanism that allows
+nesting of arbitrary depth. J\& is a language that supports \emph{nested
   intersection}, building on top of Jx. Similar to our calculi, intersection
 types play an important role in J\&, which are used to compose packages/classes.
 However, J\& does not have a merge-like operator. When conflicts arise, prefix
@@ -605,7 +605,7 @@ But we expect to investigate those features in the future.
 
 \textsc{Self}~\citep{ungar1988self} is a dynamically-typed, prototype-based
 language with a simple and uniform object model. \textsc{Self}'s inheritance
-model is typical of what we call \textit{mutable inheritance}, because an
+model is typical of what we call \emph{mutable inheritance}, because an
 object's parent slot may be assigned new values at run time. Mutable inheritance
 is rather unstructured, and oftentimes access to any clashing methods will
 generate a ``messageAmbiguous'' error at run time. Although \sedel's dynamic
@@ -620,7 +620,7 @@ However, the type system in \sedel is more lenient in that two identically named
 methods with different signatures can coexist.
 Grace~\citep{DBLP:journals/jot/NobleBBHJ17, DBLP:conf/ecoop/0002HNB16} is an
 object-based language designed for education, where objects are created by
-\textit{object constructors}.
+\emph{object constructors}.
 % In that regard, Grace is similar to \namee in that
 % both are not class-based.
 Since Grace has mutable fields, it has to consider
@@ -641,7 +641,7 @@ based on what they call \emph{instantiable traits}.
 We believe that there is plenty to be learned from Grace's design of traits if
 we want to extend our trait model with features such as mutable state.
 \textsc{MetaFJig}~\citep{SERVETTO2014219} (an extension of \textsc{FJig})
-supports \textit{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907,
+supports \emph{dynamic trait replacement}~\citep{chai_trait, BETTINI2013907,
   Ducasse_2006}, a feature for changing the behavior of an object at run time by
 replacing one trait for another. More recently, a Java-like language called
 Familia~\citep{Zhang_2017} were proposed to combine subtyping polymorphism,
@@ -691,10 +691,10 @@ parametric polymorphism and family polymorphism.
 In parallel to OOP, the ML module system originally proposed by
 \citet{MacQueen_1984} also offers powerful support for flexible program
 construction. There is a large body of work on ML modules. Supporting
-\textit{data abstraction} is the primary focus of the module mechanism in ML. It
-ensures \textit{implementor-side} data abstraction by allowing the implementor
+\emph{data abstraction} is the primary focus of the module mechanism in ML. It
+ensures \emph{implementor-side} data abstraction by allowing the implementor
 of a module to ``hide'' specific implementation behind an abstract interface. It
-also supports a form of \textit{client-side} data abstraction where a client can
+also supports a form of \emph{client-side} data abstraction where a client can
 develop and compile a module independently from the modules on which it depends,
 via the ``functor'' mechanism. One major limitation of the traditional ML module
 systems is the lack of support for mutually recursive modules. There are several

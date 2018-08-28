@@ -96,7 +96,7 @@ rules such as those in \cref{fig:subtype_decl}.
 If we permit ourselves to consider only the syntactic aspects of expressions,
 then very few expressions can be considered equal. The syntactic view also conflicts
 with the intuition that ``the significance of an expression lies in its
-contribution to the \textit{outcome} of a computation''~\citep{Harper_2016}.
+contribution to the \emph{outcome} of a computation''~\citep{Harper_2016}.
 Drawing inspiration from a wide range of literature on contextual
 equivalence~\citep{morris1969lambda}, we want a context-based notion of
 coherence. It is helpful to consider several examples before presenting the
@@ -111,7 +111,7 @@ that these three \tname terms are ``equal'' in the sense that all reduce to the 
 
 \subsection{Expression Contexts and Contextual Equivalence.}
 
-To formalize the intuition, we turn to \textit{expression contexts}, as
+To formalize the intuition, we turn to \emph{expression contexts}, as
 introduced in \cref{sec:bg:lr}. The syntax of \tname contexts $[[cc]]$ can be found in
 \cref{fig:contexts}. The static semantics of \tname is extended to expression
 contexts by defining the typing judgment
@@ -132,7 +132,7 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
   \label{fig:contexts}
 \end{figure}
 
-We define a \textit{complete program} to mean any closed term of type $[[nat]]$.
+We define a \emph{complete program} to mean any closed term of type $[[nat]]$.
 Recall the definitions of Kleene equality and contextual equivalence in \cref{sec:bg:lr}.
 For ease of reference, we restate them below:
 
@@ -152,7 +152,7 @@ example.
   expression: $[[(\x . x) : nat & nat -> nat]]$. What can we do with this lambda
   abstraction? We can apply it to $[[1]]$ for example, which leads
   to two translations $[[  (\x . pp1 x) <1 , 1>  ]]$ and $[[ (\x . pp2 x) <1, 1>  ]]$. It is obvious that both reduce to the same numeral
-  $[[1]]$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ are definitely \textit{not} equal
+  $[[1]]$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ are definitely \emph{not} equal
   according to \cref{def:cxtx}, as one can find a context
   $[[ __ <1, 2> ]]$ in which the two terms reduce to two different
   numerals. The problem is that
@@ -240,7 +240,7 @@ The rest of the chapter is devoted to proving the validity of \cref{thm:coherenc
 
 As intuitive as \cref{def:cxtx2} may seem, it is generally very hard to prove
 contextual equivalence directly, since it involves quantification over
-\textit{all} possible contexts. Worse still, two kinds of contexts are involved
+\emph{all} possible contexts. Worse still, two kinds of contexts are involved
 in \cref{thm:coherence}, which makes reasoning even more tedious. The key to
 simplifying the reasoning is to exploit types using logical
 relations~\citep{tait, statman1985logical, plotkin1973lambda}.
@@ -296,7 +296,7 @@ contexts. A moment of thought leads us to the following observations:
 \paragraph{The canonicity relation.}
 
 In order to deal with the complexity of the elaboration semantics, we introduce
-in \cref{fig:logical} what we call the \textit{canonicity} relation to capture
+in \cref{fig:logical} what we call the \emph{canonicity} relation to capture
 ``canonical'' values based on the above observations.\footnote{The logical
   relation is slightly different form that in the original
   publication~\citep{bi_et_al:LIPIcs:2018:9227} in that it is indexed by
@@ -305,12 +305,12 @@ in \cref{fig:logical} what we call the \textit{canonicity} relation to capture
   consistency reasons as the logical relation for \fnamee must be indexed by
   source types.}
 The canonicity relation is a family of binary
-relations over \tname values that are \textit{heterogeneous}, i.e., indexed by
+relations over \tname values that are \emph{heterogeneous}, i.e., indexed by
 two \namee types. Heterogeneity allows us to relate values of different types,
 and in particular values of disjoint types. The canonicity relation seeks to combine equality
 checking from traditional (homogeneous) logical relations (\cref{ob:2}) with
 disjointness checking (\cref{ob:1}). It consists of two relations. The
-value relation $\valR{[[A]]}{[[B]]}$ relates \textit{closed} values, i.e.,
+value relation $\valR{[[A]]}{[[B]]}$ relates \emph{closed} values, i.e.,
 well-typed values with no free variables. Similarly, the expression relation
 $\eeR{[[A]]}{[[B]]}$ relates closed expressions. For brevity, we write
 $\valRR{[[A]]}$ to mean $\valR{[[A]]}{[[A]]}$, and $\eeRR{[[A]]}$ for
@@ -389,7 +389,7 @@ they evaluate to two values $[[v1]]$ and $[[v2]]$ that are related.
 \paragraph{Logical Equivalence.}
 
 The logical relation can be lifted to open terms in the usual way. First we give
-the semantic interpretation of typing contexts. A \textit{closing substitution}
+the semantic interpretation of typing contexts. A \emph{closing substitution}
 $[[ g ]]$ for the typing context $ [[GG]] = [[x1]] : [[A1]], \dots , [[xn]] :
 [[An]] $ is a finite function assigning closed values
 $[[ v1 ]] : [[ |A1|]], \dots , [[vn]] : [[ |An| ]]$ to $[[ x1 ]] , \dots , [[xn]]$, respectively.
@@ -446,7 +446,7 @@ We show only two compatibility lemmas that are specific to our logical relation:
 
 The ``Fundamental Property'' states that any well-typed expression is related to
 itself by the logical relation. In our elaboration setting, we rephrase it so
-that any two \tname terms elaborated from the \textit{same} \namee expression are related
+that any two \tname terms elaborated from the \emph{same} \namee expression are related
 by the logical relation. To prove it, we require \cref{thm:uniq}.
 
 \begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L50}{\leftpointright} Inference Uniqueness] \label{thm:uniq}

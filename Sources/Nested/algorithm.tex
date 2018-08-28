@@ -69,7 +69,7 @@ analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
 into the right side of $[[->]]$'s (\rref{A-arr}), and into the fields of records
 (\rref{A-rcd}) until it reaches one of the two base cases, $[[Top]]$ or $[[  B rigid ]]$.
 If the base case is $[[Top]]$, then the subtyping holds trivially
-(\rref{A-top}). For the other base case, we introduce the notion of \textit{rigid types}---those that do not have distributivity rules---captured
+(\rref{A-top}). For the other base case, we introduce the notion of \emph{rigid types}---those that do not have distributivity rules---captured
 by the predicate ``$ [[A rigid]] $'' over types, and defined as follows:
 
 \begin{definition}[Rigid types] \label{def:rigid}
@@ -315,13 +315,13 @@ With reflexivity and transitivity in position, we show the main theorem.
   \end{mathpar}
   where he concludes from the inductive
   hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (his rules 6a and 3).
-  However his rule 6a (our \rref{A-arrR}) only works for \textit{primitive types}, and is thus not applicable in this case. Instead we
+  However his rule 6a (our \rref{A-arrR}) only works for \emph{primitive types}, and is thus not applicable in this case. Instead we
   need a few technical lemmas to support the argument.
 \end{remark}
 
 \begin{remark}
   It is worth pointing out that the two coercions $[[c]]$ and $[[c']]$ in
-  \cref{thm:complete} are \textit{contextually equivalent} (the precise
+  \cref{thm:complete} are \emph{contextually equivalent} (the precise
   definition is found in \cref{chap:coherence:simple}), which follows from
   \cref{thm:soundness} and \cref{lemma:coercion_same}.
 \end{remark}
