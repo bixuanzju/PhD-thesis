@@ -47,13 +47,6 @@ $[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record projections $[[ee.l]
 \Cref{fig:subtype_decl} presents the subtyping relation. We ignore the
 \hll{highlighted} parts, and explain them later in \cref{sec:elaboration}.
 
-\begin{figure}[t]
-  \centering
-  \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd}
-  \caption{Declarative subtyping of \namee}
-  \label{fig:subtype_decl}
-\end{figure}
-
 \paragraph{BCD-style subtyping.}
 
 The subtyping relation is essentially BCD subtyping~\citep{Barendregt_1983},
@@ -67,6 +60,7 @@ the subtyping relations for function types and those for intersection types.
 Note that the other direction $[[A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)]]$
 and the contravariant distribution $[[ (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2 ]]$ are both
 derivable from the existing subtyping rules, as shown below:
+
   \begin{footnotesize}
 \begin{mathpar}
   \inferrule*[right=\rref*{S-and}]
@@ -80,10 +74,21 @@ derivable from the existing subtyping rules, as shown below:
   {  [[  (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2  ]]   }
 \end{mathpar}
   \end{footnotesize}
-\Rref{S-distRcd}, which is not found in the original BCD system,
+
+\noindent \Rref{S-distRcd}, which is not found in the original BCD system,
 prescribes the distribution of records over intersection types. The two
 distributivity rules are the key to enabling nested composition. \Rref*{S-topArr} is standard in BCD subtyping, and the new
 \rref{S-topRcd} plays a similar role for record types.
+
+\begin{figure}[t]
+  \centering
+  \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd}
+  \caption{Declarative subtyping of \namee}
+  \label{fig:subtype_decl}
+\end{figure}
+
+
+
 
 \paragraph{Non-algorithmic.}
 The subtyping relation in \cref{fig:subtype_decl} is clearly no more than a
