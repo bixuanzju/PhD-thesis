@@ -30,7 +30,7 @@ manipulation. A \namee program consists of a collection of definitions and
 declarations, separated by semicolon \lstinline{;}.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\paragraph{Adding Evaluation.}
+\paragraph{Adding evaluation.}
 We obtain \lstinline{IPrint & IEval}, which is the corresponding type for \lstinline{LangEval.Exp}, by
 intersecting \lstinline{IPrint} with \lstinline{IEval} where
 \lstinputlisting[linerange=29-29]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
@@ -42,7 +42,7 @@ functionality \lstinline{implEval} using the merge operator \lstinline{,,}.
 \lstinputlisting[linerange=45-53]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\paragraph{Adding Negation.}
+\paragraph{Adding negation.}
 Adding negation to \lstinline{Lang} works similarly.
 \lstinputlisting[linerange=57-65]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
 % \begin{Verbatim}[xleftmargin=10mm,fontsize=\relscale{.80}]
@@ -55,17 +55,17 @@ Adding negation to \lstinline{Lang} works similarly.
 % \end{Verbatim}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\paragraph{Putting Everything Together.}
+\paragraph{Putting everything together.}
 Finally, we can combine the two extensions and provide the missing
 implementation of evaluation for the negation case.
 \lstinputlisting[linerange=70-80]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
-We can test \lstinline{implLangNegEval} by creating an object \lstinline{e} of expression $-2 + 3$ that is able to print and evaluate at the same time.
+We can test \lstinline{implLangNegEval} by creating an object that represents $-2 + 3$, which is able to print and evaluate at the same time.
 \lstinputlisting[linerange=98-100]{./examples/overview.sl}% APPLY:linerange=TEST
 
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\paragraph{Multi-Field Records.}
+\paragraph{Multi-field records.}
 Recall that in \cref{bg:sec:intersection}, we show how to model multi-field records by
 single-field records. Thus \namee does not have multi-field record types built in.
 They are merely syntactic sugar for intersections of single-field record types.
@@ -80,7 +80,7 @@ implLang : Lang = { lit = ... } ,, { add = ... };
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Subtyping.}
-A big difference compared to \textsf{gbeta} is that many more \namee types are related through
+A distinctive difference compared to \textsf{gbeta} is that many more \namee types are related through
 subtyping. Indeed, \textsf{gbeta} is unnecessarily conservative~\citep{ernst_hoh}: none of the families is related
 through subtyping, nor is any of the class members of one family related to any
 of the class members in another family. For instance, \lstinline{LangEval} is
@@ -98,15 +98,16 @@ subtype of the family \lstinline{Lang}.
 
 However, \textsf{gbeta} and \namee agree that \lstinline{LangEval} is not a subtype of
 \lstinline{Lang}. The \namee-side of this may seem contradictory at first, as we
-have seen that intersection types arise from the use of the merge operator, and
-we have created an implementation for \lstinline{LangEval} with
-\lstinline{implLang ,, implEval} where \lstinline{implLang : Lang}. That
+have seen that intersection types arise from the use of the merge operator.
+We have created an implementation for \lstinline{LangEval} with
+\lstinline{implLang ,, implEval} where \lstinline{implLang} has type \lstinline{Lang}, which
 suggests that \lstinline{LangEval} is a subtype of \lstinline{Lang}.
 Yet, there is a flaw in our reasoning:
 strictly speaking, \lstinline{implLang ,, implEval} is not of
 type \lstinline{LangEval} but instead of type \lstinline{Lang & EvalExt}, where
 \lstinline{EvalExt} is the type of \lstinline{implEval}:
 \lstinputlisting[linerange=41-41]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
+
 Nevertheless, the definition of \lstinline{implLangEval} is valid because
 \lstinline{Lang & EvalExt} is a subtype of \lstinline{LangEval}.
 Indeed, if we consider for the sake of simplicity only the \lstinline{lit}
@@ -123,7 +124,7 @@ is unsound. For the same reason \lstinline{Lang} is not a subtype of \lstinline{
 A summary of the various relationships between the language components is shown
 in \cref{fig:diagram}. Admittedly, the figure looks quite complex because our
 calculus has a structural type system (as often more foundational calculi
-do) where more types are related through subtyping, whereas mainstream OO
+do) where more types are related through subtyping, whereas mainstream object-oriented
 languages have nominal type systems.
 
 
@@ -136,7 +137,7 @@ languages have nominal type systems.
 \end{figure}
 
 
-\paragraph{Stand-Alone Extensions.}
+\paragraph{Stand-alone extensions.}
 Unlike in \textsf{gbeta} and other class-based inheritance systems, in \namee
 the extension \lstinline{implEval} is not tied to \lstinline{LangEval}. In that
 sense, it resembles trait and mixin systems that can apply the same extension

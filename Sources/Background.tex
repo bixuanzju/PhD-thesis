@@ -4,18 +4,20 @@
 \label{chap:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The chapter sets the stage for the three typed calculi we are going to present
+This chapter sets the stage for the three typed calculi we are going to present
 in later chapters by expanding upon some relevant topics from the introduction.
 In \cref{bg:sec:intersection} we start with the traditional formulation of
 intersection types, followed by an introduction of the merge operator and the
-issue of coherence. We then review the \oname calculus~\citep{oliveira2016disjoint}, the first calculus
-featuring disjoint intersection types, and briefly discuss how disjointness
-achieves coherence. In \cref{sec:ernst} we introduce family polymorphism by
-means of presenting \citeauthor{ernst2004expression}'s elegant solution~\citep{ernst2004expression} to the
-expression problem. In \cref{sec:bg:mixin:trait} we review the concepts of
-mixins and traits, their drawbacks and strengths. \Cref{sec:bg:object} reviews
-the denotational model of inheritance. Finally in \cref{sec:bg:lr} we give a
-simple introduction to program equivalence and logical relations.
+issue of coherence. We then review the \oname
+calculus~\citep{oliveira2016disjoint}, the first calculus featuring disjoint
+intersection types, and briefly discuss how disjointness achieves coherence. In
+\cref{sec:bg:mixin:trait} we review the concepts of mixins and traits, their
+drawbacks and strengths. In \cref{sec:ernst} we introduce family polymorphism by
+means of presenting \citeauthor{ernst2004expression}'s elegant
+solution~\citep{ernst2004expression} to the expression problem.
+\Cref{sec:bg:object} reviews the denotational model of inheritance. Finally in
+\cref{sec:bg:lr} we give a simple introduction to program equivalence and
+logical relations.
 
 
 
@@ -26,7 +28,7 @@ simple introduction to program equivalence and logical relations.
 
 Intersection types in the pure lambda calculus were developed in the late
 1970s by \citet{coppoInter}, and independently by \citet{pottinger1980type}. The
-original motivation to introduce intersection types was to devise a
+original motivation for intersection types was to devise a
 type-assignment system \`a la Curry~\citep{CurryFeys} that satisfies the
 following two properties:
 \begin{enumerate}
@@ -45,9 +47,9 @@ view, $[[A & B]]$ is a subtype of $[[A]]$, as well as of $[[B]]$; from the
 order-theoretic point of view, $[[A & B]]$ is a greatest lower bound of $[[A]]$
 and $[[B]]$.\footnote{Note that we say ``a'' rather than ``the'' because
   greatest lower bounds are not unique, but they are all ``equal'' to $[[A & B]]$
-  in a sense that will be made precise in \cref{sec:category}.} In the literature of OOP,
-intersection types are long known to model \emph{multiple
-  inheritance}~\citep{compagnoni1996higher}. The intuition is that if we read the
+  in a sense that will be made precise in \cref{sec:category}.} In the literature of object-oriented programming,
+intersection types are long known to model \emph{multiple inheritance}~\citep{compagnoni1996higher}.
+The intuition is that if we read the
 subtyping $[[A <: B]]$ as ``$[[A]]$ is a subclass of $[[B]]$'', then $[[A & B]]$
 is a ``name'' of a class with all the common properties of $[[A]]$ and $[[B]]$. Of
 course, this analog is not exact, in the same sense that inheritance is not
@@ -55,7 +57,7 @@ subtyping~\citep{cook1989inheritance}. But it is intuitively appealing, and as
 we will see, can be made more precise in a sufficiently enriched calculus based
 on intersection types. More pragmatically, many programming languages, such as
 Scala, TypeScript, Flow and Ceylon adopt some form of intersection types. For example, in Scala
-we can express a class \lstinline{A} implements \emph{both} \lstinline{B} and \lstinline{C} by the following declaration
+we can express a class \lstinline{A} implements \emph{both} \lstinline{B} and \lstinline{C} by the following declaration:
 \begin{lstlisting}[language=Scala]
   class A extends B with C
 \end{lstlisting}
@@ -67,7 +69,7 @@ where \lstinline[language=Scala]{B with C} denotes an intersection type between
 % $[[A & B]]$ is a name of a class with all the common properties of $[[A]]$ and
 % $[[B]]$.
 
-\paragraph{Intersection Subtyping.}
+\paragraph{Intersection subtyping.}
 
 
 \newcommand{\rulehl}[1]{}
@@ -83,7 +85,7 @@ Two nice consequences follow:
 \item The top type $[[Top]]$ can be regarded as the 0-ary form of intersection. It is
   a maximum element of the subtyping ordering, i.e., $[[A <: Top]]$ for every
   type $[[A]]$.
-\item Multiple-field record types can be thought of as an intersection of
+\item Multi-field record types can be thought of as an intersection of
   single-field record types. Thus, instead of
   \[
     [[ {  l1 : A1, ... , ln : An   }       ]]
@@ -92,12 +94,12 @@ Two nice consequences follow:
   \[
     [[ { l1 : A1} & ... & {ln : An} ]]
   \]
-  Note that the width and depth subtyping rules of records become a
+  Note that the width and depth subtyping of records become a
   consequence of intersection subtyping.
 \end{enumerate}
 
 
-\paragraph{Distributivity Rules.}
+\paragraph{Distributivity rules.}
 
 Two additional subtyping rules are usually found in the literature of
 intersection types (e.g., see \citet{reynolds1988preliminary, Barendregt_1983}).
@@ -113,10 +115,10 @@ records, allowing intersections to distribute over record labels:
     \drule{S-distRcd}
 \]
 These two rules, though intuitively reasonable, will have a strong effect on both
-syntactic and semantics properties of the language. For example, \rref{S-distArr} implies that
+syntactic and semantic properties of the language. For example, \rref{S-distArr} implies that
 $[[ Top <: A -> Top ]]$ for any $[[A]]$; and \rref{S-distRcd} implies that $[[  Top <: {l : Top} ]]$.
 
-\paragraph{Intersection Typing.}
+\paragraph{Intersection typing.}
 
 The introduction rule of intersection types says that a term $[[ee]]$ can be
 given type $[[A & B]]$ if it inhabits both $[[A]]$ and $[[B]]$:
@@ -125,7 +127,7 @@ given type $[[A & B]]$ if it inhabits both $[[A]]$ and $[[B]]$:
 \]
 The corresponding elimination rule allows us to derive, given a derivation of
 $[[ ee : A1 & A2 ]]$, that $[[ee : A1]]$ and $ [[ee : A2]]$. But this already
-follows from intersection subtyping and the subsumption rules; so we need not
+follows from intersection subtyping and the subsumption rule; so we need not
 to add the elimination rule explicitly to the calculus.
 
 
@@ -133,7 +135,7 @@ to add the elimination rule explicitly to the calculus.
 
 
 Intersection types were first incorporated into a practical programming language
-named Forsythe by \cite{reynolds1988preliminary, reynolds1997design}, who used
+``Forsythe'' by \cite{reynolds1988preliminary, reynolds1997design}, who used
 them to encode features such as operator overloading by means of a
 ``merge'' operator $p_1 ,, p_2$---``a construction for intersecting or
 `merging' meanings''~\citep[p. 24]{reynolds1997design}.
@@ -150,7 +152,7 @@ we can write
 \[
   [[ { l1 = ee1} ,, ... ,, {ln = een} ]]
 \]
-which plays nicely with the syntactic sugar of multiple-field record types as
+which plays nicely with the syntactic sugar of multi-field record types as
 an intersection of single-field record types.
 
 Recently, \citet{dunfield2014elaborating} developed a method for
@@ -182,15 +184,15 @@ then the type $[[ (nat -> nat) & nat ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
   { [[  ee1 ,, ee2 : (nat -> nat) & nat   ]] }
 \]
 
-\citeauthor{dunfield2014elaborating} then showed how to give a semantics to a
+\citeauthor{dunfield2014elaborating} showed how to give a semantics to a
 calculus with unrestricted intersection types by a type-directed elaboration to
 a simply-typed lambda calculus extended with products. For example, the
 expression $[[ (\x . x) ,, 1 ]]$ elaborates to a pair $[[ <\x. x , 1> ]]$. As
 usual, his system does not have explicit source-level intersection eliminations;
-elaboration puts all needed projections into the target program. For example,
+elaboration puts all needed projections into the target program. For instance,
 the same expression $[[ (\x . x) ,, 1 ]]$, when checked against $[[nat]]$, elaborates to $[[ pp2 <\x. x , 1> ]]$. The
 type-directed elaboration is elegant, type-safe, and serves as the original
-foundation for type systems with disjoint intersection types.
+foundation for calculi with disjoint intersection types.
 
 
 \subsection{(In)Coherence}
@@ -217,7 +219,7 @@ type system is extended''. Another simple idea would be to require all types in
 an intersection be \emph{distinct}. This works fine for simple types such as
 $[[nat]]$ and $[[bool]]$: $[[nat & bool]]$ is clearly a good intersection. But
 it is less clear as to what constituents a ``good'' (read unambiguous) intersection type in
-general. A few moments of thoughts lead to the following principle: good
+general. A moment of thoughts leads to the following principle: good
 intersection types are defined in terms of the subtyping relation. After all, it
 is the subtyping relation that defines the behavior of intersection types. A
 first attempt would be to require that two types $[[A]]$ and $[[B]]$ can form an
@@ -234,7 +236,7 @@ ambiguous ($[[1]]$ or $[[2]]$).
 
 When moving to richer types, it is even less clear how to deal with for example,
 intersections of higher-order functions. Consider the following intersection
-types (again take from \citet{oliveira2016disjoint}):
+types (again takes from \citet{oliveira2016disjoint}):
 \begin{enumerate}
 \item $[[ (nat -> nat) & (string -> string)   ]]$
 \item $[[ (string -> nat) & (string -> string)   ]]$
@@ -285,7 +287,7 @@ system without $[[Top]]$, this can be ensured by the following specification:
 The disjointness judgment appears in the well-formedness of intersection types
 (\rref{wf-and}) and the typing rule of merges (\rref{Ti-merge}).
 \Rref{wf-and}---the well-formedness of intersections---enforces that only
-disjoint types can form an intersection types: so $[[nat & bool]]$ is
+disjoint types can form an intersection type: so $[[nat & bool]]$ is
 well-formed but $[[nat & nat]]$ is not. \Rref{Ti-merge}---the typing rule for
 merges---prevents problematic merges such as $[[1 ,, 2]]$ (because $[[nat]]$ and
 $[[nat]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, true]]$.
@@ -311,9 +313,9 @@ problem, the notion of \emph{top-like types} was introduced, which are those
 types that behave like $[[Top]]$ (such as $[[Top & Top]], [[Top & Top & Top]],
 \dots$), and captured by a predicate $ \rceil \cdot \lceil $. An important
 observation is that any coercions for top-like types are unique, \emph{even if
-  multiple derivations exist}. The meta-function $\llbracket [[A]] \rrbracket $
-used in \rref{Si-andL,Si-andR} define coercions for top-like types.
-With top-types,
+  multiple derivations exist}. The meta-function $\llbracket \cdot \rrbracket $
+used in \rref{Si-andL,Si-andR} defines coercions for top-like types.
+With top-like types,
 \cref{def:disjoint_spec} is refined to account for $[[Top]]$, as shown in
 \cref{def:disjoint_spec2}.
 
@@ -324,7 +326,7 @@ With top-types,
 
 However, a careful analysis of \cref{def:disjoint_spec2} shows that intersection
 types such as $[[ Top & Top ]]$ and $[[Top & nat]]$ are not well-formed because
-their constitute types are not disjoint. This is one of the limitations in
+their constituent types are not disjoint. This is one of the limitations in
 \oname, since ``a merge of two $[[Top]]$-types will always return the same value
 regardless of which component of the merge is chosen''~\citep{alpuimdisjoint}.
 In other words, $[[Top]]$ is always disjoint to every other type. This
@@ -345,7 +347,7 @@ reader to their paper for a detailed account of \oname.
 
 
 Disjoint polymorphism, first proposed by \citet{alpuimdisjoint} in the \fname
-calculus, is a more advanced mechanism to combine disjointness intersection
+calculus, is a more advanced mechanism to combine disjoint intersection
 types with parametric polymorphism. The combination allows objects with
 statically unknown types to be composed without conflicts. To understand the
 usefulness of disjointness polymorphism, consider the following program (adapted
@@ -358,7 +360,7 @@ However, if we were to allow such definition, we could easily create an example 
 \begin{lstlisting}
 (mergeBad Int 1) : Int -- 1 or 2
 \end{lstlisting}
-This is essentially the same problem of allowing $\mer{1}{2}$, which as we
+This is essentially the same problem of allowing $[[1 ,, 2]]$, which as we
 discussed will cause ambiguity. For \oname, we
 know the concrete type for each variable and thus disjointness checking can help
 avoid this problematic expression. However, with parametric polymorphism, a
@@ -446,8 +448,8 @@ treated as a function from classes to classes. Thus the same mixin can be used t
 extend a variety of parent classes with the same set of features.
 \Cref{fig:mixin} shows a typical class hierarchy when using mixins. In the mixin
 model, a class can inherit from another class by means of single inheritance as
-usual. Apart from that, it can also have several mixins applied \emph{one at a
-  time}. Let us take a close look at \cref{fig:mixin}. Both mixins
+usual. Apart from that, it can also have several mixins applied \emph{one at a time}.
+Let us take a close look at \cref{fig:mixin}. Both mixins
 \lstinline{M1} and \lstinline{M2} contain a method \lstinline{m}, a question
 arises as to which one is inherited in the class \lstinline{C}. The answer is
 \lstinline{m} from the mixin \lstinline{M2}. This is because mixin composition
@@ -458,7 +460,7 @@ obtain the method \lstinline{m} from the mixin \lstinline{M1} by switching the
 order of \lstinline{M1} and \lstinline{M2}, no suitable order of composition
 exists to obtain \lstinline{m} from the superclass \lstinline{A}.
 
-In respondence to the problems in the then compositional models,
+In response to the problems in the then compositional models,
 \citet{scharli2003traits} proposed a mechanism called \emph{traits} as a
 better way to foster code reuse in object-oriented programs. A trait is
 essentially \emph{a set of pure methods}, divorced from any class hierarchy. A
@@ -468,7 +470,7 @@ behavior. \Cref{fig:trait} shows a simple trait \lstinline{TCircle}, which
 provides two methods \lstinline{hash} and \lstinline{area}, and requires a
 method \lstinline{radius}. A class is then constructed by inheriting from a
 superclass and incorporating a collection of traits, as shown in
-\cref{fig:trait:conflict}. Also notice that there is a conflicting method
+\cref{fig:trait:conflict}. Notice that there is a conflicting method
 \lstinline{hash} that is provided by both \lstinline{TCircle} and
 \lstinline{TDraw}. This is where the trait model is very different from the
 mixin model. Unlike mixins that force a linear order in their composition,
@@ -498,7 +500,7 @@ improved by traits. We refer to their paper for a detailed account of traits.
 % %-------------------------------------------------------------------------------
 % \subsection{Motivation: Family Polymorphism}
 
-\emph{Family polymorphism} is the ability to simultaneously refine a family of
+Family polymorphism~\citep{Ernst_2001} is the ability to simultaneously refine a family of
 related classes through inheritance. This is motivated by a need to not only
 refine individual classes, but also to preserve and refine their mutual
 relationships. \citet{Nystrom_2004} call this \emph{scalable extensibility}:
@@ -513,7 +515,7 @@ inherits (and can override) all the class members, as well as the relationships
 within the family between the class members. However,
 the members of the new family do not become subtypes of those in the parent family.
 
-\paragraph{The expression problem}
+\paragraph{The expression problem.}
 
 \citet{ernst2004expression} illustrates the benefits of nested inheritance for modularity
 and extensibility with one of the most elegant and concise solutions to the
@@ -532,7 +534,7 @@ The expression problem is concerned with two-dimensional extensions:
 \end{inparaenum}
 Depending on the programming style used in the code, it is usually
 straightforward to add either new variants or new operations. For example, in an
-OO language such as Java where an abstract datatype is represented by means of
+object-oriented language such as Java where an abstract datatype is represented by means of
 classes whose methods are the operations on the datatype, it is easy to extend
 the set of variants by writing another class. On the other hand, in a functional
 language such as Haskell where the abstract datatype is modeled by means of
@@ -542,14 +544,14 @@ In either case, it is much harder to perform both extensions in the
 \emph{same} language.
 
 
-\paragraph{The expression problem, Scandinavian Style.}
+\paragraph{The expression problem, Scandinavian style.}
 
 Nowadays we know many solutions to the expression problem (for example, see
 \citet{oliveira2012extensibility, wang2016expression, oliveira09modular,
   swierstra_2008, Zenger-Odersky2005}, to cite a few). Among all of them,
 \citeauthor{ernst2004expression}'s solution is perhaps one of the most elegant
-solutions out there. \citeauthor{ernst2004expression} solves the Expression
-Problem in the \textsf{gbeta} language~\citep{ernst2000gbeta}, which he adorns with a Java-like syntax for
+solutions out there. \citeauthor{ernst2004expression} solves the expression
+problem in the \textsf{gbeta} language~\citep{ernst2000gbeta}, which he adorns with a Java-like syntax for
 presentation purposes, for a small abstract syntax tree (AST) example. His
 starting point is the code shown in \cref{fig:lang}. The outer class
 \lstinline{Lang} contains a family of related AST classes: the common superclass
@@ -623,7 +625,7 @@ class LangNeg extends Lang {
     \caption{The expression problem, Scandinavian Style}
 \end{figure}
 
-\paragraph{Adding a New Operation.}
+\paragraph{Adding a new operation.}
 
 One way to extend the family is to add an additional evaluation operation, as
 shown in the top half of \cref{fig:extend}. This is done by subclassing the
@@ -638,7 +640,7 @@ method. Note that the inheritance between, e.g., \lstinline{Lang.Exp} and
 \lstinline{left} and \lstinline{right} fields in \lstinline{Lang.Add} is
 automatically refined to \lstinline{LangEval.Exp} in \lstinline{LangEval.Add}.
 
-\paragraph{Adding a New Case.}
+\paragraph{Adding a new case.}
 
 A second dimension to extend the family is to add a case for negation, shown in
 the bottom half of \cref{fig:extend}. This is similarly achieved by subclassing
@@ -648,7 +650,7 @@ declared to be a subclass of \lstinline{Exp}, which means that the extension to
 \lstinline{Exp} will also be added to \lstinline{Neg}.
 
 
-\paragraph{Combining Both Extensions.}
+\paragraph{Combining both extensions.}
 
 Finally, the two extensions are naturally combined by means of multiple
 inheritance, closing the diamond. (\citeauthor{ernst2004expression} uses the
@@ -670,7 +672,7 @@ case, evaluation of negated expressions.
 
 \label{sec:bg:object}
 
-\citet{cook1989denotational} developed a method to model inheritance in the
+\citet{cook1989denotational} developed a method for modeling inheritance in the
 presence of self-reference, based on the fixed-point semantics of recursive
 definitions. In their model, the interpretation of inheritance is taken as a
 mechanism of \emph{incremental programming}, where new programs are developed
@@ -710,10 +712,10 @@ A point $(3, 4)$ is created by taking a fixed point of \lstinline{PointGen(3, 4)
 \begin{lstlisting}[language=simple]
 p = letrec this = PointGen(3, 4, this) in this
 \end{lstlisting}
-and method invocation on objects is simply field accessing on records:
+and method invocation on objects is simply record projections:
 \lstinline{p.dist()} evaluates to $5$ as expected.
 
-\paragraph{Modeling Inheritance.}
+\paragraph{Modeling inheritance.}
 
 Inheritance allows a new class to be defined by adding or replacing methods in
 an existing class. We illustrate this by defining another class \lstinline{Circle}:
@@ -776,11 +778,11 @@ one implementation is swapped by another, as long as they all adhere to the same
 interface.
 
 Program equivalence is generally defined in terms of \emph{contextual
-  equivalence}. The intuition is that two program are equivalent if we
+  equivalence}. The intuition is that two programs are equivalent if we
 \emph{cannot} tell them apart in any context. More formally, we introduce the
 notion of \emph{expression contexts}. An expression context $[[cc]]$ is a term
 with a single hole $[[__]]$ (possibly under some binders) in it. Take the
-simply-typed lambda calculus (STLC) for example, the syntax of expression context is as
+simply-typed lambda calculus (STLC) for example, the syntax of expression contexts is as
 follows:
 \[
 \text{Contexts} \quad [[cc]] \Coloneqq [[__]] \mid [[\x . cc]] \mid [[cc e]] \mid [[e cc]]
@@ -797,10 +799,10 @@ is extended to expression contexts by defining the typing judgment
 where $([[gg |- T]])$ indicates the type of the hole. This judgment is
 inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 
-\paragraph{Contextual Equivalence.}
+\paragraph{Contextual equivalence.}
 
 We define a \emph{complete program} to mean any closed term of type $[[nat]]$.
-The following two definitions capture the notion of \emph{contextual equivalence}.
+The following two definitions capture the notion of \emph{contextual equivalence}:
 
 \begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L467}{\leftpointright} Kleene Equality]{definition}{kleene}
   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
@@ -820,7 +822,7 @@ experiment on $[[e1]]$ is the same as the outcome on $[[e2]]$
 (i.e., $\kleq{[[cc{e1}]]}{[[cc{e2}]]}$), which is an equivalence relation.
 
 
-\paragraph{Logical Relations.}
+\paragraph{Logical relations.}
 
 Unfortunately, directly proving contextual equivalence is very difficult in
 general (if not possible at all), since it involves quantification over
@@ -845,7 +847,7 @@ functions applied to the arguments are related expressions at the range type
 $[[T2]]$.
 
 
-\paragraph{Logical and Contextual Equivalence Coincide.}
+\paragraph{Logical and contextual equivalence coincide.}
 
 The usefulness of the logical relation lies in the fact that it characterize
 \emph{exactly} contextual equivalence---i.e., logical and contextual equivalence

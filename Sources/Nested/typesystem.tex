@@ -6,8 +6,8 @@
 \label{sec:typesystem}
 
 In this section we formally present the syntax and semantics of \namee. Compared
-to prior work~\citep{alpuimdisjoint, oliveira2016disjoint}, \namee has a more
-powerful subtyping relation. The new subtyping relation is inspired by BCD-style
+to previous work~\citep{alpuimdisjoint, oliveira2016disjoint}, \namee has a more
+powerful subtyping relation. The new subtyping relation is inspired by BCD
 subtyping, but with two noteworthy differences: subtyping is coercive (in
 contrast to traditional formulations of BCD); and it is extended with records.
 We also have a new target language with explicit coercions inspired by the coercion calculus of
@@ -23,13 +23,12 @@ For brevity of the meta-theoretic study, we do not consider primitive operations
 on primitive types. They can be easily added to the language, and our prototype
 implementation is indeed equipped with common primitive types and their
 operations. Metavariables $[[A]], [[B]], [[C]]$ range over types. Types include
-primitive types (e.g., $[[nat]], [[string]]$, denoted by metavariable
-$[[pri]]$), a top type $[[Top]]$, function types $[[A -> B]]$, intersection
+primitive types $[[pri]]$ (e.g., $[[nat]], [[string]]$), a top type $[[Top]]$, function types $[[A -> B]]$, intersection
 types $[[A & B]]$, and singleton record types $[[ {l : A} ]]$. Metavariable
 $[[ee]]$ ranges over expressions. Expressions include variables $[[x]]$,
 literals $[[i]]$, a canonical top value $[[Top]]$, lambda abstractions $[[\x .
 ee]]$, applications $[[ee1 ee2]]$, merges $[[ee1 ,, ee2]]$, annotated terms
-$[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record selections $[[ee.l]]$.
+$[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record projections $[[ee.l]]$.
 
 \begin{figure}[t]
   \centering
@@ -51,14 +50,14 @@ $[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record selections $[[ee.l]]
 \begin{figure}[t]
   \centering
   \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd}
-  \caption{Declarative subtyping of \fname}
+  \caption{Declarative subtyping of \namee}
   \label{fig:subtype_decl}
 \end{figure}
 
-\paragraph{BCD-Style Subtyping.}
+\paragraph{BCD-style subtyping.}
 
-The subtyping rules are essentially those of the BCD type
-system~\citep{Barendregt_1983}, extended with subtyping for singleton records.
+The subtyping relation is essentially BCD subtyping~\citep{Barendregt_1983},
+extended with subtyping for singleton records.
 \Rref{S-top,S-rcd} for top types and record types are straightforward.
 \Rref{S-arr} for function subtyping is standard. \Rref{S-andL,S-andR,S-and} for
 intersection types axiomatize that $[[A & B]]$ is the greatest lower bound of
@@ -83,10 +82,10 @@ derivable from the existing subtyping rules, as shown below:
   \end{footnotesize}
 \Rref{S-distRcd}, which is not found in the original BCD system,
 prescribes the distribution of records over intersection types. The two
-distributivity rules are the key to enable nested composition. \Rref*{S-topArr} is standard in BCD subtyping, and the new
+distributivity rules are the key to enabling nested composition. \Rref*{S-topArr} is standard in BCD subtyping, and the new
 \rref{S-topRcd} plays a similar role for record types.
 
-\paragraph{Non-Algorithmic.}
+\paragraph{Non-algorithmic.}
 The subtyping relation in \cref{fig:subtype_decl} is clearly no more than a
 specification due to the two subtyping axioms: \rref{S-refl,S-trans}. A sound
 and complete algorithmic version is discussed in \cref{sec:alg}. Nevertheless,
@@ -94,22 +93,16 @@ for the sake of establishing coherence, the declarative subtyping relation is
 sufficient.
 
 
-\paragraph{Properties of Subtyping.}
+\paragraph{Properties of subtyping.}
 The subtyping relation is vacuously \emph{reflexive} and \emph{transitive}.
 
-
-
-\subsection{Typing of \namee}
-
-The bidirectional type system for \namee is shown in \cref{fig:type_system}.
-Again we ignore the \hll{highlighted} parts for now.
 
 \begin{figure}[t]
   \centering
   \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
   \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
-  \label{fig:type_system}
   \caption{Bidirectional type system of \namee}
+  \label{fig:type:namee}
 \end{figure}
 
 % no gray anymore after this point
@@ -124,9 +117,15 @@ Again we ignore the \hll{highlighted} parts for now.
 \end{figure}
 
 
-\paragraph{Typing Rules and Disjointness.}
 
-The typing rules of \namee are mostly ported from \oname in \cref{fig:lambdai}.
+\subsection{Typing of \namee}
+
+The bidirectional type system for \namee is shown in \cref{fig:type:namee}.
+We ignore the \hll{highlighted} parts for now.
+
+\paragraph{Typing rules and disjointness.}
+
+The typing rules of \namee in \cref{fig:type:namee} are mostly ported from \oname in \cref{fig:lambdai}.
 As with traditional bidirectional type systems, we employ two modes: the
 inference mode ($[[=>]]$) and the checking mode ($[[<=]]$). The inference
 judgment $[[GG |- ee => A]]$ says that we can synthesize a type $[[A]]$ for
@@ -173,7 +172,7 @@ calculus extended with products and coercions. The syntax of \tname is shown in
 pointing out that we use the erasure semantics to model record labels, i.e.,
 labels are erased during elaboration. Note that this is different from the
 original publication~\citep{bi_et_al:LIPIcs:2018:9227} where we keep labels in
-the target. Both work fine in \namee, but discarding records would make the
+the target. Both work fine in \namee, but discarding records makes the
 target calculus a bit simpler.
 % It is equally fine to % keep labels in the target.
 The notation $| \cdot |$ is also overloaded for
@@ -194,10 +193,10 @@ translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 \subsection{Explicit Coercions and Coercive Subtyping}
 
 The separate syntactic category for \emph{explicit coercions} is a distinctive difference
-from the prior works (in which they are regular terms). Our coercions are based
+from the prior work (in which they are regular terms). Our coercions are based
 on those of \citet{Henglein_1994}, and we add more forms due to our extra
 subtyping rules.
-Metavariable $[[c]]$ ranges over coercions.\footnote{Coercions $[[pp1]]$ and $[[pp2]]$ subsume the first and second projection of pairs, respectively.}
+Metavariable $[[c]]$ ranges over coercions.%\footnote{Coercions $[[pp1]]$ and $[[pp2]]$ subsume the first and second projection of pairs, respectively.}
 As a cognitive aid, we can mentally ``desugar'' coercions to
 regular terms, which might help understand the dynamic semantics of coercions. The correspondence
 between coercions and terms is shown in \cref{tab:coercion}.
@@ -206,8 +205,8 @@ of a term from one type to another. Because of the addition of coercions, the
 grammar contains explicit coercion applications $[[c e]]$ as a term, and various
 unsaturated coercion applications as values. The use of explicit coercions is useful for the new semantic
 proof of coherence based on logical relations.
-The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that the
-subtyping derivation of $[[A <: B]]$ produces a coercion $[[c]]$ that converts
+The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that
+subtyping $[[A <: B]]$ produces a coercion $[[c]]$ that converts
 terms of type $[[ |A| ]]$ to type $[[ |B| ]]$. Each subtyping rule has its own
 specific form of coercion.
 
@@ -226,12 +225,6 @@ $[[  topArr   ]]$         & $[[ \x . \ y . unit    ]]$  &  & \\ \hline
   \caption{Correspondence between coercions and terms}
   \label{tab:coercion}
 \end{table}
-
-
-%The meaning of the different forms of coercions becomes clear in \tom{Section
-%  TODO} \jeremy{it's a paragraph, how to refer it?} which explains coercive
-%subtyping.\bruno{Why not discuss the form of coercions directly here?}
-
 
 \subsection{Typing of \tname}
 
@@ -287,7 +280,7 @@ Now we can show that \tname is type safe:
 
 
 We are now in a position to explain the elaboration judgments $[[GG |- ee => A ~~> e]]$
-and $[[GG |- ee <= A ~~> e]]$ in \cref{fig:type_system}. The only
+and $[[GG |- ee <= A ~~> e]]$ in \cref{fig:type:namee}. The only
 interesting rule is \rref{T-sub}, which applies the coercion $[[c]]$ produced by
 subtyping to the target term $[[e]]$ to form a coercion application
 $[[c e]]$. All the other rules do straightforward translations between
@@ -330,7 +323,7 @@ In this section we identify major differences from \oname (cf.
 elegant system. The differences may seem superficial, but they have a strong
 effect on coherence, our major topic in \cref{chap:coherence:simple}.
 
-\paragraph{No Ordinary Types.}
+\paragraph{No ordinary types.}
 
 Apart from the extra subtyping rules, there is an important difference from the
 \oname subtyping relation. The subtyping relation of \oname employs an auxiliary
@@ -353,12 +346,12 @@ subtype of both $[[A1]]$ and $[[A2]]$, instead of the more general form $[[ A1 &
 %   example? }
 
 
-\paragraph{No Top-Like Types.}
+\paragraph{No top-like types.}
 
 Another notable difference from the coercive subtyping of \oname is that,
-because of their syntactic proof method, they have special treatment for
+because of the syntactic proof method, they have a special treatment for
 coercions of \emph{top-like types} (see the coercion parts in
-\rref{Si-andL,Si-andR} in \cref{fig:lambdai}). Top types will introduce
+\rref{Si-andL,Si-andR} in \cref{fig:lambdai}). Top-like types will introduce
 non-determinism during subtyping, thus would potentially endanger coherence.
 However, as \citet{oliveira2016disjoint} observed, any coercions for top-like
 types are unique, even if multiple derivations exist. For \namee, as with
@@ -367,7 +360,7 @@ handled like all other types.
 % thanks to the adoption of a more powerful proof method (cf. \cref{chap:coherence:simple}).
 
 
-\paragraph{No Well-Formedness Judgment.}
+\paragraph{No well-formedness judgment.}
 
 A key difference from the type system of \oname is the complete omission of the
 well-formedness judgment $[[GG |- A]]$, which appears in \rref{Ti-abs} (our
@@ -375,7 +368,7 @@ well-formedness judgment $[[GG |- A]]$, which appears in \rref{Ti-abs} (our
 judgment is to enforce that all intersection types are disjoint. However, as
 \cref{chap:coherence:simple} will explain, the syntactic restriction is
 unnecessary for coherence, and merely complicates the type system. Thus \namee
-discards this well-formedness judgment altogether in favour of a simpler design
+discards this well-formedness judgment altogether in favor of a simpler design
 that is still coherent. As a consequence, \namee already subsumes \oname even
 without adding BCD subtyping: an expression such as $1 : [[nat & nat]]$ is
 accepted in \namee but rejected in \oname. This simplification is based on an

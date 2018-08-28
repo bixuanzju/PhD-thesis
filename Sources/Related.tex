@@ -37,7 +37,7 @@ normalization steps is justified by an equational theory in System F.
 with explicit coercions and showed that any derivations of the same judgment are
 translated to terms that are normalizable to a unique normal form. Following the
 same approach, \citet{SCHWINGHAMMER_2008} proved the coherence of coercion
-translation from Moggi's computational lambda calculus~\citep{Moggi_1991} with
+translation from \citeauthor{Moggi_1991}'s computational lambda calculus~\citep{Moggi_1991} with
 subtyping.
 
 
@@ -56,7 +56,7 @@ coercion semantics, showing that this approach is applicable in a variety of
 calculi, including delimited continuations and control-effect subtyping.
 
 As far as we know, our work is the first to use logical relations to show the
-coherence for intersection types and the merge operator. The BCD subtyping in
+coherence for intersection types and the merge operator. BCD subtyping in
 our setting poses a non-trivial complication over
 \citeauthor{biernacki2015logical}'s simple structural subtyping. Indeed, because
 any two coercions between given types are behaviorally equivalent in the target
@@ -149,7 +149,7 @@ types and a merge operator. However, his calculus lacks coherence. The limitatio
 was addressed by \citet{oliveira2016disjoint}, who introduced disjointness to
 ensure coherence.
 
-Compared to prior work on disjoint intersection types, the approach in this thesis simplifies type systems with
+Compared to prior work on disjoint intersection types, the approach in this thesis simplifies calculi with
 disjoint intersection types by removing several restrictions. Furthermore, our
 calculi adopt a more powerful subtyping relation based on BCD subtyping, which
 in turn requires the use of a more sophisticated proof method for proving
@@ -161,7 +161,7 @@ denotational model of inheritance~\citep{cook1989denotational}.
 
 
 \section{Intersection Types and Polymorphism}
-
+\label{chap:poly:bcd}
 
 \citet{pierce1991programming} proposed $\mathsf{F}_{\land}$, a calculus
 combining intersection types and bounded quantification. $\mathsf{F}_{\land}$
@@ -220,7 +220,7 @@ that regard, their subtyping relation thus completely subsumes BCD subtyping.
 
 The combination of intersection types, a merge operator and parametric
 polymorphism, while achieving coherence was first studied in the \fname
-calculus~\citep{alpuimdisjoint}, which servers as a foundation for our \fnamee
+calculus~\citep{alpuimdisjoint}, which serves as a foundation for our \fnamee
 calculus. Compared to \fname, the essential novelty is a BCD subtyping, and a
 more powerful proof method for proving coherence. As far as we know, we are the
 first to study the metatheory of the combination of BCD subtyping, parametric
@@ -230,7 +230,7 @@ polymorphism and the merge operator.
 
 \section{Intersection Types and Multiple Inheritance}
 
-\citet{compagnoni1996higher} proposed a $\lambda$-calculus
+\citet{compagnoni1996higher} proposed a lambda calculus
 $\mathsf{F}_{\land}^{\omega}$, an extension of System $\mathsf{F}^{\omega}$ with
 intersection types to model multiple inheritance. $\mathsf{F}_{\land}^{\omega}$
 allows arbitrary finite intersections, where all the type members must have the
@@ -278,7 +278,7 @@ those that support \emph{strict} extension. The former allows duplicate labels
 to coexist, whereas the latter does not. As pointed out by
 \citet{alpuimdisjoint}, our calculi can be thought as a hybrid of these two
 approaches: we allow duplicate labels as long as their types are disjoint. This
-is more flexible then strict extension, but less expressive than
+is more flexible than strict extension, but less expressive than
 \citeauthor{leijen2005extensible}'s system where it also accepts duplicate
 fields even when their types are overlapping. We refer to \citet{alpuimdisjoint}
 for a detailed account of encodings of polymorphic extensible records using
@@ -291,7 +291,7 @@ applications to extensible designs (such as defining Object Algebra combinators
 in \cref{chap:case_study}). In this sense, we believe disjoint polymorphism is
 more expressive than row polymorphism. It would be interesting to rigorously
 study the relationship between disjoint polymorphism and row polymorphism,
-whether the former subsumes the latter. We have some further discussion about
+whether the former subsumes the latter. We have some further discussions about
 this point in \cref{sec:future:row}.
 
 
@@ -313,14 +313,15 @@ from \cref{sec:trait:overview} implemented in Typed Racket has type:
      (Class ([toggle-mode : (-> Void)] [on-key : (String -> Void)] | r)))
 \end{lstlisting}
 As with our use of disjoint polymorphism, row polymorphism can express
-constraints on the presence or absence of members. Unlike disjoint polymorphism,
-row polymorphism prohibits forgetting class members. While this is reasonable in
-the setting of mixins, in some cases, a function taking one class as an argument
-can return another class that has fewer methods. For example, in \sedel we can write:
-\lstinputlisting[linerange=100-100]{./examples/overview2.sl}% APPLY:linerange=FOO
-where \lstinline{foo} drops \lstinline{bar} from its argument trait
-\lstinline{t}, which is impossible to express using row polymorphism. As a
-consequence, Typed Racket ends up with two subtyping mechanisms: one for
+constraints on the presence or absence of members.
+% Unlike disjoint polymorphism,
+% row polymorphism prohibits forgetting class members. While this is reasonable in
+% the setting of mixins, in some cases, a function taking one class as an argument
+% can return another class that has fewer methods. For example, in \sedel we can write:
+% \lstinputlisting[linerange=100-100]{./examples/overview2.sl}% APPLY:linerange=FOO
+% where \lstinline{foo} drops \lstinline{bar} from its argument trait
+% \lstinline{t}, which is impossible to express using row polymorphism.
+As a consequence, Typed Racket ends up with two subtyping mechanisms: one for
 first-class classes (via row polymorphism) and the other for objects (via normal
 width subtyping). In contrast, \sedel uses only one mechanism---i.e., disjoint
 polymorphism---to deal with both.
@@ -337,7 +338,7 @@ significantly more complex than ours due to the use of dependent function types
 and dependent sum types. As they admitted, they omit inheritance in their
 formalization.
 
-Racket also supports a \emph{dynamically-typed model} of first-class
+Racket also supports a \emph{dynamically typed model} of first-class
 traits~\citep{DBLP:conf/aplas/FlattFF06}. However, unlike Racket's first-class
 classes and mixins, there is no type system supporting the use of first-class
 traits. A key difficulty is \emph{statically} detecting conflicts. In the mixin
@@ -346,106 +347,6 @@ order of composition. As far as we know, \sedel is the first design for typed
 first-class traits.
 
 
-% There are multiple flavours of inheritance. To avoid confusion, since the same
-% terminology is often used in the literature to mean different things, we use the
-% following 3 terms when comparing related work with ours.
-
-% \begin{itemize}
-% \item{{\bf Static inheritance:}} Static inheritance refers to what the typical
-%   model of inheritance in class-based languages. The inheritance model is said
-%   to be static because when using class extension, the extended classes are
-%   statically known at compile-time.
-% \item{{\bf Mutable Inheritance:}} Prototype-based languages allow another model
-%   of inheritance, which we call \emph{mutable inheritance}. In this inheritance
-%   model, self-references are mutable and changeable at any point.
-% \item{{\bf Dynamic Inheritance:}} Dynamic inheritance is a less well-known model
-%   which stands in between static and mutable inheritance. Unlike the static
-%   inheritance model, with dynamic inheritance objects can inherit from other
-%   objects which are not statically known. However, unlike mutable inheritance,
-%   the self-reference is not mutable and cannot be arbitrarily changed at
-%   run-time.
-% \end{itemize}
-
-% \Cref{fig:comparision} shows the comparison between \namee and various
-% similar languages that follow \cite{cook1989inheritance}'s ``Inheritance is not
-% Subtyping'' (i.e. the flexible model), as we will explain below.
-
-% \begin{figure}[t]
-%   \centering
-%   \begin{tabular}{|l||c|c|c|c|}
-%     \hline
-%     & \bf{Statically typed} & \bf{Polymorphism} & \bf{Meta-theory} & \bf{Inheritance}  \\
-%     \hline
-%     \namee & \cmark & \cmark & \cmark & Dynamic \\
-%     \hline
-%     \textsc{Self} & \xmark & \xmark & \xmark & Mutable \\
-%     \hline
-%     Cecil & \cmark & \cmark & \xmark & Static \\
-%     \hline
-%     Cook's Modula-3 & \cmark & \xmark & \xmark & Static \\
-%     \hline
-%     IFJ & \cmark & \xmark & \cmark & Dynamic \\
-%     \hline
-%     \textsc{Darwin} & \cmark & \xmark & \xmark & Dynamic \\
-%     \hline
-%   \end{tabular}
-%   \caption{Comparison between \namee and various similar languages that
-%   adopt the \emph{flexible model}.}
-%   \label{fig:comparision}
-% \end{figure}
-
-
-
-% \paragraph{Dynamically-typed Languages with Delegation Mechanism}
-
-% \begin{itemize}
-% \item Clojure Protocols
-%   % http://www.ibm.com/developerworks/library/j-clojure-protocols/
-% \item Ruby mixin
-% \item JS mixin
-% \end{itemize}
-
-% They are all dynamically typed.
-
-
-% \paragraph{Delegation-based languages}
-
-% \cite{lieberman1986using} is the first to promote the use of prototypes and
-% delegation as the mechanism to code sharing between objects. Since then many
-% researchers have studied the mechanisms of
-% delegation~\citep{wegner1987dimensions,malenfant1995semantic,goldberg1989smalltalk}.
-
-% There is not much work on statically-typed, delegation-based languages.
-% \cite{kniesel1999type} provides a good overview of problems when combining
-% delegation with a static type discipline. Cecil~\citep{chambers1992object,
-%   chambers1993cecil} is a prototype-based language, where delegation is the
-% mechanism for method call and code reuse. Cecil supports a polymorphic static
-% type system, although no metatheory of any kind is given. Its type system is
-% able to detect statically when a message might be ambiguously defined as a
-% result of multiple inheritance or multiple dispatching. However, one major
-% omission of Cecil, which is also one of the interesting features of \namee, is
-% dynamic inheritance. There are other
-% works~\citep{fisher1995delegation,anderson2003can} on delegation in a
-% statically-typed setting, but none of them provide means (such as the merge
-% construct, disjointness constraints, etc.) that are needed for extensible
-% designs.
-
-% \cite{cook1989inheritance} were the first to propose a typed model of
-% inheritance where subtyping and inheritance are two separate concepts. In
-% particular, they introduce the notion of \emph{type inheritance} and show that
-% inherited objects have inherited types, not subtypes. An interesting aspect of
-% their calculus is the \textbf{with} construct, used to join two records. This is
-% somewhat similar to our merge construct. However two major differences are worth
-% pointing out: 1) the \textbf{with} construct operates only on records; and 2) it
-% is a biased operator, favoring values from its right argument. This biased
-% operator is good for modelling mixins, but not traits. The
-% \textbf{with} construct seems to be unable to merge two arbitrary (and possible
-% polymorphic) values, since this seems to require something like
-% \emph{row polymorphism}~\citep{wand1987complete,wand1989type}, which is not available in their language.
-% The \emph{onion} construct in the Big Bang
-% language~\citep{palmer2015building,menon2012big} has a similar bias problem -- it is a
-% left-associative operator which gives rightmost precedence to one
-% implementation when conflicts exist.
 
 \section{Mixin-Based Inheritance}
 
@@ -461,7 +362,7 @@ framework~\citep{bracha1992programming} formalized mixin composition, along with
 a rich trait algebra including merge, restrict, select, project, overriding and
 rename operators. \citet{LAGORIO201286} proposed \textsc{FJig} that reformulates
 Jigsaw constructs in a Java-like setting. \citet{DBLP:conf/oopsla/AllenBC03}
-described how to add first-class generic types---including mixins---to OO
+described how to add first-class generic types---including mixins---to object-oriented
 languages with nominal typing. \citet{Corradi_2012} described an extension of
 \textsc{FJig} that integrates modular composition and nesting of Java-like
 classes. It features a set of composition operators that allow to manipulate
@@ -475,8 +376,8 @@ their systems cannot express dynamic inheritance.
 Traits were originally proposed by \citet{scharli2003traits}, and later formalized by ~\cite{Ducasse_2006} as a mechanism
 for fine-grained code reuse to overcome many limitations of class-based
 inheritance. The original proposal of traits were implemented in the
-dynamically-typed class-based language \textsc{Squeak/Smalltalk}. Since then
-various formalizations of traits in a Java-like (statically-typed) setting have
+dynamically typed class-based language \textsc{Squeak/Smalltalk}. Since then
+various formalizations of traits in a Java-like (statically typed) setting have
 been proposed~\citep{fisher2004typed,scharli2003traitsformal,chai_trait,
   JOT:issue_2006_05/article4}. In most of the above proposals, trait composition
 complements class-based inheritance. \sedel, in the spirit of \emph{pure trait-based programming languages}~\citep{BETTINI2013521, BETTINI2017419},
@@ -498,47 +399,6 @@ the traditional trait mode, traits in \sedel have the following differences:
 
 
 
-% \cite{flatt1998classes} proposed MIXEDJAVA, an extension to a subset of
-% sequential Java called CLASSICJAVA with mixins. In their model, mixins
-% completely subsume the role of classes (classes are mixins that do not inherit
-% any services). One interesting aspect in their system is that two identically
-% named methods are allowed to coexist, and are resolved at run-time with run-time
-% context information provided by the current \emph{view} of an object. In
-% comparison, conflicts in \namee are detected statically, and resolved by the
-% programmers. Like \namee, their model also enforces the distinction between
-% implementation inheritance and subtyping.
-
-% \cite{bono1999core} develop an imperative class-based calculus that provides a
-% formal model for both single and mixin inheritance. Objects are represented by
-% records and produced by instantiating classes. In their calculus, the class
-% construct is extensible but not subtypable, while objects are subtypable but not
-% extensible. Like \namee, their system has a clean separation between subtyping
-% and inheritance. Also, their type system does not have polymorphism.
-
-% \cite{ancona2003jam} extends the Java language to support mixins, called Jam.
-% Since Jam is an upward-compatible extension of Java 1.0, it is inheritantly a
-% covariant mode. Unlike MIXEDJAVA, mixins can be only instantiated on classes,
-% and there is no notion of mixin composition.
-
-
-% Incomplete Featherweight Java (IFJ), proposed by \cite{bettini2008type}, is a
-% conservative extension of Featherweight Java with incomplete objects. Besides
-% standard classes, programmers can also define incomplete classes, whose
-% instances are incomplete objects. Incomplete objects can be composed (by object
-% composition) with complete objects, yielding new complete objects at run-time,
-% while ensuring statically that the composition is type-safe. Incomplete objects
-% are quite flexible, and support dynamic inheritance. However, object composition
-% in IFJ is quite restrictive, compared to \namee, in that it can only compose an
-% incomplete object with a complete object. In that regard, and also because IFJ's
-% type system is not polymorphic, IFJ is unable to encode composition operators of
-% Object Algebras. \cite{kniesel1999type} showed that type-safe integration of
-% delegation with subtyping into a class-based model is possible, resulting in the
-% \textsc{Darwin} model. In \textsc{Darwin}, the type of the parent object must be
-% a declared class and this limits the flexibility of dynamic composition.
-% Ostermann's delegation layers~\citep{ostermann2002dynamically} use delegation for
-% doing dynamic composition in a system with virtual classes. This is in contrast
-% with most other approaches that use class-based composition, but closer to the
-% dynamic composition that we use in \namee.
 
 \section{Family Polymorphism}
 
@@ -557,18 +417,18 @@ expressive~\citep{ErnstVirtual}, but requires a complex type system usually
 involving dependent types. The object and class family approaches have even been
 combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
 
-\paragraph{Object Families.}
+\paragraph{Object families.}
 
 Virtual classes~\citep{Madsen_1989} as introduced in
 \textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
 families. However, the virtual class mechanism in \textsc{Beta} is unsound.
 Path-dependent types are used to ensure type safety for virtual types and
-virtual classes in the calculus \emph{vc}~\citep{ErnstVirtual}. One distinctive
-difference from our calculi is that \emph{vc} follows the mixin-style by
+virtual classes in the calculus \textsc{vc}~\citep{ErnstVirtual}. One distinctive
+difference from our calculi is that \textsc{vc} follows the mixin-style by
 allowing the rightmost class to take precedence, whereas in \namee conflicts are
 detected statically and resolved explicitly.
 
-\paragraph{Class Families.}
+\paragraph{Class families.}
 
 Concord~\citep{jolly2004simple}, Jx~\citep{Nystrom_2004} and
 J\&~\citep{Nystrom:2006} follow the class family approach, where nested classes
@@ -592,7 +452,7 @@ Compared with those systems, which usually focus on getting a relatively complex
 Java-like language with family polymorphism, our work on \namee focuses on a
 minimal calculus that supports nested composition. We have shown that a calculus
 with the merge operator and a variant of BCD subtyping captures the essence of nested
-composition. Moreover \namee enables new insights on the subtyping relations of
+composition. Moreover, \namee enables new insights on the subtyping relations of
 families. Our goal in this thesis is not to support full family polymorphism
 which, besides nested composition, also requires dealing with other features
 such as self types~\citep{bruce95thistype,saito09matching} and mutable state.
@@ -603,7 +463,7 @@ But we expect to investigate those features in the future.
 
 \section{Languages with More Advanced Forms of Inheritance}
 
-\textsc{Self}~\citep{ungar1988self} is a dynamically-typed, prototype-based
+\textsc{Self}~\citep{ungar1988self} is a dynamically typed, prototype-based
 language with a simple and uniform object model. \textsc{Self}'s inheritance
 model is typical of what we call \emph{mutable inheritance}, because an
 object's parent slot may be assigned new values at run time. Mutable inheritance
@@ -648,43 +508,6 @@ Familia~\citep{Zhang_2017} were proposed to combine subtyping polymorphism,
 parametric polymorphism and family polymorphism.
 
 
-% There are many other class-based OO languages that are equipped with more
-% advanced forms of
-% inheritance~\citep{meyer1987eiffel,buchi2000generic,ostermann2001object}. Most of
-% them are heavyweight and are specific to classes. \namee is object-centered, more
-% lightweight, and is dedicated to express extensible designs in a simpler way.
-
-
-
-% \cite{kniesel1999type} is the first to show that type-safe integration of
-% delegation with subtyping into a class-based model is possible, resulting in the
-% DARWIN model. In the DARWIN model, the type of the parent object must be a
-% declared class and this limits the flexibility of dynamic composition, whereas
-% in \namee, the merge operator can merge/compose any objects. Another difference
-% with \namee lies in the conflict resolution, where DARWIN relies on method
-% overriding with the assumption that the author of the overriding method is aware
-% of the effect.
-
-% Generic wrappers~\citep{buchi2000generic} supports aggregating objects at
-% run-time. In their model, once a ``wrappee'' is assigned to a ``wrapper'', the
-% wrappee is fixed. GBETA~\citep{ernst2000gbeta} has some dynamic features that are
-% related to delegation. Like Generic wrappers, parents in GBETA are fixed at
-% run-time.
-
-% \cite{ostermann2001object} proposed compound references (CR) as a abstraction
-% for object references, which provides explicit linguistic support for combining
-% different composition properties on-demand. The model is statically typed, and
-% decouples subtype declaration from implementation reuse.
-
-
-% \cite{ostermann2002dynamically} proposed delegation layers as an approach to
-% decompose a collaboration into layers and compose these layers dynamically at
-% run-time. This combines and generalizes delegation and virtual classes concepts.
-
-% \cite{ostermann2008nominal} compared the nominal and structural subtyping
-% mechanisms. They argue nominal subtyping gives more safety guarantee, whereas
-% structural subtyping is more flexible from a component-based perspective. The
-% type system of \namee chooses structural subtyping.
 
 \section{Module Systems}
 
@@ -692,7 +515,7 @@ In parallel to OOP, the ML module system originally proposed by
 \citet{MacQueen_1984} also offers powerful support for flexible program
 construction. There is a large body of work on ML modules. Supporting
 \emph{data abstraction} is the primary focus of the module mechanism in ML. It
-ensures \emph{implementor-side} data abstraction by allowing the implementor
+ensures \emph{implementer-side} data abstraction by allowing the implementer
 of a module to ``hide'' specific implementation behind an abstract interface. It
 also supports a form of \emph{client-side} data abstraction where a client can
 develop and compile a module independently from the modules on which it depends,
@@ -703,7 +526,7 @@ modules~\citep{Crary_1999,Rossberg_2013, Russo_2001}. Mixin modules in the
 Jigsaw framework~\citep{Bracha92modularitymeets} provides a suite of operators
 for adapting and combining modules. The MixML module
 system~\citep{Rossberg_2013} incorporates mixin module composition, while
-retaining the full expressive powerful of ML modules. There are also work on
+retaining the full expressive powerful of ML modules. There is also work on
 elaborating the semantics of module systems into a smaller, well-established
 internal language. \citet{ROSSBERG_2014} showed that plain System F is
 sufficient as an internal language for conventional ML modules.
@@ -715,9 +538,6 @@ for data abstraction adds considerable complexity, which is not needed in
 \sedel. \sedel is focused on OOP and supports, among others, method overriding,
 self references and dynamic dispatching, which (generally speaking) are all
 missing features in module systems.
-% One similarity between MixML and SEDEL is that
-% both use an elaboration approach into a System F-like calculus.
-
 
 
 

@@ -80,13 +80,13 @@ object of type $[[AA]]$. Finally $[[E1 ^ E2]]$ is the forwarding expression,
 where $[[E1]]$ should be some trait.
 
 \paragraph{Abbreviations.}
-For ease of programming, multiple-field record types are merely syntactic sugar
+For ease of programming, multi-field record types are merely syntactic sugar
 for intersections of single-field record types. Similarly, multi-field record
 expressions are syntactic sugar for merges of single-field records.
 
 \subsection{Semantics}
 
-\paragraph{Subtyping and Well-formedness.}
+\paragraph{Subtyping and well-formedness.}
 
 \Cref{fig:trait:typesystem} shows the well-formedness and subtyping rules for
 \sedel. The well-formedness rule for trait types (\rref*{WF-trait}) is straightforward. The
@@ -142,7 +142,7 @@ with function types.
   \label{fig:type}
 \end{figure}
 
-\paragraph{Typing Traits.}
+\paragraph{Typing traits.}
 
 The typing rules of trait related constructs are shown in \cref{fig:type}.
 The reader is advised to ignore the translation parts ($[[~~>]] [[ee]]$) for now.
@@ -171,7 +171,7 @@ $[[E2]]$ must satisfy the requirement of $[[E1]]$.
 
 
 
-\paragraph{Treatments of Super, Exclusion and Override.}
+\paragraph{Treatments of super, exclusion and override.}
 
 We also include a variant (\rref{ST-traitSuper}) of \rref{ST-trait} where it
 implicitly assumes a $[[super]]$ variable pointing to the $\ottkw{inherits}$
@@ -239,7 +239,7 @@ disjoint intersection types and disjoint polymorphism. Our work shows that
 disjoint intersection types blend in quite nicely with \citeauthor{cook1989denotational}'s
 denotational model of inheritance.
 
-\paragraph{Flattening Property.}
+\paragraph{Flattening property.}
 
 In the literature of traits~\citep{Ducasse_2006, scharli2003traits, JOT:issue_2006_05/article4},
 a distinguished feature of traits is the \emph{flattening property}, which says that a (non-overridden) method in a

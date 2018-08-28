@@ -17,7 +17,7 @@ definition, and the connection between logical equivalence and coherence.
 %-------------------------------------------------------------------------------
 \section{The Intuition}
 
-\paragraph{Duplication is Harmless.}
+\paragraph{Duplication is harmless.}
 
 While requiring that all intersections are disjoint as in \oname is sufficient
 to guarantee coherence, it is not necessary. In fact, such requirement
@@ -66,9 +66,9 @@ semantics. In doing so, we remove the brittleness of the previous syntactic
 method to prove coherence. This new proof method has several advantages.
 Firstly, with the new proof method, several restrictions that were enforced by
 \oname to enable the syntactic proof are removed. For example, the
-aforementioned \emph{top-like types} are not necessary; top-like types are
+aforementioned top-like types are not necessary; top-like types are
 handled like all other types. Secondly, the new proof method is more powerful
-because it is based on observational equivalence rather than syntactic equality;
+because it is based on contextual equivalence rather than syntactic equality;
 it is more robust as the type system is extended. Finally, the removal of the
 ad-hoc side-conditions makes adding new extensions, such as support for
 BCD-style subtyping, easier. A complicating factor is that not one, but two
@@ -98,9 +98,9 @@ then very few expressions can be considered equal. The syntactic view also confl
 with the intuition that ``the significance of an expression lies in its
 contribution to the \emph{outcome} of a computation''~\citep{Harper_2016}.
 Drawing inspiration from a wide range of literature on contextual
-equivalence~\citep{morris1969lambda}, we want a context-based notion of
+equivalence~\citep{morris1969lambda}, we seek a context-based notion of
 coherence. It is helpful to consider several examples before presenting the
-formal definition of our new semantically-founded notion of coherence.
+formal definition of our new semantically founded notion of coherence.
 
 \begin{example} \label{eg:1}
 The same \namee expression $1$ can be typed $[[nat]]$ in many ways: for instance, by \rref{T-lit}; by
@@ -119,7 +119,7 @@ contexts by defining the typing judgment
   [[cc : (gg |- T) ~> (gg' |- T')]]
 \]
 where $([[gg |- T]])$ indicates the type of the hole. This judgment is
-inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
+inductively defined such that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 
 \begin{figure}[t]
   \centering
@@ -183,7 +183,7 @@ We write $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$ to abbreviate the above 4
 different forms. Take $[[CC : (GG => A) ~> (GG' => A') ~~> cc]]$ for example
 (whose typing rules are shown in \cref{fig:ctyp}), it reads that if
 $[[GG |- ee => A]]$, then $[[GG' |- CC{ee} => A']]$. The judgment also generates
-a \tname context $[[cc]]$ so that $[[cc : (|GG| |- |A|) ~> (|GG'| |- |A'|)]]$
+a well-typed \tname context $[[cc]]$ such that $[[cc : (|GG| |- |A|) ~> (|GG'| |- |A'|)]]$
 holds by construction. The full typing rules appear in \cref{appendix:lambdai}. Now we are
 ready to refine \cref{def:cxtx}'s contextual equivalence to take into
 consideration both \namee and \tname contexts.
@@ -245,7 +245,7 @@ in \cref{thm:coherence}, which makes reasoning even more tedious. The key to
 simplifying the reasoning is to exploit types using logical
 relations~\citep{tait, statman1985logical, plotkin1973lambda}.
 
-\paragraph{In Search of a Logical Relation.}
+\paragraph{In search of a logical relation.}
 
 \begin{figure}
   \centering
@@ -275,11 +275,11 @@ contexts. A moment of thought leads us to the following observations:
 
 \begin{observation}[Disjoint values are unambiguous] \label{ob:1}
 
-  The relation should relate values originating from disjoint intersection
-  types. Those values are essentially translated from merges, and since
-  \rref{T-merge} ensures disjointness, they are unambiguous. For example, two
-  values of types $[[nat]]$ and $[[ { l : nat}]]$ can always be distinguished by
-  any source context.
+  The relation should relate values whose types are disjoint. Those values are
+  essentially translated from merges, and since \rref{T-merge} ensures
+  disjointness, they are unambiguous. For example, one value of type $[[nat]]$
+  and the other of $[[ { l : nat}]]$ can be unambiguously distinguished by any
+  source context.
 \end{observation}
 
 \begin{observation}[Duplication is unambiguous] \label{ob:2}
@@ -307,7 +307,7 @@ in \cref{fig:logical} what we call the \emph{canonicity} relation to capture
 The canonicity relation is a family of binary
 relations over \tname values that are \emph{heterogeneous}, i.e., indexed by
 two \namee types. Heterogeneity allows us to relate values of different types,
-and in particular values of disjoint types. The canonicity relation seeks to combine equality
+and in particular values whose types are disjoint. The canonicity relation seeks to combine equality
 checking from traditional (homogeneous) logical relations (\cref{ob:2}) with
 disjointness checking (\cref{ob:1}). It consists of two relations. The
 value relation $\valR{[[A]]}{[[B]]}$ relates \emph{closed} values, i.e.,
@@ -386,7 +386,7 @@ they evaluate to two values $[[v1]]$ and $[[v2]]$ that are related.
 
 
 
-\paragraph{Logical Equivalence.}
+\paragraph{Logical equivalence.}
 
 The logical relation can be lifted to open terms in the usual way. First we give
 the semantic interpretation of typing contexts. A \emph{closing substitution}
@@ -423,7 +423,7 @@ Firstly we need the compatibility lemmas, which state that logical equivalence i
 preserved by language constructs. Most of them are standard and are thus omitted.
 We show only two compatibility lemmas that are specific to our logical relation:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L30}{\leftpointright} Coercion Compatibility]   \label{lemma:co-compa}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L30}{\leftpointright} Coercion compatibility]   \label{lemma:co-compa}
   Suppose that $[[A1 <: A2 ~~> c]]$,
   \begin{itemize}
   \item If $[[GG |- e1 == e2 : A1 ; A0]]$ then $[[GG |- c e1 == e2 : A2 ; A0]]$.
@@ -449,11 +449,11 @@ itself by the logical relation. In our elaboration setting, we rephrase it so
 that any two \tname terms elaborated from the \emph{same} \namee expression are related
 by the logical relation. To prove it, we require \cref{thm:uniq}.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L50}{\leftpointright} Inference Uniqueness] \label{thm:uniq}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L50}{\leftpointright} Inference uniqueness] \label{thm:uniq}
   If $[[GG |- ee => A1]]$ and $[[GG |- ee => A2]]$, then $[[A1]] \equiv_\alpha [[A2]]$.
 \end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental Property]  \label{thm:co-log} We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental property]  \label{thm:co-log} We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$ and $[[GG |- ee => A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
   \item If $[[GG |- ee <= A ~~> e]]$ and $[[GG |- ee <= A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
@@ -497,7 +497,7 @@ equivalence---that is, if two programs are logically related then they are
 contextually equivalent---which justifies the use of logical relation for
 proving contextual equivalence of programs.
 
-\begin{theorem}[Soundness w.r.t. Contextual Equivalence] \label{thm:log-sound}
+\begin{theorem}[Soundness w.r.t. contextual equivalence] \label{thm:log-sound}
   Given $[[GG |- e1 == e2 : A]]$, we have
   \begin{itemize}
   \item If $[[ GG |- ee1 => A ~~> e1]]$ and $[[ GG |- ee2 => A ~~> e2]]$ then

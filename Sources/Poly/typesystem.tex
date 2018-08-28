@@ -94,7 +94,7 @@ shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
   \label{fig:subtype_decl:fi}
 \end{figure}
 
-\paragraph{Declarative Subtyping.}
+\paragraph{Declarative subtyping of \fnamee.}
 
 
 % \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
@@ -104,7 +104,7 @@ We naturally extend the subtyping rules of \namee with only one rule
 \rref*{S-forall}, highlighted in \cref{fig:subtype_decl:fi}, which specifies the
 subtyping relation between two universal quantifiers. In \rref{S-forall}, a
 universal quantifier is covariant in its body, and contravariant in its
-disjointness constraint. We also need a new coercion $[[ \ c ]]$ to expression the
+disjointness constraints. We also need a new coercion $[[ \ c ]]$ to expression the
 conversion between two polymorphic types.
 A minor comment is that since
 \fnamee features explicit polymorphism, type variables are neutral to subtyping,
@@ -120,7 +120,7 @@ subtyping, the subtyping relation of \fnamee is trivially \emph{reflexive} and
 \end{remark}
 
 
-\paragraph{Typing.}
+\paragraph{Typing of \fnamee.}
 
 \begin{figure}
   \centering
@@ -145,10 +145,10 @@ explained in \cref{sec:disjoint:fi}.
 \paragraph{Disjoint quantification.}
 
 The new rules are the inferring rules for type abstractions \rref*{FT-tabs} and
-type applications \rref*{FT-tapp}. In \rref{FT-tabs}, the disjointness
-constraint is added to the type context. During a type application in
+type applications \rref*{FT-tapp}. In \rref{FT-tabs}, disjointness
+constraints are added to the type context. During a type application in
 \rref{FT-tapp}, the type system checks that the type argument agrees with the
-disjointness constraint; this is the rule where we diverge from System F and
+disjointness constraints; this is the rule where we diverge from System F and
 \fname, and allow only monotype instantiations ($[[t]]$ rather than $[[A]]$).  We shall return to this point in
 \cref{chap:coherence:poly}. \Rref{FT-merge,FT-tapp} are the
 only two rules that use the disjointness checking.

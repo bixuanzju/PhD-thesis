@@ -9,7 +9,7 @@ interesting to study combining parametric polymorphism with disjoint
 intersection types, especially how it affects disjointness and coherence. On a
 more pragmatic note, the combination of parametric polymorphism and disjoint
 intersection types also reveals new insights into practical applications.
-Dynamically-typed languages (such as JavaScript) usually embrace quite flexible
+Dynamically typed languages (such as JavaScript) usually embrace quite flexible
 mechanisms for class/object composition, e.g., mixin composition where objects
 can be composed at run time, and their structures are not necessarily statically
 known. The use of intersection types in TypeScript is inspired by such flexible
@@ -28,7 +28,7 @@ run-time type errors! Clearly a well-defined meaning for intersection types with
 type variables is needed.
 
 
-\paragraph{Disjoint Polymorphism.}
+\paragraph{Disjoint polymorphism.}
 
 Motivated by the above two points, \citet{alpuimdisjoint} proposed disjoint
 polymorphism, a variant of parametric polymorphism. The main novelty is
@@ -46,11 +46,11 @@ extend T [U * T] (first : T) (second : U) : T & U = first ,, second;
 \end{lstlisting}
 The disjointness constraint on the type variable \lstinline{U} ensures that no
 conflicts can occur when composing two objects, which is quite similar to
-trait-based approach~\citep{scharli2003traits} in object-orientated programming.
+the trait model~\citep{scharli2003traits} in object-orientated programming.
 We shall devote a whole chapter (\cref{chap:traits}) to further this point.
 
 
-\paragraph{Adding BCD Subtyping.}
+\paragraph{Adding BCD subtyping.}
 
 While \citet{alpuimdisjoint} studied the combination of disjoint intersection
 types and parametric polymorphism, they follow the then-standard approach

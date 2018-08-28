@@ -4,18 +4,21 @@
 \label{chap:case_study}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To further illustrate the applicability of \sedel, we present a case
-study using Object Algebras~\citep{oliveira2012extensibility} and
-Extensible \visitor~\citep{oliveira09modular, togersen:2004}. Encodings
-of extensible designs for Object Algebras and Extensible \visitor have
-been presented in mainstream languages~\citep{oliveira09modular, togersen:2004, oliveira2012extensibility, oliveira2013feature, rendel14attributes}.
-However, prior approaches are not entirely satisfactory
-due to the limitations in existing mainstream OO languages. In \cref{sec:ob}, we show how \sedel makes those designs significantly simpler and
-convenient to use. In particular, \sedel's encoding of extensible visitors gives true ASTs and supports
-conflict-free Object Algebra combinators, thanks to first-class traits and disjoint polymorphism.
-Based on this technique, \cref{sec:case} gives a bird's-eye view of several orthogonal features of
-a small JavaScript-like language from a textbook on Programming
-Languages~\citep{poplcook}, and illustrates how various features can
+To further illustrate the applicability of \sedel, we present a case study using
+object Algebras~\citep{oliveira2012extensibility} and extensible
+\visitor~\citep{oliveira09modular, togersen:2004}. Encodings of extensible
+designs for Object Algebras and extensible \visitor have been presented in
+mainstream languages~\citep{oliveira09modular, togersen:2004,
+  oliveira2012extensibility, oliveira2013feature, rendel14attributes}. However,
+prior approaches are not entirely satisfactory due to the limitations in
+existing mainstream object-oriented languages. In \cref{sec:ob}, we show how
+\sedel makes those designs significantly simpler and convenient to use. In
+particular, \sedel's encoding of extensible \visitor gives true ASTs. In
+\cref{sec:case:combinator} we show a native support for conflict-free Object
+Algebra combinators, thanks to first-class traits and disjoint polymorphism.
+Based on this technique, \cref{sec:case} gives a bird's-eye view of several
+orthogonal features of a small JavaScript-like language from a textbook on
+programming languages~\citep{poplcook}, and illustrates how various features can
 be modularly developed and composed to assemble a complete language with various
 operations baked in. \Cref{sec:evaluate} compares our \sedel's implementation
 with that of the textbook using Haskell in terms of lines of code.
@@ -30,14 +33,15 @@ Java. Our starting point is the following code:
 \lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
 \lstinline{ExpAlg[E]} is the generic interface of a simple arithmetic language
 with two cases, \lstinline{lit} for literals and \lstinline{add} for addition.
-\lstinline{ExpAlg[E]} is also referred to as an Object Algebra interface. A concrete
+\lstinline{ExpAlg[E]} is also referred to as an \emph{Object Algebra interface}. A concrete
 Object Algebra will implement such an interface by instantiating \lstinline{E}
 with a suitable type. Here we also define one operation \lstinline{IEval},
-modelled by a single-field record type. A concrete Object Algebra that
+modeled by a single-field record type. A concrete Object Algebra that
 implements the evaluation rules is given by a trait
 \lstinline{evalAlg}.
 
-\paragraph{First-Class Object Algebra Values.}
+\paragraph{First-class object algebra values.}
+
 The actual AST of this simple arithmetic language is given as an internal
 visitor~\citep{Oliveira_2008}:
 \lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
@@ -49,14 +53,16 @@ However, as we will see, this is not a problem in \sedel. We can build a value o
 \lstinputlisting[linerange=27-29]{./examples/application.sl}% APPLY:linerange=VALUE_E1
 
 
-\paragraph{Adding a New Operation.}
+\paragraph{Adding a new operation.}
+
 We add another operation \lstinline{IPrint} to the language:
 \lstinputlisting[linerange=34-43]{./examples/application.sl}% APPLY:linerange=PRINT_DEF
 This is done by giving another trait \lstinline{printAlg} that implements the
 additional \lstinline{print} method.
 
 
-\paragraph{Adding a New Case.}
+\paragraph{Adding a new case.}
+
 A second dimension for extension is to add another case for negation:
 \lstinputlisting[linerange=48-59]{./examples/application.sl}% APPLY:linerange=SUB_DEF
 This is achieved by extending \lstinline{evalAlg} and \lstinline{printAlg}, implementing
@@ -66,15 +72,16 @@ and build a value of \lstinline{-(2 + 3)} while reusing \lstinline{e1}:
 \lstinputlisting[linerange=71-73]{./examples/application.sl}% APPLY:linerange=VALUE_E2
 
 \paragraph{Relations between \lstinline{Exp} and \lstinline{ExpExt}}
+
 At this stage, it is interesting to point out an interesting subtyping relation
 between \lstinline{Exp} and \lstinline{ExtExp}: \lstinline{ExpExt}, though being an
 \emph{extension} of \lstinline{Exp} is actually a \emph{supertype} of \lstinline{Exp}.
-As Oliveira~\citep{oliveira09modular} observed, these relations are
+As \citet{oliveira09modular} observed, these relations are
 important for legacy and performance reasons since it means that, a value of
 type \lstinline{Exp} can be \emph{automatically} and \emph{safely}
 coerced into a value of type \lstinline{ExpExt}, allowing some
 interoperability between new functionality and legacy code.
-However, to ensure type-soundness, Scala (or other common OO languages) forbids any kind of type-refinement on method
+However, to ensure type-soundness, Scala (or other common object-oriented languages) forbids any kind of type-refinement on method
 parameter types. The consequence of this is that in those languages, it is
 impossible to express that \lstinline{ExtExp} is both an extension and a
 supertype of \lstinline{Exp}.
@@ -87,6 +94,7 @@ supertype of \lstinline{Exp}.
 
 
 \section{Dynamic Object Algebra Composition Support}
+\label{sec:case:combinator}
 
 When programming with Object Algebras, oftentimes it is necessary to compose
 multiple operations together in such a way that they are executed in parallel to
@@ -130,6 +138,7 @@ needed! Three points are worth noting:
 \item nested composition is the underlying mechanism to automatically derive the
   combined algebra by appropriately invoking (delegating) behaviors in \lstinline{A & B} to either \lstinline{A} or \lstinline{B}.
 \end{inparaenum}
+
 To conclude, let us see \lstinline{combine} in action. We merge the evaluation
 and printing algebras to create a combined algebra \lstinline{expEvalPrint}:
 \lstinputlisting[linerange=84-84]{./examples/application.sl}% APPLY:linerange=NEW_ALG
@@ -281,7 +290,9 @@ $\mathit{natF}$ is used across many languages. Even though \lstinline{simplenat}
 itself \emph{alone} has more SLOC ($40 = 7+23+7+3$) than that of Haskell (which
 has 33), we still get a huge gain when implementing other languages.
 
-Finally, we acknowledge the limitation of our case study in that SLOC is just
+\paragraph{Final remarks.}
+
+We acknowledge the limitation of our case study in that SLOC is just
 one metric and we have not measured any other metrics. Nevertheless we believe
 that the case study is already non-trivial in that we need to solve the
 expression problem. Note that Scala traits alone are not sufficient on their own

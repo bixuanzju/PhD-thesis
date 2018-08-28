@@ -31,7 +31,7 @@ due to the use of structural types, a trait name is \emph{not} a type.
 
 \subsection{Two Roles of Traits in \sedel}
 
-\paragraph{Traits as Templates for Creating Objects.}
+\paragraph{Traits as templates for creating objects.}
 
 An obvious difference between traits in \sedel and many other models of
 traits~\citep{scharli2003traits,fisher2004typed,odersky2005scalable} is that they
@@ -41,8 +41,8 @@ particular, most models of traits do not allow constructors for traits. However,
 a trait in \sedel has a single constructor of the same name. Take our last trait
 \lstinline{ide_editor} in \cref{sec:trait:overview} for example:
 \lstinputlisting[linerange=81-81]{./examples/overview2.sl}% APPLY:linerange=EDITOR_INST
-As with conventional OO languages, the keyword \lstinline{new} is used to create
-an object. A difference to other OO languages is that the keyword
+As with conventional object-oriented languages, the keyword \lstinline{new} is used to create
+an object. A difference to other object-oriented languages is that the keyword
 \lstinline{new} also specifies the intended type of the object. We instantiate
 the \lstinline{ide_editor} trait and create an object \lstinline{a_editor1} of
 type \lstinline{IDEEditor}. As we will see in \cref{subsec:cons}, constructors
@@ -51,10 +51,11 @@ with parameters can also be expressed.
 It is tempting to instantiate the \lstinline{editor} trait such as
 \lstinline{new[Editor] editor}. However this would result in a type error, because, as
 we discussed, \lstinline{editor} has no definition of \lstinline{version}, and
-blindly instantiating it would cause run-time error. This behaviour is on a par
+blindly instantiating it would cause run-time errors. This behavior is on a par
 with Java's abstract classes---i.e., traits with undefined methods cannot be instantiated on their own.
 
-\paragraph{Traits as Units of Code Reuse.}
+\paragraph{Traits as units of code reuse.}
+
 The traditional role of traits is to serve as units of code reuse. \sedel's traits
 can have this role as well.
 Our \lstinline{spell_mixin} function in \cref{sec:trait:overview} is more complicated than it should be.
@@ -66,7 +67,7 @@ This is much cleaner. The trait \lstinline{spell} adds a method
 \lstinline{check}. It also defines a method \lstinline{on_key}.
 A key difference from \lstinline{spell_mixin} is that \lstinline{on_key} is invoked on the \lstinline{self}
 parameter instead of \lstinline{super}. Note that this does not necessarily mean \lstinline{check} will call \lstinline{on_key}
-defined in the same trait. As we will see, the actual behaviour entirely depends on how we compose \lstinline{spell}
+defined in the same trait. As we will see, the actual behavior entirely depends on how we compose \lstinline{spell}
 with other traits. One minor difference is that we do not need to tag \lstinline{on_key}
 with the \lstinline{override} keyword, because \lstinline{spell} stands as a standalone entity.
 Another interesting point is that the type of \lstinline{self} (i.e., \lstinline{OnKey})
@@ -74,7 +75,7 @@ is not the same as that of the trait body, which also contains the \lstinline{ch
 In \sedel's traits, the type of \lstinline{self} serves as trait \emph{requirements}.
 
 
-\paragraph{Classes and/or Traits}
+\paragraph{Classes and/or traits.}
 
 In the literature on traits~\citep{Ducasse_2006, scharli2003traits}, the
 aforementioned two roles are considered as competing. One reason of the two
@@ -102,7 +103,8 @@ reason for having both classes and traits.
 
 \subsection{Trait Types and Trait Requirements}
 
-\paragraph{Object Types and Trait Types.}
+\paragraph{Object types and trait types.}
+
 \sedel adopts a relatively standard foundational model of object-oriented
 constructs~\citep{DBLP:conf/ecoop/LeeASP15} where objects are encoded as records
 with a structural type. This is why the object \lstinline{a_editor1}
@@ -110,7 +112,8 @@ has the record type \lstinline{IDEEditor}. In \sedel, an object type is
 different from a trait type. A trait type is specified via \lstinline{Trait[T1, T2]}.
 % For example, the type of the \lstinline{spell} trait is \lstinline{Trait[OnKey, OnKey & Spelling]}.
 
-\paragraph{Trait Requirements and Functionality.}
+\paragraph{Trait requirements and functionality.}
+
 In general, a trait type
 \lstinline{Trait[T1, T2]} specifies both the \emph{requirements} \lstinline{T1}
 and the \emph{functionality} \lstinline{T2} of a trait. The requirements of a trait denote the types/methods that the
@@ -122,13 +125,13 @@ requires some implementation of the \lstinline{on_key} method, and it provides
 implementations for the \lstinline{on_key} and \lstinline{check} methods.
 When a trait
 has no requirements, the absence of a requirement is denoted by using
-the top type (\lstinline{Top}). A simplified sugar \lstinline{Trait[T]} is
+the top type \lstinline{Top}. A simplified sugar \lstinline{Trait[T]} is
 used to denote a trait without requirements, but providing functionality \lstinline{T}.
 
 
 
 
-\paragraph{Trait Requirements as Abstract Methods.}
+\paragraph{Trait requirements as abstract methods.}
 
 Let us go back to our very first trait \lstinline{editor} in
 \cref{sec:trait:overview}. Note how in \lstinline{editor} the type of the
@@ -136,7 +139,7 @@ Let us go back to our very first trait \lstinline{editor} in
 \lstinline{Version} contains a declaration of the \lstinline{version} method
 that is needed for the definition of \lstinline{show_help}. Note also that the
 trait itself does not actually contain a \lstinline{version} definition. In many
-other OO models a similar program could be achieved by having an \emph{abstract}
+other object-oriented models a similar program could be achieved by having an \emph{abstract}
 definition of \lstinline{version}. In \sedel there are no abstract definitions
 (methods or fields), but a similar result can be achieved via trait
 requirements. Requirements of a trait are met at the object creation point. For
@@ -148,7 +151,7 @@ instantiated, as shown below:
 \sedel uses a syntax where the self parameter can be explicitly named (not
 necessarily named \lstinline{self}) with a type annotation. When the self
 parameter is omitted (for example in the \lstinline{foo} trait above), its type
-defaults to \lstinline{Top}. This is different from typical OO languages, where
+defaults to \lstinline{Top}. This is different from most object-oriented languages, where
 the default type of the self parameter is the same as the class being defined.
 This also makes trait requirements ``pay as you go'' in the sense that if the
 self parameter is not used in the body, then there is no requirements on the
@@ -161,8 +164,9 @@ is not used in the body of \lstinline{foo}.
 
 
 
-\paragraph{Intersection Types Model Subtyping.}
-\lstinline{IDEEditor} is defined as an intersection type (\lstinline{Editor & Version & Spelling & ModalEdit}).
+\paragraph{Intersection types model subtyping.}
+
+The type \lstinline{IDEEditor} is defined as an intersection type.
 Intersection types~\citep{coppo1981functional,pottinger1980type} have been woven
 into many modern languages these days. A notable example is Scala, which makes
 fundamental use of intersection types to express a class/trait that extends
@@ -192,7 +196,9 @@ and \lstinline{T2}. Unsurprisingly, \lstinline{IDEEditor} is a subtype of
 %\lstinline{Int & Bool}.
 
 
-\subsection{Traits with Parameters and First-Class Traits}\label{subsec:cons}
+\subsection{Traits with Parameters and First-Class Traits}
+
+\label{subsec:cons}
 
 So far our uses of traits involve no parameters. Instead of inventing another trait
 syntax with parameters, a trait with parameters is just a function that produces
@@ -211,6 +217,7 @@ the \lstinline{modal} trait is straightforward. We initialize the
 The \lstinline{modal} trait also comes with a constructor with one parameter---e.g., we can create an object via \lstinline{new[ModalEdit] (modal "insert")}.
 
 \subsection{Detecting and Resolving Conflicts in Trait Composition}
+\label{sec:trait:forward}
 
 A common problem in multiple inheritance is how to detect and/or resolve conflicts. For example, when
 inheriting from two traits that have the same field, then it is unclear which
@@ -233,10 +240,11 @@ above definition is ill-typed precisely because there is a conflicting
 method \lstinline{on_key}, thus violating the disjointness conditions
 imposed by disjoint intersection types.
 
-\paragraph{Resolving Conflicts.}
+\paragraph{Resolving conflicts.}
+
 To resolve the conflict, we need to explicitly state which implementation of the method
 \lstinline{on_key} gets to stay. \sedel provides such a means---the \emph{exclusion} operator (denoted by \lstinline$\$)---which allows one to
-exclude a field/method from a given trait. The following matches the behaviour
+exclude a field/method from a given trait. The following matches the behavior
 in \cref{sec:trait:overview} where \lstinline{on_key} from the \lstinline{modal} trait
 is selected:
 \lstinputlisting[linerange=143-149]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK
@@ -249,44 +257,8 @@ Using the exclusion operator, we can drop \lstinline{on_key} in \lstinline{spell
 keeping it in \lstinline{editor}.
 
 
-% Moreover, we can reason that the version number
-% in \lstinline{modal_editor} is \lstinline{0.2}.
+\paragraph{The forwarding operator.}
 
-
-% On a side note, leaving out the keyword \lstinline{override}
-% also results in a conflict because \lstinline{editor} also contains
-% \lstinline{on_key}. Whenever the type system sees \lstinline{override}, it will
-% first try to check if the inherit clause contains the method to be overridden,
-% and if so, insert the exclusion operator, otherwise a type error would
-% occur.
-
-% \paragraph{The Keyword Override}
-
-% Since it is very common that we want to exclude some methods from the
-% inherited traits, and redefine them in the body, \sedel provides the keyword
-% \lstinline{override} to achieve this. For example, suppose in
-% \lstinline{editor3} we want to define a new
-% \lstinline{version_num} in the body instead of the one from
-% \lstinline{modal_edit}, we can of course exclude
-% \lstinline{version_num} from \lstinline{modal_edit} and define a new
-% \lstinline{version_num} in the body. We can also use the keyword
-% \lstinline{override} to achieve the same:
-% \lstinputlisting[linerange=154-159]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
-% That is, by labeling a method as a overriding method, the type system will
-% automatically exclude this method from the inherited traits. Note that if the
-% overriding method is not present in the inherited traits, a type error would
-% occur.
-
-% \paragraph{The Keyword Super}
-
-% What if we want to invoke the overridden method in the overriding method. As
-% with convectional OO languages, \sedel also provides the keyword
-% \lstinline{super} to achieve this. In the following, we access the overridden
-% field \lstinline{version_num} from \lstinline{modal_edit} through the use of
-% the keyword \lstinline{super}:
-% \lstinputlisting[linerange=163-168]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
-
-\paragraph{The Forwarding Operator.}
 Another operator that \sedel provides is the \emph{forwarding} operator, which can be useful when we want to access some method that has been
 explicitly excluded in the \lstinline{inherits} clause. This is a common scenario in
 diamond inheritance, where \lstinline{super} is not enough. Below we show a
@@ -309,38 +281,6 @@ small test:
 
 
 \subsection{Disjoint Polymorphism and Dynamic Composition}
-\label{sec:merge}
-
-\begin{comment}
-One important difference to traditional traits or classes is that traits in
-\sedel are quite dynamic: we are able to compose traits \emph{dynamically} and
-then instantiate them later. We have seen an example of dynamic inheritance in
-\cref{sec:trait:overview} to mimic mixins, where disjoint polymorphism plays an
-important role. This is impossible in traditional OO languages, such as Scala,
-since classes being inherited/instantiated must be known statically.
-
-In Scala, given two concrete traits, it is possible to use \emph{mixin composition} to
-create an object that implements both traits.
-\begin{lstlisting}[language=scala]
-trait A
-trait B
-val newAB : A with B = new A with B
-\end{lstlisting}
-Here the type \lstinline[language=scala]{A with B} is an intersection type,
-and the expression \lstinline[language=scala]{new A with B} allows creating a new
-object from the combination of the traits \lstinline{A} and
-\lstinline{B}.
-However, in Scala it is not possible to dynamically compose two
-(statically unknown) \emph{objects}. For example, the following code: \jeremy{how is this useful to have?}
-\begin{lstlisting}[language=scala]
-// Invalid Scala code:
-def merge[A,B] (x: A) (y: B) : A with B = new x with y
-\end{lstlisting}
-is rejected by the Scala compiler. The problem is that the
-\lstinline[language=scala]{with} construct in Scala can only be used to mixin
-(statically known) traits or classes, not arbitrary objects. This limitation essentially puts
-intersection types in Scala in a second-class status.
-\end{comment}
 
 \sedel supports disjoint polymorphism. The combination of disjoint
 polymorphism and first-class traits enables the highly modular code
@@ -359,12 +299,6 @@ constraint \lstinline{B * A} that ensures that whatever types are used
 to instantiate \lstinline{A} and \lstinline{B} they must be disjoint.
 Thus, under the assumption that \lstinline{A} and \lstinline{B} are
 disjoint the code type-checks.
-
-\begin{comment}
-Notice the disjoint constraint on the type variable \lstinline{B} (\lstinline{B * A}), which is crucial
-to ensure the composition of two traits \lstinline{x} and \lstinline{y} is conflict-free.
-As far as we are aware, no mainstream statically typed OO languages can do this.
-\end{comment}
 
 
 %%% Local Variables:

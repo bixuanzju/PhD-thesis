@@ -5,11 +5,11 @@
 This section considers the algorithmic aspects of \namee. The bidirectional type
 system is syntax directed, so the only source of non-determinism comes from the
 subtyping relation. In this section, we present an algorithm that implements the
-subtyping relation. While BCD subtyping is well-known, the presence of a
-transitivity axiom in the rules means that the system is not algorithmic. This
+subtyping relation. While BCD subtyping is powerful, the presence of a
+transitivity axiom in the rules means that the subtyping relation is not algorithmic. This
 raises an obvious question: how to obtain an algorithm for this subtyping
 relation? \citet{Laurent12note} has shown that simply dropping the transitivity
-rule from the BCD system is not possible without losing expressivity. Hence,
+rule from BCD subtyping is not possible without losing expressiveness. Hence,
 this avenue for obtaining an algorithm is not available. In a 2012
 article~\citep{laurent2012intersection}, \citeauthor{laurent2012intersection}
 defined BCD subtyping without transitivity, but the system still does not
@@ -23,21 +23,11 @@ We adapt \citeauthor{pierce1989decision}'s decision
 procedure~\citep{pierce1989decision} for a subtyping system (closely related to
 BCD) to obtain a sound and complete algorithm for our BCD extension. Our
 algorithm extends \citeauthor{pierce1989decision}'s decision procedure with
-subtyping of singleton records and coercions. We prove in Coq that the algorithm
-is sound and complete with respect to the declarative version. At the same time
+subtyping of records and coercions. We prove in Coq that the algorithm
+is sound and complete with respect to the declarative specification. At the same time
 we find some errors and missing lemmas in \citeauthor{pierce1989decision}'s
 original manual proofs.
 
-%The algorithm is implemented in our
-%prototype implementation. \jeremy{should i say more about implementation?}
-
-%See \cref{sec:alg} for the details. 
-%\bruno{The meaning of the paragraph is somewhat obscure to me. After
-%  discussing with Tom, it seems that what may be meant here is that we
-%cannot do cut elimination, which is a common process that you can try
-%for certain systems with subtyping. However Pierce managed to find
-%another way to get a sound/complete algorithmic system. Maybe 
-%the text can be improved.}
 
 
 \begin{figure}[t]
@@ -90,7 +80,7 @@ remaining rules are similar to their declarative counterparts. Let us illustrate
 the algorithm in \cref{fig:example_deri} with an example derivation (for
 formatting reasons we use $[[N]]$ and $[[S]]$ to denote $[[nat]]$ and
 $[[string]]$ respectively, which are both rigid types), which is essentially the
-one used by the \lstinline{add} field in \cref{nested:sec:overview}. The readers
+one used by the \lstinline{add} field in \cref{nested:sec:overview}. The reader
 can try to give a corresponding derivation using the declarative subtyping and
 see how \rref{S-trans} plays an essential role there.
 
@@ -204,7 +194,7 @@ need to show the algorithmic subtyping is reflexive and
 transitive. 
 
 
-\paragraph{Soundness of the Algorithm.}
+\paragraph{Soundness of the algorithm.}
 
 The following two lemmas connect the declarative subtyping with the meta-functions.
 
@@ -231,7 +221,7 @@ The proof of soundness is straightforward.
 \end{proof}
 
 
-\paragraph{Completeness of the Algorithm.}
+\paragraph{Completeness of the algorithm.}
 
 
 \newcommand{\UU}[1]{\mathcal{U}(#1)}

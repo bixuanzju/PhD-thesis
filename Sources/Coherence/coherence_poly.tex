@@ -33,7 +33,7 @@ why the former is required, consider the judgment $[[ X ** nat |- X & nat ]]$.
 The type variable $[[X]]$ cannot be instantiated with arbitrary types, e.g.,
 substituting $[[X]]$ with $[[nat]]$ would lead to an ill-formed intersection
 type $[[nat & nat]]$. Therefore the range of types is narrowed down to those
-that respect the disjointness constraints---we have essentially a weaker
+that respect the disjointness constraints---i.e., we have essentially a weaker
 substitution lemma. To motivate the latter, which is closely related to the
 former, consider the judgment $[[ X ** nat |- X ** nat ]]$. Obviously $[[X]]$
 cannot be instantiated with $[[nat]]$, either. Generally speaking,
@@ -97,7 +97,7 @@ functions.
 \end{proposition}
 
 
-\Cref{fig:logical:f} defines the logical relation for call-by-value System F.
+\Cref{fig:logical:f} gives the logical relation for call-by-value System F.
 Compared with the logical relation for simple types, it is parameterized by a
 relational mapping $[[pq]]$, which plays a central role for type abstractions
 and type variables. Intuitively, for two values $[[v1]]$ and $[[v2]]$ of type
@@ -170,7 +170,7 @@ $[[v3]] = [[v2]]$ and $[[v4]] = [[v1]]$. So we have shown
   [[ e nat char <v1, v2> -->> v <v1, v2> ]] [[-->>]] [[  <v2, v1>  ]]
 \]
 
-\paragraph{The Problem with Type Variables.}
+\paragraph{The Problem with type variables.}
 
 Heterogeneity forces us to consider the case for
 $\valR{[[X]]}{[[A]]}$ where $[[A]] \neq [[X]]$. A seemingly innocuous definition
@@ -217,7 +217,7 @@ substitution is deliberately avoided for type abstractions.
 
 In light of the fact that substitution in the logical relation seems unavoidable
 in our setting, and that impredicativity conflicts with substitution, we turn
-to, for the lack of a better logical relation, \emph{predicativity}. The
+to, for the sake simplicity, \emph{predicativity}. The
 restriction to predicativity, though reducing the expressiveness in theory, does
 not cost much in practice. Languages based on the Hindley–Milner type
 system~\citep{milner1978theory, hindley1969principal}, such as Haskell and ML,
@@ -287,7 +287,7 @@ relation is symmetric.
 \end{lemma}
 \begin{proof}
   Symmetry of \cref{fig:logical} is trivial. For \cref{fig:logical:fi}, the
-  proof proceeds by first induction on $ | [[A]] |_{\forall} $ then simultaneous
+  proof proceeds by first induction on $ | [[A]] |_{\forall} $, then simultaneous
   induction on the structures of $[[A]]$ and $[[B]]$.
 \end{proof}
 
@@ -314,7 +314,7 @@ variables to monotypes).
 \end{definition}
 
 
-\paragraph{Logical Equivalence.}
+\paragraph{Logical equivalence.}
 
 Logical equivalence is defined in terms of logical relation by considering all possible interpretations of
 free type and term variables.
@@ -328,7 +328,7 @@ free type and term variables.
 \end{definition}
 
 
-\paragraph{Contextual Equivalence.}
+\paragraph{Contextual equivalence.}
 
 \begin{figure}
   \centering
@@ -414,7 +414,7 @@ theorems without giving proofs. The proofs have mostly the same structures as in
 simply-typed case, but with more cases. The interested reader can refer to our
 Coq formalization.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental Property] We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental property] We have that:
   \begin{itemize}
   \item If $[[DD; GG |- ee => A ~~> e]]$ and $[[DD; GG |- ee => A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
   \item If $[[DD ; GG |- ee <= A ~~> e]]$ and $[[DD ; GG |- ee <= A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
