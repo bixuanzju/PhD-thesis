@@ -204,7 +204,7 @@ meaning of a target program depends on the choice of elaboration typing
 derivation. For example, the expression $[[1 ,, true]]$ has type $[[nat & bool]]$.
 It can be used either as an integer or a Boolean, the result is always
 clear ($[[1]]$ or $[[true]]$). However, when two types have overlapping
-components, it is not always clear which value to pick. For example, the
+components, it is not at all clear which value to pick. For example, the
 expression $[[1 ,, 2]]$ (when checked against $[[nat]]$) could elaborate to
 either $1$ or $2$, depending on the particular choice in the implementation.
 \citet{dunfield2014elaborating} had a workaround by trying the left part
