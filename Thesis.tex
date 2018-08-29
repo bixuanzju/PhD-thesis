@@ -35,7 +35,18 @@
   citecolor  = black,
   linkcolor  = RoyalBlue,
   urlcolor   = black,
+  backref    = page
   ]{hyperref}
+
+\renewcommand\backreftwosep{, }
+ \renewcommand\backrefsep{, }
+ \renewcommand*{\backrefalt}[4]{%
+    \ifcase #1%
+     \or (cited on page~#2)%
+     \else (cited on pages~#2)%
+    \fi%
+    }
+
 
 \usepackage{url}
 \usepackage{nameref}
@@ -276,36 +287,40 @@ diploma or other qualifications.
 %%---------------------%%
 \mainmatter
 %%---------------------%%
+
+
+\part{Prologue}
+
 \include{Sources/Introduction}
 \input{Sources/Background.mng}
 
-
-\part{Type Systems}
+\part{Typed Calculi}
+\label{part:typesystem}
 
 \include{Sources/Nested}
 \include{Sources/Polymorphism}
 
 \part{Coherence}
+\label{part:coherence}
 
-\include{Sources/Coherence}
-
-
+\input{Sources/Coherence/coherence_simple.mng}
+\input{Sources/Coherence/coherence_poly.mng}
 
 \part{Applications}
+\label{part:applications}
 
 \include{Sources/Traits}
 \include{Sources/Applications}
 
+\part{Related and Future Work}
 
 \input{Sources/Related.mng}
 \input{Sources/Future.mng}
+
+
+\part{Epilogue}
+
 \include{Sources/Conclusion}
-
-
-\appendix
-\input{Sources/Appendix.mng}
-
-
 
 
 % This ensures that the subsequent sections are being included as root
@@ -313,11 +328,17 @@ diploma or other qualifications.
 \bookmarksetup{startatroot}
 
 %%---------------------%%
-\backmatter
+% \backmatter
 %%---------------------%%
 
 \cleardoublepage
 \bibliography{Thesis}
+
+\part{Technical Appendix}
+\appendix
+\input{Sources/Appendix.mng}
+
+
 
   % \begingroup
   %   \let\clearpage\relax
