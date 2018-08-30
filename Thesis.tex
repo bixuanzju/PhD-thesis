@@ -38,41 +38,19 @@
   backref    = page
   ]{hyperref}
 
-\renewcommand\backreftwosep{, }
- \renewcommand\backrefsep{, }
- \renewcommand*{\backrefalt}[4]{%
-    \ifcase #1%
-     \or (cited on page~#2)%
-     \else (cited on pages~#2)%
-    \fi%
-    }
-
-
-\usepackage{url}
-\usepackage{nameref}
 \usepackage[capitalise]{cleveref}
 
-
-
-\usepackage{bookmark}
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+    \ifcase #1%
+          \or [cited on page~#2]%
+          \else [cited on pages~#2]%
+    \fi%
+    }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% I like the bibliography to be extremely plain, showing only a numeric
-% identifier and citing everything in simple brackets. The first names,
-% if present, will be initialized. DOIs and URLs will be preserved.
-
-% \usepackage[%
-%   hyperref     = true,
-%   natbib       = true,
-%   sortcites    = true,
-%   maxbibnames  = 9,
-%   maxcitenames = 2,
-%   style        = authoryear,
-%   ]{biblatex}
-
 
 \usepackage[sort]{natbib}
 \setcitestyle{%
@@ -80,6 +58,15 @@
     open={[},close={]},citesep={;},%
     aysep={},yysep={,},%
     notesep={, }}
+
+% Explain list of backreferences.
+% https://tex.stackexchange.com/a/70953/1340
+\renewcommand{\bibpreamble}{%
+  [Citing pages are listed after each reference.]%
+  \par\bigskip}
+
+
+
 
 % \input{bibliography-mimosis}
 \bibliographystyle{ACM-Reference-Format}
