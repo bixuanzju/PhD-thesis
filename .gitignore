@@ -35,6 +35,8 @@ Figures/External/
 /Thesis.synctex.gz
 
 **/auto
+**/_build
+**/_shake
 *.mng
 *.tex-old
 /footempfile.txt

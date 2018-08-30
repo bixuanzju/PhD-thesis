@@ -5,7 +5,7 @@
 In this section we discuss some areas where future research might extend and/or
 complement the work described in this thesis.
 
-\section{On Categorical Semantics}
+\section{Categorical Semantics}
 \label{sec:category}
 
 An interesting avenue for future work is to give a categorical semantics of
@@ -228,7 +228,7 @@ interpretation of the merge operator. As remarked earlier, bidirectional type ch
 some research along the lines of the above, so that we may have a solid
 mathematical foundation for type systems with disjoint intersection types.
 
-\section{On Implicit Polymorphism}
+\section{Implicit Polymorphism}
 \label{sec:implicit}
 
 Another interesting and practically useful extension is to study (predicative)
