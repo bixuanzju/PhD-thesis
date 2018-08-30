@@ -25,7 +25,7 @@ AA {{ tex \mathcal{A} }}, BB {{ tex \mathcal{B} }}, CT {{ tex \mathcal{C} }}  ::
   | AA -> BB                      :: :: arr
   | AA & BB                       :: :: and
   | X                             :: :: tvar
-  | \ X ** AA  . BB               :: :: forall {{ tex \forall ( [[X]] [[**]] [[AA]] ) .\,[[BB]] }}
+  | \ X ** AA  . BB               :: :: forall {{ tex \forall ( [[X]] [[**]] [[AA]] ) .\, [[BB]] }}
   | { l : AA }                    :: :: rcd
   | Trait [ AA , BB ]             :: :: trait
   | Trait [ BB ]                  :: :: trait2

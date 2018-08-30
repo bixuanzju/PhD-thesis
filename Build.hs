@@ -14,7 +14,7 @@ main = shakeArgs shakeOptions{shakeFiles="_build"} $ do
 
     want [doc <.> "pdf"]
 
-    doc <.> "pdf" %> \out -> do
+    "*.pdf" %> \_ -> do
         texSource <- getDirectoryFiles "" ["//*.tex"]
         mngSource <- getDirectoryFiles "" ["//*.mngtex"]
         let mngFiles = [c -<.> "mng" | c <- mngSource]
@@ -23,11 +23,13 @@ main = shakeArgs shakeOptions{shakeFiles="_build"} $ do
 
     "//*.mng" %> \out -> do
       ottSource <- getDirectoryFiles "" ["spec/*.ott"]
-      need [out -<.> ".mngtex"]
-      cmd "ott" ottSource ottFlags "-tex_filter" [out -<.> ".mngtex"] [out]
+      let dep = out -<.> ".mngtex"
+      need $ dep : ottSource
+      cmd "ott" ottSource ottFlags "-tex_filter" [dep] [out]
 
     ottFile %> \out -> do
         ottSource <- getDirectoryFiles "" ["spec/*.ott"]
+        need ottSource
         cmd "ott" ottSource ottFlags "-o" [out]
 
     phony "clean" $ do
