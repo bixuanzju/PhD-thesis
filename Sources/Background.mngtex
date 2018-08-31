@@ -72,7 +72,6 @@ where \lstinline[language=Scala]{B with C} denotes an intersection type between
 \paragraph{Intersection subtyping.}
 
 
-\newcommand{\rulehl}[1]{}
 
 Three subtyping rules capture the order-theoretic properties of intersection types:
 \begin{mathpar}

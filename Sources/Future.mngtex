@@ -28,7 +28,7 @@ $\bra{[[ D ; GG |- ee : A ]]} : \bra{[[GG]]} \rightarrow \bra{[[A]]} $ in a
 suitable ``semantic'' category (i.e., being Cartesian closed and possessing
 certain limits). Proving coherence in this presentation then amounts to
 establishing the commutativity of all diagrams of the following
-form~\footnote{The proof actually needs a stronger inductive hypothesis.}:
+form:\footnote{The proof actually needs a stronger inductive hypothesis.}
 \[
 \begin{tikzcd}
 \bra{[[  GG   ]]} \arrow[rrr, "\bra{[[ D1 ; GG |- ee : A  ]]}", bend left] \arrow[rrr, "\bra{[[ D2 ; GG |- ee : A  ]]} "', bend right] &  &  & \bra{[[ A ]]}

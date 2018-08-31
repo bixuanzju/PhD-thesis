@@ -65,10 +65,7 @@
   [Citing pages are listed after each reference.]%
   \par\bigskip}
 
-
-
-
-% \input{bibliography-mimosis}
+% ACM bibliography style looks more professional
 \bibliographystyle{ACM-Reference-Format}
 
 
@@ -105,19 +102,26 @@
 % \makeindex
 % \makeglossaries
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load up my personal packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \input{packages.tex}
 \input{pl-theory.tex}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ott includes
-\inputott{ott-rules}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ottalt}
+\inputott{Gen/ott-rules}
 \renewcommand\ottaltinferrule[4]{
   \inferrule*[narrower=0.9,lab=#1,#2]
     {#3}
     {#4}
 }
+%%----------------------------------------------------------------------------%%
 
-\usepackage{tikz-cd}
-\usetikzlibrary{babel}
 
 \title{Disjoint Intersection Types: Theory and Practice}
 \author{\textbf{Xuan Bi}}
@@ -252,6 +256,8 @@ diploma or other qualifications.
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% for working with individual files
+% \includeonly{Gen/Background}
 
 \begin{document}
 
@@ -279,7 +285,7 @@ diploma or other qualifications.
 \part{Prologue}
 
 \include{Sources/Introduction}
-\input{Sources/Background.mng}
+\include{Gen/Background}
 
 \part{Typed Calculi}
 \label{part:typesystem}
@@ -290,8 +296,8 @@ diploma or other qualifications.
 \part{Coherence}
 \label{part:coherence}
 
-\input{Sources/Coherence/coherence_simple.mng}
-\input{Sources/Coherence/coherence_poly.mng}
+\include{Gen/Coherence/coherence_simple}
+\include{Gen/Coherence/coherence_poly}
 
 \part{Applications}
 \label{part:applications}
@@ -301,8 +307,8 @@ diploma or other qualifications.
 
 \part{Related and Future Work}
 
-\input{Sources/Related.mng}
-\input{Sources/Future.mng}
+\include{Gen/Related}
+\include{Gen/Future}
 
 
 \part{Epilogue}
@@ -323,7 +329,7 @@ diploma or other qualifications.
 
 \part{Technical Appendix}
 \appendix
-\input{Sources/Appendix.mng}
+\include{Gen/Appendix}
 
 
 

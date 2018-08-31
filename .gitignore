@@ -37,6 +37,7 @@ Figures/External/
 **/auto
 **/_build
 **/_shake
+**/Gen
 *.mng
 *.tex-old
 /footempfile.txt
