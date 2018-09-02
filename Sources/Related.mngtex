@@ -175,7 +175,7 @@ to be distributed over quantifiers on the right-hand side.
 In \fnamee, we do not have this distributivity rule, but are thinking to add
 a similar rule, as shown below:
 \[
-\inferrule*[lab=distPoly]{  }{  [[  (\X ** A . B1) &  (\X ** A . B2)  <: \X ** A . B1 & B2 ]]       }
+  \drule{S-distPoly}
 \]
 This rule will add extra expressiveness to \fnamee, e.g., we can compose
 algebras with polymorphic components:

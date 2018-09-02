@@ -138,7 +138,7 @@ expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee <
 checks $[[ee]]$ against $[[A]]$ in the context $[[GG]]$. The set of
 inference rules of disjointness $[[A ** B]]$ is shown in \cref{fig:disjoint}.
 Note that our set of disjointness rules is different from that in
-\oname~\citep[Figure 10]{oliveira2016disjoint}: \oname does not have
+\oname~\citep[Figure~10]{oliveira2016disjoint}: \oname does not have
 \rref{D-topL,D-topR}, which first appeared in \fname~\citep[Figure 3]{alpuimdisjoint}.
 % The intuition of two types being disjoint is
 % that their least upper bound is (isomorphic to) $[[Top]]$.

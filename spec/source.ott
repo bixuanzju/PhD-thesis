@@ -300,9 +300,8 @@ co, c :: 'co_' ::=   {{ com coercion }}
   | pp2          :: :: proj2
   | distArr     :: :: distArr
   | distRcd l   :: :: distRcd {{ tex \mathsf{dist}_{ \{ [[l]] \} } }}
-  % | { l : c }   :: :: rcd
+  | distPoly :: :: distPoly
   | topArr      :: :: topArr
-  % | < l >       :: :: topRcd {{ tex \mathsf{top}_{ \{ [[l]] \} } }}
   | ( c )       :: :: paren
   | < fs >1     :: :: tran1  {{ tex \llbracket [[fs]] \rrbracket_{\top} }}
   | < fs >2     :: :: tran2  {{ tex \llbracket [[fs]] \rrbracket_{\&} }}
@@ -394,6 +393,7 @@ terminals :: 'terminals_' ::=
     | top     :: :: top  {{ tex \mathsf{top} }}
     | topArr  :: :: topArr  {{ tex \mathsf{top}_{\rightarrow} }}
     | distArr :: :: distArr  {{ tex \mathsf{dist}_{\rightarrow} }}
+    | distPoly   :: :: distPoly  {{ tex \mathsf{dist}_{\forall} }}
     | &       :: :: And  {{ tex \, \& \, }}
     | =>      :: :: Infer  {{ tex \Rightarrow }}
     | <=      :: :: Chk  {{ tex \Leftarrow }}
@@ -465,10 +465,13 @@ formula :: 'formula_' ::=
 
 parsing
   sty_arrow <= sty_and
-  sty_arrow right sty_arrow
+  sty_all <= sty_and
+  sty_all <= sty_and2
   ty_arrow <= ty_prod
-  ty_arrow right ty_arrow
+  ty_forall <= ty_prod
   exp_abs <= exp_app
+  sty_arrow right sty_arrow
+  ty_arrow right ty_arrow
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -680,6 +683,8 @@ A <: B ~~> c
 { l : A } & { l : B } <: { l : A & B } ~~> id
 
 
+--------------------------------------------------------------------- :: distPoly
+(\ X ** A . B1) & (\ X ** A . B2)  <: \X ** A . B1 & B2 ~~> distPoly
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1331,6 +1336,10 @@ distArr |- (T1 -> T2) * (T1 -> T3) tri T1 -> T2 * T3
 
 
 
+---------------------------------------------------------- :: distPoly
+ distPoly |- (\X . T1) * (\X . T2) tri \X . T1 * T2
+
+
 --------------------- :: projl
 pp1 |- T1 * T2 tri T1
 
@@ -1591,6 +1600,11 @@ top v --> unit
 
 ------------------------------------------------- :: distArr
 (distArr < v1 , v2 >) v3 --> < v1 v3, v2 v3 >
+
+
+------------------------------------------------- :: distPoly
+(distPoly < v1 , v2 >) T --> < v1 T, v2 T >
+
 
 
 ---------------------------- :: projl
