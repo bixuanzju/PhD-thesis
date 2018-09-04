@@ -290,11 +290,11 @@ and composed in a type-safe way! The following is illustrative of this:
 %disjoint intersection types, we can define the same \lstinline{merge} that is able to take two
 %traits (where the full set of the members may not be known statically), combine and instantiate them.
 \lstinputlisting[linerange=6-6]{./examples/overview2.sl}% APPLY:linerange=MERGE
-The \lstinline{merge} function takes two traits \lstinline{x} and \lstinline{y} of
+The \lstinline{mergeTraits} function takes two traits \lstinline{x} and \lstinline{y} of
 some arbitrary types \lstinline{Trait[A]} and \lstinline{Trait[B]}, composes them,
 and creates an object from the resulting composed trait. Clearly
 such composition cannot always work if \lstinline{A} and
-\lstinline{B} can have conflicts. However, \lstinline{merge} has a
+\lstinline{B} can have conflicts. However, \lstinline{mergeTraits} has a
 constraint \lstinline{B * A} that ensures that whatever types are used
 to instantiate \lstinline{A} and \lstinline{B} they must be disjoint.
 Thus, under the assumption that \lstinline{A} and \lstinline{B} are

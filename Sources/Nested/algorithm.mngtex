@@ -167,7 +167,7 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
       \begin{align*}
         [[ < [] >1 ]] &=  [[top]] \\
         [[ < { l } , fs >1 ]] &= [[ < fs >1 o id  ]] \\
-        [[ < A , fs >1 ]] &= [[(top -> < fs >1) o (topArr o top)]]
+        [[ < A , fs >1 ]] &= [[(top -> < fs >1) o topArr]]
       \end{align*}
     \end{subfigure} ~
     \begin{subfigure}[b]{0.45\textwidth}

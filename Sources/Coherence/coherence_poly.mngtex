@@ -240,7 +240,7 @@ as briefly discussed in \cref{sec:implicit}.
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \fnamee}
+  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L107}{\leftpointright} The canonicity relation for \fnamee} % APPLYCOQ=LOGICAL
   \label{fig:logical:fi}
 \end{figure}
 
@@ -282,7 +282,7 @@ logical relation, which simplifies the proof a lot. We show that the logical
 relation is symmetric.
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L817}{\leftpointright} Symmetry of logical relation]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L819}{\leftpointright} Symmetry of logical relation] % APPLYCOQ=LOGICAL_SYM
   If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
 \end{lemma}
 \begin{proof}
@@ -298,7 +298,7 @@ basically follows that in \cref{chap:coherence:simple}. We first give the
 interpretations of type and value contexts ($[[p]]$ is a mapping from type
 variables to monotypes).
 
-\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2022}{\leftpointright} Interpretation of type contexts]
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2023}{\leftpointright} Interpretation of type contexts] % APPLYCOQ=INTERP_TYPE_CONTEXT
   \begin{mathpar}
     \ottaltinferrule{}{}{  }{ [[emp in empty]] } \and
     \ottaltinferrule{}{}{ [[p in DD]] \\ [[empty |- t ** p(B)]] \\  }{ [[p [ X -> t ] in DD , X ** B]]  }

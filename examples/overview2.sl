@@ -3,7 +3,7 @@
 -------------------------- Mixin-style ----------------------------
 
 -- BEGIN_MERGE
-merge A [B * A] (x : Trait[A]) (y : Trait[B]) = new[A & B] x & y;
+mergeTraits A [B * A] (x : Trait[A]) (y : Trait[B]) = new[A & B] x & y;
 -- END_MERGE
 
 -- BEGIN_OVERVIEW_EDITOR_TYPES
