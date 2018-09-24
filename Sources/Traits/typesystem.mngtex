@@ -20,7 +20,7 @@ can be found in \cref{appendix:proofs}.
 \centering
 \begin{small}
 \begin{tabular}{lrcl}
-  Types  & $[[AA]], [[BB]], [[CT]]$ & $\Coloneqq$ & $[[Top]] \mid [[pri]] \mid [[AA -> BB]] \mid [[AA & BB]] \mid  [[{ l : AA }]] \mid [[X]] \mid [[\ X ** AA  . BB]] \mid \hlmath{[[ Trait[AA,BB] ]]}$ \\
+  Types  & $[[AA]], [[BB]], [[CT]]$ & $\Coloneqq$ & $[[Top]] \mid [[int]] \mid [[AA -> BB]] \mid [[AA & BB]] \mid  [[{ l : AA }]] \mid [[X]] \mid [[\ X ** AA  . BB]] \mid \hlmath{[[ Trait[AA,BB] ]]}$ \\
   Expressions & $[[E]]$ & $\Coloneqq$ & $[[Top]] \mid [[ii]] \mid [[x]] \mid [[\ x . E]] \mid [[E1 E2]] \mid [[\ X ** AA  . E]] \mid [[E AA]] \mid [[E1 ,, E2]] \mid [[E : AA]] $ \\
          & & $\mid$ & $[[{ l = E }]] \mid [[E . l]] \mid [[letrec x : AA = E1 in E2]] \mid \hlmath{[[new [ AA ] (</ Ei // i />) ]]} \mid \hlmath{[[E1 ^ E2]]} $ \\
          & & $\mid$ & $\hlmath{[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA ]]}$ \\
@@ -45,7 +45,7 @@ consider definitions, which can be added in standard ways.
 
 \paragraph{Types.}
 Metavariables $[[AA]]$, $[[BB]]$, $[[CT]]$ range over types. Types include a top
-type $[[Top]]$, primitive types $[[pri]]$, function types $[[AA -> BB]]$, intersection types $[[AA & BB]]$,
+type $[[Top]]$, integers $[[int]]$, function types $[[AA -> BB]]$, intersection types $[[AA & BB]]$,
 singleton record types $[[{l : AA}]]$,  type variables $[[X]]$ and disjoint
 (universal) quantification $[[\ X ** A . B]]$. The main
 novelty is the type of first-class traits $[[ Trait[AA, BB] ]]$, which expresses

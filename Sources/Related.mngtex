@@ -90,11 +90,11 @@ key idea is to generalize the form of subtyping from $[[A <: B]]$ to $[[A1]],
 \dots, [[An]] \vdash [[B]]$, which is interpreted as meaning $[[ A1 & ... & An <: B]]$.
 Here is his subtyping system instantiated with singleton records, adapted to our setting:
 \begin{mathpar}
-  \inferrule*{ }{ [[pri]] \vdash [[pri]]  } \and
+  \inferrule*{ }{ [[int]] \vdash [[int]]  } \and
   \inferrule*{ }{ \vdash [[Top]]  } \and
   \inferrule*{ \vdash [[B]]  }{ \vdash [[A -> B]]  } \and
   \inferrule*{ \vdash [[A]]  }{ \vdash [[ {l : A}   ]]  } \and
-  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, \rho, \Delta \vdash [[C]] } \and
+  \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[int]], \Delta \vdash [[C]] } \and
   \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[Top]], \Delta \vdash [[C]] } \and
   \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[A -> B]], \Delta \vdash [[C]] } \and
   \inferrule*{ \Gamma, \Delta \vdash [[C]]  }{ \Gamma, [[ {l : B}  ]], \Delta \vdash [[C]] } \and
@@ -205,7 +205,7 @@ integer is even or not, otherwise it returns the argument as it received. Note
 that type difference (i.e., \lstinline{a \ Int}) is crucial to ensure no
 ambiguity in the domain types of two functions. In \fnamee, we cannot express
 this kind of intersections. However, \fnamee allows some other intersections
-(e.g., $[[(nat -> bool) & (nat -> nat)]]$) that are not allowed in their system.
+(e.g., $[[(int -> bool) & (int -> int)]]$) that are not allowed in their system.
 Nevertheless, both systems need to express negative information about type
 variables: in their system type difference (e.g., \lstinline{a \ Int}) achieves
 this, whereas in \fnamee we use disjointness constraints (e.g., \lstinline{a * Int}).

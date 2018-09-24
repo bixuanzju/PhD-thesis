@@ -4,8 +4,8 @@
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll} \toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[pri]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
-  Monotypes & $[[t]]$ & $\Coloneqq$ & $[[pri]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[X]] \mid [[{l : t}]]$\\
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
+  Monotypes & $[[t]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[X]] \mid [[{l : t}]]$\\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] $ \\
         & & $\mid$ & $ [[{l = ee}]] \mid [[ ee.l  ]] \mid [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
   Value Context & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\

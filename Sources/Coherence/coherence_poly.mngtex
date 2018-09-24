@@ -29,14 +29,14 @@ well-formedness rule for intersection types (\rref{wf-and}) in
 \cref{fig:lambdai}, which has a deep impact on the metatheory. For example, they
 need extra effort to prove a (weaker) substitution lemma, and also that
 disjointness between two types is preserved after substitution. To understand
-why the former is required, consider the judgment $[[ X ** nat |- X & nat ]]$.
+why the former is required, consider the judgment $[[ X ** int |- X & int ]]$.
 The type variable $[[X]]$ cannot be instantiated with arbitrary types, e.g.,
-substituting $[[X]]$ with $[[nat]]$ would lead to an ill-formed intersection
-type $[[nat & nat]]$. Therefore the range of types is narrowed down to those
+substituting $[[X]]$ with $[[int]]$ would lead to an ill-formed intersection
+type $[[int & int]]$. Therefore the range of types is narrowed down to those
 that respect the disjointness constraints---i.e., we have essentially a weaker
 substitution lemma. To motivate the latter, which is closely related to the
-former, consider the judgment $[[ X ** nat |- X ** nat ]]$. Obviously $[[X]]$
-cannot be instantiated with $[[nat]]$, either. Generally speaking,
+former, consider the judgment $[[ X ** int |- X ** int ]]$. Obviously $[[X]]$
+cannot be instantiated with $[[int]]$, either. Generally speaking,
 substitution-related lemmas are all weakened to account for disjointness
 conditions in \fname. All of these contribute to the single most important
 theorem: subtyping of \emph{well-formed} types produces \emph{unique} coercions.
@@ -47,7 +47,7 @@ implies that we now have a general substitution lemma, but also that the avenue
 taken by \citet{alpuimdisjoint} to prove coherence does not work anymore. In
 particular, subtyping does not necessarily produces unique coercions. For example,
 consider the possible coercions generated
-by $[[ \X ** nat . X & X  <: \X ** nat & nat . X ]]$. Neither of the types
+by $[[ \X ** int . X & X  <: \X ** int & int . X ]]$. Neither of the types
 is ``well-formed'' in the sense of \fname. Two possible coercions are
 $[[   \f . \X . pp1 (f X)  ]]$ and $[[   \f . \X . pp2 (f X)  ]]$. It is not entirely obvious
 that these two are equivalent in some sense.
@@ -64,7 +64,7 @@ Parametricity \`a la System F might give us some intuitions, as we will discuss 
   \centering
   \begin{tabular}{lll}
   $[[(v1 , v2) in V ( X ) with pq ]]$  &$\defeq$ & $ ([[v1]], [[v2]]) \in [[pq]]([[X]])   $ \\
-  $[[(v1 , v2) in V ( nat ) with pq ]]$  &$\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1 , v2) in V ( int ) with pq ]]$  &$\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
   $[[(v1 , v2) in V ( T1 -> T2 ) with pq ]]$  & $\defeq$ & $\forall [[(v'1, v'2) in V (T1) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (T2) with pq   ]]$ \\
   $[[(v1 , v2) in V ( T1 * T2 ) with pq ]]$  & $\defeq$ & $[[( pp1 v1, pp1 v2 ) in E (T1) with pq ]]  \land [[ (pp2 v1, pp2 v2) in E (T2) with pq ]]   $ \\
   $[[(v1 , v2) in V ( \X . T ) with pq ]]$  & $\defeq$ & $ \forall [[T1]], [[T2]], [[R]] \subseteq [[T1]] \times [[T2]].\, [[ (v1 T1, v2 T2) in E (T) with pq [X -> R ]     ]]  $ \\ \\
@@ -85,13 +85,13 @@ stringency of parametricity ensures that a polymorphic type has very few
 inhabitants, so few that we can deduce the behavior of a program by just looking
 at its type, which \citet{wadler1989theorems} christened \emph{theorems for free}.
 
-Consider an expression $[[e]]$ of type $[[ \X . X -> nat ]]$. The following
+Consider an expression $[[e]]$ of type $[[ \X . X -> int ]]$. The following
 ``free'' theorem completely determines the behavior of $[[e]]$ and any other
 function of the same type---i.e., all expressions with this type have to be constant
 functions.
 
-\begin{proposition}[A free theorem of $[[ \X . X -> nat ]]$] \label{thm:free}
-  Suppose $[[e]]$ is any expression of type $[[\X . X -> nat]]$. Let $[[T1]]$
+\begin{proposition}[A free theorem of $[[ \X . X -> int ]]$] \label{thm:free}
+  Suppose $[[e]]$ is any expression of type $[[\X . X -> int]]$. Let $[[T1]]$
   and $[[T2]]$ be arbitrary types. For any $[[v1]]$ of type $[[T1]]$ and
   $[[v2]]$ of type $[[T2]]$, if $[[e T1 v1 -->> v3]]$ and $[[e T2 v2 -->> v4]]$ then $[[v3]] = [[v4]]$.
 \end{proposition}
@@ -143,12 +143,12 @@ taste of how this definition works. Suppose $[[e]]$ is any expression
 corresponding to type $[[ \X ** bool . \Y ** X . X & Y -> Y & X ]]$, for any
 integer $[[v1]]$ and character $[[v2]]$, it can be shown that
 \[
-  [[e nat char <v1 , v2> -->> <v2 , v1>   ]]
+  [[e int char <v1 , v2> -->> <v2 , v1>   ]]
 \]
 First, we have $[[ (e, e) in E( \X ** bool . \Y ** X . X & Y -> Y & X ) ]]$.
 Choose $\mathsf{R}_1 = \{ ([[v1]], [[v1]]) \}$ and $\mathsf{R}_2 = \{ ([[v2]], [[v2]]) \}$.
-This is allowed because $[[nat]]$ and $[[char]]$ both respect the
-disjointness constraints. Suppose $[[ e nat char -->> v  ]]$ for some $[[v]]$ and we have
+This is allowed because $[[int]]$ and $[[char]]$ both respect the
+disjointness constraints. Suppose $[[ e int char -->> v  ]]$ for some $[[v]]$ and we have
 \[
   [[(v, v) in V (X & Y -> Y & X) with emp[X -> R1][Y -> R2] ]]
 \]
@@ -167,7 +167,7 @@ Suppose $[[  v <v1, v2> -->> <v3 , v4>  ]]$, we have
 We have $([[v3]], [[v3]]) \in \mathsf{R}_2$ and $([[v4]], [[v4]]) \in \mathsf{R}_1$, which means
 $[[v3]] = [[v2]]$ and $[[v4]] = [[v1]]$. So we have shown
 \[
-  [[ e nat char <v1, v2> -->> v <v1, v2> ]] [[-->>]] [[  <v2, v1>  ]]
+  [[ e int char <v1, v2> -->> v <v1, v2> ]] [[-->>]] [[  <v2, v1>  ]]
 \]
 
 \paragraph{The Problem with type variables.}
@@ -187,19 +187,19 @@ and $[[pq(A)]]$.
 %   the corresponding types in $[[A]]$.}
 Let us see another example to motivate this definition. Suppose
 \[
-  [[ee]] = [[\ X ** bool . (\x . x) : X & nat -> X & nat]]
+  [[ee]] = [[\ X ** bool . (\x . x) : X & int -> X & int]]
 \]
 we should expect the following to
 hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
 \[
-  [[ee nat 1 -->> <1 , 1> ]]
+  [[ee int 1 -->> <1 , 1> ]]
 \]
 It boils down to verifying the following:
 \[
-  [[  (1 , 1) in V (X ; nat) with pq  ]]
+  [[  (1 , 1) in V (X ; int) with pq  ]]
 \]
 where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. If we
-replace $[[X]]$ with $[[nat]]$ then the above holds obviously.
+replace $[[X]]$ with $[[int]]$ then the above holds obviously.
 Unfortunately, the seemingly innocuous definition for type variables has a serious
 issue with impredicativity---in other words, the relation in question is \emph{not well-founded}.
 We could pick a bad instantiation to make the relation ``go
@@ -228,7 +228,7 @@ as briefly discussed in \cref{sec:implicit}.
   \centering
   \begin{small}
   \begin{tabular}{lll}
-  $[[(v1 , v2) in V ( nat ; nat ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
   $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
   $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
     $\hlmath{[[(v1, v2)  in V ( \ X ** A1 . B1; \ X ** A2 . B2 ) ]]}$  &$\defeq$ & $\hlmath{\forall [[empty |- t ** A1 & A2 ]].}$ \\
@@ -367,7 +367,7 @@ Now we may give the definition of contextual equivalence for \fname as follows:
 \begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \fnamee Contextual Equivalence]
   \begin{align*}
     [[DD ; GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
-                                     & \qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => nat) ~~> cc]]   \\
+                                     & \qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => int) ~~> cc]]   \\
                                      & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{definition}

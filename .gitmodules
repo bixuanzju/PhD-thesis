@@ -1,4 +1,4 @@
 [submodule "phd-thesis-artifact"]
 	path = phd-thesis-artifact
-	url = https://github.com/bixuanzju/phd-thesis-artifact
+	url = git@github.com:bixuanzju/phd-thesis-artifact.git
 	branch = master

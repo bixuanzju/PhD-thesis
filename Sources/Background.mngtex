@@ -169,18 +169,18 @@ In other words, a merge expression can choose to type one subterm and ignore the
 other. In combination of \rref{interI}, they allow to type check
 two distinct implementations $[[ee1]]$ and $[[ee2]]$ with completely different
 types $[[A1]]$ and $[[A2]]$ of the intersection. For example, let $[[ee1]] = [[\x . x]]$ and $[[ee2]] = 1$,
-then the type $[[ (nat -> nat) & nat ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
+then the type $[[ (int -> int) & int ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
 \[
   \inferrule*[right=\rref*{interI}]
   { \inferrule*[right=\rref*{mergeL}]
-    { [[ ee1 : nat -> nat  ]] }
-    {[[ee1 ,, ee2 : nat -> nat]]}
+    { [[ ee1 : int -> int  ]] }
+    {[[ee1 ,, ee2 : int -> int]]}
     \\
     \inferrule*[right=\rref*{mergeR}]
-    { [[ ee2 : nat  ]] }
-    {[[ee1 ,, ee2 : nat]]}
+    { [[ ee2 : int  ]] }
+    {[[ee1 ,, ee2 : int]]}
   }
-  { [[  ee1 ,, ee2 : (nat -> nat) & nat   ]] }
+  { [[  ee1 ,, ee2 : (int -> int) & int   ]] }
 \]
 
 \citeauthor{dunfield2014elaborating} showed how to give a semantics to a
@@ -189,7 +189,7 @@ a simply-typed lambda calculus extended with products. For example, the
 expression $[[ (\x . x) ,, 1 ]]$ elaborates to a pair $[[ <\x. x , 1> ]]$. As
 usual, his system does not have explicit source-level intersection eliminations;
 elaboration puts all needed projections into the target program. For instance,
-the same expression $[[ (\x . x) ,, 1 ]]$, when checked against $[[nat]]$, elaborates to $[[ pp2 <\x. x , 1> ]]$. The
+the same expression $[[ (\x . x) ,, 1 ]]$, when checked against $[[int]]$, elaborates to $[[ pp2 <\x. x , 1> ]]$. The
 type-directed elaboration is elegant, type-safe, and serves as the original
 foundation for calculi with disjoint intersection types.
 
@@ -200,11 +200,11 @@ While \citeauthor{dunfield2014elaborating}'s system is simple and powerful, it
 has serious usability issues. More specifically, it lacks the theoretically and
 practically important property of \emph{coherence}~\citep{Reynolds_1991}: the
 meaning of a target program depends on the choice of elaboration typing
-derivation. For example, the expression $[[1 ,, true]]$ has type $[[nat & bool]]$.
+derivation. For example, the expression $[[1 ,, true]]$ has type $[[int & bool]]$.
 It can be used either as an integer or a Boolean, the result is always
 clear ($[[1]]$ or $[[true]]$). However, when two types have overlapping
 components, it is not at all clear which value to pick. For example, the
-expression $[[1 ,, 2]]$ (when checked against $[[nat]]$) could elaborate to
+expression $[[1 ,, 2]]$ (when checked against $[[int]]$) could elaborate to
 either $1$ or $2$, depending on the particular choice in the implementation.
 \citet{dunfield2014elaborating} had a workaround by trying the left part
 $[[1]]$ first. It is equally acceptable that one can opt to choose the right part $[[2]]$. But neither is
@@ -216,7 +216,7 @@ surface syntax, as \citeauthor{reynolds1988preliminary} did in Forsythe. But as
 restriction depends on details of the type system, which is not robust as the
 type system is extended''. Another simple idea would be to require all types in
 an intersection be \emph{distinct}. This works fine for simple types such as
-$[[nat]]$ and $[[bool]]$: $[[nat & bool]]$ is clearly a good intersection. But
+$[[int]]$ and $[[bool]]$: $[[int & bool]]$ is clearly a good intersection. But
 it is less clear as to what constituents a ``good'' (read unambiguous) intersection type in
 general. A moment of thoughts leads to the following principle: good
 intersection types are defined in terms of the subtyping relation. After all, it
@@ -228,8 +228,8 @@ it is still not enough. Consider the following expression (taken from \citet{oli
 \[
 [[(1 ,, ss) ,, (2 ,, true)]]
 \]
-The first component $[[(1 ,, ss)]]$ has type $[[ nat & string ]]$ and the
-second component $[[(2 ,, true)]]$ has type $[[ nat & bool ]]$. It is clear that neither of the two is a
+The first component $[[(1 ,, ss)]]$ has type $[[ int & string ]]$ and the
+second component $[[(2 ,, true)]]$ has type $[[ int & bool ]]$. It is clear that neither of the two is a
 subtype of the other. However, extracting an integer from the above expression is
 ambiguous ($[[1]]$ or $[[2]]$).
 
@@ -237,9 +237,9 @@ When moving to richer types, it is even less clear how to deal with for example,
 intersections of higher-order functions. Consider the following intersection
 types (again taken from \citet{oliveira2016disjoint}):
 \begin{enumerate}
-\item $[[ (nat -> nat) & (string -> string)   ]]$
-\item $[[ (string -> nat) & (string -> string)   ]]$
-\item $[[ (nat -> string) & (string -> string)   ]]$
+\item $[[ (int -> int) & (string -> string)   ]]$
+\item $[[ (string -> int) & (string -> string)   ]]$
+\item $[[ (int -> string) & (string -> string)   ]]$
 \end{enumerate}
 We can ask which of those intersection types are qualified as good. It seems
 reasonable to expect the first one is good, since both the domain and range
@@ -270,7 +270,7 @@ calculus~\citep{oliveira2016disjoint} provide a remedy for the coherence
 problem, by imposing restrictions on the uses of merges and on the formation of
 intersection types. The syntax of \oname is shown below:
 \begin{align*}
-  \text{Types} \quad [[A]] &\Coloneqq [[nat]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
+  \text{Types} \quad [[A]] &\Coloneqq [[int]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
   \text{Terms} \quad [[ee]] &\Coloneqq [[ii]] \mid [[x]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]
 \end{align*}
 Its full (bidirectional) type system is shown in \cref{fig:lambdai}. Central
@@ -286,16 +286,16 @@ system without $[[Top]]$, this can be ensured by the following specification:
 The disjointness judgment appears in the well-formedness of intersection types
 (\rref{wf-and}) and the typing rule of merges (\rref{Ti-merge}).
 \Rref{wf-and}---the well-formedness of intersections---enforces that only
-disjoint types can form an intersection type: so $[[nat & bool]]$ is
-well-formed but $[[nat & nat]]$ is not. \Rref{Ti-merge}---the typing rule for
-merges---prevents problematic merges such as $[[1 ,, 2]]$ (because $[[nat]]$ and
-$[[nat]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, true]]$.
+disjoint types can form an intersection type: so $[[int & bool]]$ is
+well-formed but $[[int & int]]$ is not. \Rref{Ti-merge}---the typing rule for
+merges---prevents problematic merges such as $[[1 ,, 2]]$ (because $[[int]]$ and
+$[[int]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, true]]$.
 \begin{remark}
   Note that the introduction form for disjoint intersection types
   (\rref{Ti-merge}) is not as expressive as \rref{interI}. For instance, \rref{interI} entails
   the following derivation:
   \[
-    \inferrule*{ [[  \x .x : nat -> nat  ]] \\ [[ \x . x : char -> char   ]]    }{  [[\x . x : (nat -> nat) & (char -> char)]]  }
+    \inferrule*{ [[  \x .x : int -> int  ]] \\ [[ \x . x : char -> char   ]]    }{  [[\x . x : (int -> int) & (char -> char)]]  }
   \]
   which is impossible to express in \oname.
 \end{remark}
@@ -324,7 +324,7 @@ With top-like types,
 \end{definition}
 
 However, a careful analysis of \cref{def:disjoint_spec2} shows that intersection
-types such as $[[ Top & Top ]]$ and $[[Top & nat]]$ are not well-formed because
+types such as $[[ Top & Top ]]$ and $[[Top & int]]$ are not well-formed because
 their constituent types are not disjoint. This is one of the limitations in
 \oname, since ``a merge of two $[[Top]]$-types will always return the same value
 regardless of which component of the merge is chosen''~\citep{alpuimdisjoint}.
@@ -393,7 +393,7 @@ In essence disjoint intersection types and disjoint polymorphism retain most of 
 the merge operator. For example, as noted by \citet{alpuimdisjoint}, they can be
 used to model powerful forms of extensible records. However, forcing every
 intersection types to be disjoint is unnecessarily restrictive. For instance,
-$[[1 : nat & nat]]$ is undoubtedly unambiguous, but is rejected by \oname and
+$[[1 : int & int]]$ is undoubtedly unambiguous, but is rejected by \oname and
 \fname. Another issue is that because of the restriction, \fname lacks a general
 substitution lemma; only a restricted form applies, which greatly complicates
 the metatheory. Our starting point in this thesis is to lift this restriction
@@ -800,7 +800,7 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 
 \paragraph{Contextual equivalence.}
 
-We define a \emph{complete program} to mean any closed term of type $[[nat]]$.
+We define a \emph{complete program} to mean any closed term of type $[[int]]$.
 The following two definitions capture the notion of \emph{contextual equivalence}:
 
 \begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L469}{\leftpointright} Kleene Equality]{definition}{kleene} % APPLYCOQ=KLEENE
@@ -812,7 +812,7 @@ The following two definitions capture the notion of \emph{contextual equivalence
 \begin{restatable}[Contextual Equivalence]{definition}{kleenee}  \label{def:cxtx}%
   \begin{align*}
     [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
-                                 & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- nat)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
+                                 & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- int)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{restatable}
 
@@ -835,7 +835,7 @@ functions, when taken logically related arguments, return logically related
 results. For STLC, the logical relation is a family of relations $[[ (v1, v2) in V(T)  ]]$
 between closed values of type $[[T]]$. It is inductively defined on $[[T]]$ as follows:
 \begin{align*}
-  [[(v1 , v2) in V ( nat ) with pq ]]  &\defeq  \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
+  [[(v1 , v2) in V ( int ) with pq ]]  &\defeq  \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
   [[(v1 , v2) in V ( T1 -> T2 ) with pq ]]  & \defeq  \forall [[(v'1, v'2) in V (T1)  ]].\, [[  (v1 v1' , v2 v2') in E (T2)  ]] \\
   [[(e1, e2) in E (T)  ]] & \defeq \exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (T) ]]
 \end{align*}
@@ -867,5 +867,5 @@ the one involving contextual equivalence.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
-%%% org-ref-default-bibliography: ../Thesis.bib
+%%% org-ref-default-bibliography: "../Thesis.bib"
 %%% End:

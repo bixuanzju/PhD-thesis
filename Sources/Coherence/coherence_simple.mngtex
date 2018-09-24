@@ -23,7 +23,7 @@ While requiring that all intersections are disjoint as in \oname is sufficient
 to guarantee coherence, it is not necessary. In fact, such requirement
 unnecessarily encumbers the subtyping definition with disjointness constraints
 and an ad-hoc treatment of ``top-like'' types. Indeed, the value $[[1 ,, 1]]$ of
-the non-disjoint type $[[ nat & nat ]]$ is entirely unambiguous, and
+the non-disjoint type $[[ int & int ]]$ is entirely unambiguous, and
 $(\mer{1}{1}) + 3$ can obviously only result in $4$. More generally, when the
 overlapping components of an intersection type have the same value, there is no
 ambiguity problem. \namee uses this idea to relax \oname's enforcement of
@@ -32,7 +32,7 @@ the two arguments have the same value, and thus \namee still requires
 disjointness. Yet, disjointness is no longer required for the well-formedness of
 types and overlapping intersections can be created implicitly through subtyping,
 which results in duplicating values at run time. For instance, while $[[ 1,, 1]]$
-is not expressible $[[ 1 : nat & nat]]$ creates the equivalent value implicitly.
+is not expressible $[[ 1 : int & int]]$ creates the equivalent value implicitly.
 % The consequence of this relaxation of disjointness is a much simplified
 % type system for \namee.
 In short, duplication is harmless and subtyping only generates duplicated values
@@ -48,12 +48,12 @@ Two factors make establishing coherence for \namee much more difficult: the
 relaxation of disjointness and the adoption of the more expressive subtyping
 rules from the BCD system (for which \oname lacks). These two factors mean that
 subtyping proofs are no longer unique and hence that there are multiple
-elaborations of the same source program. For instance, $[[ nat & nat ]]$ is a
-subtype of $[[nat]]$ in two ways: by projection on either the first or second
+elaborations of the same source program. For instance, $[[ int & int ]]$ is a
+subtype of $[[int]]$ in two ways: by projection on either the first or second
 component. Hence the fact that all elaborations yield the same result when
 evaluated has become a much more subtle property that requires sophisticated
 reasoning. For instance, we can see that coherence holds because at run time any
-value of type $[[nat & nat]]$ has identical components, and
+value of type $[[int & int]]$ has identical components, and
 thus both projections yield the same result.
 
 
@@ -103,7 +103,7 @@ coherence. It is helpful to consider several examples before presenting the
 formal definition of our new semantically founded notion of coherence.
 
 \begin{example} \label{eg:1}
-The same \namee expression $1$ can be typed $[[nat]]$ in many ways: for instance, by \rref{T-lit}; by
+The same \namee expression $1$ can be typed $[[int]]$ in many ways: for instance, by \rref{T-lit}; by
 \rref{T-sub,S-refl}; or by \rref{T-sub,S-trans,S-refl}, resulting in translations
 $[[1]]$, $[[id 1]]$ and $[[ (id o id) 1 ]]$, respectively. It is apparent
 that these three \tname terms are ``equal'' in the sense that all reduce to the same numeral $[[1]]$.
@@ -132,7 +132,7 @@ inductively defined such that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$
   \label{fig:contexts}
 \end{figure}
 
-We define a \emph{complete program} to mean any closed term of type $[[nat]]$.
+We define a \emph{complete program} to mean any closed term of type $[[int]]$.
 Recall the definitions of Kleene equality and contextual equivalence in \cref{sec:bg:lr}.
 For ease of reference, we restate them below:
 
@@ -149,7 +149,7 @@ example.
 \begin{example} \label{eg:2} It may be counter-intuitive that two \tname terms
   $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ should also be considered equal. To see
   why, first note that they are both the translations of the same \namee
-  expression: $[[(\x . x) : nat & nat -> nat]]$. What can we do with this lambda
+  expression: $[[(\x . x) : int & int -> int]]$. What can we do with this lambda
   abstraction? We can apply it to $[[1]]$ for example, which leads
   to two translations $[[  (\x . pp1 x) <1 , 1>  ]]$ and $[[ (\x . pp2 x) <1, 1>  ]]$. It is obvious that both reduce to the same numeral
   $[[1]]$. However, $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ are definitely \emph{not} equal
@@ -203,7 +203,7 @@ consideration both \namee and \tname contexts.
 \begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \namee Contextual Equivalence] \label{def:cxtx2}
   \begin{align*}
     [[GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[GG |- ee1 => A ~~> e1]] \land [[GG |- ee2 => A ~~> e2]] \ \land \\
-                                & \qquad (\forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => nat) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
+                                & \qquad (\forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => int) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
   \end{align*}
 \end{definition}
 
@@ -213,7 +213,7 @@ consider expressions in the inference mode. Our Coq formalization is complete
 with two modes.
 Now regarding \cref{eg:2}, a possible \namee context is
 \[
-[[ __ 1 : (empty => nat & nat -> nat) ~> (empty => nat) ~~> __ <1 , 1>]]
+[[ __ 1 : (empty => int & int -> int) ~> (empty => int) ~~> __ <1 , 1>]]
 \]
 We can verify that both $[[\x . pp1 x]]$ and $[[\x . pp2 x]]$ produce $1$ in the context $[[__ <1 , 1>]]$.
 Of course we should consider all possible contexts to be certain that they are truly equal. From now on, we
@@ -250,7 +250,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
 \begin{figure}
   \centering
   \begin{tabular}{lll}
-  $[[(v1 , v2) in V ( nat ; nat ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
+  $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
   $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
   $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
   $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
@@ -277,8 +277,8 @@ contexts. A moment of thought leads us to the following observations:
 
   The relation should relate values whose types are disjoint. Those values are
   essentially translated from merges, and since \rref{T-merge} ensures
-  disjointness, they are unambiguous. For example, one value of type $[[nat]]$
-  and the other of $[[ { l : nat}]]$ can be unambiguously distinguished by any
+  disjointness, they are unambiguous. For example, one value of type $[[int]]$
+  and the other of $[[ { l : int}]]$ can be unambiguously distinguished by any
   source context.
 \end{observation}
 
@@ -288,7 +288,7 @@ contexts. A moment of thought leads us to the following observations:
   types, only if the values are duplicates. This may sound baffling, since the
   whole point of disjointness is to rule out (ambiguous) expressions such as
   $[[ 1 ,, 2   ]]$. However, $[[ 1,, 2 ]]$ never gets elaborated, and the only values
-  corresponding to $[[nat & nat]]$ are those pairs such as $[[ <1 , 1>   ]]$,
+  corresponding to $[[int & int]]$ are those pairs such as $[[ <1 , 1>   ]]$,
   $[[ <2 , 2>   ]]$, etc. Those values are essentially generated from \rref{T-sub} by subtyping
   and are also unambiguous.
 \end{observation}
@@ -356,10 +356,10 @@ pairwise. That is, $[[<v1,v2>]]$ and $[[<v1', v2'>]]$ are related at $[[ A * B  
 $[[v1]]$ and $[[v1']]$ are related at $[[A]]$ and (2) $[[v2]]$ and $[[v2']]$ are related at $[[B]]$.
 According to our definition, we also require that (3) $[[v1]]$ and $[[v2']]$ are
 related and (4) $[[v2]]$ and $[[v1']]$ are related. To see why this is the case, consider
-whether $(\pair{1}{2}, \pair{1}{2}) \in \valRR{[[nat & nat]]}$. If we regard
-$[[nat & nat]]$ as a normal product type, then these two pairs are related.
+whether $(\pair{1}{2}, \pair{1}{2}) \in \valRR{[[int & int]]}$. If we regard
+$[[int & int]]$ as a normal product type, then these two pairs are related.
 However, as remarked earlier, $\pair{1}{2}$ should not be considered as the image of
-some source expression at the type $[[nat & nat]]$, and our definition correctly
+some source expression at the type $[[int & int]]$, and our definition correctly
 rejects it because $1$ is not equal to $2$, while accepting pairs such as
 $\pair{1}{1}, \pair{2}{2}$, etc.
 
@@ -485,7 +485,7 @@ We show that logical equivalence is preserved by \namee contexts:
 
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L478}{\leftpointright} Adequacy] \label{lemma:ade}
-  If $[[  empty |- e1 == e2 : nat ]]$ then $\kleq{[[e1]]}{[[e2]]}$.
+  If $[[  empty |- e1 == e2 : int ]]$ then $\kleq{[[e1]]}{[[e2]]}$.
 \end{lemma}
 \begin{proof}
   Adequacy follows easily from the definition of the logical relation.
@@ -507,8 +507,8 @@ proving contextual equivalence of programs.
   \end{itemize}
 \end{theorem}
 \begin{proof}
-  From \cref{def:cxtx2}, we are given a context $[[  CC : (GG => A) ~> (empty => nat) ~~> cc ]]$. By \cref{lemma:cong}
-  we have $[[  empty |- cc{e1} == cc{e2} : nat  ]]$, thus $  \kleq{[[ cc{e1} ]]}{ [[cc{e2} ]]}    $ by \cref{lemma:ade}.
+  From \cref{def:cxtx2}, we are given a context $[[  CC : (GG => A) ~> (empty => int) ~~> cc ]]$. By \cref{lemma:cong}
+  we have $[[  empty |- cc{e1} == cc{e2} : int  ]]$, thus $  \kleq{[[ cc{e1} ]]}{ [[cc{e2} ]]}    $ by \cref{lemma:ade}.
 \end{proof}
 
 

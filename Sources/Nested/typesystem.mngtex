@@ -23,7 +23,7 @@ For brevity of the meta-theoretic study, we do not consider primitive operations
 on primitive types. They can be easily added to the language, and our prototype
 implementation is indeed equipped with common primitive types and their
 operations. Metavariables $[[A]], [[B]], [[C]]$ range over types. Types include
-primitive types $[[pri]]$ (e.g., $[[nat]], [[string]]$), a top type $[[Top]]$, function types $[[A -> B]]$, intersection
+integer types $[[int]]$, a top type $[[Top]]$, function types $[[A -> B]]$, intersection
 types $[[A & B]]$, and singleton record types $[[ {l : A} ]]$. Metavariable
 $[[ee]]$ ranges over expressions. Expressions include variables $[[x]]$,
 literals $[[i]]$, a canonical top value $[[Top]]$, lambda abstractions $[[\x .
@@ -33,7 +33,7 @@ $[[ee : A]]$, singleton records $[[ {l = ee}]]$, and record projections $[[ee.l]
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll}\toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[pri]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]  $ \\
   & & $\mid$ & $ [[ { l = ee } ]] \mid [[ee.l]] $ \\
   Typing contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
@@ -157,7 +157,7 @@ previous work~\citep{oliveira2016disjoint, alpuimdisjoint}.
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll} \toprule
-  Types & $[[T]]$ & $\Coloneqq$ & $[[pri]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] $ \\
+  Types & $[[T]]$ & $\Coloneqq$ & $[[int]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] $ \\
   Terms & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[<e1, e2>]] \mid [[c e]]$ \\
   Coercions & $[[c]]$ & $\Coloneqq$ & $ [[id]] \mid [[c1 o c2]] \mid [[top]] \mid [[c1 -> c2]] \mid [[<c1, c2>]] \mid [[pp1]] \mid [[pp2]] $ \\
   &  &  $\mid$ & $   [[distArr]] \mid [[topArr]]  $ \\
@@ -185,7 +185,7 @@ translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 
 \begin{definition}[Type translation from \namee to \tname] \label{def:type:translate}
   \begin{align*}
-    | [[pri]] | &= [[pri]] \\
+    | [[int]] | &= [[int]] \\
     | [[Top]] | &= \langle \rangle \\
     | [[A -> B]]  | &= [[ | A | -> | B |  ]] \\
     | [[ A & B  ]] | &= [[ | A | * | B |  ]] \\
@@ -375,7 +375,7 @@ judgment is to enforce that all intersection types are disjoint. However, as
 unnecessary for coherence, and merely complicates the type system. Thus \namee
 discards this well-formedness judgment altogether in favor of a simpler design
 that is still coherent. As a consequence, \namee already subsumes \oname even
-without adding BCD subtyping: an expression such as $1 : [[nat & nat]]$ is
+without adding BCD subtyping: an expression such as $1 : [[int & int]]$ is
 accepted in \namee but rejected in \oname. This simplification is based on an
 important observation: incoherence can only originate in merges. Therefore
 disjointness checking is only necessary in \rref{T-merge}.

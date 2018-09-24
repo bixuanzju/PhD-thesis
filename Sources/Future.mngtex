@@ -85,8 +85,8 @@ and $[[B]]$:
   [[  A =/ B   ]] &= [[B =/ A]] \\
   [[  A =/ Top   ]] &= [[Top]] \\
   [[  A1 =/ (A2 & A3)  ]] &= [[  (A1 =/ A2) & (A1 =/ A3)  ]] \\
-  [[  pri =/ {l : A} ]] &= [[  Top  ]] \\
-  [[  pri =/ (A1 -> A2) ]] &= [[  Top  ]] \\
+  [[  int =/ {l : A} ]] &= [[  Top  ]] \\
+  [[  int =/ (A1 -> A2) ]] &= [[  Top  ]] \\
   [[  {l : A} =/ (A1 -> A2) ]] &= [[  Top  ]] \\
   [[  {l : A1} =/ {l : A2} ]] &= [[  {l : A1 =/ A2}  ]] \\
   [[  {l1 : A1} =/ {l2 : A2} ]] &= [[  Top   ]] \quad \text{when} \ [[ l1 <> l2 ]] \\
@@ -236,7 +236,7 @@ implicit polymorphism, in the spirit of languages like Haskell or ML. Our \fname
 explicit polymorphism in the sense that we need to provide types during type
 applications. A classic example of implicit polymorphism is the identity
 function $[[\x . x]]$ of type $[[\X . X -> X]]$. When applied to $1$, for
-example, the type variable $[[X]]$ will be implicitly instantiated to $[[nat]]$.
+example, the type variable $[[X]]$ will be implicitly instantiated to $[[int]]$.
 Moreover, we are interested in \emph{higher-rank polymorphism}, allowing
 polymorphic quantifiers to appear anywhere in a type. There are several
 approaches in the literature~\citep{odersky1996putting, dunfield2013complete,
@@ -259,7 +259,7 @@ some instantiation $[[ [t / X] A2 ]]$ is a subtype of $[[B]]$. However, unlike
 \citeauthor{dunfield2013complete}'s system, in our setting, not all monotypes
 $[[t]]$ that make the subtyping go through are equally fine---those that do not respect the disjointness constraints should
 not be considered, for the sake of coherence.
-Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** nat . X -> X & nat) 1 ]]$ to type check,
+Otherwise, we would allow $[[ ((\x . x ,, 2) : \X ** int . X -> X & int) 1 ]]$ to type check,
 which would cause ambiguity at run time.
 \Rref{IS-allR} says that $[[A]]$
 is a subtype of $[[\X ** B1. B2]]$ if we can show that $[[A]]$ is a subtype of
@@ -276,9 +276,9 @@ following derivation:
 \subsection{Disjointness}
 
 The disjointness relation needs a major overhaul. For instance, subtyping allows
-$[[ \X ** char . X -> X <: nat -> nat ]]$, and as such, $[[ \X ** char . X -> X]]$
-is no longer disjoint with $[[nat -> nat]]$, whereas $[[ \X ** nat . X -> X]]$
-is disjoint with $[[nat -> nat]]$. A seemingly intuitive rule is as follows:
+$[[ \X ** char . X -> X <: int -> int ]]$, and as such, $[[ \X ** char . X -> X]]$
+is no longer disjoint with $[[int -> int]]$, whereas $[[ \X ** int . X -> X]]$
+is disjoint with $[[int -> int]]$. A seemingly intuitive rule is as follows:
 \begin{mathpar}
   \inferrule*[lab=FD-implicit]{[[DD |- t1 ** A1]] \\  [[DD |- [t1 / X] A2 ** B2]]  }{  [[DD |- \ X ** A1 . A2 ** B2]]  }
 \end{mathpar}
@@ -287,9 +287,9 @@ suffices to exhibit a disjointness derivation of $[[  [t1 / X]  A2  ]]$ and $[[B
 for one monotype in order to build a disjointness derivation of $[[\X ** A1 . A2]]$ and $[[B2]]$.
 Unfortunately, this rule is incorrect as we could guess a
 ``wrong'' $[[t1]]$. Take $[[ \X ** char . X -> X ]]$ for example: one
-instantiation is $[[bool -> bool]]$, which is disjoint with $[[nat -> nat]]$.
+instantiation is $[[bool -> bool]]$, which is disjoint with $[[int -> int]]$.
 But as we saw, this does not mean $[[ \X ** char . X -> X ]]$ is disjoint with
-$[[nat -> nat]]$. Instead we should require \emph{all possible}
+$[[int -> int]]$. Instead we should require \emph{all possible}
 instantiations are disjoint with $[[B2]]$:
 \begin{mathpar}
   \inferrule*[lab=FD-implicit]{ \forall [[t1]] .\ [[DD |- t1 ** A1]] \Longrightarrow [[DD |- [t1 / X] A2 ** B2]]  }{  [[DD |- \ X ** A1 . A2 ** B2]]  }
@@ -375,11 +375,11 @@ assertion that the record types $r_1$ and $r_2$ have disjoint sets of labels. To
 illustrate polymorphic extensible records in $\lambda^{\|}$,
 \citeauthor{Harper:1991:RCB:99583.99603} show a function that takes two
 ``disjoint'' records $x_1$ and $x_2$, where $x_1$ has at least a field $l_1$ of
-type $[[nat]]$ and $x_2$ has at least a field $l_2$ of type $[[nat]]$, and
+type $[[int]]$ and $x_2$ has at least a field $l_2$ of type $[[int]]$, and
 returns the result of merging $x_1$ and $x_2$ (altering their syntax slightly):
 \begin{align*}
-  \Lambda \alpha_1 \# (\{ l_1 : [[nat]] \}, \{ l_2 : [[nat]] \}) .\  \Lambda \alpha_2 \# (\alpha_1 , \{l_1 : [[nat]]\} , \{ l_2 : [[nat]]   \}) . \\
-  \qquad \lambda x_1 : (\alpha_1 \| \{ l_1 : [[nat]] \}) .\  \lambda x_2 : (\alpha_2 \| \{ l_2 : [[nat]] \}) .\ x_1 \| x_2
+  \Lambda \alpha_1 \# (\{ l_1 : [[int]] \}, \{ l_2 : [[int]] \}) .\  \Lambda \alpha_2 \# (\alpha_1 , \{l_1 : [[int]]\} , \{ l_2 : [[int]]   \}) . \\
+  \qquad \lambda x_1 : (\alpha_1 \| \{ l_1 : [[int]] \}) .\  \lambda x_2 : (\alpha_2 \| \{ l_2 : [[int]] \}) .\ x_1 \| x_2
 \end{align*}
 where $r_1 \| r_2$ is the record type obtained by merging $r_1$ and $r_2$, and
 is only defined if $r_1 \# r_2$. The same operator is overloaded to merge two
@@ -395,8 +395,8 @@ qualification, intersection types to merge record types, and the merge operator
 to merge records. The function mentioned above can be written in \fnamee as
 follows:
 \begin{align*}
-  \Lambda (\alpha_1 * [[ {l1 : nat} & {l2 : nat} ]]) .\  \Lambda (\alpha_2 * [[  X1 & {l1 : nat} & {l2 : nat} ]]) . \\
-  \qquad [[\x1 : X1 & {l1 : nat} . \x2 : X2 & {l2 : nat} . x1 ,, x2]]
+  \Lambda (\alpha_1 * [[ {l1 : int} & {l2 : int} ]]) .\  \Lambda (\alpha_2 * [[  X1 & {l1 : int} & {l2 : int} ]]) . \\
+  \qquad [[\x1 : X1 & {l1 : int} . \x2 : X2 & {l2 : int} . x1 ,, x2]]
 \end{align*}
 However, the merge operator in \fnamee is more general than its counterpart in
 $\lambda^{\|}$---i.e., it works on any expressions, not just records. Another
@@ -464,14 +464,14 @@ For the ease of discussion, we do not consider top types, polymorphic types, or
 BCD subtyping; then a guiding principle of designing disjointness rules is the
 simple disjointness specification (\cref{def:disjoint_spec}): two types are
 disjoint if and only if they share no common supertypes. Now consider two
-recursive types $[[ mu XX . XX -> nat ]]$ and $[[ mu YY . YY -> nat]]$. It is
+recursive types $[[ mu XX . XX -> int ]]$ and $[[ mu YY . YY -> int]]$. It is
 not hard to see that they have no common supertypes (because of contravariance of function argument subtyping). According to
 \cref{def:disjoint_spec}, they are disjoint. On the other hand, since the
 disjointness relation is structural, we should inspect the disjointness relation
-between $[[ XX -> nat ]]$ and $[[YY -> nat ]]$ under certain relation over
+between $[[ XX -> int ]]$ and $[[YY -> int ]]$ under certain relation over
 $[[XX]]$ and $[[YY]]$ we do not know yet. However, according to \rref{D-arr}, two functions are
-disjoint if their range types are disjoint; thus $[[ XX -> nat ]]$ and $[[YY ->
-nat ]]$ are not disjoint. So we have $[[ mu XX . XX -> nat]]$ and $[[ mu YY . YY -> nat]]$
+disjoint if their range types are disjoint; thus $[[ XX -> int ]]$ and $[[YY ->
+int ]]$ are not disjoint. So we have $[[ mu XX . XX -> int]]$ and $[[ mu YY . YY -> int]]$
 are \emph{not} disjoint: a contradiction!
 
 
@@ -510,9 +510,9 @@ We also need a few more disjointness axioms:
   \drule{Dax-recRVar}
 \end{mathpar}
 An important observation is that any two distinct type variables are \emph{not}
-disjoint. A few examples: $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> YY]]$
-are not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . bool -> YY & nat]]$ are
-not disjoint; $[[mu XX . nat -> XX]]$ and $[[mu YY . nat -> nat -> YY]]$ are
+disjoint. A few examples: $[[mu XX . int -> XX]]$ and $[[mu YY . int -> YY]]$
+are not disjoint; $[[mu XX . int -> XX]]$ and $[[mu YY . bool -> YY & int]]$ are
+not disjoint; $[[mu XX . int -> XX]]$ and $[[mu YY . int -> int -> YY]]$ are
 disjoint. Note that the above is only a sketch; it remains to see whether the disjointness
 rules are equivalent to the specification.
 
@@ -544,12 +544,12 @@ sums, and the merge operator also supports union elimination with two
 computationally distinct branches. We think that adapting his approach to our
 setting should not be difficult. An immediate issue is disjointness. Adding
 union types to our system without any restrictions would cause ambiguity, again.
-For example, $[[nat & bool]]$ can reach to $[[ nat | bool ]]$ via two paths, as
+For example, $[[int & bool]]$ can reach to $[[ int | bool ]]$ via two paths, as
 shown below, each leading to semantically different translations.
 \[
 \begin{tikzcd}
- & [[nat]] \arrow[rd, "<:"] &  \\
-[[nat & bool]] \arrow[ru, "<:"] \arrow[rd, "<:"'] &  & [[ nat | bool ]] \\
+ & [[int]] \arrow[rd, "<:"] &  \\
+[[int & bool]] \arrow[ru, "<:"] \arrow[rd, "<:"'] &  & [[ int | bool ]] \\
  & [[bool]] \arrow[ru, "<:"'] &
 \end{tikzcd}
 \]
