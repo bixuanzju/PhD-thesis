@@ -32,7 +32,7 @@ original manual proofs.
 
 \begin{figure}[t]
   \centering
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, arrR, rcdR, andROne, andRTwo}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, arrInt, rcdInt, andIntOne, andIntTwo}
   \caption{Algorithmic subtyping of \namee}
   \label{fig:algorithm}
 \end{figure}
@@ -43,55 +43,42 @@ original manual proofs.
 \Cref{fig:algorithm} shows the algorithmic subtyping judgment $[[fs |- A <: B ~~> c]]$.
 This judgment is the algorithmic counterpart of the declarative
 judgment $[[A <: fs => B ~~> c]]$, where the symbol $[[fs]]$ stands for a
-sequence of types and labels. Definition~\ref{def:fs} converts $[[ fs => A ]]$ to a valid type.
+queue of types and labels. Definition~\ref{def:fs} converts $[[ fs => A ]]$ to a valid type.
 For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs => C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
 \begin{definition} $[[fs => A]]$ is inductively defined as follows: \label{def:fs}
-  \begin{mathpar}
-    [[ [] => A]] = [[A]] \and
-    [[ (fs , B) => A]] = [[fs => (B -> A)]] \and
-    [[ (fs , {l}) => A]] = [[fs => {l : A}]]
-  \end{mathpar}
+  \begin{center}
+  \begin{tabular}{lll} \toprule
+    $[[ [] => A]]$ &=& $[[A]]$ \\
+    $[[ (B , fs) => A]]$ &=& $[[B -> (fs => A)]]$ \\
+    $[[ (l , fs) => A]]$ &=& $[[{l : fs => A}]]$ \\ \bottomrule
+  \end{tabular}
+  \end{center}
 \end{definition}
 
 The basic idea of $[[fs |- A <: B ~~> c]]$ is to first perform a structural
 analysis of $[[B]]$, which descends into both sides of $[[&]]$'s (\rref{A-and}),
 into the right side of $[[->]]$'s (\rref{A-arr}), and into the fields of records
-(\rref{A-rcd}) until it reaches one of the two base cases, $[[Top]]$ or $[[  B rigid ]]$.
-If the base case is $[[Top]]$, then the subtyping holds trivially
-(\rref{A-top}).
-
-
-% For the other base case, we introduce the notion of \emph{rigid types}---those that do not have distributivity rules---captured
-% by the predicate ``$ [[A rigid]] $'' over types, and defined as follows:
-
-% \begin{definition}[Rigid types] \label{def:rigid}
-%   \[
-%     [[  pri rigid  ]]
-%   \]
-% \end{definition}
-
-% For now, the only rigid type is the primitive type $[[pri]]$, but will be
-% extended when we have richer types.
-
+(\rref{A-rcd}) until it reaches one of the two base cases, $[[Top]]$ or $[[  int ]]$.
+If the base case is $[[Top]]$, the subtyping holds trivially (\rref{A-top}).
 If the base case is $[[int]]$, the
 algorithm performs a structural analysis of $[[A]]$, in which $[[fs]]$ plays an
 important role. The left sides of $[[->]]$'s are pushed onto $[[fs]]$ as they
 are encountered in $[[B]]$ and popped off again later, left to right, as
-$[[->]]$'s are encountered in $[[A]]$ (\rref{A-arrR}). Similarly, the labels are
+$[[->]]$'s are encountered in $[[A]]$ (\rref{A-arrInt}). Similarly, the labels are
 pushed onto $[[fs]]$ as they are encountered in $[[B]]$ and popped off again
-later, left to right, as records are encountered in $[[A]]$ (\rref{A-rcdR}). The
-remaining rules are similar to their declarative counterparts. Let us illustrate
+later, left to right, as records are encountered in $[[A]]$ (\rref{A-rcdInt}). The
+remaining two rules \rref*{A-andInt1,A-andInt2} are similar to their declarative counterparts. Let us illustrate
 the algorithm in \cref{fig:example_deri} with an example derivation (for
 formatting reasons we use $[[N]]$ and $[[S]]$ to denote $[[int]]$ and
-$[[string]]$ respectively, which are both rigid types), which is essentially the
+$[[string]]$ respectively), which is essentially the
 one used by the \lstinline{add} field in \cref{nested:sec:overview}. The reader
 can try to give a corresponding derivation using the declarative subtyping and
 see how \rref{S-trans} plays an essential role there.
 
 \begin{remark}
-  Our algorithmic rules are still not deterministic (\rref{A-andR1,A-andR2} are overlapping). In other words,
-  to check whether $[[ A1 & A2 ]] \prec : [[B]] $, we need to check if $[[A1]] \prec : [[B]]$ or $[[A2]] \prec : [[B]]$.
+  Our algorithmic rules are still not deterministic (\rref{A-andInt1,A-andInt2} are overlapping). In other words,
+  to check whether $[[ A1 & A2 ]] \prec : [[int]] $, we need to check if $[[A1]] \prec : [[int]]$ or $[[A2]] \prec : [[int]]$.
   In our prototype, this is implemented using backtracking.
 \end{remark}
 
@@ -120,8 +107,8 @@ see how \rref{S-trans} plays an essential role there.
     \begin{mathpar}
       D =
 \inferrule*[right=\rref*{A-andR1}]
-        { \inferrule*[right=\rref*{A-rcdR}]
-          { \inferrule*[right=\rref*{A-arrR}]
+        { \inferrule*[right=\rref*{A-rcdInt}]
+          { \inferrule*[right=\rref*{A-arrInt}]
             { \inferrule*{ [[  [] |- N <: N  ]] } { [[ [] |- N & S <: N]]  }
               \\
               \inferrule*
@@ -138,8 +125,8 @@ see how \rref{S-trans} plays an essential role there.
     \begin{mathpar}
           D' =
 \inferrule*[right=\rref*{A-andR2}]
-        { \inferrule*[right=\rref*{A-rcdR}]
-          { \inferrule*[right=\rref*{A-arrR}]
+        { \inferrule*[right=\rref*{A-rcdInt}]
+          { \inferrule*[right=\rref*{A-arrInt}]
             { \inferrule*{ [[ [] |- S <: S    ]] } { [[ [] |- N & S <: S]]  }
               \\
               \inferrule* {  \inferrule*{  [[  [] |- S <: S  ]]    }{[[  []  |- N & S <: S    ]]}  \\ [[  [] |- S <: S   ]]     } { [[N & S]] \vdash [[S -> S]] \prec : [[S]] }     }
@@ -171,14 +158,14 @@ on $[[fs]]$ and are shown in \cref{fig:coercion}.
     \begin{subfigure}[b]{0.5\textwidth}
       \begin{align*}
         [[ < [] >1 ]] &=  [[top]] \\
-        [[ < { l } , fs >1 ]] &= [[ < fs >1 o id  ]] \\
+        [[ < l , fs >1 ]] &= [[ < fs >1 o id  ]] \\
         [[ < A , fs >1 ]] &= [[(top -> < fs >1) o topArr]]
       \end{align*}
     \end{subfigure} ~
     \begin{subfigure}[b]{0.45\textwidth}
       \begin{align*}
         [[ < [] >2 ]] &=  [[id]] \\
-        [[ < { l } , fs >2 ]] &= [[ < fs >2 o id  ]] \\
+        [[ < l , fs >2 ]] &= [[ < fs >2 o id  ]] \\
         [[ < A , fs >2 ]] &= [[(id -> < fs >2) o distArr]]
       \end{align*}
     \end{subfigure}
@@ -310,7 +297,7 @@ With reflexivity and transitivity in position, we show the main theorem.
   \end{mathpar}
   where he concludes from the inductive
   hypotheses $[[ [] |- B1 <: A1]]$ and $[[ [] |- A2 <: B2]]$ that $[[ [] |- A1 -> A2 <: B1 -> B2]]$ (his rules 6a and 3).
-  However his rule 6a (our \rref{A-arrR}) only works for \emph{primitive types}, and is thus not applicable in this case. Instead we
+  However his rule 6a (our \rref{A-arrInt}) only works for \emph{primitive types}, and is thus not applicable in this case. Instead we
   need a few technical lemmas to support the argument.
 \end{remark}
 

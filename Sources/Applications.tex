@@ -204,22 +204,22 @@ The reader can refer to our supplementary material for the source code of the ca
 \begin{table}[t]
   \centering
   \begin{small}
-\begin{tabular}{|l||c|c|c||c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{Language} & \multicolumn{3}{c||}{Operations} & \multicolumn{6}{c|}{Data variants}           \\ \cline{2-10}
-                      & eval     & print     & check    & $\mathit{natF}$ & $\mathit{boolF}$ & $\mathit{compF}$ & $\mathit{logicF}$ & $\mathit{varF}$ & $\mathit{funcF}$ \\ \hline \hline
-\lstinline$simplenat$             &   \cmark       & \cmark          &          &  \cmark    &       &       &        &      &       \\ \hline
-\lstinline$simplebool$          &  \cmark        &  \cmark         &          &      &  \cmark     &       &        &      &       \\ \hline
-\lstinline$natbool$       &  \cmark        & \cmark          & \cmark         & \cmark     & \cmark      &       &        &      &       \\ \hline
-\lstinline$varbool$       &  \cmark        &  \cmark         &          &      & \cmark      &       &        & \cmark     &       \\ \hline
-\lstinline$varnat$      &   \cmark       &  \cmark         &   &  \cmark    &     &       &        & \cmark      &       \\ \hline
-\lstinline$simplelogic$  &  \cmark        &  \cmark         &          &      &   \cmark    &       &    \cmark    &      &       \\ \hline
-\lstinline$varlogic$   &    \cmark      &   \cmark        &          &      &  \cmark     &       &  \cmark  &  \cmark    &       \\ \hline
-\lstinline$arith$     &  \cmark  &  \cmark &  \cmark &  \cmark    &  \cmark     &  \cmark     &        &      &       \\ \hline
-\lstinline$arithlogic$ &  \cmark   &  \cmark &  \cmark  & \cmark     &  \cmark     & \cmark      & \cmark       &      &       \\ \hline
-\lstinline$vararith$        &  \cmark   &  \cmark  &  \cmark  & \cmark     &  \cmark     &  \cmark     &        & \cmark     &       \\ \hline
-\lstinline$vararithlogic$  &  \cmark &  \cmark  &  \cmark  & \cmark & \cmark & \cmark &  \cmark & \cmark &       \\ \hline
-\lstinline$mini-JS$  &  \cmark &  \cmark  &  \cmark  & \cmark & \cmark & \cmark &  \cmark & \cmark & \cmark      \\ \hline
+\begin{tabular}{lccccccccc}
+\toprule
+\multirow{2}{*}{\textbf{Language}} & \multicolumn{3}{c}{\textbf{Operations}} & \multicolumn{6}{c}{\textbf{Data variants}}           \\ \cmidrule{2-10}
+                      & \textbf{eval}     & \textbf{print}     & \textbf{check}    & $\mathit{natF}$ & $\mathit{boolF}$ & $\mathit{compF}$ & $\mathit{logicF}$ & $\mathit{varF}$ & $\mathit{funcF}$ \\ \midrule
+\lstinline$simplenat$             &   \cmark       & \cmark          &          &  \cmark    &       &       &        &      &       \\
+\lstinline$simplebool$          &  \cmark        &  \cmark         &          &      &  \cmark     &       &        &      &       \\
+\lstinline$natbool$       &  \cmark        & \cmark          & \cmark         & \cmark     & \cmark      &       &        &      &       \\
+\lstinline$varbool$       &  \cmark        &  \cmark         &          &      & \cmark      &       &        & \cmark     &       \\
+\lstinline$varnat$      &   \cmark       &  \cmark         &   &  \cmark    &     &       &        & \cmark      &       \\
+\lstinline$simplelogic$  &  \cmark        &  \cmark         &          &      &   \cmark    &       &    \cmark    &      &       \\
+\lstinline$varlogic$   &    \cmark      &   \cmark        &          &      &  \cmark     &       &  \cmark  &  \cmark    &       \\
+\lstinline$arith$     &  \cmark  &  \cmark &  \cmark &  \cmark    &  \cmark     &  \cmark     &        &      &       \\
+\lstinline$arithlogic$ &  \cmark   &  \cmark &  \cmark  & \cmark     &  \cmark     & \cmark      & \cmark       &      &       \\
+\lstinline$vararith$        &  \cmark   &  \cmark  &  \cmark  & \cmark     &  \cmark     &  \cmark     &        & \cmark     &       \\
+\lstinline$vararithlogic$  &  \cmark &  \cmark  &  \cmark  & \cmark & \cmark & \cmark &  \cmark & \cmark &       \\
+\lstinline$mini-JS$  &  \cmark &  \cmark  &  \cmark  & \cmark & \cmark & \cmark &  \cmark & \cmark & \cmark      \\ \bottomrule
 \end{tabular}
 
   \end{small}
@@ -234,10 +234,9 @@ The reader can refer to our supplementary material for the source code of the ca
 \begin{table}[t]
   \centering
   \begin{small}
-  \begin{tabular}{|r|ccc||l|ccc|}
-    \hline
-     Feature & \textbf{eval} & \textbf{print} & \textbf{check} & Lang sedel & \sedel & \textbf{Haskell} & \textbf{\% Reduced}  \\
-    \hline
+  \begin{tabular}{lccclccc} \toprule
+     \textbf{Feature} & \textbf{eval} & \textbf{print} & \textbf{check} & \textbf{Lang} & \sedel & \textbf{Haskell} & \textbf{\% Reduced}  \\
+    \midrule
     $\mathit{natF}$(7) & 23 & 7 & 39 & \lstinline$simplenat$ & 3 & 33 & 91\%  \\
     $\mathit{boolF}$(4) & 9 & 4 & 17 & \lstinline$simplebool$ & 3 & 16 & 81\% \\
     $\mathit{compF}$(4) & 12 & 4 & 20 & \lstinline$natbool$ & 5 & 74 & 93\% \\
@@ -250,9 +249,9 @@ The reader can refer to our supplementary material for the source code of the ca
      & & & & \lstinline$vararith$ & 8 & 107 & 93\% \\
      & & & & \lstinline$vararithlogic$ & 8 & 127 & 94\% \\
      & & & & \lstinline$mini-JS$ & 33 & 149 & 78\% \\
-    \hline
-    \textbf{Total} & & & 237 & & 331 & 843 & 61\% \\
-    \hline
+    \midrule
+    \textbf{Total} & & & 237 & & 331 & 843 & 61\% \\ \bottomrule
+
   \end{tabular}
   \end{small}
   \caption{SLOC statistics: \sedel implementation vs. vanilla AST implementation}

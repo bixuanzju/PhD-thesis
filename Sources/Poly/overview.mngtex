@@ -30,17 +30,18 @@ type variables is needed.
 
 \paragraph{Disjoint polymorphism.}
 
-Motivated by the above two points, \citet{alpuimdisjoint} proposed disjoint
-polymorphism, a variant of parametric polymorphism. The main novelty is
-\emph{disjoint (universal) quantification} of the form $[[ \ X ** A . B ]]$.
-Inspired by bounded quantification~\citep{cardelli1994extension} where a type
-variable is constrained by a type bound, disjoint quantification allows type
-variables to be associated with \emph{disjointness constraints}.
-Correspondingly, a term construct of the form $[[ \ X ** A. ee ]]$ is used to
-create values of disjoint quantification. We have seen some examples of disjoint
-polymorphism at work in \cref{bg:sec:disjoint_poly}. With disjointness constraints
-and a built-in merge operator, a type-safe and conflict-free \lstinline{extend}
-function can be naturally defined as follows:
+\citet{alpuimdisjoint} proposed disjoint polymorphism---a variant of parametric
+polymorphism---to combine parametric polymorphism with disjoint intersection
+types. The main novelty is \emph{disjoint (universal) quantification} of the
+form $[[ \ X ** A . B ]]$. Inspired by bounded
+quantification~\citep{cardelli1994extension} where a type variable is
+constrained by a type bound, disjoint quantification allows type variables to be
+associated with \emph{disjointness constraints}. Correspondingly, a term
+construct of the form $[[ \ X ** A. ee ]]$ is used to create values of disjoint
+quantification. We have seen some examples of disjoint polymorphism at work in
+\cref{bg:sec:disjoint_poly}. With disjointness constraints and a built-in merge
+operator, a type-safe and conflict-free \lstinline{extend} function can be
+naturally defined as follows:
 \begin{lstlisting}
 extend T [U * T] (first : T) (second : U) : T & U = first ,, second;
 \end{lstlisting}

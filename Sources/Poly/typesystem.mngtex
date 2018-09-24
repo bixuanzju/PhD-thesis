@@ -5,11 +5,11 @@
   \centering
 \begin{tabular}{llll} \toprule
   Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
-  Monotypes & $[[t]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[X]] \mid [[{l : t}]]$\\
+  Monotypes & $[[t]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[{l : t}]] \mid [[X]] $\\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] $ \\
         & & $\mid$ & $ [[{l = ee}]] \mid [[ ee.l  ]] \mid [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
-  Value Context & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
-  Type Context & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
+  Value Contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
+  Type Contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
   % Expression Contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]]  $ \\
   % & & $\mid$ & $[[ ee ,, CC  ]] \mid  [[ { l = CC}  ]]  \mid [[ CC . l]] $
 \end{tabular}
@@ -40,8 +40,8 @@ relations in \cref{chap:coherence:poly}.
 \begin{figure}[t]
   \centering
   \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
-  \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
-  \drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
+  \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value contexts}{empty, var}
+  \drules[swfte]{$[[||- DD]]$}{Well-formedness of type contexts}{empty, var}
   \caption{Well-formedness of types and contexts}
   \label{fig:well-formedness:fi}
 \end{figure}
@@ -88,7 +88,9 @@ shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
     \drule{topArr}
     \drule{distRcd}
     \drule{topRcd} \and
-    \hlmath{\drule{forall}}
+    \hlmath{\drule{forall}} \and
+    \hlmath{\drule{topAll}} \and
+    \hlmath{\drule{distPoly}}
   \end{drulepar}
   \caption{Declarative subtyping of \fnamee}
   \label{fig:subtype_decl:fi}
@@ -100,17 +102,17 @@ shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
 % \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
 % ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
 % \cref{sec:elaboration:fi}.
-We naturally extend the subtyping rules of \namee with only one rule
-\rref*{S-forall}, highlighted in \cref{fig:subtype_decl:fi}, which specifies the
-subtyping relation between two universal quantifiers. In \rref{S-forall}, a
-universal quantifier is covariant in its body, and contravariant in its
-disjointness constraints. We also need a new coercion $[[ \ c ]]$ to expression the
-conversion between two polymorphic types.
-A minor comment is that since
-\fnamee features explicit polymorphism, type variables are neutral to subtyping,
-i.e., $[[X <: X]]$, which is already contained in \rref{S-refl}. As with \namee
-subtyping, the subtyping relation of \fnamee is trivially \emph{reflexive} and
-\emph{transitive}.
+We naturally extend the subtyping of \namee with three new rules
+\rref*{S-forall,S-topAll,S-distPoly}, highlighted in \cref{fig:subtype_decl:fi}.
+In \rref{S-forall}, a universal quantifier is covariant in its body, and
+contravariant in its disjointness constraints. We also need a new coercion
+$[[ \ c ]]$ to expression the conversion between two polymorphic types. A minor
+comment is that since \fnamee features explicit polymorphism, type variables are
+neutral to subtyping, i.e., $[[X <: X]]$, which is already contained in
+\rref{S-refl}. \Rref{S-distPoly}, similar to \rref{S-distArr}, dictates that
+quantifiers may distribute over intersections. \Rref{S-topAll} plays a similar
+role as \rref{S-topArr}. As with \namee subtyping, the subtyping relation of
+\fnamee is trivially \emph{reflexive} and \emph{transitive}.
 
 \begin{remark}
   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are

@@ -210,7 +210,7 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,arrRcd}
 \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
 \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
-\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, arrR, rcdR, andROne, andRTwo}
+\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, arrInt, rcdInt, andIntOne, andIntTwo}
 \drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne}
 \drules[CTyp]{$[[CC : ( GG <= A ) ~> ( GG' <= B ) ~~> cc]]$}{Context typing II}{emptyTwo, absTwo}
 \drules[CTyp]{$[[CC : ( GG <= A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing III}{appLTwo, appRTwo, mergeLTwo, mergeRTwo, rcdTwo, projTwo, annoTwo}
@@ -228,12 +228,12 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
 \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
 \drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
-\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd,forall}
+\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,forall,andL,andR,and,topArr,topRcd,topAll,distArr,distRcd,distPoly}
 \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
 \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
 \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
 \drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
-\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, forall, var, arrR, rcdR, andROne, andRTwo}
+\drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{const, and, arr, rcd, top, forall, arrConst, rcdConst, andConstOne, andConstTwo, allConst}
 \drules[FCTyp]{$[[ CC : ( DD ; GG => A ) ~> ( DD' ; GG' => B ) ~~> cc ]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne, tabsOne, tappOne}
 \drules[FCTyp]{$[[ CC : ( DD ; GG <= A ) ~> ( DD' ; GG' <= B ) ~~> cc ]]$}{Context typing II}{emptyTwo, absTwo}
 \drules[FCTyp]{$[[ CC : ( DD ; GG <= A ) ~> ( DD' ; GG' => B ) ~~> cc ]]$}{Context typing III}{appLTwo,appRTwo, mergeLTwo,mergeRTwo,rcdTwo,projTwo,annoTwo,tabsTwo,tappTwo}
@@ -244,9 +244,9 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 
 \drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value context}{empty, var}
 \drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
-\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, forall, distArr}
+\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, forall, distArr, topAll, distPoly}
 \drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Static semantics}{unit, int, var, abs, app, tabs, tapp, pair, capp}
-\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, tapp, app, ctxt}
+\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, topAll, distPoly, tapp, app, ctxt}
 
 \chapter{\sedel Typing Rules, in Full}
 \label{appendix:sedel}

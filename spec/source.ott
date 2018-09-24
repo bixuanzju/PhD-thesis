@@ -104,7 +104,7 @@ SD {{ tex \Delta }} :: 'SD_' ::=
 
 %% Types
 
-sty, A, B, C, t :: 'sty_' ::=
+sty, A, B, C, t, rho {{ tex \rho }} :: 'sty_' ::=
   | int          :: :: int
   | bool          :: :: bool
   | Top          :: :: top
@@ -291,17 +291,17 @@ co, c :: 'co_' ::=   {{ com coercion }}
   | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
   | top         :: :: top
   | c1 -> c2    :: :: arr
-  | \ c :: :: forall {{ tex [[c]]_{\forall} }}
+  | \ c         :: :: forall {{ tex [[c]]_{\forall} }}
   | < c1 , c2 > :: :: pair
   | pp1          :: :: proj1
   | pp2          :: :: proj2
   | distArr     :: :: distArr
-  | distRcd l   :: :: distRcd {{ tex \mathsf{dist}_{ \{ [[l]] \} } }}
-  | distPoly :: :: distPoly
   | topArr      :: :: topArr
+  | topAll      :: :: topAll
+  | distPoly :: :: distPoly
   | ( c )       :: :: paren
-  | < fs >1     :: :: tran1  {{ tex \llbracket [[fs]] \rrbracket_{\top} }}
-  | < fs >2     :: :: tran2  {{ tex \llbracket [[fs]] \rrbracket_{\&} }}
+  | < fs >1     :: :: tran1  {{ tex \llbracket [[fs]] \rrbracket^{\top} }}
+  | < fs >2     :: :: tran2  {{ tex \llbracket [[fs]] \rrbracket^{\&} }}
 
 
 
@@ -346,16 +346,16 @@ g {{ tex \gamma}} :: 'g_' ::=
   | g [ x -> v ] :: :: one  {{ tex [[g]] [  [[x]] \mapsto [[v]] ] }}
 
 
-%% Value substitution
+qs :: 'qs_' ::=
+  | A :: :: arr
+  | X ** A :: :: all
+  | l :: :: rcd
 
-ls, fs {{ tex \mathcal{L} }} :: 'ls_' ::=
-  | []         :: :: empty
-  | ls , A     :: :: cons1
-  | A , ls     :: :: cons2
-  | ls , { l } :: :: con3
-  | { l } , ls :: :: cons4
-  | ( ls )     :: :: paren
-
+seqs, fs {{ tex \mathcal{Q} }} :: 'seqs_' ::= {{ coq list qs }}
+  | []     :: :: empty  {{ coq nil }}
+  | fs , qs  :: :: snocTy {{ tex [[fs]] , [[qs]]   }} {{ coq ([[fs]] ++ (cons [[qs]] nil)) }}
+  | qs , fs :: :: consTy  {{ tex [[qs]] , [[fs]] }} {{ coq (cons [[qs]] [[fs]]) }}
+  | ( fs ) :: S ::  paren {{ coq [[fs]] }}
 
 
 
@@ -387,8 +387,9 @@ terminals :: 'terminals_' ::=
     | unit    :: :: unit  {{ tex \langle \rangle }}
     | Unit    :: :: Unit  {{ tex \langle \rangle }}
     | top     :: :: top  {{ tex \mathsf{top} }}
-    | topArr  :: :: topArr  {{ tex \mathsf{top}_{\rightarrow} }}
-    | distArr :: :: distArr  {{ tex \mathsf{dist}_{\rightarrow} }}
+    | topArr   :: :: topArr  {{ tex \mathsf{top}_{\rightarrow} }}
+    | topAll   :: :: topAll  {{ tex \mathsf{top}_{\forall} }}
+    | distArr   :: :: distArr  {{ tex \mathsf{dist}_{\rightarrow} }}
     | distPoly   :: :: distPoly  {{ tex \mathsf{dist}_{\forall} }}
     | &       :: :: And  {{ tex \, \& \, }}
     | =>      :: :: Infer  {{ tex \Rightarrow }}
@@ -683,6 +684,12 @@ A <: B ~~> c
 (\ X ** A . B1) & (\ X ** A . B2)  <: \X ** A . B1 & B2 ~~> distPoly
 
 
+
+---------------------------------------- :: topAll
+Top <: \X ** Top . Top ~~> topAll
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fi+ implicit subtyping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -736,50 +743,21 @@ SS |- XX <: YY
 %% Fi+ algorithmic subtyping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 defns
-JASubtype :: '' ::=
+JASubtyping :: '' ::=
 
 defn
-fs |- A <: B ~~> c :: :: ASub :: A_
-{{ tex [[fs]] [[|-]] [[A]] \prec : [[B]] [[~~>]] [[c]] }} by
+fs |- A <: B ~~> c :: :: ASub :: A_ {{ tex [[fs]] \vdash [[A]] \prec : [[B]] [[~~>]] [[c]] }}
+by
 
 
 ------------------------- :: int
 [] |- int <: int ~~> id
 
 
-[] |- A2 <: A1
-[] |- B1 <: B2 ~~> c
------------------------------------------------ :: forall
-[] |- \X ** A1 . B1 <: \X ** A2 . B2  ~~> \ c
 
-
-------------------------- :: var
-[] |- X <: X ~~> id
-
-
-fs |- A <: B ~~> c
-B rigid
---------------------------------------------- :: rcdR
-{ l } , fs |- { l : A } <: B ~~> c
-
-
-
-% fs |- A <: X ~~> c
-% --------------------------------------------- :: rcdVar
-% { l } , fs |- { l : A } <: X ~~> c
-
-
-% fs |- A <: \ X ** B1 . B2 ~~> c
-% --------------------------------------------------------- :: rcdAll
-% { l } , fs |- { l : A } <: \ X ** B1 . B2 ~~> c
-
-
-
-fs , { l } |- A <: B ~~> c
----------------------------- :: rcd
-fs |- A <: { l : B } ~~> c
+------------------------- :: const
+[] |- rho <: rho ~~> id
 
 
 -------------------------- :: top
@@ -793,64 +771,75 @@ fs |- A <: B2 ~~> c2
 fs |- A <: B1 & B2 ~~> < fs >2 o <c1 , c2>
 
 
+
+fs |- A <: int ~~> c
+--------------------------------------------- :: rcdInt
+l , fs |- { l : A } <: int ~~> c
+
+
+fs |- A <: rho ~~> c
+--------------------------------------------- :: rcdConst
+l , fs |- { l : A } <: rho ~~> c
+
+
+
+
+fs , l |- A <: B ~~> c
+---------------------------- :: rcd
+fs |- A <: { l : B } ~~> c
+
+
+
 fs , B1 |- A <: B2 ~~> c
 ---------------------------- :: arr
 fs |- A <: B1 -> B2 ~~> c
 
 
-
-% fs |- A1 <: X ~~> c
-% ---------------------------------- :: andVar1
-% fs |- A1 & A2 <: X ~~> c o pp1
-
-
-% fs |- A2 <: X ~~> c
-% ---------------------------------- :: andVar2
-% fs |- A1 & A2 <: X ~~> c o pp2
+fs ,  X ** B1 |- A <:  B2 ~~> c
+---------------------------- :: forall
+fs |- A <: \X ** B1 .  B2 ~~> c
 
 
 
-% fs |- A1 <: \X ** B1 . B2 ~~> c
-% -------------------------------------------- :: andAll1
-% fs |- A1 & A2 <: \X ** B1 . B2 ~~> c o pp1
+fs |- A1 <: int ~~> c
+---------------------------------- :: andInt1
+fs |- A1 & A2 <: int ~~> c o pp1
 
 
-% fs |- A2 <: \X ** B1 . B2 ~~> c
-% ----------------------------------------------- :: andAll2
-% fs |- A1 & A2 <: \X ** B1 . B2 ~~> c o pp2
+fs |- A2 <: int ~~> c
+---------------------------------- :: andInt2
+fs |- A1 & A2 <: int ~~> c o pp2
 
 
-
-fs |- A1 <: B ~~> c
-B rigid
----------------------------------- :: andR1
-fs |- A1 & A2 <: B ~~> c o pp1
+fs |- A1 <: rho ~~> c
+---------------------------------- :: andConst1
+fs |- A1 & A2 <: rho ~~> c o pp1
 
 
-fs |- A2 <: B ~~> c
-B rigid
----------------------------------- :: andR2
-fs |- A1 & A2 <: B ~~> c o pp2
-
-
-
-% [] |- A <: A1 ~~> c1
-% fs |- A2 <: X ~~> c2
-% --------------------------------------- :: arrVar
-% A, fs |- A1 -> A2 <: X ~~> c1 -> c2
-
-
-% [] |- A <: A1 ~~> c1
-% fs |- A2 <: \X ** B1 . B2 ~~> c2
-% ------------------------------------------------- :: arrAll
-% A, fs |- A1 -> A2 <: \X ** B1 . B2 ~~> c1 -> c2
+fs |- A2 <: rho ~~> c
+---------------------------------- :: andConst2
+fs |- A1 & A2 <: rho ~~> c o pp2
 
 
 [] |- A <: A1 ~~> c1
-fs |- A2 <: B ~~> c2
-B rigid
---------------------------------------- :: arrR
-A, fs |- A1 -> A2 <: B ~~> c1 -> c2
+fs |- A2 <: int ~~> c2
+--------------------------------------- :: arrInt
+A, fs |- A1 -> A2 <: int ~~> c1 -> c2
+
+
+[] |- A <: A1 ~~> c1
+fs |- A2 <: rho ~~> c2
+--------------------------------------- :: arrConst
+A, fs |- A1 -> A2 <: rho ~~> c1 -> c2
+
+
+
+[] |- A <: A1
+fs |- A2 <: rho ~~> c
+--------------------------------------- :: allConst
+(X ** A , fs) |- \X ** A1 . A2 <: rho ~~> \c
+
+
 
 
 
@@ -1333,7 +1322,7 @@ distArr |- (T1 -> T2) * (T1 -> T3) tri T1 -> T2 * T3
 
 
 ---------------------------------------------------------- :: distPoly
- distPoly |- (\X . T1) * (\X . T2) tri \X . T1 * T2
+distPoly |- (\X . T1) * (\X . T2) tri \X . T1 * T2
 
 
 --------------------- :: projl
@@ -1351,6 +1340,8 @@ c |- T1 tri T2
 \ c |- \ X . T1 tri \X . T2
 
 
+--------------------------------------  :: topAll
+topAll |- Unit tri \ X . Unit
 
 
 
@@ -1601,6 +1592,9 @@ top v --> unit
 ------------------------------------------------- :: distPoly
 (distPoly < v1 , v2 >) T --> < v1 T, v2 T >
 
+
+----------------------- :: topAll
+(topAll unit) T --> unit
 
 
 ---------------------------- :: projl

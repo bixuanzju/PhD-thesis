@@ -172,18 +172,12 @@ to be distributed over quantifiers on the right-hand side.
 \[
 \inferrule*{  }{  \inter{ (\forall (\alpha <: [[A]]) .\ [[B1]]) }{ (\forall (\alpha <: [[A]]) .\ [[B2]]) }  <: \forall (\alpha <: [[A]]) .\ \inter{[[B1]]}{[[B2]]}  }
 \]
-In \fnamee, we do not have this distributivity rule, but are thinking to add
-a similar rule, as shown below:
-\[
-  \drule{S-distPoly}
-\]
-This rule will add extra expressiveness to \fnamee, e.g., we can compose
-algebras with polymorphic components:
+Interestingly, this corresponds nicely to our \rref{S-distPoly}, by which we can
+compose algebras with polymorphic components:
 \[
 [[ {l : \ X . X -> A} & {l : \X . X -> B} <: {l : \ X . X -> A & B} ]]
 \]
-We expect this rule would not pose any difficulties in terms of the coherence
-proof.
+% We expect this rule would not pose any difficulties in terms of the coherence proof.
 Like the elaboration semantics of \fnamee, \citeauthor{pierce1991programming}
 translates $\mathsf{F}_{\land}$ to System F extended with products, but he left
 coherence as a conjecture.

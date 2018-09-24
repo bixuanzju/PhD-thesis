@@ -24,8 +24,8 @@ can be found in \cref{appendix:proofs}.
   Expressions & $[[E]]$ & $\Coloneqq$ & $[[Top]] \mid [[ii]] \mid [[x]] \mid [[\ x . E]] \mid [[E1 E2]] \mid [[\ X ** AA  . E]] \mid [[E AA]] \mid [[E1 ,, E2]] \mid [[E : AA]] $ \\
          & & $\mid$ & $[[{ l = E }]] \mid [[E . l]] \mid [[letrec x : AA = E1 in E2]] \mid \hlmath{[[new [ AA ] (</ Ei // i />) ]]} \mid \hlmath{[[E1 ^ E2]]} $ \\
          & & $\mid$ & $\hlmath{[[ trait [ self : BB ] inherits </ Ei // i /> { </ lj = Ej' // j /> } : AA ]]}$ \\
-  Value contexts & $[[SG]]$ & $\Coloneqq$ & $[[empty]] \mid [[SG , x : AA]] $ \\
-  Type contexts & $[[SD]]$ & $\Coloneqq$ & $[[empty]] \mid [[SD , X ** AA]]$ \\ \\
+  Value Contexts & $[[SG]]$ & $\Coloneqq$ & $[[empty]] \mid [[SG , x : AA]] $ \\
+  Type Contexts & $[[SD]]$ & $\Coloneqq$ & $[[empty]] \mid [[SD , X ** AA]]$ \\ \\
 \end{tabular}
 \begin{tabular}{llll}
   Record types & $[[ { l1 : AA1 , ... , ln : AAn } ]] $ & $\defeq$ & $[[ { l1 : AA1} & ... & { ln : AAn } ]]$ \\
