@@ -136,11 +136,11 @@ $[[(\f . \ X . c (f X)) v T ]]$ reduces to $[[ c (v T) ]]$. Also we add the
 reduction rule \rref*{r-tapp} for type applications. Now we can show that
 \tnamee is type-safe in the usual sense:
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L60}{\leftpointright} Preservation of \tnamee]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L83}{\leftpointright} Preservation of \tnamee] % APPLYCOQ=PRESERVATION
   If $[[empty; empty |- e : T]]$ and $[[e --> e']]$, then $[[empty; empty |- e' : T]]$.
 \end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress of \tnamee]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress of \tnamee] % APPLYCOQ=PROGRESS
   If $[[empty; empty |- e : T]]$, then either $[[e]]$ is a value, or there exists $[[e']]$ such
   that $[[e --> e']]$.
 \end{theorem}
@@ -163,7 +163,7 @@ rules are ported from \namee. To conclude, we show an example translation:
 
 As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L7}{\leftpointright} Coercions preserve types]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L8}{\leftpointright} Coercions preserve types] % APPLYCOQ=COERCION_TYPES
   If $[[A <: B ~~> c]]$, then $[[c |-  |A| tri |B|]]$.
   \label{lemma:sub-correct:fi}
 \end{lemma}
@@ -172,7 +172,8 @@ As with \namee, we show two lemmas that relate \fnamee to \tnamee.
 \end{proof}
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L23}{\leftpointright} Elaboration soundness] We have that:
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L44}{\leftpointright} Elaboration soundness] % APPLYCOQ=ELABORATION_SOUND
+  We have that:
   \begin{itemize}
   \item If $[[DD ; GG |- ee => A ~~> e]]$, then $[[ |DD| ; |GG| |- e : |A | ]]$.
   \item If $[[DD ; GG |- ee <= A ~~> e]]$, then $[[ |DD| ; |GG| |- e : |A | ]]$.
@@ -270,11 +271,11 @@ meta-functions need to be updated to account for type variables, as shown in
 \cref{sec:alg}. We refer the reader to our Coq formalization for more details.
 
 
-\begin{theorem}[Soundness]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L445}{\leftpointright} Soundness] % APPLYCOQ=ALGO_SOUND
   If $[[ fs |- A <: B ~~> c]]$ then $ [[   A <: fs => B ~~> c  ]]   $.
 \end{theorem}
 
-\begin{theorem}[Completeness]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L1742}{\leftpointright} Completeness] % APPLYCOQ=ALGO_COMPLETE
   If $[[A <: B ~~> c]]$ then there exists $[[c']]$ such that $[[ [] |- A <: B ~~> c']]$.
 \end{theorem}
 

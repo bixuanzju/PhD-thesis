@@ -32,7 +32,7 @@ $[[B]]$. These two rules are a specialization of a more general lemma~\citep{alp
 says that disjointness is covariant with respect to subtyping. In a more precise
 sense, we have the following:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L140}{\leftpointright} Covariance of disjointness] \label{lemma:covariance:disjoint}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L160}{\leftpointright} Covariance of disjointness] \label{lemma:covariance:disjoint} % APPLYCOQ=DISJOINT_CO
   If $[[DD |- A ** B]]$ and $[[B <: C]]$, then $[[DD |- A ** C]]$.
 \end{lemma}
 \begin{proof}
@@ -40,7 +40,7 @@ sense, we have the following:
   type $[[A]]$. In the case for \rref{S-forall}, we need \cref{lemma:narrow:disjoint}.
 \end{proof}
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L104}{\leftpointright} Narrowing of disjointness] \label{lemma:narrow:disjoint}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L106}{\leftpointright} Narrowing of disjointness] \label{lemma:narrow:disjoint} % APPLYCOQ=DISJOINT_NARROW
   If $[[DD, X ** C1 |- A ** B]]$ and $[[C2 <: C1]]$, then $[[DD, X ** C2 |- A ** B]]$.
 \end{lemma}
 \begin{proof}
@@ -75,7 +75,7 @@ variable, which are all dealt with by the main judgment.
 
 To conclude this section, we show that disjointness is also symmetric:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L297}{\leftpointright} Symmetry of disjointness]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L143}{\leftpointright} Symmetry of disjointness] % APPLYCOQ=DISJOINT_SYMM
   If $[[ DD |- A ** B  ]]$, then $[[  DD |- B ** A   ]]$.
 \end{lemma}
 \begin{proof}

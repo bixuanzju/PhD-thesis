@@ -221,7 +221,7 @@ use the symbol $\backsimeq_{ctx}$ to refer to contextual equivalence in
 \cref{def:cxtx2}. With \cref{def:cxtx2} we can formally state that \namee is coherent
 in the following sense:
 
-\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L493}{\leftpointright} Coherence]{theorem}{coherence} \label{thm:coherence}
+\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L363}{\leftpointright} Coherence]{theorem}{coherence} \label{thm:coherence} % APPLYCOQ=COHERENCE
   We have that
   \begin{itemize}
   \item If $[[GG |- ee => A ]]$ then $[[GG |- ee ~= ee : A]]$.
@@ -371,7 +371,7 @@ clauses for intersection types and the disjointness rules for intersection types
 This is not a coincidence---we can show that disjointness and the value relation
 are connected by the following lemma:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1120}{\leftpointright} Disjoint values are related] \label{lemma:disjoint}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1114}{\leftpointright} Disjoint values are related] \label{lemma:disjoint} % APPLYCOQ=DISJOINT_VALUE
   If $[[A ** B]]$ and $[[  v1 : |A|  ]]$ and
   $[[  v2 : |B|  ]]$,
   then $[[   (v1, v2) in V ( A ; B  )    ]]$.
@@ -423,7 +423,7 @@ Firstly we need the compatibility lemmas, which state that logical equivalence i
 preserved by language constructs. Most of them are standard and are thus omitted.
 We show only two compatibility lemmas that are specific to our logical relation:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L30}{\leftpointright} Coercion compatibility]   \label{lemma:co-compa}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L32}{\leftpointright} Coercion compatibility]   \label{lemma:co-compa} % APPLYCOQ=COERCION_COMPAT
   Suppose that $[[A1 <: A2 ~~> c]]$,
   \begin{itemize}
   \item If $[[GG |- e1 == e2 : A1 ; A0]]$ then $[[GG |- c e1 == e2 : A2 ; A0]]$.
@@ -434,7 +434,7 @@ We show only two compatibility lemmas that are specific to our logical relation:
   By induction on the subtyping derivation.
 \end{proof}
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L104}{\leftpointright} Merge compatibility]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L109}{\leftpointright} Merge compatibility] % APPLYCOQ=MERGE_COMPAT
   If $[[   GG |- e1 == e1' : A ]]$, $[[  GG |- e2 == e2' : B ]]$ and $[[ A ** B ]]$,
   then $[[   GG |- < e1, e2 > == <e1', e2'> : A & B ]]$.
 \end{lemma}
@@ -449,11 +449,12 @@ itself by the logical relation. In our elaboration setting, we rephrase it so
 that any two \tname terms elaborated from the \emph{same} \namee expression are related
 by the logical relation. To prove it, we require \cref{thm:uniq}.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L50}{\leftpointright} Inference uniqueness] \label{thm:uniq}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L72}{\leftpointright} Inference uniqueness] \label{thm:uniq} % APPLYCOQ=INFERENCE_UNIQUE
   If $[[GG |- ee => A1]]$ and $[[GG |- ee => A2]]$, then $[[A1]] \equiv_\alpha [[A2]]$.
 \end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental property]  \label{thm:co-log} We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L9}{\leftpointright} Fundamental property]  \label{thm:co-log} % APPLYCOQ=FUNDAMENTAL
+  We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$ and $[[GG |- ee => A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
   \item If $[[GG |- ee <= A ~~> e]]$ and $[[GG |- ee <= A ~~> e']]$, then $[[GG |- e == e' : A ]]$.
@@ -474,7 +475,7 @@ by the logical relation. To prove it, we require \cref{thm:uniq}.
 
 We show that logical equivalence is preserved by \namee contexts:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L357}{\leftpointright} Congruence] \label{lemma:cong}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L225}{\leftpointright} Congruence] \label{lemma:cong} % APPLYCOQ=CONGRUENCE
  If $[[CC : (GG dir A) ~> (GG' dir' A') ~~> cc]]$, $[[GG |- ee1 dir A ~~> e1]]$, $[[GG |- ee2 dir A ~~> e2]]$
  and $[[GG |- e1 == e2 : A]]$, then $[[GG' |- cc{e1} == cc{e2} : A']]$.
 \end{lemma}
@@ -484,7 +485,7 @@ We show that logical equivalence is preserved by \namee contexts:
 \end{proof}
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L478}{\leftpointright} Adequacy] \label{lemma:ade}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L347}{\leftpointright} Adequacy] \label{lemma:ade} % APPLYCOQ=ADEQUACY
   If $[[  empty |- e1 == e2 : int ]]$ then $\kleq{[[e1]]}{[[e2]]}$.
 \end{lemma}
 \begin{proof}

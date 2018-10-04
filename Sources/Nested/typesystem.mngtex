@@ -271,11 +271,11 @@ computation, and \rref{r-ctxt} handles reduction under an evaluation context. As
 standard, $[[-->>]]$ is the reflexive, transitive closure of $[[-->]]$.
 Now we can show that \tname is type safe:
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L60}{\leftpointright} Preservation] \label{thm:target_preserve}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L83}{\leftpointright} Preservation] \label{thm:target_preserve} % APPLYCOQ=PRESERVATION
   If $[[empty |- e : T]]$ and $[[e --> e']]$, then $[[empty |- e' : T]]$.
 \end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress] \label{thm:target_progress}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/TargetProperty.v\#L9}{\leftpointright} Progress] \label{thm:target_progress} % APPLYCOQ=PROGRESS
   If $[[empty |- e : T]]$, then either $[[e]]$ is a value, or there exists $[[e']]$ such
   that $[[e --> e']]$.
 \end{theorem}
@@ -297,7 +297,7 @@ To conclude, we show two lemmas that relate source expressions to target terms.
 % proof sketches for each lemma and theorem. We refer the interested reader
 % to our Coq development for the full proofs.)
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L7}{\leftpointright} Coercions preserve types]   \label{lemma:sub-correct}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L8}{\leftpointright} Coercions preserve types]   \label{lemma:sub-correct} % APPLYCOQ=COERCION_TYPES
   If $[[A <: B ~~> c]]$, then $[[c |-  |A| tri |B|]]$.
 \end{lemma}
 \begin{proof}
@@ -305,7 +305,7 @@ To conclude, we show two lemmas that relate source expressions to target terms.
 \end{proof}
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L23}{\leftpointright} Elaboration soundness] \label{thm:elab_safe}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SourceProperty.v\#L44}{\leftpointright} Elaboration soundness] \label{thm:elab_safe} % APPLYCOQ=ELABORATION_SOUND
   We have that:
   \begin{itemize}
   \item If $[[GG |- ee => A ~~> e]]$, then $|\Gamma| \vdash e : |A| $.

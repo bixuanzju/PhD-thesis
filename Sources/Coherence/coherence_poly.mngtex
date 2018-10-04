@@ -240,7 +240,7 @@ as briefly discussed in \cref{sec:implicit}.
                                        & & $[[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L107}{\leftpointright} The canonicity relation for \fnamee} % APPLYCOQ=LOGICAL
+  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L107}{\leftpointright} The canonicity relation for \fnamee}
   \label{fig:logical:fi}
 \end{figure}
 
@@ -282,7 +282,7 @@ logical relation, which simplifies the proof a lot. We show that the logical
 relation is symmetric.
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L819}{\leftpointright} Symmetry of logical relation] % APPLYCOQ=LOGICAL_SYM
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L822}{\leftpointright} Symmetry of logical relation] % APPLYCOQ=LOG_SYMM
   If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
 \end{lemma}
 \begin{proof}
@@ -298,7 +298,7 @@ basically follows that in \cref{chap:coherence:simple}. We first give the
 interpretations of type and value contexts ($[[p]]$ is a mapping from type
 variables to monotypes).
 
-\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2023}{\leftpointright} Interpretation of type contexts] % APPLYCOQ=INTERP_TYPE_CONTEXT
+\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2023}{\leftpointright} Interpretation of type contexts]
   \begin{mathpar}
     \ottaltinferrule{}{}{  }{ [[emp in empty]] } \and
     \ottaltinferrule{}{}{ [[p in DD]] \\ [[empty |- t ** p(B)]] \\  }{ [[p [ X -> t ] in DD , X ** B]]  }
@@ -378,7 +378,7 @@ complicated due to the addition of type variables. We first prove that disjoint
 values of monotypes are related.
 
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L843}{\leftpointright} Disjoint values of monotypes are related] \label{lemma:disjoint:mono}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L836}{\leftpointright} Disjoint values of monotypes are related] \label{lemma:disjoint:mono} % APPLYCOQ=DISJOINT_MONO
   If $[[empty |- t1 ** t2]]$,
   $[[  empty ; empty |-  v1 : |t1|  ]]$ and
   $[[  empty ; empty |-  v2 : |t2|  ]]$
@@ -390,7 +390,7 @@ values of monotypes are related.
 
 Then we can prove a more general lemma.
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1120}{\leftpointright} Disjoint values are related]
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L1114}{\leftpointright} Disjoint values are related] % APPLYCOQ=DISJOINT_VALUE
   If $[[DD |- A ** B]]$, $[[ p in DD  ]]$, $[[  empty ; empty |-  v1 : |p (A)|  ]]$ and $[[  empty ; empty |-  v2 : |p (B)|  ]]$
   then $[[   (v1, v2) in V ( p(A) ; p(B)  )    ]]$.
 \end{lemma}
@@ -414,21 +414,22 @@ theorems without giving proofs. The proofs have mostly the same structures as in
 simply-typed case, but with more cases. The interested reader can refer to our
 Coq formalization.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L142}{\leftpointright} Fundamental property] We have that:
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L9}{\leftpointright} Fundamental property] % APPLYCOQ=FUNDAMENTAL
+  We have that:
   \begin{itemize}
   \item If $[[DD; GG |- ee => A ~~> e]]$ and $[[DD; GG |- ee => A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
   \item If $[[DD ; GG |- ee <= A ~~> e]]$ and $[[DD ; GG |- ee <= A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
   \end{itemize}
 \end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L357}{\leftpointright} Congruence]
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L225}{\leftpointright} Congruence] % APPLYCOQ=CONGRUENCE
  If $[[CC : (DD ; GG dir A) ~> (DD' ; GG' dir' A') ~~> cc]]$, $[[DD ; GG |- ee1 dir A ~~> e1]]$, $[[DD ; GG |- ee2 dir A ~~> e2]]$
  and $[[DD ; GG |- e1 == e2 : A ]]$, then $[[DD' ; GG' |- cc{e1} == cc{e2} : A']]$.
 \end{theorem}
 
 Finally \fnamee is coherent.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L493}{\leftpointright} Coherence of \fnamee] \label{thm:coherence:fi}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L363}{\leftpointright} Coherence of \fnamee] \label{thm:coherence:fi} % APPLYCOQ=COHERENCE
   We have that
   \begin{itemize}
   \item If $[[DD ; GG |- ee => A ]]$ then $[[DD ; GG |- ee ~= ee : A]]$.

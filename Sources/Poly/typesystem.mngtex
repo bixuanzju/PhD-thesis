@@ -64,7 +64,7 @@ shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
   and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
 \end{proposition}
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L505}{\leftpointright} Types are stable under substitution in \fnamee] \label{lemma:general_lemma}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L519}{\leftpointright} Types are stable under substitution in \fnamee] \label{lemma:general_lemma} % APPLYCOQ=WFT_SUBST
   If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$
   and well-formed context $[[ [ B / X ] DD    ]]$, then $[[  [ B / X ] DD |- [B / X] A      ]]$.
 \end{lemma}

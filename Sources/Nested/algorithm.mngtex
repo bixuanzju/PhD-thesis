@@ -190,14 +190,14 @@ transitive.
 
 The following two lemmas connect the declarative subtyping with the meta-functions.
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L42}{\leftpointright}] \label{lemma:top}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L388}{\leftpointright}] \label{lemma:top} % APPLYCOQ=ARROWTOP
   $[[ Top <: fs => Top ~~> < fs >1]]$
 \end{lemma}
 \begin{proof}
   By induction on the length of $[[fs]]$.
 \end{proof}
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L58}{\leftpointright}] \label{lemma:and}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L388}{\leftpointright}] \label{lemma:and} % APPLYCOQ=ARROWTOP
   $[[(fs => A) & (fs => B) <: fs => (A & B) ~~> < fs >2]]$
 \end{lemma}
 \begin{proof}
@@ -205,7 +205,7 @@ The following two lemmas connect the declarative subtyping with the meta-functio
 \end{proof}
 
 The proof of soundness is straightforward.
-\begin{theorem}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L90}{\leftpointright} Soundness] \label{thm:soundness}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L445}{\leftpointright} Soundness] \label{thm:soundness} % APPLYCOQ=ALGO_SOUND
   If $[[ fs |- A <: B ~~> c]]$ then $ [[   A <: fs => B ~~> c  ]]   $.
 \end{theorem}
 \begin{proof}
@@ -230,14 +230,15 @@ $\UU{[[A]]}$, of ``reflexive supertypes'' of $[[A]]$, as defined below:
   \UU{[[A -> B]]} \defeq \{ [[A -> C]] \mid [[C]] \in \UU{[[B]]} \}
 \end{mathpar}
 We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L147}{\leftpointright}] \label{lemma:set_refl}
+
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L556}{\leftpointright}] \label{lemma:set_refl} % APPLYCOQ=SETREFL
   $[[A]] \in \UU{[[A]]}$
 \end{lemma}
 \begin{proof}
   By induction on the structure of $[[A]]$.
 \end{proof}
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L180}{\leftpointright}] \label{lemma:set_trans}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L594}{\leftpointright}] \label{lemma:set_trans} % APPLYCOQ=SETTRANS
   If $[[A]] \in \UU{[[B]]}$ and $[[B]] \in \UU{[[C]]}$, then $[[A]] \in \UU{[[C]]}$.
 \end{lemma}
 \begin{proof}
@@ -252,7 +253,7 @@ We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 
 % Next we show the following lemma from which reflexivity (\cref{lemma:refl})
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L420}{\leftpointright}] \label{lemma:refl0}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L1096}{\leftpointright}] \label{lemma:refl0} % APPLYCOQ=SETSUB
   If $[[fs => B]] \in \UU{[[A]]}$ then there exists $[[c]]$ such that $[[fs |- A <: B ~~> c]]$.
 \end{lemma}
 \begin{proof}
@@ -265,7 +266,7 @@ We show two lemmas about $\UU{[[A]]}$ that are crucial in the subsequent proofs.
 
 Now it immediately follows that the algorithmic subtyping is reflexive.
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L610}{\leftpointright} Reflexivity] \label{lemma:refl}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L1109}{\leftpointright} Reflexivity] \label{lemma:refl} % APPLYCOQ=SUBREFL
   For every $[[A]]$ there exists $[[c]]$ such that $[[ [] |- A <: A ~~> c]]$.
 \end{lemma}
 \begin{proof}
@@ -277,14 +278,14 @@ The proof of transitivity is, to quote \citet{pierce1989decision}, typically
 ``the hardest single piece'' of metatheory. We omit the details here and
 refer the interested reader to our Coq development.
 
-\begin{lemma}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L601}{\leftpointright} Transitivity] \label{lemma:trans}
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L1587}{\leftpointright} Transitivity] \label{lemma:trans} % APPLYCOQ=SUBTRANS
   If $[[ [] |- A1 <: A2 ~~> c1]]$ and $[[ [] |- A2 <: A3 ~~> c2]]$, then there
   exists $[[c]]$ such that $[[ [] |- A1 <: A3 ~~> c]]$.
 \end{lemma}
 
 With reflexivity and transitivity in position, we show the main theorem.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/nested-composition/blob/master/coq/Subtype_Property.v\#L702}{\leftpointright} Completeness] \label{thm:complete}
+\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/SoundComplete.v\#L1742}{\leftpointright} Completeness] \label{thm:complete} % APPLYCOQ=ALGO_COMPLETE
   If $[[A <: B ~~> c]]$ then there exists $[[c']]$ such that $[[ [] |- A <: B ~~> c']]$.
 \end{theorem}
 \begin{proof}
