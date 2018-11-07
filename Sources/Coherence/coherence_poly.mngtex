@@ -217,7 +217,7 @@ substitution is deliberately avoided for type abstractions.
 
 In light of the fact that substitution in the logical relation seems unavoidable
 in our setting, and that impredicativity conflicts with substitution, we turn
-to, for the sake simplicity, \emph{predicativity}. The
+to, for the sake of simplicity, \emph{predicativity}. The
 restriction to predicativity, though reducing the expressiveness in theory, does
 not cost much in practice. Languages based on the Hindley–Milner type
 system~\citep{milner1978theory, hindley1969principal}, such as Haskell and ML,
