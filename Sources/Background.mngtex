@@ -182,10 +182,10 @@ then the type $[[ (int -> int) & int ]]$ is inhabited by $[[ ee1 ,, ee2  ]]$:
   }
   { [[  ee1 ,, ee2 : (int -> int) & int   ]] }
 \]
-
-\citeauthor{dunfield2014elaborating} showed how to give a semantics to a
-calculus with unrestricted intersection types by a type-directed elaboration to
-a simply-typed lambda calculus extended with products. For example, the
+\citeauthor{dunfield2014elaborating} also developed elaboration typing rules
+which, given a source expression with unrestricted intersections and unions, type-check
+and transform the program into an ordinary $\lambda$-calculus term with sums and products.
+For example, the
 expression $[[ (\x . x) ,, 1 ]]$ elaborates to a pair $[[ <\x. x , 1> ]]$. As
 usual, his system does not have explicit source-level intersection eliminations;
 elaboration puts all needed projections into the target program. For instance,
@@ -246,8 +246,8 @@ reasonable to expect the first one is good, since both the domain and range
 types are different. But the other two are not that obvious to see.
 Clearly a formal notion of well-behaved intersection types are called for!
 
-The issue of coherence is addressed in an elegant way by
-\citet{oliveira2016disjoint} with the notion of \emph{disjoint intersection types}, as we will discuss next.
+The issue of coherence is addressed (with some compromises) by
+\citet{oliveira2016disjoint} with the notion of \emph{disjointness}, as we will discuss next.
 
 
 \subsection{Disjoint Intersection Types}
@@ -803,13 +803,13 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 We define a \emph{complete program} to mean any closed term of type $[[int]]$.
 The following two definitions capture the notion of \emph{contextual equivalence}:
 
-\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L469}{\leftpointright} Kleene Equality]{definition}{kleene}
+\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L469}{\leftpointright} Kleene Equality $\backsimeq$]{definition}{kleene}
   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
   $\kleq{[[e]]}{[[e']]}$, if there exists $[[ii]]$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
 \end{restatable}
 
 
-\begin{restatable}[Contextual Equivalence]{definition}{kleenee}  \label{def:cxtx}%
+\begin{restatable}[Contextual Equivalence $\backsimeq_{ctx}$]{definition}{kleenee}  \label{def:cxtx}%
   \begin{align*}
     [[gg |- e1 ~= e2 : T]]  & \defeq [[gg |- e1 : T]] \land [[gg |- e2 : T]] \ \land \\
                                  & \qquad (\forall [[cc]].\ [[cc : (gg |- T) ~> (empty |- int)]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
@@ -833,16 +833,16 @@ In a nutshell, logical relations specify relations over well-typed terms via a
 structural induction on the syntax of types. For instance, logically related
 functions, when taken logically related arguments, return logically related
 results. For STLC, the logical relation is a family of relations $[[ (v1, v2) in V(T)  ]]$
-between closed values of type $[[T]]$. It is inductively defined on $[[T]]$ as follows:
+between closed values of type $[[T]]$. It is inductively defined on the structure of $[[T]]$ as follows:
 \begin{align*}
-  [[(v1 , v2) in V ( int ) with pq ]]  &\defeq  \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
-  [[(v1 , v2) in V ( T1 -> T2 ) with pq ]]  & \defeq  \forall [[(v'1, v'2) in V (T1)  ]].\, [[  (v1 v1' , v2 v2') in E (T2)  ]] \\
+  [[(v1 , v2) in V ( int )  ]]  &\defeq  \exists [[i]].\, [[v1]] = [[v2]] = [[ii]] \\
+  [[(v1 , v2) in V ( T1 -> T2 ) ]]  & \defeq  \forall [[(v'1, v'2) in V (T1)  ]].\, [[  (v1 v1' , v2 v2') in E (T2)  ]] \\
   [[(e1, e2) in E (T)  ]] & \defeq \exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (T) ]]
 \end{align*}
 That is, two integers are related if they are the same integer. Two functions
 $[[v1]]$ and $[[v2]]$ are related at the type $[[T1 -> T2]]$ if given two
 arguments $[[v1']]$ and $[[v2']]$ related at the domain type $[[T1]]$, the
-functions applied to the arguments are related expressions at the range type
+functions applied to the arguments are related expressions at the codomain type
 $[[T2]]$.
 
 

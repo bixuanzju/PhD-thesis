@@ -29,21 +29,32 @@ we find some errors and missing lemmas in \citeauthor{pierce1989decision}'s
 original manual proofs.
 
 
+\renewcommand{\rulehl}[2][gray!40]{%
+  \colorbox{#1}{$\displaystyle#2$}}
 
 \begin{figure}[t]
   \centering
-  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{int, and, arr, rcd, top, arrInt, rcdInt, andIntOne, andIntTwo}
+  \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{and, arr, rcd, top, int, arrInt, rcdInt, andIntOne, andIntTwo}
   \caption{Algorithmic subtyping of \namee}
   \label{fig:algorithm}
 \end{figure}
 
+\renewcommand{\rulehl}[1]{#1}
 
 \subsection{The Subtyping Algorithm}
 
+While \cref{fig:subtype_decl} is a fine specification of how subtyping
+should behave, it cannot be read directly as a subtyping algorithm for two
+reasons: (1) the conclusions of \rref{S-refl,S-trans} overlap with the other
+rules, and (2) the premises of \rref{S-trans} mention a type that does not
+appear in the conclusion. Simply dropping the two offending rules
+from the system is not possible without losing
+expressivity~\cite{Laurent12note}. Thus we need a
+different approach.
 \Cref{fig:algorithm} shows the algorithmic subtyping judgment $[[fs |- A <: B ~~> c]]$.
 This judgment is the algorithmic counterpart of the declarative
-judgment $[[A <: fs => B ~~> c]]$, where the symbol $[[fs]]$ stands for a
-queue of types and labels. Definition~\ref{def:fs} converts $[[ fs => A ]]$ to a valid type.
+judgment $[[A <: fs => B ~~> c]]$, where $[[fs]]$ stands for a
+queue used to track domain types and labels. Definition~\ref{def:fs} converts $[[ fs => A ]]$ to a valid type.
 For instance, if $[[fs]] = [[A]] , [[B]] , \{[[l]]\} $, then $[[fs => C]]$ abbreviates $ [[A -> B -> {l : C}]]$.
 
 \begin{definition} $[[fs => A]]$ is inductively defined as follows: \label{def:fs}

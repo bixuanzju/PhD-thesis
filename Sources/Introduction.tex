@@ -379,14 +379,34 @@ The second one, named \fnamee, is a polymorphic calculus with disjoint
 intersection types. \fnamee is essentially \namee enriched with a variant of
 parametric polymorphism called disjoint polymorphism~\citep{alpuimdisjoint}. The
 addition of parametric polymorphism greatly increases the expressiveness of
-\namee: \fnamee is able to express \emph{deep} conflict-free mixin composition
-in the presence of parametric polymorphism, which is extremely useful in the
-encodings of extensible designs. The key contribution is thus the extension of BCD
-subtyping with disjointness polymorphism. The extension is non-trivial in that
-we need to carefully retain coherence. The technical difficulty is
-\emph{well-foundedness}, stemming from the interaction between impredicativity
-and disjointness. To address this, we extend the canonicity relation with the
-restriction of predicativity.
+\namee: \fnamee supports a broader notion of compositional designs, and enables
+the development of highly modular and reusable programs. \fnamee is a
+generalization and extension of \citeauthor{alpuimdisjoint}'s \fname calculus, which proposed
+the idea of \emph{disjoint polymorphism}. The main novelty of \fnamee is a novel
+subtyping algorithm with distributivity laws on types. Distributivity plays a
+fundamental role in improving compositional designs, by enabling the automatic
+composition of multiple operations/interpretations. The main technical challenge
+is the proof of coherence for \fnamee as impredicativity makes it hard to
+develop a well-founded logical relation for coherence. However, by restricting
+the system to predicative instantiations only we are able to develop a suitable
+logical relation and show coherence.
+Besides coherence, we show
+several other important meta-theoretical results, such as type-safety,
+sound and complete algorithmic subtyping, and
+decidability of the type system. Remarkably, unlike
+\fsub's \emph{bounded polymorphism}, disjoint polymorphism
+in \fnamee supports decidable type-checking.
+
+% The
+% addition of parametric polymorphism greatly increases the expressiveness of
+% \namee: \fnamee is able to express \emph{deep} conflict-free mixin composition
+% in the presence of parametric polymorphism, which is extremely useful in the
+% encodings of extensible designs. The key contribution is thus the extension of BCD
+% subtyping with disjointness polymorphism. The extension is non-trivial in that
+% we need to carefully retain coherence. The technical difficulty is
+% \emph{well-foundedness}, stemming from the interaction between impredicativity
+% and disjointness. To address this, we extend the canonicity relation with the
+% restriction of predicativity.
 
 
 \paragraph{Typed first-class traits.}
@@ -440,7 +460,8 @@ In summary the contributions of this thesis are:
   intersections more easily extensible.
 
 \item The canonicity relation: a powerful proof method for establishing
-  coherence of calculi with disjoint intersection types and BCD-like subtyping.
+  coherence of calculi with disjoint intersection types, BCD-like subtyping and
+  polymorphism.
 
 \item A comprehensive Coq mechanization of all metatheory, including type
   safety, coherence, algorithmic soundness and completeness, etc.\footnote{For
@@ -454,13 +475,13 @@ In summary the contributions of this thesis are:
   algorithm with coercions.
 
 \item A full-blown implementation of \sedel; it runs and type-checks all the
-  examples in this thesis.\footnote{The Coq formalization and implementation are
-    available at \url{https://github.com/bixuanzju/phd-thesis-artifact}.} We
-  also conduct a case study, which shows that support for composition of Object
-  Algebras~\citep{oliveira2012extensibility} is greatly improved in \sedel.
-  Using such improved design patterns we re-code the interpreters from an
-  undergraduate textbook on programming languages~\citep{poplcook} in a modular
-  way.
+  examples in this thesis. We also conduct a case study, which shows that
+  support for composition of Object Algebras~\citep{oliveira2012extensibility}
+  is greatly improved in \sedel. Using such improved design patterns we re-code
+  the interpreters from an undergraduate textbook on programming
+  languages~\citep{poplcook} in a modular way. The implementation, Coq
+  formalization and all code presented in this thesis are available at
+  \url{https://github.com/bixuanzju/phd-thesis-artifact}.
 
 \end{itemize}
 
@@ -498,7 +519,7 @@ structure of the technical content in the thesis is divided into three parts:
   the elaboration, soundness and completeness of the algorithmic subtyping, etc.
 \item[\cref{part:coherence}:] \Cref{chap:coherence:simple,chap:coherence:poly} explore the
   issue of coherence. In \cref{chap:coherence:simple} we first propose a
-  semantically founded definition of coherence. We then use a proof method
+  semantically founded definition of coherence. We then propose a proof method
   called the canonicity relation to establish coherence of \namee. In
   \cref{chap:coherence:poly} we follow the same technique in
   \cref{chap:coherence:simple} but encounter a severe issue of impredicativity.
@@ -513,9 +534,9 @@ structure of the technical content in the thesis is divided into three parts:
 \Cref{sec:related} reviews related work, \cref{chap:future} presents some future
 work and finally \cref{chap:conclusion} concludes.
 
-This thesis is largely based on two publications~\citep{bi_et_al:LIPIcs:2018:9214, bi_et_al:LIPIcs:2018:9227} by the author, which are shown
-in the list below with corresponding chapters indicated. The work on \fnamee is
-based on an on-going draft by the author (\cref{chap:fi,chap:coherence:poly}).
+This thesis is largely based on two
+publications~\citep{bi_et_al:LIPIcs:2018:9214, bi_et_al:LIPIcs:2018:9227} by the
+author and one draft~\citep{xuanbiesop}, currently under review as of writing.
 In comparison to the original publications, this thesis contains a more in-depth
 and consistent treatment of disjoint intersection types.
 
@@ -523,6 +544,9 @@ and consistent treatment of disjoint intersection types.
 \item[\cref{chap:nested,chap:coherence:simple}:] Xuan Bi, Bruno C. d. S.
   Oliveira, and Tom Schrijvers. 2018. ``The Essence of Nested Composition''. In
   \emph{European Conference on Object-Oriented Programming (ECOOP)}.
+\item[\cref{chap:fi,chap:coherence:poly}:] Xuan Bi, Ningning Xie, Bruno C. d. S.
+  Oliveira, and Tom Schrijvers. 2019. ``Distributive Disjoint Polymorphism for Compositional Programming''. Submitted to
+  \emph{European Symposium on Programming (ESOP)}.
 \item[\cref{chap:traits,chap:case_study}:] Xuan Bi and Bruno C. d. S. Oliveira.
   2018. ``Typed First-Class Traits''. In \emph{European Conference on Object-Oriented Programming (ECOOP)}.
 \end{description}
@@ -540,5 +564,5 @@ languages~\citep{DBLP:books/daglib/0005958} for a general introduction.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
-%%% org-ref-default-bibliography: ../Thesis.bib
+%%% org-ref-default-bibliography: "../Thesis.bib"
 %%% End:

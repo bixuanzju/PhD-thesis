@@ -2,6 +2,8 @@
 \section{\namee by Examples}
 \label{nested:sec:overview}
 
+
+
 This section illustrates \namee with an encoding of a family polymorphism
 solution to the expression problem, and informally presents its salient
 features.
@@ -21,9 +23,9 @@ to abbreviate types.
 \lstinputlisting[linerange=4-4]{./examples/overview.sl}% APPLY:linerange=PRINT_INTERFACE
 Similarly, we capture the interface of the \lstinline{Lang} family in a record,
 with one field for each case's constructor.
-\lstinputlisting[linerange=8-8]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY
+\lstinputlisting[linerange=8-11]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY
 Here is the implementation of \lstinline{Lang}.
-\lstinputlisting[linerange=17-24]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
+\lstinputlisting[linerange=20-27]{./examples/overview.sl}% APPLY:linerange=LANG_IMPL
 We assume several primitive types: fixed width integers \lstinline{Int},
 \lstinline{Double} for numeric operations and \lstinline{String} for text
 manipulation. A \namee program consists of a collection of definitions and
@@ -33,18 +35,18 @@ declarations, separated by semicolon \lstinline{;}.
 \paragraph{Adding evaluation.}
 We obtain \lstinline{IPrint & IEval}, which is the corresponding type for \lstinline{LangEval.Exp}, by
 intersecting \lstinline{IPrint} with \lstinline{IEval} where
-\lstinputlisting[linerange=29-29]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
+\lstinputlisting[linerange=32-32]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE
 The type for \lstinline{LangEval} is then
-\lstinputlisting[linerange=34-37]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
+\lstinputlisting[linerange=37-40]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_INTERFACE
 We obtain an implementation for \lstinline{LangEval} by merging the existing
 \lstinline{Lang} implementation \lstinline{implLang} with the new evaluation
 functionality \lstinline{implEval} using the merge operator \lstinline{,,}.
-\lstinputlisting[linerange=45-53]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
+\lstinputlisting[linerange=48-56]{./examples/overview.sl}% APPLY:linerange=EVAL_PRINT_IMPL
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Adding negation.}
 Adding negation to \lstinline{Lang} works similarly.
-\lstinputlisting[linerange=57-65]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
+\lstinputlisting[linerange=60-68]{./examples/overview.sl}% APPLY:linerange=LANG_NEG
 % \begin{Verbatim}[xleftmargin=10mm,fontsize=\relscale{.80}]
 % type LangNeg = Lang & { neg : IPrint -> IPrint }
 
@@ -58,9 +60,9 @@ Adding negation to \lstinline{Lang} works similarly.
 \paragraph{Putting everything together.}
 Finally, we can combine the two extensions and provide the missing
 implementation of evaluation for the negation case.
-\lstinputlisting[linerange=70-80]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
+\lstinputlisting[linerange=73-83]{./examples/overview.sl}% APPLY:linerange=LANG_FINAL
 We can test \lstinline{implLangNegEval} by creating an object that represents $-2 + 3$, which is able to print and evaluate at the same time.
-\lstinputlisting[linerange=98-100]{./examples/overview.sl}% APPLY:linerange=TEST
+\lstinputlisting[linerange=101-103]{./examples/overview.sl}% APPLY:linerange=TEST
 
 
 
@@ -70,7 +72,7 @@ Recall that in \cref{bg:sec:intersection}, we show how to model multi-field reco
 single-field records. Thus \namee does not have multi-field record types built in.
 They are merely syntactic sugar for intersections of single-field record types.
 Hence, the following is an equivalent definition of \lstinline{Lang}:
-\lstinputlisting[linerange=13-13]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
+\lstinputlisting[linerange=16-16]{./examples/overview.sl}% APPLY:linerange=LANG_FAMILY2
 Similarly, the multi-field record expression in the definition of
 \lstinline{implLang} is syntactic sugar for the explicit merge of two
 single-field records.
@@ -106,7 +108,7 @@ Yet, there is a flaw in our reasoning:
 strictly speaking, \lstinline{implLang ,, implEval} is not of
 type \lstinline{LangEval} but instead of type \lstinline{Lang & EvalExt}, where
 \lstinline{EvalExt} is the type of \lstinline{implEval}:
-\lstinputlisting[linerange=41-41]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
+\lstinputlisting[linerange=44-44]{./examples/overview.sl}% APPLY:linerange=EVAL_INTERFACE2
 
 Nevertheless, the definition of \lstinline{implLangEval} is valid because
 \lstinline{Lang & EvalExt} is a subtype of \lstinline{LangEval}.

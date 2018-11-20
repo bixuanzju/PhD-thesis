@@ -286,7 +286,7 @@ EE :: 'EE_' ::= {{ tex \mathcal{E} }}
 
 %% Coercions
 
-co, c :: 'co_' ::=   {{ com coercion }}
+co, c {{ tex co }} :: 'co_' ::=   {{ com coercion }}
   | id          :: :: id
   | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
   | top         :: :: top
@@ -373,8 +373,7 @@ terminals :: 'terminals_' ::=
     | <       :: :: lbr  {{ tex \langle }}
     | >       :: :: rbr  {{ tex \rangle }}
     | *       :: :: prod {{ tex \times }}
-    | dot     :: :: dot  {{ tex [ \cdot ] }}
-    | empty   :: :: empty {{ tex \cdot }}
+    | empty   :: :: empty {{ tex \bullet }}
     | |-      :: :: dash  {{ tex \vdash }}
     | elt     :: :: elt       {{ tex \in }}
     | tri     :: :: tri       {{ tex \triangleright }}
@@ -747,7 +746,7 @@ defns
 JASubtyping :: '' ::=
 
 defn
-fs |- A <: B ~~> c :: :: ASub :: A_ {{ tex [[fs]] \vdash [[A]] \prec : [[B]] [[~~>]] [[c]] }}
+fs |- A <: B ~~> c :: :: ASub :: A_ {{ tex [[fs]] \vdash [[A]] \prec : [[B]] \rulehl{[[~~>]] [[c]]} }}
 by
 
 
@@ -1278,7 +1277,9 @@ defns
 
 JCoTyping :: '' ::=
 
-defn c |- T1 tri T2 ::  :: cotyp :: 'ct_' by
+defn c |- T1 tri T2 ::  :: cotyp :: 'ct_'
+{{ tex [[c]] :: [[T1]] [[tri]] [[T2]] }}
+by
 
 
 ----------------------- :: refl

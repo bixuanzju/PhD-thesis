@@ -5,7 +5,10 @@ type IPrint = { print : String };
 -- END_PRINT_INTERFACE
 
 -- BEGIN_LANG_FAMILY
-type Lang = { lit : Int -> IPrint, add : IPrint -> IPrint -> IPrint };
+type Lang = {
+  lit : Int -> IPrint,
+  add : IPrint -> IPrint -> IPrint
+};
 -- END_LANG_FAMILY
 
 
@@ -55,7 +58,7 @@ implLangEval : LangEval = implLang ,, implEval;
 
 -- BEGIN_LANG_NEG
 type NegPrint = { neg : IPrint -> IPrint };
-type LangNeg = Lang & NegPrint;
+type LangNeg  = Lang & NegPrint;
 
 implNegPrint : NegPrint = {
   neg (exp : IPrint) = {
@@ -74,7 +77,7 @@ implNegEval : NegEval = {
   }
 };
 
-type NegEvalExt = { neg : IPrint & IEval -> IPrint & IEval };
+type NegEvalExt  = { neg : IPrint & IEval -> IPrint & IEval };
 type LangNegEval = LangEval & NegEvalExt;
 implLangNegEval : LangNegEval =
   implLangEval ,, implNegPrint ,, implNegEval;
@@ -95,7 +98,7 @@ e2 E (f : ExpAlgExt[E]) : E = f.sub (f.lit 5) (e1 E f);  -- 5 - (2 + 3)
 
 
 -- BEGIN_TEST
-fac = implLangNegEval;
-e = fac.add (fac.neg (fac.lit 2)) (fac.lit 3);
+fac  = implLangNegEval;
+e    = fac.add (fac.neg (fac.lit 2)) (fac.lit 3);
 main = e.print ++ " = " ++ e.eval.toString -- Output: "-2+3 = 1"
 -- END_TEST
