@@ -4,14 +4,12 @@
 \begin{figure}[t]
   \centering
 \begin{tabular}{llll} \toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
-  Monotypes & $[[t]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[{l : t}]] \mid [[X]] $\\
-  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] $ \\
-        & & $\mid$ & $ [[{l = ee}]] \mid [[ ee.l  ]] \mid [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
-  Value Contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
-  Type Contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
-  % Expression Contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]]  $ \\
-  % & & $\mid$ & $[[ ee ,, CC  ]] \mid  [[ { l = CC}  ]]  \mid [[ CC . l]] $
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[Bot]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
+  % Monotypes & $[[t]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[{l : t}]] \mid [[X]] $\\
+  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] \mid [[{l = ee}]] \mid [[ ee.l  ]]  $ \\
+        & & $\mid$ & $  [[\X ** A . ee]] \mid [[ ee A ]]  $ \\
+  Term contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
+  Type contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
 \end{tabular}
   \caption{Syntax of \fnamee}
   \label{fig:syntax:fi}
@@ -19,21 +17,22 @@
 
 \Cref{fig:syntax:fi} shows the syntax of \fnamee. Metavariables $[[A]], [[B]],
 [[C]]$ range over types. Apart from \namee types, \fnamee also includes type
-variables $[[X]]$ and disjoint quantification $[[ \X ** A . B ]]$. Monotypes
-$[[t]]$ are the same, minus the universal quantification. Metavariable $[[ee]]$
+variables $[[X]]$ and disjoint quantification $[[ \X ** A . B ]]$.
+One novelty in \fnamee is the addition of the uninhabited bottom type $[[Bot]]$.
+Metavariable $[[ee]]$
 ranges over expressions. We extend \namee expressions with two standard
-constructs in System F: type abstractions $[[ \X ** A . ee ]]$ and type
+constructs from System F: type abstractions $[[ \X ** A . ee ]]$ and type
 applications $[[ee A]]$. The former also includes an extra disjointness
 constraint $[[A]]$ associated with the type variable $[[X]]$.
 
 \paragraph{Contexts.}
 
-In the traditional formulation of System F, there is a single context that is
-used to keep track of both type variables and term variables. Here we use
+In the traditional formulation of System F, there is a single context for
+tracking of both type variables and term variables. Here we use
 another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
-split into \emph{value contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
-The former track bound term variables $[[x]]$ with their types $[[A]]$; and the
-latter track bound type variables $[[X]]$ with their disjointness constraints
+split into \emph{term contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
+The former track free term variables $[[x]]$ with their types $[[A]]$; and the
+latter track free type variables $[[X]]$ with their disjointness constraints
 $[[A]]$. This formulation is also convenient for the presentation of logical
 relations in \cref{chap:coherence:poly}.
 
@@ -46,18 +45,36 @@ relations in \cref{chap:coherence:poly}.
   \label{fig:well-formedness:fi}
 \end{figure}
 
-\paragraph{Well-formedness.}
+\paragraph{Well-formedness and unrestricted intersections.}
 
-The well-formedness judgments for types and contexts in
+The well-formedness judgments for types $[[ DD |- A ]]$ in
 \cref{fig:well-formedness:fi}, though quite standard in System F, is the key
-difference from \fname. The \fname calculus follows \oname where it has a
-disjointness condition $[[ A ** B ]]$ in \rref{swft-and}. This is crucial to
-ensure coherence due to the syntactic proof method, but it also complicates the
-metatheory a lot with extra effort required to show that all types in \fname are
-well-formed. In particular, they only have a weaker version of the substitution
-lemma, shown in \cref{lemma:weaker_lemma}: the general substitution lemma as
-shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
-\fnamee.
+difference from \fname, which (like its predecessor \oname) uses well-formedness
+to also ensure that all intersection types are disjoint. In other words, while
+in \fname all valid intersection types must be disjoint, in \fnamee unrestricted
+intersection types such as $[[int & int]]$ are allowed.
+More specifically,
+the well-formedness of intersection types in \fnamee and \fname is:
+\begin{mathpar}
+  \ottaltinferrule{wf-\fnamee}{}{ [[DD |- A]] \\ [[DD |- B]]  }{ [[ DD |- A & B ]] } \and
+  \ottaltinferrule{wf-\fname}{}{ [[DD |- A]] \\ [[DD |- B]] \\ \hlmath{[[DD |- A ** B]]}  }{ [[ DD |- A & B ]] }
+\end{mathpar}
+Notice that \fname has an extra disjointness condition $[[ DD |- A ** B ]]$ in the premise.
+This is crucial for \fname's syntactic method for proving coherence,
+but also burdens the calculus with various syntactic restrictions and
+complicates its metatheory. For example, it requires extra effort to
+show that \fname only produces disjoint intersection types. As a consequence,
+\fname features a \emph{weaker} substitution lemma (note the gray
+part in \cref{lemma:weaker_lemma}) than \fnamee (\cref{lemma:general_lemma}).
+
+% The \fname calculus follows \oname where it has a
+% disjointness condition $[[ A ** B ]]$ in \rref{swft-and}. This is crucial to
+% ensure coherence due to the syntactic proof method, but it also complicates the
+% metatheory a lot with extra effort required to show that all types in \fname are
+% well-formed. In particular, they only have a weaker version of the substitution
+% lemma, shown in \cref{lemma:weaker_lemma}: the general substitution lemma as
+% shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
+% \fnamee.
 
 \begin{proposition}[Types are stable under substitution in \fname] \label{lemma:weaker_lemma}
   If $[[DD |- A]]$ and $[[DD |- B]]$ and $[[ X ** C in DD  ]]$ and $\hlmath{[[ DD |- B ** C ]]}$
@@ -73,87 +90,94 @@ shown in \cref{lemma:general_lemma} does not hold in \fname, but holds in
 \end{proof}
 
 
+\paragraph{Declarative subtyping of \fnamee.}
+
+
 \begin{figure}[t]
   \centering
-  \begin{drulepar}[S]{$ [[A <: B ~~> c]]  $}{Declarative subtyping}{}
-    \drule{refl}
-    \drule{trans}
-    \drule{top}
-    \drule{rcd}
-    \drule{arr}
-    \drule{andL}
-    \drule{andR}
-    \drule{and}
-    \drule{distArr}
-    \drule{topArr}
-    \drule{distRcd}
-    \drule{topRcd} \and
-    \hlmath{\drule{forall}} \and
-    \hlmath{\drule{topAll}} \and
-    \hlmath{\drule{distPoly}}
-  \end{drulepar}
+    \drules[S]{$ [[A <: B ~~> c]]  $}{Declarative subtyping}{refl,trans,top,rcd,andL,andR,arr,and,distArr,topArr,distRcd,topRcd,bot,forall,topAll,distAll}
   \caption{Declarative subtyping of \fnamee}
   \label{fig:subtype_decl:fi}
 \end{figure}
 
-\paragraph{Declarative subtyping of \fnamee.}
-
-
 % \Cref{fig:subtyping:fi} presents the subtyping relation of \fnamee. For now, we
 % ignore the coercion parts ($[[~~>]] [[c]]$) and explain them in
 % \cref{sec:elaboration:fi}.
-We naturally extend the subtyping of \namee with three new rules
-\rref*{S-forall,S-topAll,S-distPoly}, highlighted in \cref{fig:subtype_decl:fi}.
-In \rref{S-forall}, a universal quantifier is covariant in its body, and
-contravariant in its disjointness constraints. We also need a new coercion
-$[[ \ c ]]$ to expression the conversion between two polymorphic types. A minor
-comment is that since \fnamee features explicit polymorphism, type variables are
-neutral to subtyping, i.e., $[[X <: X]]$, which is already contained in
-\rref{S-refl}. \Rref{S-distPoly}, similar to \rref{S-distArr}, dictates that
-quantifiers may distribute over intersections. \Rref{S-topAll} plays a similar
-role as \rref{S-topArr}. As with \namee subtyping, the subtyping relation of
-\fnamee is trivially \emph{reflexive} and \emph{transitive}.
+We extend the subtyping of \namee with four new rules: \rref{S-bot} for the
+bottom type, and \rref{S-distAll,S-topAll} for distributivity of disjoint
+quantification, as shown in \cref{fig:subtype_decl:fi}. $[[Bot]]$ is a subtype of
+all types (\rref{S-bot}). Subtyping of disjoint quantification is covariant in
+its body, and contravariant in its disjointness constraints (\rref{S-forall}).
+\Rref{S-distAll}, similar to \rref{S-distArr}, dictates that quantifiers may
+distribute over intersections. \Rref{S-topAll} plays a similar role as
+\rref{S-topArr}. A minor comment is that since \fnamee features explicit
+polymorphism, type variables are neutral to subtyping, i.e., $[[X <: X]]$, which
+is already contained in \rref{S-refl}.
 
-\begin{remark}
-  In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are
-  well-formed relative to some type context, resulting in the subtyping
-  judgment $[[DD |- A <: B]]$. But this is not very important
-  for the purpose of presentation, thus we omit contexts.
-\end{remark}
+% \begin{remark}
+%   In our Coq formalization, we require that the two types $[[A]]$ and $[[B]]$ are
+%   well-formed relative to some type context, resulting in the subtyping
+%   judgment $[[DD |- A <: B]]$. But this is not very important
+%   for the purpose of presentation, thus we omit contexts.
+% \end{remark}
 
 
 \paragraph{Typing of \fnamee.}
 
-\begin{figure}
+\begin{figure}[t]
   \centering
-  \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
-  \drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+  \begin{small}
+    \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, rcd, proj, tabs, tapp}
+    \drules[FT]{$[[DD ; GG |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+  \end{small}
   \caption{Bidirectional type system of \fnamee}
   \label{fig:typing:fi}
 \end{figure}
 
 
-The bidirectional type system of \fnamee follows that of \namee, as shown
-in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[~~>]] [[e]]$) and explain them in
-\cref{sec:elaboration:fi}. The inference judgment $[[ DD; GG |- ee => A  ]]$
-says that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]]$. The checking judgment
-$[[ DD ; GG |- ee <= A  ]]$ asserts that $[[ee]]$ checks against the type $[[A]]$
-in the contexts $[[DD]]$ and $[[GG]]$. The rules directly ported from \namee are inferring rules \rref*{FT-top} for top values,
-\rref*{FT-int} for integers, \rref*{FT-var} for variables, \rref*{FT-app} for applications, \rref*{FT-merge} for merges,
-\rref*{FT-anno} for annotated terms, \rref*{FT-rcd,FT-proj} for records; checking rules \rref*{FT-abs} for term abstractions, and
-the subsumption rule \rref*{FT-sub}. Note that in \rref{FT-merge}, the disjointness judgment has an extra type context, which will be
-explained in \cref{sec:disjoint:fi}.
+\fnamee features a bidirectional type system inherited from \fname.
+% \bruno{We can just focus on the
+%   T-TApp, T-TAbs and T-Merge. Maybe you can drop subsumption and lambdas,
+%   since those are standard.
+% Refer to the full rules in the appendix.}
+The full set of typing rules are shown in \cref{fig:typing:fi}. % Again we ignore
+% the gray parts and explain them in \cref{sec:elaboration:fi}.
+The inference judgment $[[ DD; GG |- ee => A ]]$ says
+that we can synthesize the type $[[A]]$ under the contexts $[[DD]]$ and
+$[[GG]]$. The checking judgment $[[ DD ; GG |- ee <= A ]]$ asserts that $[[ee]]$
+checks against the type $[[A]]$ under the contexts $[[DD]]$ and $[[GG]]$.
+Most of the rules are quite standard in the literature.
+The merge expression $[[ee1 ,, ee2]]$ is well-typed if both sub-expressions are
+well-typed, and their types are \textit{disjoint} (\rref{FT-merge}).
+The disjointness relation will be explained in \cref{sec:disjoint:fi}.
+To infer a type abstraction (\rref{FT-tabs}), we add disjointness constraints to the type
+context. For a type
+application (\rref{FT-tapp}), we check that the type argument
+satisfies the disjointness constraints.
+\Rref{FT-merge,FT-tapp} are the only rules checking disjointness.
 
-\paragraph{Disjoint quantification.}
 
-The new rules are the inferring rules for type abstractions \rref*{FT-tabs} and
-type applications \rref*{FT-tapp}. In \rref{FT-tabs}, disjointness
-constraints are added to the type context. During a type application in
-\rref{FT-tapp}, the type system checks that the type argument agrees with the
-disjointness constraints; this is the rule where we diverge from System F and
-\fname, and allow only monotype instantiations ($[[t]]$ rather than $[[A]]$).  We shall return to this point in
-\cref{chap:coherence:poly}. \Rref{FT-merge,FT-tapp} are the
-only two rules that use the disjointness checking.
+% The bidirectional type system of \fnamee follows that of \namee, as shown
+% in \cref{fig:typing:fi}. Again we ignore the translation parts ($[[~~>]] [[e]]$) and explain them in
+% \cref{sec:elaboration:fi}. The inference judgment $[[ DD; GG |- ee => A  ]]$
+% says that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]]$. The checking judgment
+% $[[ DD ; GG |- ee <= A  ]]$ asserts that $[[ee]]$ checks against the type $[[A]]$
+% in the contexts $[[DD]]$ and $[[GG]]$. The rules directly ported from \namee are inferring rules \rref*{FT-top} for top values,
+% \rref*{FT-int} for integers, \rref*{FT-var} for variables, \rref*{FT-app} for applications, \rref*{FT-merge} for merges,
+% \rref*{FT-anno} for annotated terms, \rref*{FT-rcd,FT-proj} for records; checking rules \rref*{FT-abs} for term abstractions, and
+% the subsumption rule \rref*{FT-sub}. Note that in \rref{FT-merge}, the disjointness judgment has an extra type context, which will be
+% explained in \cref{sec:disjoint:fi}.
+
+% \paragraph{Disjoint quantification.}
+
+% The new rules are the inferring rules for type abstractions \rref*{FT-tabs} and
+% type applications \rref*{FT-tapp}. In \rref{FT-tabs}, disjointness
+% constraints are added to the type context. During a type application in
+% \rref{FT-tapp}, the type system checks that the type argument agrees with the
+% disjointness constraints; this is the rule where we diverge from System F and
+% \fname, and allow only monotype instantiations ($[[t]]$ rather than $[[A]]$).  We shall return to this point in
+% \cref{chap:coherence:poly}. \Rref{FT-merge,FT-tapp} are the
+% only two rules that use the disjointness checking.
 
 
 

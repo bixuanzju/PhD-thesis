@@ -379,23 +379,23 @@ The second one, named \fnamee, is a polymorphic calculus with disjoint
 intersection types. \fnamee is essentially \namee enriched with a variant of
 parametric polymorphism called disjoint polymorphism~\citep{alpuimdisjoint}. The
 addition of parametric polymorphism greatly increases the expressiveness of
-\namee: \fnamee supports a broader notion of compositional designs, and enables
-the development of highly modular and reusable programs. \fnamee is a
-generalization and extension of \citeauthor{alpuimdisjoint}'s \fname calculus, which proposed
-the idea of \emph{disjoint polymorphism}. The main novelty of \fnamee is a novel
-subtyping algorithm with distributivity laws on types. Distributivity plays a
-fundamental role in improving compositional designs, by enabling the automatic
-composition of multiple operations/interpretations. The main technical challenge
-is the proof of coherence for \fnamee as impredicativity makes it hard to
-develop a well-founded logical relation for coherence. However, by restricting
-the system to predicative instantiations only we are able to develop a suitable
-logical relation and show coherence.
-Besides coherence, we show
-several other important meta-theoretical results, such as type-safety,
-sound and complete algorithmic subtyping, and
-decidability of the type system. Remarkably, unlike
-\fsub's \emph{bounded polymorphism}, disjoint polymorphism
-in \fnamee supports decidable type-checking.
+\namee: \fnamee improves upon the finally tagless~\citep{CARETTE_2009} and
+object algebra~\citep{oliveira2012extensibility} approaches and support advanced
+compositional designs, and enables the development of highly modular and
+reusable programs. \fnamee is a generalization and extension of
+\citeauthor{alpuimdisjoint}'s \fname calculus, which proposed the idea of
+\emph{disjoint polymorphism}. The main novelty of \fnamee is a novel subtyping
+algorithm with distributivity laws on types. Distributivity plays a fundamental
+role in improving compositional designs, by enabling the automatic composition
+of multiple operations/interpretations. The main technical challenge is the
+proof of coherence for \fnamee as impredicativity makes it hard to develop a
+well-founded logical relation for coherence. However, by restricting the system
+to predicative instantiations only we are able to develop a suitable logical
+relation and show coherence. Besides coherence, we show several other important
+meta-theoretical results, such as type-safety, sound and complete algorithmic
+subtyping, and decidability of the type system. Remarkably, unlike \fsub's
+\emph{bounded polymorphism}~\citep{cardelli1985understanding}, disjoint polymorphism in \fnamee supports decidable
+type-checking.
 
 % The
 % addition of parametric polymorphism greatly increases the expressiveness of
@@ -476,7 +476,7 @@ In summary the contributions of this thesis are:
 
 \item A full-blown implementation of \sedel; it runs and type-checks all the
   examples in this thesis. We also conduct a case study, which shows that
-  support for composition of Object Algebras~\citep{oliveira2012extensibility}
+  support for composition of object algebras~\citep{oliveira2012extensibility}
   is greatly improved in \sedel. Using such improved design patterns we re-code
   the interpreters from an undergraduate textbook on programming
   languages~\citep{poplcook} in a modular way. The implementation, Coq

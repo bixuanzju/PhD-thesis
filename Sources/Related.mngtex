@@ -350,7 +350,7 @@ proposed~\citep{flatt1998classes,bono1999core, ancona2003jam}. Mixin-based
 inheritance requires that mixins are composed linearly, and as such, conflicts
 are resolved implicitly. In comparison, the trait model in \sedel requires
 conflicts to be resolved explicitly. We want to emphasize that conflict
-detection is essential in expressing composition operators for Object Algebras,
+detection is essential in expressing composition operators for object algebras,
 without running into ambiguities. \citeauthor{bracha1992programming}'s Jigsaw
 framework~\citep{bracha1992programming} formalized mixin composition, along with
 a rich trait algebra including merge, restrict, select, project, overriding and

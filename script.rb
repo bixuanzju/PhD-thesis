@@ -45,7 +45,7 @@ fileloc = {}
 beginpos = {}
 endpos = {}
 
-Dir['./examples/*.sl','./phd-thesis-artifact/coq/poly/*.v'].each do |file|
+Dir['./examples/*.hs','./examples/*.sl','./phd-thesis-artifact/coq/poly/*.v'].each do |file|
   scan(file, beginpos, endpos, fileloc)
 end
 

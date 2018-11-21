@@ -1,4 +1,161 @@
 
+\renewcommand{\rulehl}[1]{#1}
+
+\chapter{Circuit Embeddings}
+\label{appendix:circuit}
+
+\lstinputlisting[language=haskell,linerange=2-140]{./examples/Scan2.hs}% APPLY:linerange=DSL_FULL
+
+
+\chapter{Decidability}
+\label{appendix:decidable}
+
+\begin{definition}[Size of $[[fs]]$]
+  \begin{align*}
+    size([[ [] ]]) &=  0 \\
+    size([[ fs, l ]]) &= size([[ fs ]]) \\
+    size([[ fs, A ]]) &= size([[ fs ]]) + size ([[ A ]]) \\
+    size([[ fs, X ** A ]]) &= size([[ fs ]]) + size([[ A ]]) \\
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Size of types]
+  \begin{align*}
+    size([[ rho ]]) &= 1 \\
+    size([[ A -> B ]]) &= size([[A]]) + size([[B]]) + 1 \\
+    size([[ A & B ]]) &= size([[A]]) + size([[B]]) + 1 \\
+    size([[ {l:A} ]]) &= size([[A]]) + 1 \\
+    size([[ \X ** A. B ]]) &= size([[A]]) + size([[B]]) + 1
+  \end{align*}
+\end{definition}
+
+% \begin{theorem}[Decidability of Algorithmic Subtyping]
+%   \label{lemma:decide-sub}
+%   Given $[[fs]]$, $[[A]]$ and $[[B]]$, it is decidable whether there exists
+%   $[[c]]$, such that $[[fs |- A <: B ~~> c]]$.
+% \end{theorem}
+\decidesub*
+\begin{proof}
+Let the judgment $[[fs |- A <: B ~~> c]]$ be measured by $size([[fs]]) +
+size([[A]]) + size([[B]])$. For each subtyping rule, we show that every
+inductive premise
+is smaller than the conclusion.
+
+\begin{itemize}
+  \item Rules \rref*{A-const,A-top, A-bot} have no premise.
+    \item Case \[ \drule{A-and} \]
+      In both premises, they have the same $[[fs]]$ and $[[A]]$, but $[[B1]]$
+      and $[[B2]]$ are smaller than $[[B1 & B2]]$.
+    \item Case \[\drule{A-arr} \]
+      The size of premise is smaller than the conclusion as $size([[B1 -> B2]])
+      = size([[B1]]) + size([[B2]]) + 1$.
+    \item Case \[ \drule{A-rcd} \]
+      In premise, the size is $size([[fs,l]]) + size ([[A]]) + size([[B]]) =
+      size([[fs]]) + size([[A]]) + size([[B]])$, which is smaller than
+      $size([[fs]]) + size([[A]]) + size([[{l:B}]]) = size([[fs]]) + size([[A]])
+      + size([[B]]) + 1$.
+    \item Case \[\drule{A-forall} \]
+      The size of premise is smaller than the conclusion as $size([[fs]]) +
+      size([[A]]) + size([[\X ** B1.B2]])
+      = size([[fs]]) + size([[A]]) + size([[B1]]) + size([[B2]]) + 1
+      > size([[fs, X ** B1]]) + size([[A]]) + size([[B2]])
+      = size([[fs]]) + size([[B1]]) + size([[A]]) + size([[B2]])$.
+    \item Case \[\drule{A-arrConst} \]
+      In the first premise, the size is smaller than the conclusion because of
+      the size of $[[fs]]$ and $[[A2]]$. In the second premise, the size is
+      smaller than the conclusion because $size([[A1 -> A2]]) > size([[A2]])$.
+    \item Case \[\drule{A-rcdConst} \]
+      The size of premise is smaller as $size([[ l, fs ]]) + size([[{l:A}]]) +
+      size([[rho]])
+      = size([[fs]]) + size([[A]]) + size([[rho]]) + 1
+      > size([[fs]]) + size([[A]]) + size([[rho]])$.
+    \item Case \[\drule{A-andConstOne} \]
+      The size of premise is smaller as $size([[A1 & A2]]) = size([[A1]]) +
+      size([[A2]]) + 1 > size([[A1]])$.
+    \item Case \[\drule{A-andConstTwo} \]
+      The size of premise is smaller as $size([[A1 & A2]]) = size([[A1]]) +
+      size([[A2]]) + 1 > size([[A2]])$.
+    \item Case \[\drule{A-allConst} \]
+      In the first premise, the size is smaller than the conclusion because of
+      the size of $[[fs]]$ and $[[A2]]$. In the second premise, the size is
+      smaller than the conclusion because $size([[\Y**A1. A2]]) > size([[A2]])$.
+\end{itemize}
+\end{proof}
+
+\begin{lemma}[Decidability of Top-like types]
+  \label{lemma:decide-top}
+  Given a type $[[A]]$, it is decidable whether $[[ A top ]]$.
+\end{lemma}
+\begin{proof}
+Induction on the judgment $[[A top]]$. For each subtyping rule, we show
+that every inductive premise is smaller than the conclusion.
+\begin{itemize}
+  \item \rref{TL-top} has no premise.
+  \item Case \[\drule{TL-and}\]
+    $size([[A & B]]) = size([[A]]) + size([[B]]) + 1$, which is greater than
+    $size([[A]])$ and $size([[B]])$.
+  \item Case \[\drule{TL-arr}\]
+    $size([[A -> B]]) = size([[A]]) + size([[B]]) + 1$, which is greater than
+    $size([[B]])$.
+  \item Case \[\drule{TL-rcd}\]
+    $size([[{l:A}]]) = size([[A]]) + 1$, which is greater than
+    $size([[A]])$.
+  \item Case \[\drule{TL-all}\]
+    $size([[\X ** A. B]]) = size([[A]]) + size([[B]]) + 1$, which is greater than
+    $size([[B]])$.
+\end{itemize}
+\end{proof}
+
+\begin{lemma}[Decidability of disjointness axioms checking]
+  \label{lemma:decide-disa}
+  Given $[[A]]$ and $[[B]]$, it is decidable whether $[[ A **a B ]]$.
+\end{lemma}
+\begin{proof}
+  $[[ A **a B ]]$ is decided by the shape of types, and thus it's
+  decidable.
+\end{proof}
+
+% \begin{theorem}[Decidability of disjointness checking]
+%   \label{lemma:decide-dis}
+%   Given $[[DD]]$, $[[A]]$ and $[[B]]$, it is decidable whether $[[ DD |- A ** B ]]$.
+% \end{theorem}
+\decidedis*
+\begin{proof}
+Let the judgment $[[ DD |- A ** B ]]$ be measured by $ size([[A]]) +
+size([[B]])$. For each subtyping rule, we show that every inductive premise
+is smaller than the conclusion.
+\begin{itemize}
+\item Case \[\drule{FD-topL}\]
+  By \cref{lemma:decide-top}, we know $[[A top]]$ is decidable.
+\item Case \[\drule{FD-topR}\]
+  By \cref{lemma:decide-top}, we know $[[B top]]$ is decidable.
+\item Case \[\drule{FD-arr}\]
+  $size([[A1 -> A2]]) + size ([[B1 -> B2]]) > size([[A2]]) + size([[B2]])$.
+\item Case \[\drule{FD-andL}\]
+  $size([[A1 & A2]]) + size ([[B]])$ is greater than $size([[A1]]) +
+  size([[B]])$ and $size([[A2]]) + size([[B]])$.
+\item Case \[\drule{FD-andR}\]
+  $size([[B1 & B2]]) + size ([[A]])$ is greater than $size([[B1]]) +
+  size([[A]])$ and $size([[B2]]) + size([[A]])$.
+\item Case \[\drule{FD-rcdEq}\]
+  $size([[{l:A}]]) + size ([[{l:B}]])$ is greater than $size([[A]]) +
+  size([[B]])$.
+\item Case \[\drule{FD-rcdNeq}\]
+  It's decidable whether $[[l1]]$ is equal to $[[l2]]$.
+\item Case \[\drule{FD-tvarL}\]
+  By \cref{lemma:decide-sub}, it's decidable whether $[[A<:B]]$.
+\item Case \[\drule{FD-tvarR}\]
+  By \cref{lemma:decide-sub}, it's decidable whether $[[A<:B]]$.
+\item Case \[\drule{FD-forall}\]
+  $size([[\X**A1.B1]]) + size ([[\X**A2.B2]])$ is greater than $size([[B1]]) +
+  size([[B2]])$.
+\item Case \[\drule{FD-ax}\]
+  By \cref{lemma:decide-disa} it is decidable.
+\end{itemize}
+\end{proof}
+
+
+
 \chapter{Proofs about \sedel}
 \label{appendix:proofs}
 
@@ -201,8 +358,6 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 
 \chapter{\namee Typing Rules, in Full}
 \label{appendix:lambdai}
-
-\renewcommand{\rulehl}[1]{#1}
 
 
 \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distRcd,distArr}

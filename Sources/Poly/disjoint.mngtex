@@ -3,34 +3,66 @@
 \label{sec:disjoint:fi}
 
 
-\begin{figure}[t]
+\begin{figure}
   \centering
+  \drules[TL]{$[[ A top  ]]$}{Top-like types}{top,and,arr,rcd,all}
   \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
   \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
   \caption{Disjointness of \fnamee}
   \label{fig:disjoint:fi}
 \end{figure}
 
+% In this section we present the inference rules of disjointness, as show in
+% \cref{fig:disjoint:fi}. The disjointness rules of \fnamee are directly inherited
+% from \fname~\citep{alpuimdisjoint}, which consists of two judgments.
 
-In this section we present the inference rules of disjointness, as show in
-\cref{fig:disjoint:fi}. The disjointness rules of \fnamee are directly inherited
-from \fname~\citep{alpuimdisjoint}, which consists of two judgments.
+We now turn to another core judgment of \fnamee---the disjointness relation,
+shown in \cref{fig:disjoint:fi}. The disjointness rules are mostly inherited
+from \fname~\citep{alpuimdisjoint}, but the new bottom type requires
+a notable change regarding disjointness with \emph{top-like types}.
 
 
-\paragraph{Main judgment.}
+\paragraph{Top-like types.}
 
-The main judgment $[[DD |- A ** B]]$ says that the two types $[[A]]$ and $[[B]]$
-are disjoint in the context $[[DD]]$. As a precondition, $[[A]]$
-and $[[B]]$ are required to be both well-formed in the context $[[DD]]$.
-Most of the rules are similar to those of
-\namee. The major additions are the two rules \rref*{FD-tvarL,FD-tvarR} for
-type variables, and \rref{FD-forall} for disjoint quantification.
-\Rref{FD-tvarL} and the symmetric one \rref*{FD-tvarR} state that a type
-variable $[[X]]$ is disjoint with some type $[[B]]$ if its
-disjointness constraint (i.e., $[[A]]$) in the context $[[DD]]$ is a subtype of
-$[[B]]$. These two rules are a specialization of a more general lemma~\citep{alpuimdisjoint}, which
-says that disjointness is covariant with respect to subtyping. In a more precise
-sense, we have the following:
+Top-like types are all types that are isomorphic to $[[Top]]$ (i.e.,
+simultaneously sub- and supertypes of $[[Top]]$). Hence, they are inhabited by a
+single value, isomorphic to the $[[Top]]$ value. \cref{fig:disjoint:fi} captures
+this notion in a syntax-directed fashion in the $[[A top]]$ predicate. As a
+historical note, top-like types were first introduced in
+\oname~\citep{oliveira2016disjoint}, and then adopted by \fname~\citep{alpuimdisjoint}. Their motivation
+is solely for enabling a syntactic method of proving coherence, and due to the
+lack of BCD subtyping, they do not have a type-theoretic interpretation of
+top-like types.
+
+
+The disjointness judgment $[[DD |- A ** B]]$ is helpful to check whether the merge of two
+expressions of type $[[A]]$ and $[[B]]$ preserves coherence. Incoherence
+arises when both expressions produce distinct values for the same type, either
+directly when they are both of that same type, or through implicit upcasting to
+a common supertype. Of course we can safely disregard top-like types in this matter
+because they do not have two distinct values. In short, it suffices to check that the
+two types have only top-like supertypes in common.
+
+% (As a precondition, $[[A]]$ and $[[B]]$ are
+% required to be both well-formed under the context $[[DD]]$.)
+% A guiding principle
+% of checking whether $[[A]]$ and $[[B]]$ are disjoint is to ask if their
+% supertypes are top-like types. Let us apply this principle to design
+% disjointness rules for bottom types. Given $[[Bot]]$ and $[[A]]$, we know that
+Because $[[Bot]]$ and any another type $[[A]]$ always have $[[A]]$ as
+a common supertype,
+it follows that $[[Bot]]$ is only disjoint to $[[A]]$ when
+$[[A]]$ is top-like.
+More generally, if $[[A]]$ is a top-like type, then $[[A]]$ is disjoint to any
+type. This is the rationale behind the two rules \rref*{FD-topL,FD-topR}, which
+generalize and subsume $[[ DD |- Top ** A ]]$ and $[[ DD |- A ** Top ]]$ from \fname, and
+also cater to the bottom type.
+Two other interesting rules are
+\rref*{FD-tvarL,FD-tvarR}, which dictate that a type variable $[[X]]$ is disjoint
+with some type $[[B]]$ if its disjointness constraints $[[A]]$ is a subtype of
+$[[B]]$.
+These two rules are a specialization of a more general lemma~\citep{alpuimdisjoint}, which
+says that disjointness is covariant with respect to subtyping:
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L160}{\leftpointright} Covariance of disjointness] \label{lemma:covariance:disjoint} % APPLYCOQ=DISJOINT_CO
   If $[[DD |- A ** B]]$ and $[[B <: C]]$, then $[[DD |- A ** C]]$.
@@ -48,12 +80,12 @@ sense, we have the following:
   in the middle, then by induction on the disjointness derivation.
 \end{proof}
 
-An intuition of the following may help better understanding
-\cref{lemma:covariance:disjoint}. Another way to interpret two types being
-disjoint is that their least upper bound is (isomorphic to) $[[Top]]$ (cf.
-\cref{sec:category}). Following this interpretation, it is obvious that if the
-least upper bound of two given types is already $[[Top]]$, a supertype of one of
-them will not change this fact.
+% An intuition of the following may help better understanding
+% \cref{lemma:covariance:disjoint}. Another way to interpret two types being
+% disjoint is that their least upper bound is (isomorphic to) $[[Top]]$ (cf.
+% \cref{sec:category}). Following this interpretation, it is obvious that if the
+% least upper bound of two given types is already $[[Top]]$, a supertype of one of
+% them will not change this fact.
 
 We now turn to \rref{FD-forall}. To illustrate this rule, consider the following two types:
 \begin{mathpar}
@@ -64,22 +96,22 @@ cannot be instantiated to $[[int]]$ (among others) and in the second type
 $[[X]]$ cannot be instantiated to $[[char]]$. Therefore for both bodies to be disjoint,
 $[[X]]$ can only be instantiated to types that are disjoint with both $[[int]]$
 and $[[char]]$. More formally, in \rref{FD-forall}, we add to the context a new
-constraint $[[A1 & A2]]$ by intersecting the two constraints $[[A1]]$ and $[[A2]]$, and check for disjointness of the bodies
+constraint $[[A1 & A2]]$, and check for disjointness of the bodies
 under the extended context.
 
-\paragraph{Disjointness axioms.}
+% \paragraph{Disjointness axioms.}
 
-Disjointness axioms $[[ A **a B ]]$  take care of two types with different type constructs,
-except for when one of them is $[[Top]]$, an intersection type or a type
-variable, which are all dealt with by the main judgment.
+% Disjointness axioms $[[ A **a B ]]$  take care of two types with different type constructs,
+% except for when one of them is $[[Top]]$, an intersection type or a type
+% variable, which are all dealt with by the main judgment.
 
-To conclude this section, we show that disjointness is also symmetric:
+To conclude this section, we show that the disjointness relation is symmetric:
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Disjoint.v\#L143}{\leftpointright} Symmetry of disjointness] % APPLYCOQ=DISJOINT_SYMM
   If $[[ DD |- A ** B  ]]$, then $[[  DD |- B ** A   ]]$.
 \end{lemma}
 \begin{proof}
-  By induction on the disjointness derivation. In the case for \rref{FD-forall},
+  By structural induction on the derivation of disjointness. In the case for \rref{FD-forall},
   apply \cref{lemma:narrow:disjoint}.
 \end{proof}
 

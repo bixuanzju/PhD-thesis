@@ -5,9 +5,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To further illustrate the applicability of \sedel, we present a case study using
-Object Algebras~\citep{oliveira2012extensibility} and extensible
+object algebras~\citep{oliveira2012extensibility} and extensible
 \visitor~\citep{oliveira09modular, togersen:2004}. Encodings of extensible
-designs for Object Algebras and extensible \visitor have been presented in
+designs for object algebras and extensible \visitor have been presented in
 mainstream languages~\citep{oliveira09modular, togersen:2004,
   oliveira2012extensibility, oliveira2013feature, rendel14attributes}. However,
 prior approaches are not entirely satisfactory due to the limitations in
@@ -27,7 +27,7 @@ with that of the textbook using Haskell in terms of lines of code.
 \section{Object Algebras and Extensible Visitors in \sedel}
 \label{sec:ob}
 
-First we give a simple introduction to Object Algebras, a design pattern that
+First we give a simple introduction to object algebras, a design pattern that
 can solve the expression problem~\citep{wadler1998expression} in languages like
 Java. Our starting point is the following code:
 \lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
@@ -45,7 +45,7 @@ implements the evaluation rules is given by a trait
 The actual AST of this simple arithmetic language is given as an internal
 visitor~\citep{Oliveira_2008}:
 \lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
-Note that Object Algebras as implemented in languages like Java or Scala do not define the type
+Note that object algebras as implemented in languages like Java or Scala do not define the type
 \lstinline{Exp} because this would make adding new variants very hard. Although extensible versions
 of this visitor pattern do exist, they usually require complex types using advanced features of
 generics~\citep{oliveira2012extensibility, togersen:2004}.
@@ -96,7 +96,7 @@ supertype of \lstinline{Exp}.
 \section{Dynamic Object Algebra Composition Support}
 \label{sec:case:combinator}
 
-When programming with Object Algebras, oftentimes it is necessary to compose
+When programming with object algebras, oftentimes it is necessary to compose
 multiple operations together in such a way that they are executed in parallel to
 the same input. For example, in the simple language we have been developing it
 can be useful to create an object that supports both printing and evaluation.
@@ -111,7 +111,7 @@ encoding of the merge operator is quite complex as it relies on low-level
 type-unsafe programming features such as dynamic proxies, reflection or other
 meta-programming techniques. In \sedel, the combination of first-class traits,
 dynamic inheritance, disjoint polymorphism and nested composition allows type-safe, coherent and
-boilerplate-free composition of Object Algebras.
+boilerplate-free composition of object algebras.
 
 Abstractly speaking, what we are seeking is a combinator:
 \[

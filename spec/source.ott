@@ -104,10 +104,11 @@ SD {{ tex \Delta }} :: 'SD_' ::=
 
 %% Types
 
-sty, A, B, C, t, rho {{ tex \rho }} :: 'sty_' ::=
+sty, A, B, C, t, rho {{ tex c }} :: 'sty_' ::=
   | int          :: :: int
   | bool          :: :: bool
   | Top          :: :: top
+  | Bot          :: :: bot
   | X            :: :: tvar
   | XX            :: :: rvar
   | A -> B       :: :: arrow
@@ -130,6 +131,7 @@ sty, A, B, C, t, rho {{ tex \rho }} :: 'sty_' ::=
   | string ::  :: ss   {{ tex \mathsf{String} }}
   | | AA | :: :: trans
   | A =/ B :: :: lup {{ tex [[A]] \sqcup [[B]] }}
+  | \/ X <: A . B   ::  :: fsub {{ tex \forall ( [[X]] [[<:]] [[A]] ) .\, [[B]] }}
 
 
 %% Expressions
@@ -178,6 +180,7 @@ DD {{ tex \Delta }} :: 'stctx'  ::=
   | | SD |   :: :: trans
   | [ A / X ] DD :: :: subst
   | X ** A :: :: con1
+  | DD , X <: A :: :: fsub
 
 
 SS {{ tex \Sigma }} :: 'rtctx'  ::=
@@ -290,6 +293,7 @@ co, c {{ tex co }} :: 'co_' ::=   {{ com coercion }}
   | id          :: :: id
   | c1 o c2     :: :: trans {{ tex [[c1]] \circ [[c2]] }}
   | top         :: :: top
+  | bot         :: :: bot
   | c1 -> c2    :: :: arr
   | \ c         :: :: forall {{ tex [[c]]_{\forall} }}
   | < c1 , c2 > :: :: pair
@@ -361,6 +365,8 @@ seqs, fs {{ tex \mathcal{Q} }} :: 'seqs_' ::= {{ coq list qs }}
 
 terminals :: 'terminals_' ::=
     | ii      :: :: Arith      {{ tex i }}
+    | Bot       ::  :: Bot  {{ tex \bot }}
+    | bot   :: :: bot  {{ tex \mathsf{bot} }}
     | BL      :: :: Bool       {{ tex \mathbb{B} }}
     | \       :: :: lambda     {{ tex \lambda }}
     | -->     :: :: red        {{ tex \longrightarrow }}
@@ -626,6 +632,10 @@ A1 <: A2 ~~> c2
 A1 <: A3 ~~> c1 o c2
 
 
+---------------------- :: bot
+Bot <: A ~~> bot
+
+
 --------------- :: top
 A <: Top ~~> top
 
@@ -679,7 +689,7 @@ A <: B ~~> c
 { l : A } & { l : B } <: { l : A & B } ~~> id
 
 
---------------------------------------------------------------------- :: distPoly
+--------------------------------------------------------------------- :: distAll
 (\ X ** A . B1) & (\ X ** A . B2)  <: \X ** A . B1 & B2 ~~> distPoly
 
 
@@ -753,6 +763,9 @@ by
 ------------------------- :: int
 [] |- int <: int ~~> id
 
+
+-------------------------- :: bot
+fs |- Bot <: rho ~~> bot
 
 
 ------------------------- :: const
@@ -1238,6 +1251,7 @@ DD' |- A1
 
 CC : (DD ; GG => A) ~> (DD' , X ** B ; GG' => B') ~~> cc
 DD' |- B
+DD' ||- GG'
 ------------------------------------------------------- :: tabs1
 \ X ** B . CC : (DD ; GG => A) ~> (DD' ; GG' => \ X ** B . B') ~~> \X . cc
 
@@ -1245,24 +1259,24 @@ DD' |- B
 
 CC : (DD ; GG <= A) ~> (DD' , X ** B ; GG' => B') ~~> cc
 DD' |- B
+DD' ||- GG'
 ------------------------------------------------------- :: tabs2
 \ X ** B . CC : (DD ; GG <= A) ~> (DD' ; GG' => \ X ** B . B') ~~> \X . cc
 
 
 CC : (DD ; GG => A) ~> (DD' ; GG' => \ X ** A1 . A2) ~~> cc
-DD' |- t
-DD' |- t ** A1
+DD' |- B
+DD' |- B ** A1
 ----------------------------------------------- :: tapp1
-CC B : (DD ; GG => A) ~> (DD' ; GG' => [ t / X ] A2  ) ~~> cc |t|
+CC B : (DD ; GG => A) ~> (DD' ; GG' => [ B / X ] A2  ) ~~> cc |B|
 
 
 
 CC : (DD ; GG <= A) ~> (DD' ; GG' => \ X ** A1 . A2) ~~> cc
-DD' |- t
-DD' |- t ** A1
+DD' |- B
+DD' |- B ** A1
 ----------------------------------------------- :: tapp2
-CC B : (DD ; GG <= A) ~> (DD' ; GG' => [ t / X ] A2  ) ~~> cc |t|
-
+CC B : (DD ; GG <= A) ~> (DD' ; GG' => [ B / X ] A2  ) ~~> cc |B|
 
 
 
@@ -1293,6 +1307,9 @@ c2 |- T1 tri T2
 c1 o c2 |- T1 tri T3
 
 
+-----------------------------  :: bot
+bot |- \ X . X tri T
+
 
 ---------------------  :: top
 top |- T tri Unit
@@ -1322,7 +1339,7 @@ distArr |- (T1 -> T2) * (T1 -> T3) tri T1 -> T2 * T3
 
 
 
----------------------------------------------------------- :: distPoly
+---------------------------------------------------------- :: distAll
 distPoly |- (\X . T1) * (\X . T2) tri \X . T1 * T2
 
 
@@ -1529,7 +1546,6 @@ dd |- gg
 dd ; gg |- \X . e : \X. T
 
 
-
 dd ; gg |- e : \X .T'
 dd |- T
 --------------------------- :: tapp
@@ -1590,7 +1606,7 @@ top v --> unit
 (distArr < v1 , v2 >) v3 --> < v1 v3, v2 v3 >
 
 
-------------------------------------------------- :: distPoly
+------------------------------------------------- :: distAll
 (distPoly < v1 , v2 >) T --> < v1 T, v2 T >
 
 
@@ -1639,6 +1655,10 @@ DD |- A :: :: swft :: 'swft_' by
 
 ----------- :: top
 DD |- Top
+
+
+----------- :: bot
+DD |- Bot
 
 
 ----------- :: int
@@ -1719,18 +1739,51 @@ DD |- A
 %% Fi+ disjointness
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+defns
+TopLike :: '' ::=
+
+defn A top :: :: toplike    :: 'TL_'  {{ tex \rceil [[A]] \lceil  }} by
+
+----------- :: top
+Top top
+
+
+A top
+B top
+----------- :: and
+A & B top
+
+
+B top
+----------- :: arr
+A -> B top
+
+
+A top
+----------- :: rcd
+{l : A} top
+
+
+B top
+----------- :: all
+\X ** A . B top
+
+
 defns
 FDisjoint :: '' ::=
 
 defn DD |- A ** B :: :: Fdisjoint    :: 'FD_'  {{ com Disjointness }} by
 
 
+A top
 --------------- :: topL
-DD |- Top ** A
+DD |- A ** B
 
-
+B top
 ------------------ :: topR
-DD |- A ** Top
+DD |- A ** B
+
 
 
 DD |- A2 ** B2
@@ -1916,18 +1969,24 @@ DD ; GG |- ee <= A ~~> e
 DD ; GG |- ee : A => A ~~> e
 
 
-DD |- A
 DD , X ** A ; GG |- ee => B ~~> e
+DD |- A
+DD ||- GG
 ----------------------------------------------- :: tabs
 DD ; GG |- \ X ** A . ee => \ X ** A . B ~~> \ X . e
 
 
 
-DD ; GG |- ee => \ X ** A . B ~~> e
-DD |- t
-DD |- t ** A
+DD ; GG |- ee => \ X ** B . C ~~> e
+DD |- A ** B
 -------------------------------------------- :: tapp
-DD ; GG |- ee t => [ t / X ] B  ~~>  e | t |
+DD ; GG |- ee A => [ A / X ] C  ~~>  e | A |
+
+
+DD ; GG |- ee => \ X ** B . C ~~> e
+DD |- t ** B
+-------------------------------------------- :: tappMono
+DD ; GG |- ee t => [ t / X ] C  ~~>  e | t |
 
 
 
@@ -1949,8 +2008,8 @@ DD ; GG |- \x . ee <= A -> B ~~> \x . e
 
 
 DD ; GG |- ee => B ~~> e
-DD |- A
 B <: A ~~> c
+DD |- A
 --------------------- :: sub
 DD ; GG |- ee <= A ~~> c e
 
@@ -2322,6 +2381,7 @@ SD ; SG |- E.l => AA ~~> ee.l
 
 
 SD |- AA
+% SD ||- SG
 SD , X ** AA ; SG |- E => BB ~~> ee
 --------------------------------------------------------------------- :: tabs
 SD; SG |- \ X ** AA . E => \ X ** AA . BB ~~> \ X ** |AA| . ee
@@ -2380,3 +2440,23 @@ AA <: BB
 SD |- BB
 -------------------------------- :: sub
 SD ; SG |- E <= BB ~~> ee
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SYSTEM FSUB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+defns
+FS :: '' ::=
+
+defn
+DD |- A <: B :: :: fsub :: 'fsub_' by
+
+DD |- A2 <: A1
+DD, X <: A2 |- B1 <: B2
+---------------------------- :: forall
+DD |- \/ X <: A1. B1 <: \/X <: A2. B2
+
+DD, X <: A |- B1 <: B2
+---------------------------- :: forallw
+DD |- \/ X <: A. B1 <: \/X <: A. B2

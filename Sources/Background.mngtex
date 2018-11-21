@@ -252,8 +252,6 @@ The issue of coherence is addressed (with some compromises) by
 
 \subsection{Disjoint Intersection Types}
 
-\renewcommand{\rulehl}[1]{#1}
-
 
 \begin{figure}
   \centering

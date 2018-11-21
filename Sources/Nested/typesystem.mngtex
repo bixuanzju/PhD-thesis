@@ -15,19 +15,6 @@ We also have a new target language with explicit coercions inspired by the coerc
 
 \subsection{Syntax}
 
-\begin{figure}[t]
-  \centering
-\begin{tabular}{llll}\toprule
-  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
-  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]  $ \\
-  & & $\mid$ & $ [[ { l = ee } ]] \mid [[ee.l]] $ \\
-  Typing contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
-\end{tabular}
-  \caption{Syntax of \namee}
-  \label{fig:source}
-\end{figure}
-
-
 \Cref{fig:source} shows the syntax of \namee.
 % with the differences from \oname \hll{highlighted}.
 % \namee is a simple calculus with intersection types, the merge operator
@@ -42,6 +29,19 @@ $[[ee]]$ ranges over expressions. Expressions include variables $[[x]]$,
 literals $[[i]]$, a canonical top value $[[Top]]$, lambda abstractions $[[\x .
 ee]]$, applications $[[ee1 ee2]]$, merges $[[ee1 ,, ee2]]$, annotated terms
 $[[ee : A]]$, single-field records $[[ {l = ee}]]$, and record projections $[[ee.l]]$.
+
+\begin{figure}[t]
+  \centering
+\begin{tabular}{llll}\toprule
+  Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
+  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]] \mid [[ { l = ee } ]] \mid [[ee.l]] $ \\
+  % & & $\mid$ & $  $ \\
+  Term contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
+\end{tabular}
+  \caption{Syntax of \namee}
+  \label{fig:source}
+\end{figure}
+
 
 \subsection{Declarative Subtyping}
 
@@ -163,13 +163,10 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
   \label{fig:disjoint}
 \end{figure}
 
-
-
-
-
-
 \section{Syntax and Semantics of \tname}
 \label{sec:elaboration}
+
+
 
 \begin{figure}[t]
   \centering
@@ -185,6 +182,8 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
   \caption{\tname syntax}
   \label{fig:target}
 \end{figure}
+
+
 
 We elaborate well-typed source expression $[[ee]]$ into target terms $[[e]]$.
 Our target language \tname is the standard simply-typed call-by-value lambda

@@ -117,7 +117,7 @@ see how \rref{S-trans} plays an essential role there.
 
     \begin{mathpar}
       D =
-\inferrule*[right=\rref*{A-andR1}]
+\inferrule*[right=\rref*{A-andInt1}]
         { \inferrule*[right=\rref*{A-rcdInt}]
           { \inferrule*[right=\rref*{A-arrInt}]
             { \inferrule*{ [[  [] |- N <: N  ]] } { [[ [] |- N & S <: N]]  }
@@ -135,7 +135,7 @@ see how \rref{S-trans} plays an essential role there.
 
     \begin{mathpar}
           D' =
-\inferrule*[right=\rref*{A-andR2}]
+\inferrule*[right=\rref*{A-andInt2}]
         { \inferrule*[right=\rref*{A-rcdInt}]
           { \inferrule*[right=\rref*{A-arrInt}]
             { \inferrule*{ [[ [] |- S <: S    ]] } { [[ [] |- N & S <: S]]  }
