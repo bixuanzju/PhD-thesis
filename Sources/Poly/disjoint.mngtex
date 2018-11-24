@@ -36,7 +36,10 @@ top-like types.
 
 
 The disjointness judgment $[[DD |- A ** B]]$ is helpful to check whether the merge of two
-expressions of type $[[A]]$ and $[[B]]$ preserves coherence. Incoherence
+expressions of type $[[A]]$ and $[[B]]$ preserves coherence.
+(As a precondition, $[[A]]$ and $[[B]]$ are
+required to be both well-formed in the context $[[DD]]$.)
+Incoherence
 arises when both expressions produce distinct values for the same type, either
 directly when they are both of that same type, or through implicit upcasting to
 a common supertype. Of course we can safely disregard top-like types in this matter
@@ -87,17 +90,17 @@ says that disjointness is covariant with respect to subtyping:
 % least upper bound of two given types is already $[[Top]]$, a supertype of one of
 % them will not change this fact.
 
-We now turn to \rref{FD-forall}. To illustrate this rule, consider the following two types:
-\begin{mathpar}
-  [[ \X ** int . X & int ]] \and  [[ \X ** char . X & char ]]
-\end{mathpar}
-Under what conditions are the two types disjoint? In the first type, $[[X]]$
-cannot be instantiated to $[[int]]$ (among others) and in the second type
-$[[X]]$ cannot be instantiated to $[[char]]$. Therefore for both bodies to be disjoint,
-$[[X]]$ can only be instantiated to types that are disjoint with both $[[int]]$
-and $[[char]]$. More formally, in \rref{FD-forall}, we add to the context a new
-constraint $[[A1 & A2]]$, and check for disjointness of the bodies
-under the extended context.
+% We now turn to \rref{FD-forall}. To illustrate this rule, consider the following two types:
+% \begin{mathpar}
+%   [[ \X ** int . X & int ]] \and  [[ \X ** char . X & char ]]
+% \end{mathpar}
+% Under what conditions are the two types disjoint? In the first type, $[[X]]$
+% cannot be instantiated to $[[int]]$ (among others) and in the second type
+% $[[X]]$ cannot be instantiated to $[[char]]$. Therefore for both bodies to be disjoint,
+% $[[X]]$ can only be instantiated to types that are disjoint with both $[[int]]$
+% and $[[char]]$. More formally, in \rref{FD-forall}, we add to the context a new
+% constraint $[[A1 & A2]]$, and check for disjointness of the bodies
+% in the extended context.
 
 % \paragraph{Disjointness axioms.}
 

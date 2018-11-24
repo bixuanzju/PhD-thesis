@@ -28,7 +28,7 @@ constraint $[[A]]$ associated with the type variable $[[X]]$.
 \paragraph{Contexts.}
 
 In the traditional formulation of System F, there is a single context for
-tracking of both type variables and term variables. Here we use
+tracking type variables and term variables. Here we use
 another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
 split into \emph{term contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
 The former track free term variables $[[x]]$ with their types $[[A]]$; and the
@@ -48,8 +48,9 @@ relations in \cref{chap:coherence:poly}.
 \paragraph{Well-formedness and unrestricted intersections.}
 
 The well-formedness judgments for types $[[ DD |- A ]]$ in
-\cref{fig:well-formedness:fi}, though quite standard in System F, is the key
-difference from \fname, which (like its predecessor \oname) uses well-formedness
+\cref{fig:well-formedness:fi} is standard and only enforces well-scoping.
+This is one of the key
+differences from \fname, which (like its predecessor \oname) uses well-formedness
 to also ensure that all intersection types are disjoint. In other words, while
 in \fname all valid intersection types must be disjoint, in \fnamee unrestricted
 intersection types such as $[[int & int]]$ are allowed.
@@ -111,7 +112,7 @@ its body, and contravariant in its disjointness constraints (\rref{S-forall}).
 \Rref{S-distAll}, similar to \rref{S-distArr}, dictates that quantifiers may
 distribute over intersections. \Rref{S-topAll} plays a similar role as
 \rref{S-topArr}. A minor comment is that since \fnamee features explicit
-polymorphism, type variables are neutral to subtyping, i.e., $[[X <: X]]$, which
+polymorphism, type variables are neutral to subtyping (i.e., $[[X <: X]]$), which
 is already contained in \rref{S-refl}.
 
 % \begin{remark}
@@ -136,16 +137,13 @@ is already contained in \rref{S-refl}.
 
 
 \fnamee features a bidirectional type system inherited from \fname.
-% \bruno{We can just focus on the
-%   T-TApp, T-TAbs and T-Merge. Maybe you can drop subsumption and lambdas,
-%   since those are standard.
-% Refer to the full rules in the appendix.}
-The full set of typing rules are shown in \cref{fig:typing:fi}. % Again we ignore
-% the gray parts and explain them in \cref{sec:elaboration:fi}.
+The full set of typing rules are shown in \cref{fig:typing:fi}.
+Again we ignore the translation parts ($[[~~>]] [[e]]$) and explain them in
+\cref{sec:elaboration:fi}
 The inference judgment $[[ DD; GG |- ee => A ]]$ says
-that we can synthesize the type $[[A]]$ under the contexts $[[DD]]$ and
+that we can synthesize the type $[[A]]$ in the contexts $[[DD]]$ and
 $[[GG]]$. The checking judgment $[[ DD ; GG |- ee <= A ]]$ asserts that $[[ee]]$
-checks against the type $[[A]]$ under the contexts $[[DD]]$ and $[[GG]]$.
+checks against the type $[[A]]$ in the contexts $[[DD]]$ and $[[GG]]$.
 Most of the rules are quite standard in the literature.
 The merge expression $[[ee1 ,, ee2]]$ is well-typed if both sub-expressions are
 well-typed, and their types are \textit{disjoint} (\rref{FT-merge}).
