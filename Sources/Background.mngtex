@@ -801,7 +801,7 @@ inductively defined so that if $[[gg |- e : T]]$, then $[[gg' |- cc{e} : T']]$.
 We define a \emph{complete program} to mean any closed term of type $[[int]]$.
 The following two definitions capture the notion of \emph{contextual equivalence}:
 
-\begin{restatable}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L469}{\leftpointright} Kleene Equality $\backsimeq$]{definition}{kleene}
+\begin{restatable}[Kleene Equality $\backsimeq$]{definition}{kleene}
   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
   $\kleq{[[e]]}{[[e']]}$, if there exists $[[ii]]$ such that $[[e -->> ii]]$ and $[[e' -->> ii]]$.
 \end{restatable}

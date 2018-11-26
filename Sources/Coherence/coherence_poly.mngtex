@@ -4,283 +4,248 @@
 \label{chap:coherence:poly}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we extend the canonicity relation introduced in
-\cref{chap:coherence:simple} to prove coherence for \fnamee. Firstly in
+In this section, we establish the coherence property for \fnamee. The proof
+strategy mostly follows that of \namee, but the construction of the
+heterogeneous logical relation is significantly more complicated. Firstly in
 \cref{sec:para:intuition} we discuss why adding BCD subtyping to disjoint
-polymorphism makes establishing coherence even challenging. We then review the
-parametric logical relation for System F~\citep{reynolds1983types} in
-\cref{sec:para:lr}, and talk about a failed attempt on a natural extension to
-deal with disjoint polymorphism in \cref{sec:failed:lr}. The technical
+polymorphism introduces significant complications. In
+\cref{sec:failed:lr}, we discuss why a natural extension of
+System F's logical relation to deal with disjoint polymorphism fails. The technical
 difficulty is \emph{well-foundedness}, stemming from the interaction between
 impredicativity and disjointness. Finally in \cref{sec:succeed:lr}, we present
 our (predicative) logical relation that is specially crafted to prove coherence
-for \fnamee, and allude briefly to a potential solution to lift the
-predicativity restriction.
+for \fnamee.
+% and allude to a potential solution to lift the predicativity restriction.
 
-
-\section{The Challenges}
+\section{The Challenge}
 \label{sec:para:intuition}
 
-To have a better understanding at why adding BCD subtyping to disjoint
-polymorphism poses difficulties in terms of proving coherence, let us first
-understand how \fname retains coherence. In \fname it is of great importance to
-show that type system only produces \emph{well-formed} types. Recall the
-well-formedness rule for intersection types (\rref{wf-and}) in
-\cref{fig:lambdai}, which has a deep impact on the metatheory. For example, they
-need extra effort to prove a (weaker) substitution lemma, and also that
-disjointness between two types is preserved after substitution. To understand
-why the former is required, consider the judgment $[[ X ** int |- X & int ]]$.
-The type variable $[[X]]$ cannot be instantiated with arbitrary types, e.g.,
-substituting $[[X]]$ with $[[int]]$ would lead to an ill-formed intersection
-type $[[int & int]]$. Therefore the range of types is narrowed down to those
-that respect the disjointness constraints---i.e., we have essentially a weaker
-substitution lemma. To motivate the latter, which is closely related to the
-former, consider the judgment $[[ X ** int |- X ** int ]]$. Obviously $[[X]]$
-cannot be instantiated with $[[int]]$, either. Generally speaking,
-substitution-related lemmas are all weakened to account for disjointness
-conditions in \fname. All of these contribute to the single most important
-theorem: subtyping of \emph{well-formed} types produces \emph{unique} coercions.
+Before we tackle the coherence of \fnamee, let us first consider how \fname
+(and its predecessor \oname) enforces coherence. Its essentially syntactic
+approach is to make sure that there is at most one subtyping derivation for any
+two types. As an immediate consequence, the produced coercions are uniquely determined and thus
+the calculus is clearly coherent. Key to this approach is the invariant that
+the type system only produces \emph{disjoint} intersection types. As we
+mentioned in \cref{sec:fi:typesystem}, this invariant complicates the calculus
+and its metatheory, and leads to a weaker substitution lemma.
+% To see this, consider the judgment $[[ X ** int |- X & int ]]$.
+% Clearly $[[X]]$ cannot be instantiated to an arbitrary type. For
+% instance, substituting $[[X]]$ with $[[int]]$ would lead to an ill-formed
+% intersection type $[[int & int]]$ in \fname.
+% Therefore in the
+% substitution lemma, the range of substituted types is narrowed down to those
+% that respect the disjointness constraints.
+% The motivation of maintaining this invariant was to enable
+% Generally speaking, in \fname all meta-theoretic properties are weakened to
+% account for disjointness pre-conditions. All of these contribute
+Moreover, the syntactic coherence approach is incompatible with BCD subtyping,
+which leads to multiple subtyping derivations with different coercions and
+requires a more general substitution lemma. For example, consider the
+coercions produced by $[[ \X ** int . X & X <: \X ** int & int . X ]]$ (neither
+type is ``well-formed'' in the sense of \fname). Two possible ones are
+$[[ \f . \X . pp1 (f X) ]]$ and $[[ \f . \X . pp2 (f X) ]]$. It is not at all
+obvious that they should be equivalent in an appropriate sense.
+As we have shown in \cref{chap:coherence:simple}, to prove coherence for \namee,
+we need a semantically-founded proof method based on logical relations.
+Because \namee does not feature polymorphism, the problem at hand is to
+incorporate support for polymorphism in this semantic approach to coherence,
+which turns out to be more challenging than is apparent.
 
-However for \fnamee, the well-formedness of intersection types (\rref{swft-and})
-in \cref{fig:well-formedness:fi} does not demand a disjointness premise. This
-implies that we now have a general substitution lemma, but also that the avenue
-taken by \citet{alpuimdisjoint} to prove coherence does not work anymore. In
-particular, subtyping does not necessarily produces unique coercions. For example,
-consider the possible coercions generated
-by $[[ \X ** int . X & X  <: \X ** int & int . X ]]$. Neither of the types
-is ``well-formed'' in the sense of \fname. Two possible coercions are
-$[[   \f . \X . pp1 (f X)  ]]$ and $[[   \f . \X . pp2 (f X)  ]]$. It is not entirely obvious
-that these two are equivalent in some sense.
-Moreover, the addition of BCD subtyping aggravates the matter---i.e.,
-the subtyping relation becomes even more non-deterministic, producing more syntactically different coercions that are harder
-to argue to be equivalent. Clearly a better way to prove coherence is called for!
-Parametricity \`a la System F might give us some intuitions, as we will discuss below.
-
-
-\section{Review of the Parametric Logical Relation}
-\label{sec:para:lr}
-
-\begin{figure}[t]
-  \centering
-  \begin{tabular}{lll}
-  $[[(v1 , v2) in V ( X ) with pq ]]$  &$\defeq$ & $ ([[v1]], [[v2]]) \in [[pq]]([[X]])   $ \\
-  $[[(v1 , v2) in V ( int ) with pq ]]$  &$\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
-  $[[(v1 , v2) in V ( T1 -> T2 ) with pq ]]$  & $\defeq$ & $\forall [[(v'1, v'2) in V (T1) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (T2) with pq   ]]$ \\
-  $[[(v1 , v2) in V ( T1 * T2 ) with pq ]]$  & $\defeq$ & $[[( pp1 v1, pp1 v2 ) in E (T1) with pq ]]  \land [[ (pp2 v1, pp2 v2) in E (T2) with pq ]]   $ \\
-  $[[(v1 , v2) in V ( \X . T ) with pq ]]$  & $\defeq$ & $ \forall [[T1]], [[T2]], [[R]] \subseteq [[T1]] \times [[T2]].\, [[ (v1 T1, v2 T2) in E (T) with pq [X -> R ]     ]]  $ \\ \\
-  $[[(e1, e2) in E (T) with pq ]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \land [[(v1, v2) in V (T) with pq ]]$
-  \end{tabular}
-  \caption{A logical relation for System F}
-  \label{fig:logical:f}
-\end{figure}
-
-System F provides a reasoning principle called \emph{relational
-  parametricity}~\citep{reynolds1983types} for establishing when two expressions
-of the same type have identical behavior. The principle is expressed in terms of
-a logical relation. It is well-known that the logical relation of System F
-induces the \emph{abstraction theorem} (also called the \emph{parametricity
-  theorem}) of \citet{reynolds1983types}, which roughly says that every
-well-typed expression behaves the same as itself according to its type. The
-stringency of parametricity ensures that a polymorphic type has very few
-inhabitants, so few that we can deduce the behavior of a program by just looking
-at its type, which \citet{wadler1989theorems} christened \emph{theorems for free}.
-
-Consider an expression $[[e]]$ of type $[[ \X . X -> int ]]$. The following
-``free'' theorem completely determines the behavior of $[[e]]$ and any other
-function of the same type---i.e., all expressions with this type have to be constant
-functions.
-
-\begin{proposition}[A free theorem of $[[ \X . X -> int ]]$] \label{thm:free}
-  Suppose $[[e]]$ is any expression of type $[[\X . X -> int]]$. Let $[[T1]]$
-  and $[[T2]]$ be arbitrary types. For any $[[v1]]$ of type $[[T1]]$ and
-  $[[v2]]$ of type $[[T2]]$, if $[[e T1 v1 -->> v3]]$ and $[[e T2 v2 -->> v4]]$ then $[[v3]] = [[v4]]$.
-\end{proposition}
-
-
-\Cref{fig:logical:f} gives the logical relation for call-by-value System F.
-Compared with the logical relation for simple types, it is parameterized by a
-relational mapping $[[pq]]$, which plays a central role for type abstractions
-and type variables. Intuitively, for two values $[[v1]]$ and $[[v2]]$ of type
-$[[\X . T]]$ to behave the same, their instantiations must behave the same.
-However, because $[[v1]]$ and $[[v2]]$ do not manipulate the values of type
-$[[X]]$, it is not required that they should behave the same at the
-\emph{same} instantiation. Indeed, as we saw in \cref{thm:free}, we shall be
-able to consider \emph{separately} instances of $[[v1]]$ and $[[v2]]$ by types
-$[[T1]]$ and $[[T2]]$, and treat the type variable $[[X]]$ as standing for any
-relation $[[R]]$ between $[[T1]]$ and $[[T2]]$. Now it is apparent that the
-relational mapping $[[pq]]$ maps each type variable $[[X]]$ to a relation
-$[[R]]$ that says how values at type $[[X]]$ should be related. This explains
-why for type variables, values of type $[[X]]$ are related according to the
-relation associated with $[[X]]$ in the mapping $[[pq]]$.
-
-
+% preclude the possibility of adding BCD
+% subtyping, which requires a general substitution lemma. This implies that the
+% avenue taken by Alpuim et al.~\cite{alpuimdisjoint} to prove coherence does not
+% work for \fnamee anymore. In particular, subtyping does not necessarily produces unique
+% coercions. For example, consider the possible coercions generated by $[[ \X ** int . X & X <: \X ** int & int . X ]]$ (neither of which is ``well-formed''
+% in the sense of \fname). Two possible coercions are $[[ \f . \X . pp1 (f X) ]]$
+% and $[[ \f . \X . pp2 (f X) ]]$. It is not at all obvious that these two
+% coercions are equivalent in an appropriate sense. Moreover, the addition of BCD subtyping
+% aggravates the matter even more---the subtyping relation can produce additional
+% syntactically different coercions that are harder to argue to be equivalent.
+% Inspired by Bi et al.~\cite{bi_et_al:LIPIcs:2018:9227}, a new semantically-founded
+% proof method is called for. Logical relations \`a la System F might shed some
+% light, as we will discuss next.
 
 \section{Impredicativity and Disjointness at Odds}
 \label{sec:failed:lr}
 
-Based on the parametric logical relation of System F, it is not hard to come up
-with a heterogeneous version, similar to \cref{fig:logical}, but with a
-relational mapping.
-\begin{align*}
- [[(v1, v2)  in V(A1 -> B1; A2 -> B2) with pq ]] &\defeq \forall [[(v'1, v'2) in V (A1; A2) with pq  ]].\, [[  (v1 v1' , v2 v2') in E (B1 ; B2) with pq   ]] \\
-  [[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) with pq ]]  &\defeq [[ (v1, v3)  in V (A ; C) with pq ]] \land [[ (v2, v3)  in V (B ; C) with pq ]] \\
-  [[( v3 , < v1 , v2 >  )  in V ( C ; A & B  ) with pq ]]  &\defeq [[ (v3, v1)  in V (C ; A) with pq ]] \land [[ (v3, v2)  in V (C ; B) with pq ]] \\
-  [[(v1, v2)  in V(X; X) with pq ]] &\defeq ([[v1]], [[v2]]) \in [[pq]]([[X]])
-\end{align*}
-The first three cases do not manipulate $[[pq]]$ and are directly ported from
-\cref{fig:logical}. The case for type variables is directly copied from
-\cref{fig:logical:f}. For type abstractions, we follow the definition for System
-F, but also take care of disjointness constraints, as shown below.
-\begin{align*}
-  [[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]] &\defeq \forall [[empty |- C1 ** pq(A1 & A2) ]], [[empty |- C2 ** pq(A1 & A2)]], \\
-                                                            & \quad [[R]] \subseteq [[C1]] \times [[C2]]. \\
-                                                            & \quad [[ ( v1 |C1|, v2 |C2|) in E (B1 ; B2) with pq[X -> R]    ]]
-\end{align*}
-Compared with parametricity \`a la System F, here we cannot pick arbitrary two types
-except those that respect the disjointness constraints, due to the typing rule
-for type applications (\rref{FT-tapp}). Let us see an example in action to get a
-taste of how this definition works. Suppose $[[e]]$ is any expression
-corresponding to type $[[ \X ** bool . \Y ** X . X & Y -> Y & X ]]$, for any
-integer $[[v1]]$ and character $[[v2]]$, it can be shown that
-\[
-  [[e int char <v1 , v2> -->> <v2 , v1>   ]]
-\]
-First, we have $[[ (e, e) in E( \X ** bool . \Y ** X . X & Y -> Y & X ) ]]$.
-Choose $\mathsf{R}_1 = \{ ([[v1]], [[v1]]) \}$ and $\mathsf{R}_2 = \{ ([[v2]], [[v2]]) \}$.
-This is allowed because $[[int]]$ and $[[char]]$ both respect the
-disjointness constraints. Suppose $[[ e int char -->> v  ]]$ for some $[[v]]$ and we have
-\[
-  [[(v, v) in V (X & Y -> Y & X) with emp[X -> R1][Y -> R2] ]]
-\]
-Note that the input $[[  <v1, v2>  ]]$ is related to itself at $[[ X & Y   ]]$
-\[
-  [[ (<v1, v2>, <v1, v2>) in V (X & Y) with emp[X -> R1][Y -> R2] ]]
-\]
-So the outputs of $[[v]]$ are related at $[[ Y & X ]]$
-\[
-  [[ (v <v1, v2>, v <v1, v2>) in E (Y & X) with emp[X -> R1][Y -> R2] ]]
-\]
-Suppose $[[  v <v1, v2> -->> <v3 , v4>  ]]$, we have
-\[
-  [[ (<v3, v4>, <v3, v4>) in V (Y & X) with emp[X -> R1][Y -> R2] ]]
-\]
-We have $([[v3]], [[v3]]) \in \mathsf{R}_2$ and $([[v4]], [[v4]]) \in \mathsf{R}_1$, which means
-$[[v3]] = [[v2]]$ and $[[v4]] = [[v1]]$. So we have shown
-\[
-  [[ e int char <v1, v2> -->> v <v1, v2> ]] [[-->>]] [[  <v2, v1>  ]]
-\]
+% \Cref{fig:logical:necolus} shows selected cases of \emph{canonicity},
+% which is \namee's (heterogeneous) logical relation used
+% in the coherence proof. The definition captures that two values
+% $[[v1]]$ and $[[v2]]$ of types $[[ T1 ]]$ and $[[T2]]$ are in $\valR{[[T1]]}{[[T2]]}$ iff
+% either the types are disjoint or the types are equal and the values are
+% semantically equivalent. Because both alternatives entail coherence,
+% canonicity is key to \namee's coherence proof.
 
-\paragraph{The Problem with type variables.}
-
-Heterogeneity forces us to consider the case for
-$\valR{[[X]]}{[[A]]}$ where $[[A]] \neq [[X]]$. A seemingly innocuous definition
-is as follows:
+\paragraph{Well-foundedness issues.}
+For \fnamee, we need to extend canonicity with additional cases to
+account for universally quantified types.
+A naive formulation of one case rule is:
 \begin{align*}
-  [[(v1, v2)  in V(X; A) with pq ]] &\defeq [[ (v1, v2) in V(pq(X); pq(A)) with emp  ]]
+    &[[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) ]] \defeq  \\
+    &\qquad \forall [[C1 ** A1]], [[C2 ** A2]].\ [[( v1 | C1 | , v2 | C2 | ) in E ( [C1 / X] B1 ; [C2 / X] B2 ) ]]
 \end{align*}
-That is, given $[[v1]]$ of type $[[X]]$ and $[[v2]]$ of type $[[A]]$, they are
-related at $[[X]]$ and $[[A]]$ if and only if they are related at $[[pq(X)]]$
-and $[[pq(A)]]$.
-% \footnote{Here we are abusing the notation with the intention
-%   that $[[pq(X)]]$ means the assigned type of $[[X]]$ in $[[pq]]$; and
-%   $[[pq(A)]]$ means substituting all the variables mentioned in $[[pq]]$ with
-%   the corresponding types in $[[A]]$.}
-Let us see another example to motivate this definition. Suppose
-\[
-  [[ee]] = [[\ X ** bool . (\x . x) : X & int -> X & int]]
-\]
-we should expect the following to
-hold:\footnote{The reader is advised to try it out in our prototype interpreter.}
-\[
-  [[ee int 1 -->> <1 , 1> ]]
-\]
-It boils down to verifying the following:
-\[
-  [[  (1 , 1) in V (X ; int) with pq  ]]
-\]
-where the mapping $[[pq]]$ maps $[[X]]$ to a relation over integers. If we
-replace $[[X]]$ with $[[int]]$ then the above holds obviously.
-Unfortunately, the seemingly innocuous definition for type variables has a serious
-issue with impredicativity---in other words, the relation in question is \emph{not well-founded}.
-We could pick a bad instantiation to make the relation ``go
-into a loop''. For example, suppose $[[pq]]$ only contains a mapping from $[[X]]$ to
-$[[\X . \Y . Y]]$, we then have the following infinite chain of equational reasoning:
-\[
- \valR{[[X]]}{[[\Y . Y]]}_{[[pq]]} = \valR{[[\X . \Y . Y]]}{[[\Y. Y]]}_{[[emp]]} = \eeR{[[\Y . Y]]}{[[ X ]]}_{[[pq]]} = \valR{[[\Y . Y]]}{[[ X ]]}_{[[pq]]} = \dots
-\]
-The culprit is the polymorphic instantiation $[[\X . \Y . Y]]$, which is larger
-than $[[\Y . Y]]$. This is the exact circumstance where in \cref{fig:logical:f}
-substitution is deliberately avoided for type abstractions.
+This case is problematic because it destroys the well-foundedness of \namee's
+logical relation, which is based on structural induction on the type indices.
+Indeed, the type $[[ [C1 / X] B1  ]]$ may well be larger than $[[ \X ** A1 . B1 ]]$.
 
-\section{Predicative Logical Relation}
+
+% \begin{verbatim}
+% Further outline
+% - show System F-style case with deferred substitions
+% - introduce variable case
+% - show well-foundedness problem with variable case (also present in System F)
+% - show System F solution for the problem by adding a relation parameter R
+% - introduce problem with heterogeneous case
+% \end{verbatim}
+
+However, System F's well-known parametricity logical
+relation~\citep{reynolds1983types} provides us with a means to avoid this
+problem.  Rather than performing the type substitution immediately as in the
+above rule, we can defer it to a later point by adding it to an extra parameter
+$[[pq]]$ of the relation, which accumulates the deferred substitutions. This yields a modified rule where the type indices in the recursive occurrences are indeed smaller:
+\begin{align*}
+  &[[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]]  \defeq  \\
+  &\qquad \forall [[C1 ** A1]], [[C2 ** A2]]. ([[v1 | C1 | ]] ,  [[v2 | C2 |]]) \in \eeR{[[B1]]}{{[[B2]]}}_{[[pq]] [ [[X]] \mapsto ([[C1]], [[C2]])]}
+\end{align*}
+Of course, the deferred substitution has to be performed eventually, to be precise when the type indices are type variables.
+\[
+    [[(v1, v2)  in V(X ; X) with pq ]] \defeq [[ (v1, v2) in V(pq1 (X); pq2 (X)) with emp  ]]
+\]
+Unfortunately, this way we have not only moved the type substitution to the type variable case, but also the ill-foundedness problem. Indeed, this problem is also
+present in System F. The standard solution is to not fix the relation $[[Rel]]$ by which values
+at type $[[X]]$ are related to $\valR{[[pq1 (X)]]}{[[pq2 (X)]]}$, but instead to make it a parameter that is tracked by $[[pq]]$.
+This yields the following two rules for disjoint quantification and type variables:
+\begin{align*}
+  [[(v1, v2)  in V(\X ** A1 . B1; \X ** A2 . B2) with pq ]] &\defeq \forall [[C1 ** A1]], [[C2 ** A2]], [[Rel]] \subseteq [[C1]] \times [[C2]]. \\
+                                                            & ([[v1 | C1 | ]] ,  [[v2 | C2 |]]) \in \eeR{[[B1]]}{{[[B2]]}}_{[[pq]] [ [[X]] \mapsto ([[C1]], [[C2]], [[Rel]])]} \\
+    [[(v1, v2)  in V(X; X) with pq ]] & \defeq ([[v1]], [[v2]]) \in [[pq]]_{[[Rel]]}([[X]])
+\end{align*}
+Now we have finally recovered the well-foundedness of the relation. It is again
+structurally inductive on the size of the type indexes.
+
+
+\paragraph{Heterogeneous issues.}
+
+We have not yet accounted for one major difference between the parametricity relation, from which we have borrowed ideas, and the canonicity relation, to which we have been adding. The former is homogeneous (i.e., the types of the two values is the same) and therefore has one type index, while the latter is heterogeneous (i.e., the two values may have different types) and therefore has two type indices. Thus we must also consider cases like
+$\valR{[[X]]}{[[int]]}$. A definition that seems to handle this case
+appropriately is:
+  \begin{align} \label{eq:var}
+    [[(v1, v2)  in V(X; int) with pq ]] \defeq [[ (v1, v2) in V(pq1 (X); int) with emp  ]]
+  \end{align}
+Here is an example to motivate this case.
+Let  $  [[ee]] = [[\ X ** Top . (\x . x) : X & int -> X & int]] $.
+We expect that $[[ee int 1 -->> <1 , 1> ]]$, which
+%%\footnote{The reader is advised to try it out in our prototype interpreter.}
+boils down to showing $  (1 , 1)   \in \valR{[[X]]}{[[int]]}_{[ [[X]] \mapsto ([[int]], [[int]], [[Rel]])   ]}  $.
+According to \cref{eq:var}, this is indeed the case. However, we run into ill-foundedness issue again, because
+$[[pq1 (X)]]$ could be larger than $[[X]]$. Alas, this time the parametricity relation has no solution for us.
+
+
+\section{The Canonicity Relation for \fnamee}
 \label{sec:succeed:lr}
 
+% \bruno{Perhaps we are still showing too many auxiliary lemmas here? We
+% could cut on some of these if we are looking for space.}
 In light of the fact that substitution in the logical relation seems unavoidable
-in our setting, and that impredicativity conflicts with substitution, we turn
-to, for the sake of simplicity, \emph{predicativity}. The
-restriction to predicativity, though reducing the expressiveness in theory, does
-not cost much in practice. Languages based on the Hindley–Milner type
-system~\citep{milner1978theory, hindley1969principal}, such as Haskell and ML,
-have such restriction. We also plan to study a variant of \fnamee with implicit polymorphism,
-as briefly discussed in \cref{sec:implicit}.
+in our setting, and that impredicativity is at odds with substitution, we turn
+to \emph{predicativity}: we change \rref{FT-tapp} to its predicative version:
+\[
+  \drule{FT-tappMono}
+\]
+where metavariable $[[t]]$ ranges over monotypes, whose syntax is shown below
+\[
+    \text{Monotypes} \quad [[t]] \Coloneqq [[int]] \mid [[Top]] \mid [[t1 -> t2]]  \mid [[t1 & t2]] \mid [[{l : t}]] \mid [[X]]
+\]
+We do not believe that predicativity is a severe restriction in practice, since many source
+languages (e.g., those based on the Hindley-Milner type system~\citep{milner1978theory, hindley1969principal} like Haskell and
+OCaml) are themselves predicative and do not require the full generality of an
+impredicative core language.
 
-\begin{figure}
+% The restriction to
+% predicative polymorphism, though reducing expressiveness in theory, does not seem to cost much
+% in practice. Languages based on the Hindley–Milner type
+% system~\cite{milner1978theory, hindley1969principal}, such as Haskell and ML,
+% have such restriction. We also plan to study a variant of \fnamee with implicit
+% polymorphism in the future, where a predicativity restriction is
+% likely to be required anyway.
+
+\begin{figure}[t]
   \centering
   \begin{small}
-  \begin{tabular}{lll}
-  $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
-  $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
-  $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
-    $\hlmath{[[(v1, v2)  in V ( \ X ** A1 . B1; \ X ** A2 . B2 ) ]]}$  &$\defeq$ & $\hlmath{\forall [[empty |- t ** A1 & A2 ]].}$ \\
-                                       && $\hlmath{[[  (v1 |t| , v2 |t|) in E ( [t / X] B1 ; [t / X] B2) ]]}$ \\
-  $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
-  $[[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]$  & $\defeq$ & $[[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]$  \\
-  $[[(v1 , v2) in V (A; B) ]]$  & $\defeq$ & $\mathsf{true} \quad \text{otherwise}$ \\ \\
-    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
-                                       & & $[[(v1, v2) in V (A; B)]]$
+  \begin{tabular}{rll}
+    $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[i]]$ \\
+    $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
+    $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
+    $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
+    $[[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]$  & $\defeq$ & $[[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]$  \\
+    $[[(v1, v2)  in V ( \ X ** A1 . B1; \ X ** A2 . B2 ) ]]$  &$\defeq$ & $\forall [[empty |- t ** A1 & A2 ]].\ [[  (v1 |t| , v2 |t|) in E ( [t / X] B1  ;  [ t / X] B2 ) ]]$ \\
+    $[[(v1 , v2) in V (A; B)]] $  &$\defeq$ & $\mathsf{true} \quad \text{otherwise} $ \\ \\
+    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land [[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L107}{\leftpointright} The canonicity relation for \fnamee}
+  \caption{The canonicity relation for \fnamee}
   \label{fig:logical:fi}
 \end{figure}
 
-Substitution with predicative instantiations does not prevent well-foundedness.
-\Cref{fig:logical:fi} presents the logical relation for \fnamee.\footnote{In the
-  Coq formalization, due to some technical difficulties, it contains one
-  ``Admit'' about well-foundedness, for which we provide a manual proof
-  (\cref{lemma:well-founded}).} We extend the canonicity relation in
-\cref{fig:logical} with a new clause (highlighted) for disjoint quantification.
-Notice that it does not quantify over arbitrary relations, which means that our
-logical relation \emph{does not} imply parametricity, and in particular,
-\cref{thm:free} is impossible to prove using our logical relation. However, it
-suffices for our purposes to prove coherence. Also notice that we directly
-substitute $[[X]]$ with $[[t]]$ in both $[[B1]]$ and $[[B2]]$. It can be shown
-that the relation is well-founded.
+Luckily, substitution with monotypes does not prevent well-foundedness.
+\Cref{fig:logical:fi} defines the \emph{canonicity} relation for
+\fnamee. The canonicity relation is a family of binary relations over \tnamee
+values that are \emph{heterogeneous}, i.e., indexed by two \fnamee types.
+% Two points are worth mentioning.
+% (1) An apparent difference from \namee's logical
+% relation is that our relation is now indexed by \emph{source types}. The reason is that
+% the type translation function (\cref{def:type:translate:fi}) discards disjointness
+% constraints, which are crucial in our setting, whereas \namee's
+% type translation does not have information loss. (2) Heterogeneity
+% allows relating values of different types, and in particular values whose types are
+% disjoint.
+% The rationale behind the canonicity relation is to combine equality
+% checking from traditional (homogeneous) logical relations with disjointness
+% checking.
+It consists of two relations: the value relation $\valR{[[A]]}{[[B]]}$
+relates \emph{closed} values; and the expression relation
+$\eeR{[[A]]}{[[B]]}$---defined in terms of the value relation---relates closed
+expressions.
 
-\begin{lemma}[Well-foundedness] \label{lemma:well-founded}
-  The logical relation as defined in \cref{fig:logical:fi} is well-founded.
-\end{lemma}
+% \paragraph{Value relation.}
+
+The relation $\valR{[[A]]}{[[B]]}$ is defined by induction on the structures of $[[A]]$ and
+$[[B]]$. For integers, it requires the two values to be literally the same. For
+two records to behave the same, their fields must behave the same. For two
+functions to behave the same, they are required to produce outputs related at
+$[[B1]]$ and $[[B2]]$ when given related inputs at $[[A1]]$ and $[[A2]]$. For
+the next two cases regarding intersection types, the relation distributes
+over intersection constructor $[[&]]$. Of particular interest is the case for
+disjoint quantification. Notice that it \emph{does not} quantify over arbitrary
+relations, but directly substitutes $[[X]]$ with monotype $[[t]]$ in $[[B1]]$ and
+$[[B2]]$. This means that our canonicity relation \emph{does not} entail
+parametricity~\citep{reynolds1983types}. % , and as such, the free theorem in \cref{sec:failed:lr}
+% cannot be proved using the canonicity relation.
+However, it suffices for our
+purposes to prove coherence. Another noticeable thing is that we keep the
+invariant that $[[A]]$ and $[[B]]$ are closed types throughout the relation, so
+we no longer need to consider type variables. This simplifies things a lot. % The
+% other cases are quite standard.
+Note that when one type is $[[Bot]]$, two
+values are vacuously related because there simply are no values of type $[[Bot]]$.
+% We refer to Bi et al.~\cite{bi_et_al:LIPIcs:2018:9227} for more explanations of
+% the canonicity relation.
+We need to show that the relation is indeed well-founded:
+
+\begin{restatable}[Well-foundedness]{lemma}{wellfounded}\label{lemma:well-founded}
+  The canonicity relation of \fnamee is well-founded.
+\end{restatable}
 \begin{proof}
-  Let $| \cdot |_{\forall}$ and $| \cdot |_s$ denote the number of
-  $\forall$-quantifies and the size of types, respectively. The following
-  measure suffices to prove well-foundedness:
-  \[
-\langle | \cdot |_{\forall} ,  | \cdot |_s   \rangle
-  \]
-  where $\langle \dots \rangle$ denotes lexicographic order. We can verify that
-  for the clause of disjoint quantification, the number of $\forall$-quantifies
-  decreases, because the monotype $[[t]]$ does not contain $\forall$-quantifies.
-  For the other clauses, either the measure of $| \cdot |_{\forall}$ decreases,
-  or it remains the same but the measure of $| \cdot |_s$ decreases.
+  Let $| \cdot |_{\forall}$ and $| \cdot |_s$ be the number of
+  $\forall$-quantifies and the size of types, respectively. We consider the measure $\langle
+  | \cdot |_{\forall} , | \cdot |_s \rangle$,
+  where $\langle \dots \rangle$ denotes lexicographic order. For the case of
+  disjoint quantification, the number of $\forall$-quantifiers decreases because monotype $[[t]]$ does not contain $\forall$-quantifiers.
+  For the other cases, the measure of $| \cdot |_{\forall}$ does not increase, and
+  the measure of $| \cdot |_s$ strictly decreases.
 \end{proof}
 
-
-Another noticeable thing is that in the value relation $ \valR{[[A]]}{[[B]]} $
-(and $\eeR{[[A]]}{[[B]]} $), we keep the invariant that $[[A]]$ and $[[B]]$
-are closed types. This is why we do not need to consider type variables in the
-logical relation, which simplifies the proof a lot. We show that the logical
-relation is symmetric.
-
+Next we show that the logical relation is symmetric.
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L822}{\leftpointright} Symmetry of logical relation] % APPLYCOQ=LOG_SYMM
   If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
@@ -291,12 +256,7 @@ relation is symmetric.
   induction on the structures of $[[A]]$ and $[[B]]$.
 \end{proof}
 
-\section{Establishing Coherence}
-
-We are now ready to prove coherence for \fnamee. The proof of coherence
-basically follows that in \cref{chap:coherence:simple}. We first give the
-interpretations of type and value contexts ($[[p]]$ is a mapping from type
-variables to monotypes).
+We then give the interpretations of type and term contexts.
 
 \begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2023}{\leftpointright} Interpretation of type contexts]
   \begin{mathpar}
@@ -314,68 +274,9 @@ variables to monotypes).
 \end{definition}
 
 
-\paragraph{Logical equivalence.}
-
-Logical equivalence is defined in terms of logical relation by considering all possible interpretations of
-free type and term variables.
-
-\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L180}{\leftpointright} Logical equivalence]
-  \begin{align*}
-    [[DD ; GG |- e1 == e2 : A ; B]]  & \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
-                                       & \qquad (\forall [[p]], [[g1]], [[g2]]. \ ([[p in DD]] \land [[(g1, g2) in GG with p ]]) \\
-                                       & \qquad \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]])
-  \end{align*}
-\end{definition}
-
-
-\paragraph{Contextual equivalence.}
-
-\begin{figure}
-  \centering
-\begin{tabular}{llll}\toprule
-  \tnamee contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid \hlmath{[[\ X . cc]]}  \mid \hlmath{[[ cc T  ]]} \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $ \\
-  \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid \hlmath{[[\ X ** A. CC]]} \mid \hlmath{[[ CC A  ]]} \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
-  & & $\mid$ & $[[ { l = CC}  ]]  \mid [[ CC . l]]   $  \\ \bottomrule
-\end{tabular}
-  \caption{Expression contexts of \tnamee and \fnamee}
-  \label{fig:contexts:fi}
-\end{figure}
-
-
-
-\begin{figure}
-  \centering
-\drules[FCTyp]{$[[ CC : ( DD ; GG => A ) ~> ( DD' ; GG' => B ) ~~> cc ]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne, tabsOne, tappOne}
-\caption{\fnamee context typing (excerpt)}
-\label{fig:fctyp}
-\end{figure}
-
-
-To define the contextual equivalence, we must define the expression contexts for
-\fnamee and \tnamee, which are shown in \cref{fig:contexts:fi} (highlighted for
-the differences from \namee contexts). The typing judgment of
-\fnamee contexts has 4 different forms:
-\begin{mathpar}
-  [[CC : (DD; GG => A) ~> (DD'; GG' => A') ~~> cc]] \and
-  [[CC : (DD; GG <= A) ~> (DD'; GG' => A') ~~> cc]] \and
-  [[CC : (DD; GG => A) ~> (DD'; GG' <= A') ~~> cc]] \and
-  [[CC : (DD; GG <= A) ~> (DD'; GG' <= A') ~~> cc]]
-\end{mathpar}
-\Cref{fig:fctyp} shows one form of rules. The full typing rules appear in \cref{appendix:fi}.
-Now we may give the definition of contextual equivalence for \fname as follows:
-
-\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \fnamee Contextual Equivalence]
-  \begin{align*}
-    [[DD ; GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
-                                     & \qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => int) ~~> cc]]   \\
-                                     & \qquad \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
-  \end{align*}
-\end{definition}
-
-
 The connection between disjointness and the value relation becomes a bit
-complicated due to the addition of type variables. We first prove that disjoint
-values of monotypes are related.
+complicated due to the addition of polymorphism. We first prove that
+values of disjoint monotypes are related.
 
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L836}{\leftpointright} Disjoint values of monotypes are related] \label{lemma:disjoint:mono} % APPLYCOQ=DISJOINT_MONO
@@ -408,26 +309,70 @@ Then we can prove a more general lemma.
 \end{proof}
 
 
-Next up are the compatibility lemmas. They are essentially the same as in
-\cref{chap:coherence:simple}. So we skip them and state the last two important
-theorems without giving proofs. The proofs have mostly the same structures as in the
-simply-typed case, but with more cases. The interested reader can refer to our
-Coq formalization.
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L9}{\leftpointright} Fundamental property] % APPLYCOQ=FUNDAMENTAL
-  We have that:
-  \begin{itemize}
-  \item If $[[DD; GG |- ee => A ~~> e]]$ and $[[DD; GG |- ee => A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
-  \item If $[[DD ; GG |- ee <= A ~~> e]]$ and $[[DD ; GG |- ee <= A ~~> e']]$, then $[[DD; GG |- e == e' : A ]]$.
-  \end{itemize}
-\end{theorem}
 
-\begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L225}{\leftpointright} Congruence] % APPLYCOQ=CONGRUENCE
- If $[[CC : (DD ; GG dir A) ~> (DD' ; GG' dir' A') ~~> cc]]$, $[[DD ; GG |- ee1 dir A ~~> e1]]$, $[[DD ; GG |- ee2 dir A ~~> e2]]$
- and $[[DD ; GG |- e1 == e2 : A ]]$, then $[[DD' ; GG' |- cc{e1} == cc{e2} : A']]$.
-\end{theorem}
 
-Finally \fnamee is coherent.
+
+\section{Establishing Coherence}
+
+We are now ready to prove coherence for \fnamee. The proof of coherence
+basically follows that in \cref{chap:coherence:simple}.
+
+\paragraph{Logical equivalence.}
+
+The canonicity relation can be lifted to open expressions in the standard way,
+i.e., by considering all possible interpretations of free type and term variables.
+
+\begin{definition}[Logical equivalence $\backsimeq_{log}$]
+  \begin{align*}
+    &[[DD ; GG |- e1 == e2 : A ; B]]   \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
+    &\qquad (\forall [[p]], [[g1]], [[g2]]. \ [[p in DD]] \land [[(g1, g2) in GG with p ]] \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]])
+  \end{align*}
+\end{definition}
+For conciseness, we write $[[DD ; GG |- e1 == e2 : A]]$ to mean $[[DD ; GG |- e1 == e2 : A ; A]]$.
+
+\paragraph{Contextual equivalence.}
+
+\begin{figure}[t]
+  \centering
+\begin{tabular}{llll}\toprule
+  \tnamee contexts & $[[cc]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . cc]] \mid [[\ X . cc]]  \mid [[ cc T  ]] \mid [[cc e]] \mid [[e cc]] \mid [[< cc , e>]] \mid [[<e , cc>]] \mid [[c cc]] $ \\
+  \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
+  & & $\mid$ & $ [[ { l = CC}  ]]  \mid [[ CC . l]] \mid [[ CC : A ]]$ \\ \bottomrule
+\end{tabular}
+  \caption{Expression contexts}
+  \label{fig:contexts:fi}
+\end{figure}
+
+Following \namee, the notion of coherence is based on \emph{contextual
+  equivalence}. The intuition is that two programs are equivalent if we
+\emph{cannot} tell them apart in any context. More formally, we introduce
+\emph{expression contexts}, whose syntax is shown in \cref{fig:contexts:fi}. Due
+to the bidirectional nature of the type system, the typing judgment of $[[C]]$
+features 4 different forms (see \cref{appendix:fi}),
+e.g., $[[CC : (DD; GG => A) ~> (DD'; GG' => A') ~~> cc]]$ reads if $[[DD ; GG |- ee => A]]$
+then $[[DD' ; GG' |- CC { ee } => A']]$. The judgment also generates a well-typed \tnamee context $[[cc]]$. The
+following definition capture the notion of contextual equivalence in \fnamee:
+
+% \begin{definition}[Kleene Equality $\backsimeq$]
+%   Two complete programs, $[[e]]$ and $[[e']]$, are Kleene equal, written
+%   $\kleq{[[e]]}{[[e']]}$, iff there exists $[[ii]]$ such that $[[e -->> ii]]$ and
+%   $[[e' -->> ii]]$.
+% \end{definition}
+
+\begin{definition}[\fnamee Contextual Equivalence]
+  \begin{align*}
+    &[[DD ; GG |- ee1 ~= ee2 : A]]  \defeq \forall [[e1]], [[e2]].\  [[DD ; GG |- ee1 => A ~~> e1]] \land [[DD ; GG |- ee2 => A ~~> e2]] \ \land   \\
+    &\qquad (\forall [[C]], [[cc]].\ [[CC : (DD; GG => A) ~> (empty ; empty => int) ~~> cc]] \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
+  \end{align*}
+\end{definition}
+
+
+\paragraph{Coherence.}
+
+We directly show the coherence statement of \fnamee.
+We need several technical lemmas such as compatibility lemmas, fundamental property, etc.
+The interested reader can refer to our Coq formalization.
 
 \begin{theorem}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Coherence.v\#L363}{\leftpointright} Coherence of \fnamee] \label{thm:coherence:fi} % APPLYCOQ=COHERENCE
   We have that
@@ -436,17 +381,13 @@ Finally \fnamee is coherent.
   \item If $[[DD ; GG |- ee <= A ]]$ then $[[DD ; GG |- ee ~= ee : A]]$.
   \end{itemize}
 \end{theorem}
-
-
-\paragraph{Final remarks.}
-
-It would be interesting to study parametricity of \fnamee. As we have seen, it
-is not obvious how to extend the parametric logical relation as defined in
-\cref{fig:logical:f} to account for disjointness, and avoid potential
-circularity due to impredicativity. A possible solution is to use step-indexed
-logical relations. We have yet investigated further on that direction.
+% \noindent That is, coherence is a special case of \cref{def:cxtx2} where
+% $[[ee1]]$ and $[[ee2]]$ are the same. At first glance, this
+% appears underwhelming: of course $[[ee]]$ behaves the same as itself! The tricky
+% part is that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
+% itself but all its translations $[[e1]]$ and $[[e2]]$ that behave the same!
 
 % Local Variables:
 % TeX-master: "../../Thesis"
-% org-ref-default-bibliography: ../../Thesis.bib
+% org-ref-default-bibliography: "../../Thesis.bib"
 % End:

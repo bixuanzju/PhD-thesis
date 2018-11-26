@@ -200,7 +200,7 @@ consideration both \namee and \tname contexts.
 
 
 
-\begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Compatibility.v\#L471}{\leftpointright} \namee Contextual Equivalence] \label{def:cxtx2}
+\begin{definition}[\namee Contextual Equivalence] \label{def:cxtx2}
   \begin{align*}
     [[GG |- ee1 ~= ee2 : A]]  & \defeq \forall [[e1]], [[e2]].\  [[GG |- ee1 => A ~~> e1]] \land [[GG |- ee2 => A ~~> e2]] \ \land \\
                                 & \qquad (\forall [[C]], [[cc]]. \ [[CC : (GG => A) ~> (empty => int) ~~> cc]]  \Longrightarrow \kleq{[[cc{e1}]]}{[[cc{e2}]]})
@@ -229,11 +229,11 @@ in the following sense:
   \end{itemize}
 \end{restatable}
 
-That is, coherence is just a special case of \cref{def:cxtx2} where we set
-$[[ee1]]$ and $[[ee2]]$ to be the same source expression. At first glance, this
-appears underwhelming: of course $[[ee]]$ behaves the same as itself! The tricky part is
-that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
-itself but all its translations $[[e]]$ that should behave the same!
+\noindent That is, coherence is a special case of \cref{def:cxtx2} where
+$[[ee1]]$ and $[[ee2]]$ are the same. At first glance, this
+appears underwhelming: of course $[[ee]]$ behaves the same as itself! The tricky
+part is that, if we expand it according to \cref{def:cxtx2}, it is not $[[ee]]$
+itself but all its translations $[[e1]]$ and $[[e2]]$ that behave the same!
 The rest of the chapter is devoted to proving the validity of \cref{thm:coherence}.
 
 \section{The Canonicity Relation, Formally Defined}
@@ -249,15 +249,14 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
 
 \begin{figure}
   \centering
-  \begin{tabular}{lll}
+  \begin{tabular}{rll}
   $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
   $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
   $[[(v1 , v2) in V ( A1 -> B1 ; A2 -> B2 ) ]]$  & $\defeq$ & $\forall [[(v2' , v1') in V ( A2 ; A1 ) ]].\, [[ (v1 v1' , v2 v2') in E ( B1 ; B2 ) ]]$ \\
   $[[( < v1 , v2 > , v3  )  in V ( A & B ;  C  ) ]]$  & $\defeq$ & $[[ (v1, v3)  in V (A ; C) ]] \land [[ (v2, v3)  in V (B ; C) ]]$  \\
   $[[( v3 , < v1 , v2 >  )  in V ( C; A & B  ) ]]$  & $\defeq$ & $[[ (v3, v1)  in V (C ; A) ]] \land [[ (v3, v2)  in V (C ; B) ]]$  \\
   $[[(v1 , v2) in V (A; B) ]]$  & $\defeq$ & $\mathsf{true} \quad \text{otherwise}$ \\ \\
-    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land $ \\
-                                       & & $[[(v1, v2) in V (A; B)]]$
+    $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land [[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \namee}
   \label{fig:logical}
@@ -403,7 +402,9 @@ The interruption of typing contexts, written $[[  (g1, g2) in GG ]]$ is inductiv
   \end{mathpar}
 \end{definition}
 
-Two open terms are related if every pair of related closing substitutions
+
+The canonicity relation can be lifted to open expressions in the standard way,
+i.e., two open terms are related if every pair of related closing substitutions
 makes them related:
 \begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L180}{\leftpointright} Logical equivalence]
   \begin{align*}

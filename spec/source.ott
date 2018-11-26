@@ -4,7 +4,7 @@
 
 metavar rvar, XX {{ tex X }}, YY {{ tex Y }} ::=
 
-metavar typvar, X {{ tex \alpha }}, Y {{ tex \beta }} ::=
+metavar typvar, Rel {{ tex \mathsf{R} }}, X {{ tex \alpha }}, Y {{ tex \beta }} ::=
 
 metavar var, x, y, f, D , R {{ tex \mathsf{R}  }}, TT {{ tex T }}, l, super {{ tex \mathsf{super} }}, self {{ tex \mathsf{self} }} ::=
 
