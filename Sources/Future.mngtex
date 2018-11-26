@@ -361,8 +361,7 @@ research into the algorithmic system.
 \section{Disjoint Polymorphism vs. Row Polymorphism}
 \label{sec:future:row}
 
-As we have alluded to in \cref{sec:related:row}, row polymorphism alone cannot express
-the merge operator. It would be interesting to study the
+As we have alluded to in \cref{sec:related:row},  it would be interesting to study the
 relationship between disjoint polymorphism and row polymorphism, and in
 particular, whether the former subsumes the latter. As noted by
 \citet{alpuimdisjoint}, disjoint polymorphism can already encode polymorphic
@@ -412,18 +411,19 @@ where $\mathsf{Empty}$ is the empty record type. Compare it to our ``more expres
 \[
   \mathsf{mergeAny} = [[\ X1 ** Top . \ X2 ** X1 . \x1 : X1 . \x2 : X2 . x1 ,, x2 ]]
 \]
-that merges \emph{any} two expressions of statically unknown types.
+that merges \emph{any} two expressions of statically unknown types. Thus
+we conjecture that \fnamee completely subsumes $\lambda^{\|}$.
 
-We believe \fnamee completely subsumes $\lambda^{\|}$. To support this claim, we
-may show a type directed translation from $\lambda^{\|}$ to \fnamee. However,
-there could be many feasible translations, some of which may even discard important
-information. For example, we could easily translate $\lambda^{\|}$ to System F,
-ignoring all compatibility conditions. Thus we need a stronger argument: a
-bisimulation property between $\lambda^{\|}$ and (a subset of) \fnamee:
-\begin{inparaenum}[(1)]
-\item the translation from $\lambda^{\|}$ to \fnamee is type-safe (i.e., it type check in \fnamee),
-\item and the translation from a subset of \fnamee to $\lambda^{\|}$ is type-safe (i.e., it type check in $\lambda^{\|}$).
-\end{inparaenum}
+% To support this claim, we
+% may show a type directed translation from $\lambda^{\|}$ to \fnamee. However,
+% there could be many feasible translations, some of which may even discard important
+% information. For example, we could easily translate $\lambda^{\|}$ to System F,
+% ignoring all compatibility conditions. Thus we need a stronger argument: a
+% bisimulation property between $\lambda^{\|}$ and (a subset of) \fnamee:
+% \begin{inparaenum}[(1)]
+% \item the translation from $\lambda^{\|}$ to \fnamee is type-safe (i.e., it type check in \fnamee),
+% \item and the translation from a subset of \fnamee to $\lambda^{\|}$ is type-safe (i.e., it type check in $\lambda^{\|}$).
+% \end{inparaenum}
 
 
 \section{Recursive Types}
