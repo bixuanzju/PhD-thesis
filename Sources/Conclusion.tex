@@ -12,31 +12,46 @@ increasing expressiveness:
 \begin{itemize}
 \item The \namee calculus is the basic calculus with disjoint intersection types
   and a powerful subtyping relation. We have shown that it captures the essence
-  of nested composition, enabling a simple solution to the expression problem.
-  In order to prove coherence, we have introduced a powerful proof method called
-  the canonicity relation based on logical relations.
+  of nested composition, enables a simple solution to the expression problem. In
+  order to prove coherence, we have proposed the canonicity relation based on
+  logical relations.
 \item The \fnamee calculus, building on \namee, supports parametric
-  polymorphism. We have shown that it can express a very dynamic (and
-  conflict-free) form of composition, which could serve as a foundation for more
-  sophisticated compositional models. We have also extended the canonicity
-  relation to establish coherence property of \fnamee.
+  polymorphism. We have shown that it improves upon the finally
+  tagless~\citep{CARETTE_2009} and object
+  algebra~\citep{oliveira2012extensibility} approaches and support advanced
+  compositional designs, and enables the development of highly modular and
+  reusable programs. We have also extended the canonicity relation to establish
+  coherence property of \fnamee.
 \item \sedel---an object-oriented language design---building on \fnamee,
-  supports, among others, typed first traits. Through a case study, we have
-  shown the usefulness of \fnamee in building highly reusable software
-  components using a improved form of object algebras. The case study
-  demonstrates that the state-of-art encodings of extensible designs are greatly
-  improved by \fnamee.
+  supports, among others, typed first traits. We have illustrated the
+  applicability of \sedel with several example uses for first-class traits.
+  Furthermore, we have conducted a case study that modularizes programming
+  language interpreters. The case study demonstrates that the state-of-art
+  encodings of extensible designs are greatly improved by \sedel.
 \end{itemize}
 
-Throughout the thesis, we have demonstrated that disjoint intersection types have great
-potential to serve as a foundation for powerful, flexible and yet type-safe and
-easy to reason object-oriented languages. We hope that the concepts and the
-methods described in this thesis may serve as a helpful guide to researchers and
-programmers alike in their attempts to understand and build better software.
-Thus this thesis serves as a stepping stone for further investigation of
-disjoint intersection types in conjunction with other type disciplines. A great
-number of open questions, new research directions lie ahead!
 
+Of course there are several noteworthy limitations in our proposed calculi. (1)
+Lack of mutable state, which is a desirable feature in modern programming
+languages, and also very important in order for mainstream languages to adopt
+some of the proposed language mechanisms in this thesis. (2) Lack of recursive
+types, which is important for modeling object-oriented language. (3) Poor
+runtime performance due to redundant coercion applications (e.g., applying multiple
+$\mathsf{id}$s). As we remarked earlier, our generated coercions are not
+efficient in terms of space. There is existing work on space-efficient
+coercions~\citep{Siek_2015, herman2010space}, which we expect should be
+applicable to the work in this thesis.
+
+
+Hopefully we have convinced the reader that disjoint intersection types have
+great potential to serve as a foundation for powerful, flexible and yet
+type-safe and easy to reason object-oriented languages. We hope that the
+concepts and the methods described in this thesis may serve as a helpful guide
+to researchers and programmers alike in their attempts to understand and build
+better software. Thus this thesis serves as a stepping stone for further
+investigation of disjoint intersection types in conjunction with other type
+disciplines. A great number of open questions, new research directions lie ahead
+(cf. \cref{chap:future}).
 
 
 
