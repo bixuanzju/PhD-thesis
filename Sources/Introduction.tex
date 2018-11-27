@@ -140,7 +140,7 @@ to static inheritance that is also common in statically typed languages. One of
 the motivations for this thesis is to propose a type discipline that can encode
 first-class classes. Moreover, we push this one step further: for the first
 time, this thesis shows how to encode \emph{first-class traits} in a
-statically typed setting. But first thing first, let us briefly explain what are
+statically typed setting. But first things first, let us briefly explain what are
 traits, and the related concept ``mixins''.
 
 % Racket~\citep{DBLP:conf/aplas/FlattFF06} supports typed first-class classes, as
@@ -154,7 +154,7 @@ traits, and the related concept ``mixins''.
 
 As remarked earlier, single inheritance is inadequate and inflexible to write
 large software. To overcome this limitation, multiple
-inheritance~\citep{cardelli1984semantics} was proposed as a generalization of
+inheritance was proposed as a generalization of
 single inheritance. However, multiple inheritance is renowned for being tricky
 to get right, largely because of the possible ambiguity issues that arise when
 conflicting features are inherited along different paths.
@@ -242,7 +242,7 @@ supports nested composition.
 \section{Our Proposed Solution}
 
 This thesis sets out to explore an alternative object-oriented language design
-that makes extending and composing existing code more easily and safely on the
+that makes it easy and safe to extend and compose existing code on the
 language level. More specifically, we seek to rein in ideas that are seemingly
 unrelated but powerful in object-oriented programming---dynamic inheritance,
 first-class traits, family polymorphism---under a simple unifying mechanism:
@@ -315,9 +315,8 @@ Recently, \citet{oliveira2016disjoint} proposed \oname: a calculus with a
 variant of intersection types called \emph{disjoint intersection types}. Calculi
 with disjoint intersection types also feature the merge operator, with restrictions
 that all expressions in a merge operator must have disjoint types and all
-well-formed intersections are also disjoint. A bidirectional type system and the
-disjointness restrictions ensure that the semantics of the resulting calculi
-remains coherent. As shown by \citet{alpuimdisjoint}, calculi with disjoint
+well-formed intersections are also disjoint. With the
+disjointness restrictions \oname is proved to be coherent. As shown by \citet{alpuimdisjoint}, calculi with disjoint
 intersection types are very expressive and can be used to statically type-check
 JavaScript-style programs using mixins. Yet they retain both type safety and
 coherence. While coherence may seem at first of mostly theoretical relevance, it
@@ -353,7 +352,8 @@ with support for first-class traits, dynamic inheritance and nested composition.
 
 The first one, named \namee, is a simple calculus with records and disjoint
 intersection types that supports \emph{nested composition}. The essential
-novelty of \namee is the adoption of BCD subtyping, which includes distributivity
+novelty of \namee is the adoption of the
+Barendregt, Coppo and Dezani (BCD) subtyping~\citep{Barendregt_1983}, which includes distributivity
 rules between function/record types and intersection types. These rules are the
 delta that enables extending the simple forms of multiple inheritance/composition
 supported by previous work~\citep{oliveira2016disjoint} into a more powerful form

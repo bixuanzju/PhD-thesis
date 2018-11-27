@@ -225,7 +225,7 @@ between coercions and terms is shown in \cref{tab:coercion}.
 In essence, coercions express the conversion
 of a term from one type to another. Because of the addition of coercions, the
 grammar contains explicit coercion applications $[[c e]]$ as a term, and various
-unsaturated coercion applications as values. The use of explicit coercions is useful for the new semantic
+unsaturated coercion applications as values. Explicit coercions are useful for the new semantic
 proof of coherence based on logical relations.
 The subtyping judgment in \cref{fig:subtype_decl} has the form $[[A <: B ~~> c]]$, which says that
 subtyping $[[A <: B]]$ produces a coercion $[[c]]$ that converts

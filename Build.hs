@@ -16,11 +16,12 @@ main =
 
     "*.pdf" %> \_ -> do
       texSource <- getDirectoryFiles "" ["/*.tex", "Sources//*.tex"]
+      codeSource <- getDirectoryFiles "" ["examples/*.sl"]
       genFiles <-
         (\mngSource ->
            ["Gen" </> (dropDirectory1 c -<.> "tex") | c <- mngSource]) <$>
         getDirectoryFiles "" ["Sources//*.mngtex"]
-      need $ [ottFile] ++ genFiles ++ texSource
+      need $ [ottFile] ++ genFiles ++ texSource ++ codeSource
       cmd "latexmk" [doc -<.> "tex"]
 
     "Gen//*.tex" %> \out -> do

@@ -388,7 +388,7 @@ terminals :: 'terminals_' ::=
     | int     :: :: int  {{ tex \mathsf{Int} }}
     | char    :: :: char  {{ tex \mathsf{Char} }}
     | bool    :: :: bool  {{ tex \mathsf{Bool} }}
-    % | ,,      :: :: Merge  {{ tex \,,,\, }}
+    | ,,      :: :: Merge  {{ tex \, ,,\, }}
     | unit    :: :: unit  {{ tex \langle \rangle }}
     | Unit    :: :: Unit  {{ tex \langle \rangle }}
     | top     :: :: top  {{ tex \mathsf{top} }}
@@ -670,7 +670,7 @@ A1 & A2 <: A2 ~~> pp2
 
 
 B1 <: B2 ~~> c
-A2 <: A1
+A2 <: A1 ~~> c'
 ------------------------------------------------ :: forall
 \ X ** A1 . B1 <: \ X ** A2 . B2  ~~> \ c
 

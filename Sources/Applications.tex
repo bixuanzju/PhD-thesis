@@ -17,18 +17,19 @@ particular, \sedel's encoding of extensible \visitor gives true ASTs. In
 \cref{sec:case:combinator} we show a native support for conflict-free Object
 Algebra combinators, thanks to first-class traits and disjoint polymorphism.
 Based on this technique, \cref{sec:case} gives a bird's-eye view of several
-orthogonal features of a small JavaScript-like language from a textbook on
-programming languages~\citep{poplcook}, and illustrates how various features can
-be modularly developed and composed to assemble a complete language with various
-operations baked in. \Cref{sec:evaluate} compares our \sedel's implementation
-with that of the textbook using Haskell in terms of lines of code.
+orthogonal features of a small JavaScript-like language taken from the textbook
+``Anatomy of Programming Languages''~\citep{poplcook}, and illustrates how
+various features can be modularly developed and composed to assemble a complete
+language with various operations baked in. \Cref{sec:evaluate} compares our
+\sedel's implementation with that of the textbook using Haskell in terms of
+lines of code.
 
 
 \section{Object Algebras and Extensible Visitors in \sedel}
 \label{sec:ob}
 
 First we give a simple introduction to object algebras, a design pattern that
-can solve the expression problem~\citep{wadler1998expression} in languages like
+can solve the expression problem~\citep{wadler1998expression, cook1990object, krishnamurthi1998synthesizing} in languages like
 Java. Our starting point is the following code:
 \lstinputlisting[linerange=4-17]{./examples/application.sl}% APPLY:linerange=ALGEBRA_DEF
 \lstinline{ExpAlg[E]} is the generic interface of a simple arithmetic language
@@ -174,11 +175,11 @@ evaluation and pretty printing at the same time:
 Now we are ready to see how the same technique scales to modularize different
 language features. A \emph{feature} is an increment in program
 functionality~\citep{zave1999faq,lopez2005evaluating}. \Cref{fig:mini-js}
-presents the syntax of the expressions, values and types provided by the
-features; each line is annotated with the corresponding feature name. Starting from a
-simple arithmetic language, we gradually introduce new features and combine them
-with some of the existing features to form various languages. Below we briefly
-explain what constitutes each feature:
+presents the syntax of a mini-JS language~\citep{poplcook}; each line is
+annotated with the corresponding feature name. Starting from a simple arithmetic
+language, we gradually introduce new features and combine them with some of the
+existing features to form various languages. Below we briefly explain what
+constitutes each feature:
 \begin{itemize}
 \item $\mathit{natF}$ and $\mathit{boolF}$ contain, among others, literals, additions and conditional expressions.
 \item $\mathit{compF}$ and $\mathit{logicF}$ introduce comparisons between numbers and logical connectives.
@@ -186,7 +187,7 @@ explain what constitutes each feature:
 \item $\mathit{funcF}$ introduces top-level functions and function calls.
 \end{itemize}
 Besides, each feature is packed with 3 operations: evaluator, pretty
-printer and type checker.
+printer and type checker. We also define a combined algebra with the combined behavior of all the operations.
 
 Having the feature set, we can synthesize different languages by selecting one
 or more operations, and one or more data variants, as shown in \cref{fig:langs}.
@@ -197,7 +198,6 @@ that for some languages (e.g., \lstinline{simplenat}), since they have only one
 kind of value, we only define an evaluator and a pretty printer. We thus obtain
 12 languages and 30 operations in total. The complete language
 \lstinline{mini-JS} contains all the features and supports all the operations.
-Besides, we also define a combined algebra with the combined behavior of all the operations.
 The reader can refer to our supplementary material for the source code of the case study.
 
 
@@ -291,9 +291,18 @@ has 33), we still get a huge gain when implementing other languages.
 
 \paragraph{Final remarks.}
 
-We acknowledge the limitation of our case study in that SLOC is just
-one metric and we have not measured any other metrics. Nevertheless we believe
-that the case study is already non-trivial in that we need to solve the
-expression problem. Note that Scala traits alone are not sufficient on their own
-to solve the expression problem. While there are solutions in both Haskell and Scala, they
-introduce significant complexity, as explained in \cref{sec:ob}.
+We acknowledge that there are several limitations in our case study. On the one
+hand, SLOC is just one metric and we have not yet measured any other metrics. On
+the other hand, we did not compare with other modular approaches such as finally
+tagless~\citep{CARETTE_2009}. Nevertheless we believe that the case study is already non-trivial in
+that we need to solve the expression problem. Note that Scala traits alone are
+not sufficient on their own to solve the expression problem. While there are
+solutions in both Haskell and Scala, they introduce significant complexity, as
+explained in \cref{sec:ob}.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../Thesis"
+%%% org-ref-default-bibliography: "../Thesis.bib"
+%%% End:

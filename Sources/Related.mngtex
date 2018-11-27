@@ -409,7 +409,7 @@ combined by the work on Tribe~\citep{pubsdoc:tribe-virtual-calculus}.
 
 Virtual classes~\citep{Madsen_1989} as introduced in
 \textsc{Beta}~\citep{LehrmannMadsen:1993:OPB:221048} are based on object
-families. However, the virtual class mechanism in \textsc{Beta} is unsound.
+families. However, the virtual class mechanism in \textsc{Beta} is known to be unsound~\citep{bruce1998statically}.
 Path-dependent types are used to ensure type safety for virtual types and
 virtual classes in the calculus \textsc{vc}~\citep{ErnstVirtual}. One distinctive
 difference from our calculi is that \textsc{vc} follows the mixin-style by
@@ -532,5 +532,5 @@ missing features in module systems.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../Thesis"
-%%% org-ref-default-bibliography: ../Thesis.bib
+%%% org-ref-default-bibliography: "../Thesis.bib"
 %%% End:

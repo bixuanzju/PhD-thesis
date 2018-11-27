@@ -187,10 +187,11 @@ impredicative core language.
   \label{fig:logical:fi}
 \end{figure}
 
-Luckily, substitution with monotypes does not prevent well-foundedness.
-\Cref{fig:logical:fi} defines the \emph{canonicity} relation for
-\fnamee. The canonicity relation is a family of binary relations over \tnamee
-values that are \emph{heterogeneous}, i.e., indexed by two \fnamee types.
+Luckily because monotypes do not contain $\forall$-quantifiers, substitution
+with monotypes does not prevent well-foundedness. \Cref{fig:logical:fi} defines
+the \emph{canonicity} relation for \fnamee. The canonicity relation is a family
+of binary relations over \tnamee values that are \emph{heterogeneous}, i.e.,
+indexed by two \fnamee types.
 % Two points are worth mentioning.
 % (1) An apparent difference from \namee's logical
 % relation is that our relation is now indexed by \emph{source types}. The reason is that
@@ -221,10 +222,11 @@ relations, but directly substitutes $[[X]]$ with monotype $[[t]]$ in $[[B1]]$ an
 $[[B2]]$. This means that our canonicity relation \emph{does not} entail
 parametricity~\citep{reynolds1983types}. % , and as such, the free theorem in \cref{sec:failed:lr}
 % cannot be proved using the canonicity relation.
-However, it suffices for our
-purposes to prove coherence. Another noticeable thing is that we keep the
-invariant that $[[A]]$ and $[[B]]$ are closed types throughout the relation, so
-we no longer need to consider type variables. This simplifies things a lot. % The
+However, it suffices for our purposes to prove coherence. Another noticeable
+thing is that the value relation $\valR{[[A]]}{[[B]]}$ (and
+$\eeR{[[A]]}{[[B]]}$) keeps the invariant that $[[A]]$ and $[[B]]$ are closed
+types. As a result, type variables need not to be
+considered in the logical relation. This simplifies things a lot. % The
 % other cases are quite standard.
 Note that when one type is $[[Bot]]$, two
 values are vacuously related because there simply are no values of type $[[Bot]]$.

@@ -233,7 +233,7 @@ second component $[[(2 ,, true)]]$ has type $[[ int & bool ]]$. It is clear that
 subtype of the other. However, extracting an integer from the above expression is
 ambiguous ($[[1]]$ or $[[2]]$).
 
-When moving to richer types, it is even less clear how to deal with for example,
+When moving to richer types, it is even less clear how to deal with, for example,
 intersections of higher-order functions. Consider the following intersection
 types (again taken from \citet{oliveira2016disjoint}):
 \begin{enumerate}
@@ -271,11 +271,13 @@ intersection types. The syntax of \oname is shown below:
   \text{Types} \quad [[A]] &\Coloneqq [[int]] \mid [[A1 -> A2]] \mid [[A1 & A2]]  \\
   \text{Terms} \quad [[ee]] &\Coloneqq [[ii]] \mid [[x]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]]
 \end{align*}
-Its full (bidirectional) type system is shown in \cref{fig:lambdai}. Central
-to their system is the notion of \emph{disjointness}. As a first
-approximation, for two types $[[A]]$ and $[[B]]$ to be disjoint (written $[[A ** B]]$),
-they must not have any sub-components sharing the same type. In a type
-system without $[[Top]]$, this can be ensured by the following specification:
+Its full (bidirectional) type system is shown in \cref{fig:lambdai}. (It is
+probably best to skim this figure on first reading. We will explain and contrast
+this figure in later chapters.) Central to their system is the notion of
+\emph{disjointness}. As a first approximation, for two types $[[A]]$ and $[[B]]$
+to be disjoint (written $[[A ** B]]$), they must not have any sub-components
+sharing the same type. In a type system without $[[Top]]$, this can be ensured
+by the following specification:
 
 \begin{definition}[Simple disjointness] \label{def:disjoint_spec}
   $[[A ** B]] \defeq  \nexists C.\ [[A <: C]] \land [[B <: C]]$
@@ -298,7 +300,7 @@ $[[int]]$ are not disjoint), while accepting unambiguous merges such as $[[1 ,, 
   which is impossible to express in \oname.
 \end{remark}
 
-To ensure that subtyping produces unique coercions, they also employ the notion
+To ensure that subtyping produces unique coercions, \oname employs the notion
 of \emph{ordinary types}~\citep{Davies_2000}---those that are not intersection
 types---and use the judgment ``$[[ A ord ]]$'' in \rref{Si-andL,Si-andR}.
 Ordinary types and disjointness are sufficient to ensure a coherent semantics of
@@ -412,7 +414,7 @@ common parent), and these methods will be inherited by other classes in the same
 hierarchy, which may not be desirable. On the other hand, putting those methods
 in a \emph{lower} position results in code duplication. To overcome this
 limitation, \emph{multiple inheritance} was proposed as a generalization of
-single inheritance. However, as \citet{cook:multi} put it:
+single inheritance. However, as Steve Cook~\citep{cook:multi} put it:
 \begin{quote}
   \emph{``Multiple inheritance is good, but there is no good way to do it.''}
 \end{quote}
@@ -552,7 +554,7 @@ problem in the \textsf{gbeta} language~\citep{ernst2000gbeta}, which he adorns w
 presentation purposes, for a small abstract syntax tree (AST) example. His
 starting point is the code shown in \cref{fig:lang}. The outer class
 \lstinline{Lang} contains a family of related AST classes: the common superclass
-\lstinline{Exp} and two cases, \lstinline{Lit} for literals and \lstinline{Add}
+\lstinline{Exp} and two classes, \lstinline{Lit} for literals and \lstinline{Add}
 for addition. The AST comes equipped with one operation, \lstinline{toString},
 which is implemented by both cases. Notice that all the inner classes are
 \emph{virtual}, in the same sense of virtual methods, which means that they

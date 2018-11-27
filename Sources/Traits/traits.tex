@@ -10,7 +10,7 @@ we simplify the examples in \cref{sec:trait:overview} to make better use of trai
 \subsection{Traits in \sedel}
 
 \sedel supports a simple, yet expressive form of traits~\citep{scharli2003traits}.
-Traits provide a simple mechanism for find-grained code reuse, which
+Traits provide a simple mechanism for fine-grained code reuse, which
 can be regarded as a disciplined form of multiple inheritance. A trait is
 similar to a mixin in that it encapsulates a collection of related methods to be
 added to a class. The
@@ -249,10 +249,10 @@ in \cref{sec:trait:overview} where \lstinline{on_key} from the \lstinline{modal}
 is selected:
 \lstinputlisting[linerange=143-149]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK
 Now the above code type checks. We can also select \lstinline{on_key} from the \lstinline{spell} trait as easily:
-\lstinputlisting[linerange=154-159]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
+\lstinputlisting[linerange=154-160]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK2
 In \cref{sec:trait:overview} we mentioned that in the mixin style, it is impossible
 to select \lstinline{on_key} from the \lstinline{editor} trait, but this is not a problem now:
-\lstinputlisting[linerange=163-168]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
+\lstinputlisting[linerange=164-170]{./examples/overview2.sl}% APPLY:linerange=MODAL_OK3
 Using the exclusion operator, we can drop \lstinline{on_key} in \lstinline{spell} and \lstinline{modal} while
 keeping it in \lstinline{editor}.
 
@@ -263,7 +263,7 @@ Another operator that \sedel provides is the \emph{forwarding} operator, which c
 explicitly excluded in the \lstinline{inherits} clause. This is a common scenario in
 diamond inheritance, where \lstinline{super} is not enough. Below we show a
 variant of \lstinline{ide_editor}:
-\lstinputlisting[linerange=173-181]{./examples/overview2.sl}% APPLY:linerange=MODAL_WIRE
+\lstinputlisting[linerange=175-183]{./examples/overview2.sl}% APPLY:linerange=MODAL_WIRE
 Notice that \lstinline{on_key} in \lstinline{spell} has been
 excluded. However, we can
 still access it by using the forwarding operator as in \lstinline{spell ^ self},
@@ -271,7 +271,7 @@ which gives full access to all the methods in \lstinline{spell}. Also note that
 using \lstinline{super} only gives us access to \lstinline{on_key} in the
 \lstinline{modal} trait. To see \lstinline{ide_editor4} in action, we create a
 small test:
-\lstinputlisting[linerange=185-188]{./examples/overview2.sl}% APPLY:linerange=MODAL_USE
+\lstinputlisting[linerange=187-190]{./examples/overview2.sl}% APPLY:linerange=MODAL_USE
 % \jeremy{Compare this to trait alias operator?}
 % \jeremy{would it be better to use forwarding operator in mix-style \lstinline{ide_editor} in
 %   \cref{sec:trait:overview}, where we show how to access \lstinline{on_key} from editor, which is impossible in JavaScript?}

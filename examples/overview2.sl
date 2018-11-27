@@ -73,7 +73,7 @@ trait ide_editor [self : IDEEditor]
 
 
 -- BEGIN_TRANS
-ide_editor = \ (self : IDEEditor) ->
+ide_editor (self : IDEEditor) =
   (modal_mixin Spelling (spell_mixin Top editor) self) ,, {version = "0.2"};
 -- END_TRANS
 
@@ -142,9 +142,9 @@ ide_editor (init_mode : String) =
 --BEGIN_MODAL_OK
 ide_editor (init_mode : String) =
   trait [self : IDEEditor]
-    inherits editor \ {on_key : String -> String} &
-            spell \ {on_key : String -> String} &
-            modal init_mode => {
+    inherits (editor \ {on_key : String -> String})
+         & (spell \ {on_key : String -> String})
+         & (modal init_mode) => {
       version = "0.2"
   };
 --END_MODAL_OK
@@ -153,8 +153,9 @@ ide_editor (init_mode : String) =
 --BEGIN_MODAL_OK2
 ide_editor2 (init_mode : String) =
   trait [self : IDEEditor]
-    inherits spell & editor \ {on_key : String -> String} &
-           (modal init_mode) \ {on_key : String -> String} => {
+    inherits spell
+         & (editor \ {on_key : String -> String})
+         & (modal init_mode) \ {on_key : String -> String} => {
       version = "0.2"
   };
 --END_MODAL_OK2
@@ -162,8 +163,9 @@ ide_editor2 (init_mode : String) =
 --BEGIN_MODAL_OK3
 ide_editor3 (init_mode : String) =
   trait [self : IDEEditor]
-    inherits editor & spell \ {on_key : String -> String} &
-           (modal init_mode) \ {on_key : String -> String} => {
+    inherits editor
+         & (spell \ {on_key : String -> String})
+         & ((modal init_mode) \ {on_key : String -> String}) => {
       version = "0.2"
   };
 --END_MODAL_OK3
@@ -172,9 +174,9 @@ ide_editor3 (init_mode : String) =
 --BEGIN_MODAL_WIRE
 ide_editor4 (init_mode : String) =
   trait [self : IDEEditor]
-    inherits editor \ {on_key : String -> String} &
-            spell \ {on_key : String -> String} &
-            modal init_mode => {
+    inherits (editor \ {on_key : String -> String})
+         & (spell \ {on_key : String -> String})
+         & (modal init_mode) => {
     version = "0.2";
     override on_key(key : String) =
       super.on_key key ++ " and " ++ (spell ^ self).on_key key

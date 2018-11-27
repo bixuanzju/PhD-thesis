@@ -313,12 +313,12 @@ With reflexivity and transitivity in position, we show the main theorem.
   need a few technical lemmas to support the argument.
 \end{remark}
 
-\begin{remark}
-  It is worth pointing out that the two coercions $[[c]]$ and $[[c']]$ in
-  \cref{thm:complete} are \emph{contextually equivalent} (the precise
-  definition is found in \cref{chap:coherence:simple}), which follows from
-  \cref{thm:soundness} and \cref{lemma:coercion_same}.
-\end{remark}
+% \begin{remark}
+%   It is worth pointing out that the two coercions $[[c]]$ and $[[c']]$ in
+%   \cref{thm:complete} are \emph{contextually equivalent} (the precise
+%   definition is found in \cref{chap:coherence:simple}), which follows from
+%   \cref{thm:soundness} and \cref{lemma:coercion_same}.
+% \end{remark}
 
 % Local Variables:
 % TeX-master: "../../Thesis"
