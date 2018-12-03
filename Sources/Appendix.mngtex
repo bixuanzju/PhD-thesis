@@ -383,7 +383,7 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \drules[swft]{$[[DD |- A]]$}{Well-formedness of types}{top, int, var, arrow, all, and, rcd}
 \drules[swfe]{$[[DD ||- GG]]$}{Well-formedness of value context}{empty, var}
 \drules[swfte]{$[[||- DD]]$}{Well-formedness of type context}{empty, var}
-\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,forall,andL,andR,and,topArr,topRcd,topAll,distArr,distRcd,distPoly}
+\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,forall,andL,andR,and,topArr,topRcd,topAll,distArr,distRcd,distAll}
 \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
 \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
 \drules[FT]{$[[DD; GG |- ee => A ~~> e]]$}{Inference}{top, int, var, app, merge, anno, tabs, tapp, rcd, proj}
@@ -399,9 +399,9 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 
 \drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value context}{empty, var}
 \drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
-\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, forall, distArr, topAll, distPoly}
+\drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, forall, distArr, topAll, distAll}
 \drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Static semantics}{unit, int, var, abs, app, tabs, tapp, pair, capp}
-\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, topAll, distPoly, tapp, app, ctxt}
+\drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, topAll, distAll, tapp, app, ctxt}
 
 \chapter{\sedel Typing Rules, in Full}
 \label{appendix:sedel}
