@@ -13,9 +13,9 @@
   & & $\mid$ & $ [[distArr]] \mid [[topArr]] \mid \hlmath{[[bot]]} \mid \hlmath{[[\ c]]} \mid \hlmath{[[topAll]]} \mid \hlmath{[[distPoly]]} $ \\
   Values & $[[v]]$ & $\Coloneqq$ & $[[i]] \mid [[unit]] \mid [[\x . e]] \mid [[< v1 , v2>]] \mid [[ (c1 -> c2) v ]] \mid [[distArr v]] \mid [[topArr v]] $ \\
   & & $\mid$ & $ \hlmath{[[\X . e]]} \mid \hlmath{[[\c v]]} \mid \hlmath{[[ topAll v ]]} \mid \hlmath{[[ distPoly v ]]}  $ \\
-  Value Context & $[[gg]]$ & $\Coloneqq$ &  $[[empty]] \mid [[gg , x : T]] $ \\
-  Type Context & $[[dd]]$ & $\Coloneqq$ &  $[[empty]] \mid [[dd , X ]] $ \\
-  Evaluation Context & $[[EE]]$ & $\Coloneqq$ &  $  [[__]] \mid [[EE e]] \mid [[v EE]] \mid [[ < EE , e >  ]] \mid [[ < v , EE > ]] \mid [[ c EE  ]] \mid \hlmath{[[ EE T  ]]}  $ \\ \bottomrule
+  Value contexts & $[[gg]]$ & $\Coloneqq$ &  $[[empty]] \mid [[gg , x : T]] $ \\
+  Type contexts & $[[dd]]$ & $\Coloneqq$ &  $[[empty]] \mid [[dd , X ]] $ \\
+  Evaluation contexts & $[[EE]]$ & $\Coloneqq$ &  $  [[__]] \mid [[EE e]] \mid [[v EE]] \mid [[ < EE , e >  ]] \mid [[ < v , EE > ]] \mid [[ c EE  ]] \mid \hlmath{[[ EE T  ]]}  $ \\ \bottomrule
 \end{tabular}
 \caption{Syntax of \tnamee}
 \label{fig:syntax:fco}
@@ -80,11 +80,13 @@ is ``equal'' to $[[ \X . c (v X) ]]$, which is why we can treat $[[\c v]]$ as a 
 
 \paragraph{Static semantics.}
 
-\begin{figure}
+\begin{figure}[t]
   \centering
+  \begin{small}
   \drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value context}{empty, var}
   \drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
   \drules[Ft]{$[[ dd ; gg |- e : T ]]$}{Static semantics}{unit, int, var, abs, app, tabs, tapp, pair, capp}
+  \end{small}
   \caption{Typing rules of \tnamee}
   \label{fig:typing:fco}
 \end{figure}
@@ -105,7 +107,9 @@ We extend \cref{fig:co} with four new rules, corresponding to the four new coerc
 
 \begin{figure}[t]
   \centering
+  \begin{small}
   \drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, forall, distAll, topAll, app, tapp, ctxt}
+  \end{small}
   % \begin{drulepar}[r]{$[[e --> e']]$}{Single-step reduction}{}
   %   \drule{id}
   %   \drule{trans}
@@ -307,7 +311,9 @@ The full rules of the algorithmic subtyping of \fnamee are shown \cref{fig:algo:
 
 \begin{figure}[t]
   \centering
+  \begin{small}
   \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{top,and,arr,rcd,forall,const, bot,arrConst,rcdConst,andConstOne,andConstTwo,allConst}
+  \end{small}
   \caption{Algorithmic subtyping}
   \label{fig:algo:sub:fi}
 \end{figure}

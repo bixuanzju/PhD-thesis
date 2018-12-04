@@ -192,7 +192,7 @@ consideration both \namee and \tname contexts.
 \begin{figure}[t]
   \centering
   \begin{small}
-\drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, rcdOne, projOne, annoOne}
+\drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing I}{emptyOne, appLOne, appROne, mergeLOne, mergeROne, annoOne, rcdOne, projOne}
   \end{small}
 \caption{\namee context typing (excerpt)}
 \label{fig:ctyp}
@@ -249,6 +249,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
 
 \begin{figure}
   \centering
+  \begin{small}
   \begin{tabular}{rll}
   $[[(v1 , v2) in V ( int ; int ) ]]$  & $\defeq$ & $\exists [[i]].\, [[v1]] = [[v2]] = [[ii]]$ \\
   $[[(v1, v2) in V ( {l : A}  ; {l : B} ) ]]$ & $\defeq$ & $[[ (v1, v2) in V ( A ; B ) ]]$\\
@@ -258,6 +259,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
   $[[(v1 , v2) in V (A; B) ]]$  & $\defeq$ & $\mathsf{true} \quad \text{otherwise}$ \\ \\
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land [[(v1, v2) in V (A; B)]]$
   \end{tabular}
+  \end{small}
   \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \namee}
   \label{fig:logical}
 \end{figure}
@@ -297,7 +299,7 @@ contexts. A moment of thought leads us to the following observations:
 In order to deal with the complexity of the elaboration semantics, we introduce
 in \cref{fig:logical} what we call the \emph{canonicity} relation to capture
 ``canonical'' values based on the above observations.\footnote{The logical
-  relation is slightly different form that in the original
+  relation is slightly different from that in the original
   publication~\citep{bi_et_al:LIPIcs:2018:9227} in that it is indexed by
   ``source'' types whereas in the publication it is indexed by ``target'' types.
   For \namee, both formulations work equally fine. The choice here is mainly for

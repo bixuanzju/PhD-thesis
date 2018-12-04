@@ -3,9 +3,8 @@
 \label{sec:disjoint:fi}
 
 
-\begin{figure}
+\begin{figure}[t]
   \centering
-  \drules[TL]{$[[ A top  ]]$}{Top-like types}{top,and,arr,rcd,all}
   \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
   \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
   \caption{Disjointness of \fnamee}
@@ -26,14 +25,14 @@ a notable change regarding disjointness with \emph{top-like types}.
 
 Top-like types are all types that are isomorphic to $[[Top]]$ (i.e.,
 simultaneously sub- and supertypes of $[[Top]]$). Hence, they are inhabited by a
-single value, isomorphic to the $[[Top]]$ value. \cref{fig:disjoint:fi} captures
-this notion in a syntax-directed fashion in the $[[A top]]$ predicate. As a
-historical note, top-like types were first introduced in
+single value, isomorphic to the $[[Top]]$ value. The following rules capture
+this notion in a syntax-directed fashion in the $[[A top]]$ predicate.
+As a historical note, top-like types were first introduced in
 \oname~\citep{oliveira2016disjoint}, and then adopted by \fname~\citep{alpuimdisjoint}. Their motivation
 is solely for enabling a syntactic method of proving coherence, and due to the
 lack of BCD subtyping, they do not have a type-theoretic interpretation of
 top-like types.
-
+\drules[TL]{$[[ A top  ]]$}{Top-like types}{top,and,arr,rcd,all}
 
 The disjointness judgment $[[DD |- A ** B]]$ is helpful to check whether the merge of two
 expressions of type $[[A]]$ and $[[B]]$ preserves coherence.

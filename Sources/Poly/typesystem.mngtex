@@ -4,6 +4,7 @@
 
 \begin{figure}[t]
   \centering
+  \begin{small}
 \begin{tabular}{llll} \toprule
   Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[Bot]] \mid [[A -> B]]  \mid [[A & B]] \mid [[{l : A}]] \mid [[X]] \mid [[\ X ** A . B]] $\\
   Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ ee1 ,, ee2 ]]   \mid [[ ee : A ]] \mid [[{l = ee}]] \mid [[ ee.l  ]]  $ \\
@@ -11,6 +12,7 @@
   Term contexts & $[[GG]]$ & $\Coloneqq$ &  $[[empty]] \mid [[GG , x : A]] $ \\
   Type contexts & $[[DD]]$ & $\Coloneqq$ &  $[[empty]] \mid [[DD , X ** A]] $  \\ \bottomrule
 \end{tabular}
+  \end{small}
   \caption{Syntax of \fnamee}
   \label{fig:syntax:fi}
 \end{figure}
@@ -25,16 +27,16 @@ constructs from System F: type abstractions $[[ \X ** A . ee ]]$ and type
 applications $[[ee A]]$. The former also includes an extra disjointness
 constraint $[[A]]$ associated with the type variable $[[X]]$.
 
-\paragraph{Contexts.}
+% \paragraph{Contexts.}
 
-In the traditional formulation of System F, there is a single context for
-tracking type variables and term variables. Here we use
-another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
-split into \emph{term contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
-The former track free term variables $[[x]]$ with their types $[[A]]$; and the
-latter track free type variables $[[X]]$ with their disjointness constraints
-$[[A]]$. This formulation is also convenient for the presentation of logical
-relations in \cref{chap:coherence:poly}.
+% In the traditional formulation of System F, there is a single context for
+% tracking type variables and term variables. Here we use
+% another style of presentation~\citep[chap. 16]{Harper_2016} where contexts are
+% split into \emph{term contexts} $[[GG]]$ and \emph{type contexts} $[[DD]]$.
+% The former track free term variables $[[x]]$ with their types $[[A]]$; and the
+% latter track free type variables $[[X]]$ with their disjointness constraints
+% $[[A]]$. This formulation is also convenient for the presentation of logical
+% relations in \cref{chap:coherence:poly}.
 
 \begin{figure}[t]
   \centering

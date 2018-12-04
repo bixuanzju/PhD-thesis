@@ -188,7 +188,7 @@ impredicative core language.
 \end{figure}
 
 Luckily because monotypes do not contain $\forall$-quantifiers, substitution
-with monotypes does not prevent well-foundedness. \Cref{fig:logical:fi} defines
+with monotypes preserves well-foundedness. \Cref{fig:logical:fi} defines
 the \emph{canonicity} relation for \fnamee. The canonicity relation is a family
 of binary relations over \tnamee values that are \emph{heterogeneous}, i.e.,
 indexed by two \fnamee types.
@@ -247,9 +247,9 @@ We need to show that the relation is indeed well-founded:
   the measure of $| \cdot |_s$ strictly decreases.
 \end{proof}
 
-Next we show that the logical relation is symmetric.
+The logical relation is symmetric:
 
-\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L822}{\leftpointright} Symmetry of logical relation] % APPLYCOQ=LOG_SYMM
+\begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L822}{\leftpointright} Symmetry] % APPLYCOQ=LOG_SYMM
   If $[[ (v1, v2) in V ( A ; B ) ]]$ then $[[ (v2, v1) in V ( B ; A ) ]]$.
 \end{lemma}
 \begin{proof}
@@ -258,7 +258,7 @@ Next we show that the logical relation is symmetric.
   induction on the structures of $[[A]]$ and $[[B]]$.
 \end{proof}
 
-We then give the interpretations of type and term contexts.
+The interpretations of type and term contexts are given below:
 
 \begin{definition}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/Infrastructure.v\#L2023}{\leftpointright} Interpretation of type contexts]
   \begin{mathpar}
@@ -276,9 +276,9 @@ We then give the interpretations of type and term contexts.
 \end{definition}
 
 
-The connection between disjointness and the value relation becomes a bit
-complicated due to the addition of polymorphism. We first prove that
-values of disjoint monotypes are related.
+The connection between disjointness and the logical relation becomes more
+complicated due to the addition of polymorphism. We first show values of
+disjoint monotypes are related.
 
 
 \begin{lemma}[\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L836}{\leftpointright} Disjoint values of monotypes are related] \label{lemma:disjoint:mono} % APPLYCOQ=DISJOINT_MONO
@@ -304,7 +304,7 @@ Then we can prove a more general lemma.
   \]
   By the definition of $[[p]]$, we know $[[p(X)]]$ is a monotype. If $[[B]]$ is
   a polytype, then it follows easily from the definition of logical relation. If
-  $[[B]]$ is also a monotype, we know $[[p(X)]]$ and $[[p(A)]]$ are disjoint by
+  $[[B]]$ is also a monotype, $[[p(X)]]$ and $[[p(A)]]$ are disjoint by
   definition. Then by \cref{lemma:covariance:disjoint} and $[[A <: B]]$,
   we have $[[p(X)]]$ and $[[p(B)]]$ are also disjoint. Finally we apply
   \cref{lemma:disjoint:mono}.
@@ -328,7 +328,7 @@ i.e., by considering all possible interpretations of free type and term variable
 \begin{definition}[Logical equivalence $\backsimeq_{log}$]
   \begin{align*}
     &[[DD ; GG |- e1 == e2 : A ; B]]   \defeq  [[|DD| ; |GG| |- e1 : |A|]] \land [[ |DD | ; |GG| |- e2 : | B | ]] \ \land \\
-    &\qquad (\forall [[p]], [[g1]], [[g2]]. \ [[p in DD]] \land [[(g1, g2) in GG with p ]] \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]])
+    &\quad (\forall [[p]], [[g1]], [[g2]]. \ [[p in DD]] \land [[(g1, g2) in GG with p ]] \Longrightarrow [[(g1 (p1 (e1)), g2 (p2 (e2)))  in E (p(A) ; p(B)) ]])
   \end{align*}
 \end{definition}
 For conciseness, we write $[[DD ; GG |- e1 == e2 : A]]$ to mean $[[DD ; GG |- e1 == e2 : A ; A]]$.

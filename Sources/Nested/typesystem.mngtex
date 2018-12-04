@@ -188,7 +188,7 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
   Evaluation contexts & $[[EE]]$ & $\Coloneqq$ &  $  [[__]] \mid [[EE e]] \mid [[v EE]] \mid [[ < EE , e >  ]] \mid [[ < v , EE > ]] \mid [[ c EE  ]]$ \\ \bottomrule
 \end{tabular}
   \end{small}
-  \caption{\tname syntax}
+  \caption{Syntax of \tname}
   \label{fig:target}
 \end{figure}
 
