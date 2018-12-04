@@ -316,7 +316,7 @@ variant of intersection types called \emph{disjoint intersection types}. Calculi
 with disjoint intersection types also feature the merge operator, with restrictions
 that all expressions in a merge operator must have disjoint types and all
 well-formed intersections are also disjoint. With the
-disjointness restrictions \oname is proved to be coherent. As shown by \citet{alpuimdisjoint}, calculi with disjoint
+disjointness restrictions, \oname is proved to be coherent. As shown by \citet{alpuimdisjoint}, calculi with disjoint
 intersection types are very expressive and can be used to statically type-check
 JavaScript-style programs using mixins. Yet they retain both type safety and
 coherence. While coherence may seem at first of mostly theoretical relevance, it
@@ -382,13 +382,13 @@ addition of parametric polymorphism greatly increases the expressiveness of
 \namee: \fnamee improves upon the finally tagless~\citep{CARETTE_2009} and
 object algebra~\citep{oliveira2012extensibility} approaches and support advanced
 compositional designs, and enables the development of highly modular and
-reusable programs. \fnamee is a generalization and extension of
-\citeauthor{alpuimdisjoint}'s \fname calculus, which proposed the idea of
+reusable programs. \fnamee is a generalization and extension of the
+\fname calculus~\citep{alpuimdisjoint}, which proposed the idea of
 \emph{disjoint polymorphism}. The main novelty of \fnamee is a novel subtyping
-algorithm with distributivity laws on types. Distributivity plays a fundamental
+algorithm with distributivity laws. Distributivity plays a fundamental
 role in improving compositional designs, by enabling the automatic composition
 of multiple operations/interpretations. The main technical challenge is the
-proof of coherence for \fnamee as impredicativity makes it hard to develop a
+proof of coherence as impredicativity makes it hard to develop a
 well-founded logical relation for coherence. However, by restricting the system
 to predicative instantiations only we are able to develop a suitable logical
 relation and show coherence. Besides coherence, we show several other important
@@ -531,8 +531,8 @@ structure of the technical content in the thesis is divided into three parts:
   conduct a case study of modularizing programming language features using a
   highly modular form of \visitor.
 \end{description}
-\Cref{sec:related} reviews related work, \cref{chap:future} presents some future
-work and finally \cref{chap:conclusion} concludes.
+\Cref{sec:related} reviews related work, \cref{chap:future} discusses future
+work and \cref{chap:conclusion} concludes.
 
 This thesis is largely based on two
 publications~\citep{bi_et_al:LIPIcs:2018:9214, bi_et_al:LIPIcs:2018:9227} by the

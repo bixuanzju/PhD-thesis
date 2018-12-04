@@ -32,12 +32,13 @@ $[[ee : A]]$, single-field records $[[ {l = ee}]]$, and record projections $[[ee
 
 \begin{figure}[t]
   \centering
+  \begin{small}
 \begin{tabular}{llll}\toprule
   Types & $[[A]], [[B]], [[C]]$ & $\Coloneqq$ & $[[int]] \mid [[Top]] \mid [[A -> B]]  \mid [[A & B]] \mid [[ { l : A } ]]$ \\
-  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]] \mid [[ { l = ee } ]] \mid [[ee.l]] $ \\
-  % & & $\mid$ & $  $ \\
+  Expressions & $[[ee]]$ & $\Coloneqq$ & $[[x]] \mid [[ii]] \mid [[Top]] \mid [[\x . ee]] \mid [[ee1 ee2]] \mid [[ee1 ,, ee2]] \mid [[ee : A]] \mid [[ { l = ee } ]] \mid [[ee.l]] $ \\
   Term contexts & $[[GG]]$ & $\Coloneqq$ & $[[empty]] \mid [[GG , x : A]]$ \\ \bottomrule
 \end{tabular}
+  \end{small}
   \caption{Syntax of \namee}
   \label{fig:source}
 \end{figure}
@@ -51,16 +52,16 @@ $[[ee : A]]$, single-field records $[[ {l = ee}]]$, and record projections $[[ee
 \paragraph{BCD-style subtyping.}
 
 The subtyping relation is essentially BCD subtyping~\citep{Barendregt_1983},
-extended with subtyping for single-field records.
-\Rref{S-top,S-rcd} for top types and record types are straightforward.
-\Rref{S-arr} for function subtyping is standard. \Rref{S-andL,S-andR,S-and} for
-intersection types axiomatize that $[[A & B]]$ is the greatest lower bound of
-$[[A]]$ and $[[B]]$. \Rref{S-distArr} is perhaps the most interesting rule.
-This, so-called ``distributivity'' rule, describes the interaction between
-the subtyping relations for function types and those for intersection types.
-Note that the other direction $[[A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)]]$
-and the contravariant distribution $[[ (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2 ]]$ are both
-derivable from the existing subtyping rules, as shown below:
+extended with subtyping for single-field records. The top type is a supertype of
+all types (\rref{S-top}). \Rref{S-andL,S-andR,S-and} for intersection types
+axiomatize that $[[A & B]]$ is the greatest lower bound of $[[A]]$ and $[[B]]$.
+\Rref{S-arr,S-rcd} for function and record subtyping are standard.
+\Rref{S-distArr} is perhaps the most interesting rule. This, so-called
+``distributivity'' rule, describes the interaction between the subtyping
+relations for function types and those for intersection types. Note that the
+other direction $[[A1 -> A2 & A3 <: (A1 -> A2) & (A1 -> A3)]]$ and the
+contravariant distribution $[[ (A1 -> A2) & (A3 -> A2) <: A1 & A3 -> A2 ]]$ are
+both derivable from the existing subtyping rules, as shown below:
 
   \begin{footnotesize}
 \begin{mathpar}
@@ -83,7 +84,9 @@ distributivity rules are the key to enabling nested composition. \Rref*{S-topArr
 
 \begin{figure}[t]
   \centering
-  \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distArr,distRcd}
+  \begin{small}
+  \drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,andL,andR,and,arr,rcd, distArr,distRcd, topArr,topRcd}
+  \end{small}
   \caption{Declarative subtyping of \namee}
   \label{fig:subtype_decl}
 \end{figure}
@@ -108,8 +111,10 @@ The subtyping relation is vacuously \emph{reflexive} and \emph{transitive}.
 
 \begin{figure}[t]
   \centering
+  \begin{small}
   \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
   \drules[T]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+  \end{small}
   \caption{Bidirectional type system of \namee}
   \label{fig:type:namee}
 \end{figure}
@@ -157,8 +162,10 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
 
 \begin{figure}[t]
   \centering
+  \begin{small}
   \drules[D]{$[[A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq,ax}
   \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,arrRcd}
+  \end{small}
   \caption{Disjointness}
   \label{fig:disjoint}
 \end{figure}
@@ -170,6 +177,7 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
 
 \begin{figure}[t]
   \centering
+  \begin{small}
 \begin{tabular}{llll} \toprule
   Types & $[[T]]$ & $\Coloneqq$ & $[[int]] \mid [[Unit]] \mid [[T1 * T2]] \mid [[T1 -> T2]] $ \\
   Terms & $[[e]]$ & $\Coloneqq$ & $[[x]] \mid [[i]] \mid [[unit]] \mid [[\x . e]] \mid [[e1 e2]] \mid [[<e1, e2>]] \mid [[c e]]$ \\
@@ -179,6 +187,7 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
   Typing contexts & $[[gg]]$ & $\Coloneqq$ & $[[empty]] \mid [[gg , x : T]]$ \\
   Evaluation contexts & $[[EE]]$ & $\Coloneqq$ &  $  [[__]] \mid [[EE e]] \mid [[v EE]] \mid [[ < EE , e >  ]] \mid [[ < v , EE > ]] \mid [[ c EE  ]]$ \\ \bottomrule
 \end{tabular}
+  \end{small}
   \caption{\tname syntax}
   \label{fig:target}
 \end{figure}
@@ -202,9 +211,10 @@ translating source contexts $[[GG]]$ to target contexts $[[gg]]$.
 
 \begin{definition}[Type translation $|\cdot|$ from \namee to \tname] \label{def:type:translate} \leavevmode
   \begin{center}
+
 \begin{tabular}{lllllll} \toprule
-  $| [[int]] |$ &$=$ & $ [[int]]$ &  &   $| [[Top]] |$ & $ = $ & $ \langle  \rangle $ \\
-  $| [[A -> B]] |$ &$=$ & $[[ |A| -> |B| ]]$ &  &   $| [[A & B]] |$ & $ = $ & $[[ |A| * |B|    ]]$ \\
+  $| [[int]] |$ &$=$ & $ [[int]]$ & $\qquad$  &   $| [[Top]] |$ & $ = $ & $ \langle  \rangle $ \\
+  $| [[A -> B]] |$ &$=$ & $[[ |A| -> |B| ]]$ & $\qquad$ &   $| [[A & B]] |$ & $ = $ & $[[ |A| * |B|    ]]$ \\
   $| [[ {l : A}  ]] |$ &$=$& $[[| A |]]$  \\ \bottomrule
 \end{tabular}
 
@@ -236,11 +246,11 @@ specific form of coercion.
 \begin{table}[t]
   \centering
 \begin{tabular}{lllll} \toprule
-  \textbf{Coercion} & \textbf{Term} & & \textbf{Coercion} & \textbf{Term} \\ \midrule
-  $[[id]]$         & $[[ \x . x]]$  & & $[[ c1 o c2  ]]$    &  $[[  \x . c1 (c2 x) ]]$ \\
-  $[[top]]$         & $[[ \x . unit ]]$  & & $[[ c1 -> c2  ]]$    &  $[[  \f . \x . c2 (f (c1 x))  ]]$ \\
-  $[[  pp1   ]]$         & $[[ \x . pp1 x    ]]$  & & $[[ pp2  ]]$    &  $[[  \x . pp2 x  ]]$ \\
-  $[[  < c1 , c2 >   ]]$         & $[[ \x . < c1 x, c2 x >    ]]$  & & $[[ distArr  ]]$    &  $[[  \x . \y . < (pp1 x) y , (pp2 x) y > ]]$ \\
+  \textbf{Coercion} & \textbf{Term} & $\qquad$ & \textbf{Coercion} & \textbf{Term} \\ \midrule
+  $[[id]]$         & $[[ \x . x]]$  & $\qquad$ & $[[ c1 o c2  ]]$    &  $[[  \x . c1 (c2 x) ]]$ \\
+  $[[top]]$         & $[[ \x . unit ]]$  & $\qquad$ & $[[ c1 -> c2  ]]$    &  $[[  \f . \x . c2 (f (c1 x))  ]]$ \\
+  $[[  pp1   ]]$         & $[[ \x . pp1 x    ]]$  &  $\qquad$ & $[[ pp2  ]]$    &  $[[  \x . pp2 x  ]]$ \\
+  $[[  < c1 , c2 >   ]]$         & $[[ \x . < c1 x, c2 x >    ]]$  & $\qquad$ & $[[ distArr  ]]$    &  $[[  \x . \y . < (pp1 x) y , (pp2 x) y > ]]$ \\
   $[[  topArr   ]]$         & $[[ \x . \ y . unit    ]]$  \\ \bottomrule
 \end{tabular}
 \caption{Correspondence between coercions and terms}

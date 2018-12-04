@@ -255,10 +255,12 @@ The issue of coherence is addressed (with some compromises) by
 
 \begin{figure}
   \centering
+  \begin{small}
   \drules[Si]{$[[A <: B ~~> e]]$}{Subtyping}{int, top, arr, and, andL, andR}
   \drules[wf]{$[[GG |- A]]$}{Well-formedness of types}{int, top, and, arr}
   \drules[Ti]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, merge}
   \drules[Ti]{$[[GG  |- ee <= A ~~> e]]$}{Checking}{abs, sub}
+  \end{small}
   \caption{Type system of \oname}
   \label{fig:lambdai}
 \end{figure}
@@ -853,7 +855,7 @@ The usefulness of the logical relation lies in the fact that it characterize
 coincide for STLC:
 
 \begin{proposition}
-  For closed expression $[[e : T]]$ and $[[e' : T]]$, $[[ (e, e') in E(T)  ]]$ if and only if $[[  empty |- e ~= e' : T  ]]$.
+  For closed expression $[[e : T]]$ and $[[e' : T]]$, $[[ (e, e') in E(T)  ]]$ iff $[[  empty |- e ~= e' : T  ]]$.
 \end{proposition}
 
 The proofs proceeds by generalizing to open terms, which will be explained in
