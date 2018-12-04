@@ -110,7 +110,7 @@ the subject of this thesis are three powerful linguistic mechanisms for software
 extensibility, providing increasing order of flexibility, as well as complexity:
 first-class classes~\citep{DBLP:conf/oopsla/TakikawaSDTF12}, (first-class)
 mixins/traits~\citep{bracha1990mixin, scharli2003traits}, and family
-polymorphism~\citep{Ernst_2001}, as we will briefly discuss below.
+polymorphism~\citep{Ernst_2001}.
 
 
 \subsection{First-Class Classes}
@@ -194,8 +194,8 @@ citizens adds considerable expressiveness and flexibility in terms of software
 extensibility, as will be illustrated throughout this thesis. Only recently some
 progress has been made in statically typing first-class classes and dynamic
 inheritance~\citep{DBLP:conf/oopsla/TakikawaSDTF12,DBLP:conf/ecoop/LeeASP15}.
-However, prior to this thesis, we did not know how to model \emph{typed
-  first-class traits}. A key challenge, compared to models with first-class
+However, prior to this thesis, no previous work supports \emph{typed first-class traits}.
+A key challenge, compared to models with first-class
 classes or mixins, is how to detect conflicts at compile time even when \emph{not}
 knowing all components being composed statically. This is important because in
 the setting with dynamic inheritance and polymorphism, the possibility of
@@ -252,9 +252,9 @@ analysis in this thesis, we hope to convince readers that disjoint intersection
 types are a feasible semantic tool to facilitate code reuse and modularity. In
 particular, for family polymorphism, we show that the combination of the
 \emph{merge operator} and a rich subtyping relation captures the essence of
-nested composition; for traits, we show that with the merge operator and
-disjoint intersection types, we are able to express \emph{typed first-class
-  traits}. Combined with parametric polymorphism, we can further
+nested composition; for traits, we show that the merge operator and
+disjoint intersection types enable encodings of \emph{typed first-class traits}.
+Combined with parametric polymorphism, we can further
 express a very dynamic form of mixin-style compositions, enabling programmers to write highly
 modular and reusable software components.
 
@@ -364,10 +364,8 @@ solution to coherence, the solution imposes several ad-hoc restrictions to
 guarantee the uniqueness of the elaboration and thus allows for a simple
 syntactic proof. However such restrictions make it hard or
 impossible to adapt the proof to extensions of the calculus with distributivity
-rules. To deal with coherence, we employ a more semantic proof method based on
-\emph{logical relations}~\citep{tait, plotkin1973lambda, statman1985logical}
-that we call the \emph{canonicity} relation. The second difficulty is that
-BCD subtyping is non-algorithmic: the presence of a transitivity axiom in the
+rules. To deal with coherence, a more semantic proof method, called the \emph{canonicity} relation, is employed.
+The second difficulty is that BCD subtyping is non-algorithmic: the presence of a transitivity axiom in the
 rules makes it hard to get an algorithmic version. To address it, we adapt and extend
 Pierce's decision procedure~\citep{pierce1989decision} (closely related to BCD)
 with subtyping of records and coercions, and propose an equivalent algorithmic
@@ -424,8 +422,8 @@ low-level core calculus. The main contribution of \sedel is to show how to model
 source language constructs for first-class traits and dynamic inheritance. The
 work on \namee and \fnamee aimed at core record calculi, and omits important
 features for practical object-oriented languages, including (dynamic) inheritance, dynamic
-dispatching and abstract methods. Based on \citeauthor{cook1989denotational}'s
-work on the denotational semantics for inheritance~\citep{cook1989denotational},
+dispatching and abstract methods. Based on \citeauthor{cookthesis}'s
+work on the denotational semantics for inheritance~\citep{cook1989denotational, cookthesis},
 we show how to design a source language that is elaborated into \fnamee.
 \sedel's elaboration into \fnamee is proved to be both type-safe and coherent.
 Coherence ensures that the semantics of \sedel is unambiguous. In particular

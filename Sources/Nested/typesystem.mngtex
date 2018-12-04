@@ -125,7 +125,7 @@ We ignore the \hll{highlighted} parts for now.
 \paragraph{Typing rules.}
 
 The typing rules of \namee in \cref{fig:type:namee} are mostly ported from \oname in \cref{fig:lambdai}.
-As with traditional bidirectional type systems, we employ two modes: the
+As with traditional bidirectional type systems, two modes are employed: the
 inference mode ($[[=>]]$) and the checking mode ($[[<=]]$). The inference
 judgment $[[GG |- ee => A]]$ says that we can synthesize a type $[[A]]$ for
 expression $[[ee]]$ in the context $[[GG]]$. The checking judgment $[[GG |- ee <= A]]$

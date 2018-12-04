@@ -4,7 +4,7 @@
 \label{chap:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This chapter sets the stage for the three typed calculi we are going to present
+This chapter sets the stage for the three typed calculi that will be presented
 in later chapters by expanding upon some relevant topics from the introduction.
 In \cref{bg:sec:intersection} we start with the traditional formulation of
 intersection types, followed by an introduction of the merge operator and the
@@ -333,8 +333,8 @@ regardless of which component of the merge is chosen''~\citep{alpuimdisjoint}.
 In other words, $[[Top]]$ is always disjoint to every other type. This
 restriction was later lifted in the \fname calculus of \citet{alpuimdisjoint} by
 a set of inference rules, but whether a corresponding specification of
-disjointness exists or not was not known at that time. We will present a
-suitable specification in \cref{sec:category}.
+disjointness exists or not was not known at that time. A
+suitable specification will be proposed in \cref{sec:category}.
 
 
 Combined with bidirectional type-checking, \citet{oliveira2016disjoint}
@@ -369,8 +369,7 @@ variable could have any types,
 including those that are already in the intersection. So a question to ask is to
 decide under what conditions a type variable is disjoint with, say,
 \lstinline{Int}. This is where \emph{disjointness constraints} come into stage. The key
-idea is that since we do not know \emph{a priori} what is the type with which
-a type variable can be instantiated, we can restrict the set of types it can be
+idea is to restrict the set of types a type variable can be
 instantiated to. Let us rewrite the above program as follows:
 \begin{lstlisting}
 mergeGood [X * Int] (x : X) : X & Int = x ,, 2;
