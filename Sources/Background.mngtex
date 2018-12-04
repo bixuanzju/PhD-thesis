@@ -622,7 +622,7 @@ class LangNeg extends Lang {
 \end{lstlisting}
 \subcaption{Extending in two dimensions} \label{fig:extend}
     \end{subfigure}
-    \caption{The expression problem, Scandinavian Style}
+    \caption{The expression problem, Scandinavian style}
 \end{figure}
 
 \paragraph{Adding a new operation.}

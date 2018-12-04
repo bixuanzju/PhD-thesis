@@ -260,7 +260,7 @@ relations~\citep{tait, statman1985logical, plotkin1973lambda}.
     $[[(e1, e2) in E (A; B)]]$ & $\defeq$ & $\exists [[v1]], [[v2]].\, [[e1 -->> v1]] \land [[e2 -->> v2]] \ \land [[(v1, v2) in V (A; B)]]$
   \end{tabular}
   \end{small}
-  \caption{\href{https://github.com/bixuanzju/phd-thesis-artifact/blob/master/coq/poly/LR.v\#L105}{\leftpointright} The canonicity relation for \namee}
+  \caption{The canonicity relation for \namee}
   \label{fig:logical}
 \end{figure}
 

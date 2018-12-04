@@ -342,7 +342,7 @@ For conciseness, we write $[[DD ; GG |- e1 == e2 : A]]$ to mean $[[DD ; GG |- e1
   \fnamee contexts & $[[CC]]$ & $\Coloneqq$ &  $[[__]] \mid [[\ x . CC]] \mid [[\ X ** A. CC]] \mid [[ CC A  ]] \mid [[CC ee]] \mid [[ee CC]] \mid [[ CC ,, ee  ]] \mid [[ ee ,, CC  ]]  $ \\
   & & $\mid$ & $ [[ { l = CC}  ]]  \mid [[ CC . l]] \mid [[ CC : A ]]$ \\ \bottomrule
 \end{tabular}
-  \caption{Expression contexts}
+  \caption{Expression contexts of \tnamee and \fnamee}
   \label{fig:contexts:fi}
 \end{figure}
 

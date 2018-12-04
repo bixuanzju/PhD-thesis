@@ -7,7 +7,7 @@
   \centering
   \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
   \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
-  \caption{Disjointness of \fnamee}
+  \caption{Disjointness rules of \fnamee}
   \label{fig:disjoint:fi}
 \end{figure}
 

@@ -314,7 +314,7 @@ The full rules of the algorithmic subtyping of \fnamee are shown \cref{fig:algo:
   \begin{small}
   \drules[A]{$[[fs |- A <: B ~~> c]]$}{Algorithmic subtyping}{top,and,arr,rcd,forall,const, bot,arrConst,rcdConst,andConstOne,andConstTwo,allConst}
   \end{small}
-  \caption{Algorithmic subtyping}
+  \caption{Algorithmic subtyping of \fnamee}
   \label{fig:algo:sub:fi}
 \end{figure}
 

@@ -166,7 +166,7 @@ expressions such as $\mer{1}{2}$ because $[[int]]$ is \emph{not} disjoint to $[[
   \drules[D]{$[[A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq,ax}
   \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,arrRcd}
   \end{small}
-  \caption{Disjointness}
+  \caption{Disjointness rules of \namee}
   \label{fig:disjoint}
 \end{figure}
 
