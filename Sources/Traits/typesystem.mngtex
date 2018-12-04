@@ -8,8 +8,8 @@ This section presents the syntax and semantics of \sedel. In particular, we show
 how to elaborate high-level source language constructs (self-references,
 abstract methods, first-class traits, dynamic inheritance and so on) to \fnamee. The
 treatment of the self-reference and dynamic dispatching is inspired by
-\citeauthor{cook1989denotational}'s work on the denotational semantics for
-inheritance~\citep{cook1989denotational}. We then prove the elaboration is type
+\citeauthor{cookthesis}'s work on the denotational semantics for
+inheritance~\citep{cook1989denotational, cookthesis}. We then prove the elaboration is type
 safe, i.e., well-typed \sedel expressions are translated to well-typed \fnamee
 terms. Finally we show that \sedel is coherent. All manual proofs about \sedel
 can be found in \cref{appendix:proofs}.
@@ -112,8 +112,10 @@ the second type $[[BB]]$. The rest of the rules are direct analogies of \fnamee.
 
 \begin{figure}
   \centering
+  \begin{small}
   \drules[SD]{$[[ SD |- AA ** BB ]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall, trait, traitArrOne, traitArrTwo, ax}
   \drules[SDax]{$[[ AA **a BB ]]$}{Disjointness axiom}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd, intTrait, traitAll, traitRcd}
+  \end{small}
 \caption{Disjointness rules of \sedel}
   \label{fig:disjoint:sedel}
 \end{figure}
@@ -238,10 +240,10 @@ applications. We show the translation of the
 translation of instantiation:
 \lstinputlisting[linerange=85-85]{./examples/overview2.sl}% APPLY:linerange=NEW
 
-One remarkable point is that, while \citeauthor{cook1989denotational}'s work is done in
+One remarkable point is that, while \citeauthor{cookthesis}'s work is done in
 an untyped setting, here we apply their ideas in a setting with
 disjoint intersection types and disjoint polymorphism. Our work shows that
-disjoint intersection types blend in quite nicely with \citeauthor{cook1989denotational}'s
+disjoint intersection types blend in quite nicely with \citeauthor{cookthesis}'s
 denotational model of inheritance.
 
 \paragraph{Flattening property.}
@@ -342,5 +344,5 @@ Finally we are in a position to establish the type safety property:
 
 % Local Variables:
 % TeX-master: "../../Thesis"
-% org-ref-default-bibliography: ../../Thesis.bib
+% org-ref-default-bibliography: "../../Thesis.bib"
 % End:

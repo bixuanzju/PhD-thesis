@@ -290,8 +290,8 @@ For the sake of conciseness, \sedel uses \lstinline{type} aliases to abbreviate 
 Recall that in the JavaScript class \lstinline{Editor}, the \lstinline{version}
 method is undefined, but is used inside \lstinline{showHelp}. How can we express
 this in the typed setting, if not with an abstract method? In \sedel, the type of \lstinline{self}
-plays the role of trait requirements. As a first approximation, we
-can justify the invocation of \lstinline{version} on \lstinline{self} by noticing that (part of) the
+plays the role of trait requirements. As a first approximation,
+the invocation of \lstinline{version} on \lstinline{self} is justified by noticing that (part of) the
 type of \lstinline{self} (i.e., \lstinline{Version}) contains the declaration of
 \lstinline{version}. An interesting aspect of \sedel's trait model is that there
 is no need for abstract methods. Instead, abstract methods can be simulated as
@@ -378,7 +378,7 @@ assigned type, equips it with the \lstinline{check} method and overrides its
 old \lstinline{on_key} method. As a side note, the use of disjoint polymorphism
 is essential to correctly model the mixin semantics. From the type we know
 \lstinline{base} has some features specified by \lstinline{Editor}, plus
-something more denoted by \lstinline{A}. By inheriting \lstinline{base}, we are
+something more denoted by \lstinline{A}. By inheriting \lstinline{base}, it is
 guaranteed that the resulting trait will have everything that is already contained
 in \lstinline{base}, plus more features. This is in some sense similar to row
 polymorphism~\citep{wand1994type} in that the result trait is prohibited from
