@@ -86,7 +86,7 @@ expEvalPrint = combine IEval IPrint negEvalAlg negPrintAlg;
 
 
 -- BEGIN_USE
-o = e2.accept (IEval & IPrint)
-              (new[ExpExtAlg[IEval & IPrint]] expEvalPrint);
-main = o.print ++ " = " ++ o.eval.toString -- "-(2.0 + 3.0) = -5.0"
+obj  = e2.accept (IEval & IPrint)
+                 (new[ExpExtAlg[IEval & IPrint]] expEvalPrint);
+main = obj.print ++ " = " ++ obj.eval.toString -- "-(2.0 + 3.0) = -5.0"
 -- END_USE

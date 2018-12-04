@@ -359,8 +359,7 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \chapter{\namee Typing Rules, in Full}
 \label{appendix:lambdai}
 
-
-\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,rcd,arr,andL,andR,and,topArr,topRcd,distRcd,distArr}
+\drules[S]{$[[A <: B ~~> c]]$}{Declarative subtyping}{refl,trans,top,andL,andR,and,arr,rcd, distArr,distRcd, topArr,topRcd}
 \drules[D]{$[[A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq,ax}
 \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,arrRcd}
 \drules[T]{$[[GG  |- ee => A ~~> e]]$}{Inference}{top, lit, var, app, anno, proj, merge, rcd}
@@ -371,7 +370,7 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \drules[CTyp]{$[[CC : ( GG <= A ) ~> ( GG' => B ) ~~> cc]]$}{Context typing III}{appLTwo, appRTwo, mergeLTwo, mergeRTwo, rcdTwo, projTwo, annoTwo}
 \drules[CTyp]{$[[CC : ( GG => A ) ~> ( GG' <= B ) ~~> cc]]$}{Context typing IV}{absOne}
 
-\section{\tname}
+\section{\tname Typing Rules}
 
 \drules[ct]{$[[c |- T1 tri T2]]$}{Coercion typing}{refl, trans, top, topArr, arr, pair, projl, projr, distArr}
 \drules[r]{$[[e --> e']]$}{Single-step reduction}{id, trans, top, topArr, pair, arr, distArr, projl, projr, app, ctxt}
@@ -395,7 +394,7 @@ Most of them are straightforward. We only show \rref{TS-trait}.
 \drules[FCTyp]{$[[ CC : ( DD ; GG => A ) ~> ( DD' ; GG' <= B ) ~~> cc ]]$}{Context typing IV}{absOne}
 
 
-\section{\tnamee}
+\section{\tnamee Typing Rules}
 
 \drules[wfe]{$[[ dd |- gg   ]]$}{Well-formedness of value context}{empty, var}
 \drules[wft]{$[[ dd |- T   ]]$}{Well-formedness of types}{int, var, arrow,prod, all}
