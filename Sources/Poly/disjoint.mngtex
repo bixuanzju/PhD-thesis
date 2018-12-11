@@ -1,16 +1,6 @@
 
 \section{Disjointness}
 \label{sec:disjoint:fi}
-
-
-\begin{figure}[t]
-  \centering
-  \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
-  \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
-  \caption{Disjointness rules of \fnamee}
-  \label{fig:disjoint:fi}
-\end{figure}
-
 % In this section we present the inference rules of disjointness, as show in
 % \cref{fig:disjoint:fi}. The disjointness rules of \fnamee are directly inherited
 % from \fname~\citep{alpuimdisjoint}, which consists of two judgments.
@@ -25,18 +15,27 @@ a notable change regarding disjointness with \emph{top-like types}.
 
 Top-like types are all types that are isomorphic to $[[Top]]$ (i.e.,
 simultaneously sub- and supertypes of $[[Top]]$). Hence, they are inhabited by a
-single value, isomorphic to the $[[Top]]$ value. The following inference rules capture
-this notion in a syntax-directed fashion by the $[[A top]]$ predicate.
+single value, isomorphic to the $[[Top]]$ value. The following rules capture
+this notion in a syntax-directed fashion:
 \drules[TL]{$[[ A top]]$}{Top-like types}{top,and,arr,rcd,all}
-As a
-historical note, the concept of top-like types were already known by
-\citet{Barendregt_1983} (although they did not call it ``top-like'') in the
-original BCD paper. The \oname calculus~\citep{oliveira2016disjoint}
-re-discovered it, and the \fname calculus~\citep{alpuimdisjoint} extended it
+As a historical note, the concept of top-like types were already known by
+\citet{Barendregt_1983} (although they did not call it ``top-like''). The \oname calculus~\citep{oliveira2016disjoint}
+re-discovered it and coined the term ``top-like types''; the \fname calculus~\citep{alpuimdisjoint} extended it
 with universal quantifiers. Note that in both \oname and \fname, the
 introduction of top-like types is solely for enabling a syntactic method of
 proving coherence, and due to the lack of BCD subtyping, they do not have a
 type-theoretic interpretation of top-like types.
+
+
+\begin{figure}[t]
+  \centering
+  \drules[FD]{$[[DD |- A ** B]]$}{Disjointness}{topL, topR, arr, andL, andR, rcdEq, rcdNeq, tvarL, tvarR, forall,ax}
+  \drules[Dax]{$[[A **a B]]$}{Disjointness axioms}{sym, intArr, intRcd,intAll,arrAll,arrRcd,allRcd}
+  \caption{Disjointness rules of \fnamee}
+  \label{fig:disjoint:fi}
+\end{figure}
+
+
 
 The disjointness judgment $[[DD |- A ** B]]$ is helpful to check whether the merge of two
 expressions of type $[[A]]$ and $[[B]]$ preserves coherence.
