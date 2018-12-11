@@ -121,7 +121,8 @@ each DSL, as well as explicit projections that need to be written in each
 interpretation. A final remark is that adding new primitives (e.g.,
 a ``right stretch'' \lstinline{rstretch}
 combinator~\citep{hinze2004algebra}) can also be easily
-achieved in the finally tagless approach~\citep{kiselyov2012typed}.
+achieved in the finally tagless approach (e.g., see \citet{oliveira2006extensible}).
+
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -212,6 +213,7 @@ merging the two interpretations.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Disjoint polymorphism and dynamic merges.}
+\label{eg:combine}
 
 While it may seem from the above examples that definitions have to be merged
 statically, \fnamee in fact supports dynamic merges. For instance, we can
@@ -312,5 +314,5 @@ we can rewrite \lstinline{l3} as follows (note that \lstinline{Width} and \lstin
 
 % Local Variables:
 % TeX-master: "../../Thesis"
-% org-ref-default-bibliography: ../../Thesis.bib
+% org-ref-default-bibliography: "../../Thesis.bib"
 % End:

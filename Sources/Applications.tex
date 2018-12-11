@@ -46,11 +46,17 @@ implements the evaluation rules is given by a trait
 The actual AST of this simple arithmetic language is given as an internal
 visitor~\citep{Oliveira_2008}:
 \lstinputlisting[linerange=21-23]{./examples/application.sl}% APPLY:linerange=EXP_TYPE
-Note that object algebras as implemented in languages like Java or Scala do not define the type
-\lstinline{Exp} because this would make adding new variants very hard. Although extensible versions
-of this visitor pattern do exist, they usually require complex types using advanced features of
-generics~\citep{oliveira2012extensibility, togersen:2004}.
-However, as we will see, this is not a problem in \sedel. We can build a value of \lstinline{Exp} as follows:
+Note that object algebras as implemented in languages like Java or Scala do not
+define the type \lstinline{Exp} because this would make adding new variants very
+hard, essentially due to the fact that the subtyping relation between the
+extended and the base languages is inverted (i.e., the extended language is a
+\emph{supertype} of the base language). Most OO languages couple extension with
+subtyping, preventing us from (easily) modeling such
+cases~\citep{oliveira09modular}. Although extensible versions of this visitor
+pattern do exist, they usually require complex types using advanced features of
+generics~\citep{oliveira2012extensibility, togersen:2004}. However, as we will
+see, this is not a problem in \sedel. We can build a value of \lstinline{Exp} as
+follows:
 \lstinputlisting[linerange=27-29]{./examples/application.sl}% APPLY:linerange=VALUE_E1
 
 
@@ -99,7 +105,8 @@ supertype of \lstinline{Exp}.
 
 When programming with object algebras, oftentimes it is necessary to compose
 multiple operations together in such a way that they are executed in parallel to
-the same input. For example, in the simple language we have been developing it
+the same input. (We already introduced such combinator on \cpageref{eg:combine}.)
+For example, in the simple language we have been developing it
 can be useful to create an object that supports both printing and evaluation.
 \citet{oliveira2012extensibility} addressed this problem by
 proposing \emph{Object Algebra combinators} that combine multiple algebras into

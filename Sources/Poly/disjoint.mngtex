@@ -25,14 +25,18 @@ a notable change regarding disjointness with \emph{top-like types}.
 
 Top-like types are all types that are isomorphic to $[[Top]]$ (i.e.,
 simultaneously sub- and supertypes of $[[Top]]$). Hence, they are inhabited by a
-single value, isomorphic to the $[[Top]]$ value. The following rules capture
-this notion in a syntax-directed fashion in the $[[A top]]$ predicate.
-As a historical note, top-like types were first introduced in
-\oname~\citep{oliveira2016disjoint}, and then adopted by \fname~\citep{alpuimdisjoint}. Their motivation
-is solely for enabling a syntactic method of proving coherence, and due to the
-lack of BCD subtyping, they do not have a type-theoretic interpretation of
-top-like types.
-\drules[TL]{$[[ A top  ]]$}{Top-like types}{top,and,arr,rcd,all}
+single value, isomorphic to the $[[Top]]$ value. The following inference rules capture
+this notion in a syntax-directed fashion by the $[[A top]]$ predicate.
+\drules[TL]{$[[ A top]]$}{Top-like types}{top,and,arr,rcd,all}
+As a
+historical note, the concept of top-like types were already known by
+\citet{Barendregt_1983} (although they did not call it ``top-like'') in the
+original BCD paper. The \oname calculus~\citep{oliveira2016disjoint}
+re-discovered it, and the \fname calculus~\citep{alpuimdisjoint} extended it
+with universal quantifiers. Note that in both \oname and \fname, the
+introduction of top-like types is solely for enabling a syntactic method of
+proving coherence, and due to the lack of BCD subtyping, they do not have a
+type-theoretic interpretation of top-like types.
 
 The disjointness judgment $[[DD |- A ** B]]$ is helpful to check whether the merge of two
 expressions of type $[[A]]$ and $[[B]]$ preserves coherence.
@@ -119,5 +123,5 @@ To conclude this section, we show that the disjointness relation is symmetric:
 
 % Local Variables:
 % TeX-master: "../../Thesis"
-% org-ref-default-bibliography: ../../Thesis.bib
+% org-ref-default-bibliography: "../../Thesis.bib"
 % End:
