@@ -72,7 +72,7 @@ in a more complicated notion of contextual equivalence and our logical
 relation's non-trivial treatment of pairs.
 As we have shown in \cref{chap:coherence:poly}, constructing a
 suitable logical relation for \fnamee is challenging. On the one hand, the
-original approach by Alpuim et al.~\citep{alpuimdisjoint} in \fname does not work
+original approach by \citet{alpuimdisjoint} in \fname does not work
 any more due to the addition of BCD subtyping. On the other hand, simply
 combining System F's logical relation with \namee's canonicity relation does not
 work as expected, due to the issue of well-foundedness. To solve the problem, we

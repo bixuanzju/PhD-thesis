@@ -4,10 +4,18 @@
 \label{chap:fi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we present \fnamee, the first typed calculus combining disjoint
-polymorphism with BCD subtyping. \fnamee is essentially a hybrid of \namee
-(which does not support parametric polymorphism) and \fname (which does not
-account for BCD subtyping). As we will see, the combination is very expressive,
+This chapter introduces \fnamee, an explicitly typed second-order lambda
+calculus with disjoint quantification and disjoint intersection types. \fnamee
+can be characterized as the hybrid of \namee (which does not support
+polymorphism) and \fname (which does not support BCD subtyping):
+\[
+\begin{tikzcd}
+ & \mathsf{F}_{i}^{+} &  \\
+\lambda_{i}^{+} \arrow[ru] &  & \mathsf{F}_{i} \arrow[lu] \\
+ & \lambda_{i} \arrow[lu] \arrow[ru] &
+\end{tikzcd}
+\]
+As we will see, the combination is very expressive,
 enabling improved compositional designs and supporting automated composition of
 interpretations in programming techniques like object
 algebras~\citep{oliveira2012extensibility} and finally
